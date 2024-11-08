@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.facilities.dao.FacilitiesDAO">
+<resultMap id="FacilityResultMap" type="com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO">
+
+    <id property="id" column="id" />
+    <result property="facilityName" column="facility_name" />
+    <result property="address" column="address" />
+    <result property="contact" column="contact" />
+    <result property="openingTime" column="opening_time" />
+    <result property="categoryId" column="category_id" />
+    <result property="latitude" column="latitude" />
+    <result property="longitude" column="longitude" />
+    <!-- 시설 타입 (enum일 경우 EnumTypeHandler 사용 필요) -->
+    <result property="facilityType" column="facility_type"
+            typeHandler="com.ohgiraffers.climbon.facilities.handler.FacilityTypeTypeHandler"/><!--이넘핸들러주소를써야함-->
+</resultMap>
+
+
+    <select id="facilitiesList" parameterType="com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO" resultMap="FacilityResultMap">
+        SELECT
+        *
+        FROM FACILITIES
+    </select>
+
+
+
+
+
+</mapper>
