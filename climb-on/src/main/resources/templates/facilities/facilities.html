@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<h2>시설 목록</h2>
+
+<!-- 시설 목록이 있을 경우 -->
+<div th:if="${facilitiesList != null}">
+    <table id="facilitiestb">
+        <thead>
+        <tr>
+            <th>시설 ID</th>
+            <th>시설명</th>
+            <th>주소</th>
+            <th>연락처</th>
+            <th>개방 시간</th>
+            <th>카테고리 ID</th>
+            <th>위도</th>
+            <th>경도</th>
+            <th>시설 타입</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="facility : ${facilitiesList}">
+            <td th:text="${facility.id}">시설 ID</td>
+            <td th:text="${facility.facilityName}">시설명</td>
+            <td th:text="${facility.address}">주소</td>
+            <td th:text="${facility.contact}">연락처</td>
+            <td th:text="${facility.openingTime}">개방 시간</td>
+            <td th:text="${facility.categoryId}">카테고리 ID</td>
+            <td th:text="${facility.latitude}">위도</td>
+            <td th:text="${facility.longitude}">경도</td>
+            <td th:text="${facility.facilityType}">시설 타입</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 시설 목록이 없을 경우 메시지 표시 -->
+<div th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
+    <p>시설 목록이 없습니다.</p>
+</div>
+
+
+<a href="http://localhost:8080"><input type="button" value="돌아가기"> </a>
+</body>
+</html>
