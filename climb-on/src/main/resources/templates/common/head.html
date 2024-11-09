@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:fragment="headFragment">
+    <meta charset="UTF-8">
+    <title>CLI'MON</title>
+
+    <!--공통 css-->
+    <!--브라우저 초기값 리셋-->
+    <link rel="stylesheet" th:href="@{/css/ui/reset.css}">
+    <!-- 부트스트랩 -->
+    <!--<link rel="stylesheet" th:href="@{/css/ui/bootstrap.min.css}">-->
+    <!--폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400..600&display=swap" rel="stylesheet">
+    <!--공통영역 css(만듦)-->
+    <link rel="stylesheet" th:href="@{/css/common/common.css}">
+
+    <!--추가적인 css 파일을 각 페이지에서 전달받아 삽입(필요 시)-->
+    <th:block layout:fragment="css"></th:block>
+
+
+</head>
+
+</html>

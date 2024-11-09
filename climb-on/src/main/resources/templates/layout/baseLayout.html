@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="light" xmlns:th="http://www.thymeleaf.org"
+                                        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+    <!--head-->
+    <head th:replace="~{/common/head :: headFragment}"></head>
+
+    <body>
+        <!--header-->
+        <header th:replace ="~{/common/header :: headerFragment}" ></header>
+
+        <!--content-->
+        <main class="content">
+            <th:block layout:fragment = "containerFragment">
+                <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
+            </th:block>
+        </main>
+
+        <!--footer-->
+        <footer th:replace ="~{/common/footer :: footerFragment}" ></footer>
+
+        <!--공통 js-->
+        <!--fontawesome icon-->
+        <script src="https://kit.fontawesome.com/5d48c3da4c.js" crossorigin="anonymous"></script>
+        <!--부트스트랩-->
+        <script th:src="@{/js/plugin/bootstrap.bundle.min.js}"></script>
+        <!--공통영역(만듦)-->
+        <script th:src="@{/js/common/common.js}"></script>
+
+        <!--각 페이지의 js 추가-->
+        <th:block layout:fragment="javascript"></th:block>
+    </body>
+</html>
