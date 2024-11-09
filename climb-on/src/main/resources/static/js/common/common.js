@@ -39,6 +39,7 @@ depth1.forEach(function(el) {
 // 다크모드
 function darkMode(){
 
+
     const $html = document.querySelector('html');
     const $btnToggle = document.querySelector("#btnToggle");
     // 현재 모드를 가져옴
@@ -54,4 +55,9 @@ function darkMode(){
         $html.setAttribute("data-bs-theme", "dark");
         /*$btnToggle.textContent = "라이트모드";*/
     }
+
+
 }
+
+
+

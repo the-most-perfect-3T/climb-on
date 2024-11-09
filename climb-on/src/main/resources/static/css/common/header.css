@@ -1,0 +1,68 @@
+@charset "utf-8";
+
+/* header */
+.header {
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+.header .inner {
+    height: var(--headerHeight);
+}
+
+.header .inner > div:first-child .gnb {
+    margin-left: 9rem;
+}
+
+/* li 공통 */
+.header .inner > div:first-child .gnb ul li {
+    height: 100%;
+}
+
+/* a 공통 */
+.header .inner > div:first-child .gnb ul li a {
+    font-size: 1.125rem;
+    padding: 0 30px;
+    display: block;
+    line-height: var(--headerHeight);
+    box-sizing: border-box;
+}
+.header .inner > div:first-child .gnb ul li a:hover {
+    color: var(--point);
+    font-weight: 600;
+}
+
+.header .inner > div:first-child .gnb .depth1 > li .depth2 {
+    top: var(--headerHeight);
+    /*height: var(--headerHeight);*/
+    height: 0;
+    opacity: 0;
+}
+.header .inner > div:first-child .gnb .depth1 > li .depth2::after {
+    content: '';
+    position: fixed;
+    /*top: calc(var(--headerHeight) * 2);*/
+    top: calc(var(--headerHeight) + 1px);
+    left: 0;
+    width: 100%;
+    /*height: 1px;*/
+    height: var(--headerHeight);
+    /*background-color: var(--borderColor);*/
+    background-color: #fff;
+    z-index: -1;
+    border-bottom: 1px solid var(--borderColor);
+}
+
+
+.header .inner .info ul li {
+    margin-left: 14px;
+}
+.header .inner .info ul li a,
+.header .inner .info ul li button {
+    color: var(--gray);
+    font-size: 1.125rem;
+}
+.header .inner .info ul li a:hover,
+.header .inner .info ul li button:hover {
+    color: var(--point);
+}
