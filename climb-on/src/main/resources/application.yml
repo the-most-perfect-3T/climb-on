@@ -2,8 +2,13 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/climbdb
-    username: gangnam
-    password: gangnam
+    username: jeongmin
+    password: jeongmin
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    mode: HTML
+    cache: false
 
 mybatis:
   mapper-locations: mapper/*.xml
