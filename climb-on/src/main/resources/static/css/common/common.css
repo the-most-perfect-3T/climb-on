@@ -1,0 +1,116 @@
+@charset "utf-8";
+
+/* 공통 */
+:root {
+    /*색상 정의*/
+    --black: #222;
+    --point: #FF7F27;
+    --borderColor: #DEE2E6;
+    --beige: #FAEFDD; /*rgb(250,239,221)*/
+    --darkGray: #343A40;
+    --gray: #6C757D;
+    --darkBorderColor: #495057;
+    --darkBgBlack: #212529;
+    /*header*/
+    --headerHeight: 4rem;
+}
+html {
+    font-size: 16px;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+body {
+    color: var(--black);
+    font-family: "Noto Sans KR", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.inner {
+    width: 1440px;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+
+a {
+    color: var(--black);
+    text-decoration: none;
+
+}
+
+/* bootstrap 초기화 */
+h1,h2,h3,h4,h5,h6 {
+    margin-bottom: 0;
+    color: var(--black);
+    font-size: unset;
+}
+dl, ol, ul {
+    margin-bottom: 0;
+}
+ul, ol {
+    padding-left: 0;
+}
+p {
+    margin-bottom: 0;
+}
+
+
+
+/*버튼 초기화*/
+button {
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-weight: inherit;
+}
+
+
+
+/* 다크모드 : 색상 변경 안되는 태그 있으면 추가하기 !!! */
+[data-bs-theme="dark"]{
+
+    body {
+        a {
+            color: #fff;
+        }
+        .header {
+            .inner {
+                > div:first-child {
+                    .gnb {
+                        .depth1 {
+                            > li {
+                                .depth2{
+                                    &::after {
+                                        background-color: var(--darkBgBlack);
+                                        border-bottom-color: var(--darkBorderColor);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        .footer {
+            .inner {
+                .ft-right {
+                    color: #fff;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+/* content */
+.content {
+    padding-top: var(--headerHeight);
+    padding-bottom: 120px;
+}
+
