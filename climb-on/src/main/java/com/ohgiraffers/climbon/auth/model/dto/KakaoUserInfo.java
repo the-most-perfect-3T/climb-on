@@ -20,9 +20,9 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         return String.valueOf(attributes.get("id"));
     }
 
+    /** "kakao_account" 내에 email 정보가 있는지 확인 후 반환*/
     @Override
     public String getEmail() {
-        // "kakao_account" 내에 email 정보가 있는지 확인 후 반환
         Object object = attributes.get("kakao_account");
         if (object instanceof Map) {
             Map<String, Object> accountMap = (Map<String, Object>) object;
@@ -31,14 +31,24 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         return null;
     }
 
-
+    /**"properties" 내에 nickname 정보가 있는지 확인 후 반환*/
     @Override
     public String getName() {
-        // "properties" 내에 nickname 정보가 있는지 확인 후 반환
         Object properties = attributes.get("properties");
         if (properties instanceof Map) {
             Map<String, Object> propertiesMap = (Map<String, Object>) properties;
             return (String) propertiesMap.get("nickname");
+        }
+        return null;
+    }
+
+    /**properties 내에 profile_img 정보가 있는지 확인 후 반환*/
+    @Override
+    public String getPictureUrl() {
+        Object properties = attributes.get("properties");
+        if (properties instanceof Map) {
+            Map<String, Object> propertiesMap = (Map<String, Object>) properties;
+            return (String) propertiesMap.get("image");
         }
         return null;
     }

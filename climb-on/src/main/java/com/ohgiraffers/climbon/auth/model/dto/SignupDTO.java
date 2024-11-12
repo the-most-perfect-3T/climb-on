@@ -1,7 +1,7 @@
 package com.ohgiraffers.climbon.auth.model.dto;
 
-// signup 회원가입
-public class UserDTO {
+/**signup 회원가입*/
+public class SignupDTO {
 
     private Integer id;                         // 사용자 고유 ID (Integer로 변경)
     private String nickname;                    // 사용자 닉네임
@@ -11,10 +11,10 @@ public class UserDTO {
     private String profilePic;                  // 사용자 프로필 사진 URL
     private int status;                         // 사용자 계정 상태 (0: 비활성, 1: 활성)
 
-    public UserDTO() {
+    public SignupDTO() {
     }
 
-    public UserDTO(Integer id, String nickname, String userId, String password, String userRole, String profilePic, int status) {
+    public SignupDTO(Integer id, String nickname, String userId, String password, String userRole, String profilePic, int status) {
         this.id = id;
         this.nickname = nickname;
         this.userId = userId;

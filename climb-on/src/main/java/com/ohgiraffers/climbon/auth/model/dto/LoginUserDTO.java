@@ -66,7 +66,7 @@ public class LoginUserDTO {
         this.userRole = userRole;
     }
 
-    public List<String> getRole(){
+    public List<String> getRoleList(){
         if(this.userRole.getRole().length() > 0){
             return Arrays.asList(this.userRole.getRole().split(","));
         }

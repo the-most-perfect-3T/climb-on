@@ -29,8 +29,7 @@
                         <!--로그인된 사용자에게만 보임 -->
                         <a th:href="@{/mypage}" sec:authorize="isAuthenticated()"><i class="fa-solid fa-user"></i></a>
                         <!--비로그인 사용자에게만 보임-->
-<!--                        <a th:href="@{/login}" sec:authorize="isAnonymous()">로그인</a>-->
-                        <a th:href="@{/auth/login}"><i class="fa-solid fa-user"></i></a>
+                        <a th:href="@{/login}" sec:authorize="isAnonymous()"><i class="fa-solid fa-user"></i></a>
                     </li>
                 </ul>
             </div>
