@@ -10,12 +10,11 @@ import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -36,6 +35,43 @@ public class FacilitiesController {
 
 
         return mv; // ModelAndView 반환
+    }
+    //카테고리코드를 이용한 조회
+    // 카테고리 코드에 해당하는 시설 목록을 조회하는 메서드
+    @PostMapping("/categoryselect")
+    public ModelAndView categorySelect(@RequestParam int categoryId ,String facilityName, ModelAndView mv) {
+
+
+        // 시설 목록 조회 (서비스 계층에서 처리)
+         List<FacilitiesDTO> facilitiesList = facilitiesService.categorySelect(categoryId,facilityName);
+
+        mv.addObject("facilitiesList", facilitiesList);
+        mv.setViewName("facilities/facilities");
+        return mv;
+    }
+
+
+    //검색기능
+    @PostMapping("search")
+    public ModelAndView search(@RequestParam String code, ModelAndView mv) {
+
+        List<FacilitiesDTO> facilitiesList = facilitiesService.searchOneFacility(code);
+        if (Objects.isNull(facilitiesList)) {
+            throw new NullPointerException();
+        }
+        mv.addObject("facilitiesList", facilitiesList);
+        mv.setViewName("facilities/facilities");
+        return mv;
+
+    }
+    //검색시 실시간
+    @GetMapping("/suggestions")
+    public ResponseEntity<List<FacilitiesDTO>> getSuggestions(@RequestParam String code) {
+
+        List<FacilitiesDTO> suggestions = facilitiesService.getFacilitySuggestions(code);
+        return ResponseEntity.ok(suggestions);
+
+
     }
 
 
