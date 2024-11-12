@@ -1,0 +1,40 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--css 추가하고 싶을 때 -->
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/mypage.css}">
+</th:block>
+
+<!-- 각 컨텐츠 넣는 곳 !! -->
+<th:block layout:fragment="containerFragment">
+    <div class="inner">
+        <aside>
+            <h3>내 계정</h3>
+            <ul>
+                <li><a href="">내 프로필</a></li>
+                <li><a href="">리뷰 관리</a></li>
+            </ul>
+            <a href="/auth/logout">로그아웃</a>
+        </aside>
+        <section>
+
+            <div sec:authorize="hasAnyAuthority('ADMIN')">
+                <p>welcome, admin</p>
+            </div>
+            <div sec:authorize="hasAnyAuthority('USER')">
+                <p>welcome, user</p>
+            </div>
+
+        </section>
+    </div>
+
+</th:block>
+
+<!-- js 추가하고 싶을 때 -->
+<th:block layout:fragment="javascript">
+    <script th:src="@{/js/page/mypage.js}"></script>
+</th:block>
+</html>

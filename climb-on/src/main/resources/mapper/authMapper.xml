@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.auth.model.dao.UserMapper">
+    <resultMap id="login" type="com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO">
+        <id property="id" column="ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="nickname" column="NICKNAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="userRole" column="USER_ROLE"/>
+    </resultMap>
+
+
+    <select id="findByUserId" parameterType="com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO" resultMap="login">
+        SELECT
+            *
+          FROM USERS
+         WHERE USER_ID = #{userId}
+    </select>
+
+    <insert id="save" parameterType="com.ohgiraffers.climbon.auth.model.dto.SignupDTO">
+        <!--프로필이미지 나중에 추가-->
+        INSERT INTO USERS (
+            NICKNAME,
+            USER_ID,
+            PASSWORD,
+            USER_ROLE,
+            STATUS
+        ) VALUES (
+            #{nickname},
+            #{userId},
+            #{password},
+            #{userRole},
+            #{status}
+        )
+    </insert>
+
+
+
+
+
+</mapper>
