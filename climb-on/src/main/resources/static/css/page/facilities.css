@@ -1,0 +1,33 @@
+.category-button {
+    display: inline-block;
+    margin: 10px;
+    padding: 20px 20px 10px;  /* 상단에 더 많은 여백을 추가 */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.category-button:hover {
+    background-color: #0056b3;
+}
+
+/*검색창 추천*/
+#suggestions {
+    border: 1px solid #ccc;
+    display: none; /* 초기에는 숨김 */
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute; /* 위치 조정 */
+    background: white; /* 배경색을 흰색으로 설정 */
+    z-index: 1000;
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0; /* 마우스 오버 시 배경색 변화 */
+}
