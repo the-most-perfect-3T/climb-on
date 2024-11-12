@@ -23,7 +23,7 @@ public class FacilitiesServiceController {
     private FacilitiesServiceService facilitiesServiceService; //퍼실리티서비스
 
     @GetMapping("select")
-    public ModelAndView selectCategory(ModelAndView mv) {
+   public ModelAndView selectCategory(ModelAndView mv) {
         // 서비스 리스트 가져오기
         List<FacilitiesDTO> facilitiesList = facilitiesServiceService.facilitiesList();
 
