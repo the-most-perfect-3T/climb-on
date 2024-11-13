@@ -101,4 +101,95 @@ function handleCategorySubmit(categoryId) {
     }
     document.body.appendChild(form);
     form.submit();
+//세션 클리어
+    sessionStorage.removeItem('searchCode');
 }
+
+let map = null;
+let marker = null; // 전역 marker
+let selectedPosition = {lat: 37.4988635, lng: 127.0266457}; // 초기 위치
+
+// 카카오 지도 API 로드 함수
+function loadKakaoMap(facilities) {
+    const {kakao} = window;
+
+    // 지도와 마커 생성
+
+    const container = document.getElementById('map');
+    const options = {
+        center: new kakao.maps.LatLng(facilities[0].latitude, facilities[0].longitude),
+        level: 3
+    };
+    map = new kakao.maps.Map(container, options);
+
+    // 시설마다 마커 추가
+    // facilities는 loadKakaoApi 호출 시 전달해야 함
+    facilities.forEach(facility => {
+        const markerPosition = new kakao.maps.LatLng(facility.latitude, facility.longitude);
+        console.log(facility)
+        const facilityMarker = new kakao.maps.Marker({
+            position: markerPosition,  // 마커 위치 설정
+            map: map  // 지도에 마커 추가
+        });
+        console.log(facility);
+        console.log(facilityMarker)
+        // 마커 클릭 시 해당 시설 정보 표시
+        kakao.maps.event.addListener(facilityMarker, 'click', function () {
+
+            console.log(`시설명: ${facility.facilityName}`);
+        });
+    });
+
+/*    // 초기 마커 설정
+    marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(selectedPosition.lat, selectedPosition.lng),
+        map: map
+    });*/
+
+    // 지도 클릭 이벤트
+    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+        const latlng = mouseEvent.latLng;
+
+      /*  // 마커 위치 변경
+        marker.setPosition(latlng);
+        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};*/
+
+        // 선택된 좌표를 콘솔에 출력
+        console.log(`Selected Location: ${selectedPosition.lat}, ${selectedPosition.lng}`);
+    });
+}
+
+// 카카오 지도 API 스크립트 로드
+function loadKakaoApi(facilities) {
+    const script = document.createElement('script');
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=5787c5f817571b9179d48c038390a65f&autoload=false`;
+    script.async = true;
+
+    script.onload = () => {
+        window.kakao.maps.load(() => loadKakaoMap(facilities));
+    };
+
+    script.onerror = () => {
+        console.error('Kakao Maps API 스크립트를 로드하는 중 오류가 발생했습니다.');
+    };
+
+    document.head.appendChild(script);
+}
+
+// 모달 닫기 버튼 처리
+function closeModal() {
+    const mapModal = document.getElementById('map-modal');
+    if (mapModal) {
+        mapModal.style.display = 'none'; // 모달 숨기기
+    }
+}
+
+window.onload = function () {
+
+    articleMessage()
+
+    const closeBtn = document.getElementById('close-modal');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+};
