@@ -6,6 +6,7 @@
 
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/page/crew.css}">
+        <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css" />
     </th:block>
 
 
@@ -17,23 +18,36 @@
                         <h2>크루게시판 글 쓰기</h2>
                         <p th:text="|${nickname} 님 크루게시판에서 다양한 크루원들과 교류해 보세요.|"></p>
                     </div>
+                    <br/>
                     <form action="/crew/writePost" method="post">
-                        <div class="input-group">
-                            <label for="category">카테고리</label>
-                            <div class="dropdown">
-                                <button id="category" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
-                                        value="카테고리를 선택해주세요">
-                                </button>
+                        <div class="input-wrap">
+                            <h4>카테고리</h4>
+                            <select class="form-select" aria-label="Default select example" name="categoryCode">
+                                <option selected>카테고리를 선택해주세요.</option>
+                                <option value="1">공지</option>
+                                <option value="2">내 크루</option>
+                            </select>
+                            <br/>
 
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">공지</a></li>
-                                    <li><a class="dropdown-item" href="#">내 크루</a></li>
-                                </ul>
-
+                            <div class="mb-3">
+                                <label for="title" class="form-label">제목</label>
+                                <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요." name="title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editor" class="form-label">본문</label>
+                                <textarea th:replace="~{common/ckEditorFragment :: textEditorFragment}"></textarea>
                             </div>
 
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="anonymous" name="isAnonymous" onclick="">
+                                <label class="form-check-label" for="anonymous">익명</label>
+                            </div>
+
+                            <button type="reset" class="btn">취소</button>
+                            <button type="submit" class="btn">등록</button>
 
                         </div>
+
                     </form>
 
 
@@ -46,5 +60,7 @@
     <th:block layout:fragment="javascript">
 
         <script th:src="@{/js/page/crew.js}"></script>
+        <script th:replace="~{common/ckEditorFragment :: importEditor}"></script>
+        <script th:replace="~{common/ckEditorFragment :: editorConfig}"></script>
     </th:block>
 </html>
