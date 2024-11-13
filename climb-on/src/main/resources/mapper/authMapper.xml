@@ -36,6 +36,12 @@
         )
     </insert>
 
+    <select id="findByNickname" parameterType="com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO" resultMap="login">
+        SELECT
+        *
+        FROM USERS
+        WHERE NICKNAME = #{nickname}
+    </select>
 
 
 

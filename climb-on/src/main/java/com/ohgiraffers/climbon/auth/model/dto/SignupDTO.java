@@ -1,5 +1,6 @@
 package com.ohgiraffers.climbon.auth.model.dto;
 
+
 /**signup 회원가입*/
 public class SignupDTO {
 

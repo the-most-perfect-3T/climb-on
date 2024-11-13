@@ -1,6 +1,8 @@
 /* footer */
 .footer {
-    height: 100px;
+    height: var(--footerHeight);
+    width: fit-content;
+    min-width: 100%;
 }
 
 .footer .inner .ft-right {
