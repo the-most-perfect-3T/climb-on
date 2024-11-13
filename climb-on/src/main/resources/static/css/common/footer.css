@@ -1,0 +1,15 @@
+/* footer */
+.footer {
+    height: var(--footerHeight);
+    width: fit-content;
+    min-width: 100%;
+}
+
+.footer .inner .ft-right {
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--gray);
+}
+.footer .inner .ft-right p {
+    margin-bottom: 4px;
+}

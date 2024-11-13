@@ -1,9 +1,15 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/climbdb
-    username: gangnam
-    password: gangnam
-
-mybatis:
-  mapper-locations: mapper/*.xml
+  profiles:
+    include:
+      - oauth
+      - db
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
