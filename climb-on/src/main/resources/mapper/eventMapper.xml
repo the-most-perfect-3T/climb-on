@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.calendar.dao.EventMapper">
+
+    <resultMap id="eventResult" type="com.ohgiraffers.climbon.calendar.dto.EventDTO">
+        <id property="id" column="EVENT_ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="start" column="START_DATETIME"/>
+        <result property="end" column="END_DATETIME"/>
+        <result property="description" column="DESCRIPTION"/>
+        <result property="backgroundColor" column="COLOR"/>
+    </resultMap>
+
+
+    <select id="getAllEvents" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">
+        SELECT
+        *
+        FROM calendar_events;
+    </select>
+
+    <insert id="insertEvent">
+        INSERT INTO calendar_events (title, start_datetime, end_datetime, description, color)
+        VALUES(#{title}, #{start}, #{end}, #{description}, #{backgroundColor});
+    </insert>
+</mapper>
