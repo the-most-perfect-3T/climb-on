@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Validate start and end dates
                             alert("시간을 잘못입력 하셨습니다.");
                         } else {
-                            // Add the event to FullCalendar view
+                            // 캘린더 뷰에 데이터 저장
                             calendar.addEvent(eventData);
 
                             // // Send the event to the database
@@ -46,10 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 title: event.title,
                                 start: event.start.toISOString(),
                                 end: event.end ? event.end.toISOString() : null,
-                                color: event.backgroundColor
+                                backgroundColor: event.backgroundColor
                             }));
 
-                            // Save all events to the database in a batch
+                            // 모든 이벤트 저장
                             try
                             {
                                 // Save all events to the database in a batch using the fetch API
@@ -82,51 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 }
-            },
-            mySaveButton: {
-                text: '저장!',
-                click: async function()
-                {
-                    if(confirm("저장하시겠습니까?"))
-                    {
-                        // Get all events from the calendar
-                        let allEvents = calendar.getEvents();
-                        let eventsData = allEvents.map(event => ({
-                            title: event.title,
-                            start: event.start.toISOString(),
-                            end: event.end ? event.end.toISOString() : null,
-                            color: event.backgroundColor
-                        }));
-
-                        // Save all events to the database in a batch
-                       try
-                       {
-                           // Save all events to the database in a batch using the fetch API
-                           const response = await fetch('/events/batch', {
-                               method: 'POST',
-                               headers: {
-                                   'Content-Type': 'application/json'
-                               },
-                               body: JSON.stringify(eventsData)
-                           });
-                           // Check if the response was successful
-                           if (response.ok) {
-                               //await calendar.refetchEvents(); // Refresh events from the server
-                               //등록 완
-                           } else {
-                               throw new Error("이벤트 저장에 실패했습니다.");
-                           }
-                       }
-                       catch(error)
-                       {
-                           alert(error.message);
-                       }
-                    }
-                }
             }
         },
         headerToolbar: {
-            left: 'prev,next today,myCustomButton,mySaveButton',
+            left: 'prev,next today,myCustomButton',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
@@ -135,17 +94,17 @@ document.addEventListener('DOMContentLoaded', function() {
         navLinks: true, // can click day/week names to navigate views
         selectable: true,
         selectMirror: true,
-        select: function(arg) {
+        select: async function(arg) {
             var title = prompt('Event Title:');
             if (title) {
                 calendar.addEvent({
                     title: title,
                     start: arg.start,
                     end: arg.end,
-                    color: arg.backgroundColor
+                    backgroundColor: arg.backgroundColor
                 })
             }
-            calendar.unselect()
+            calendar.unselect();
         },
         eventClick: function(arg) {
             if (confirm('Are you sure you want to delete this event?')) {
