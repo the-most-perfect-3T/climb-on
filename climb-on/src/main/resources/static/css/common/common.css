@@ -13,6 +13,11 @@
     --darkBgBlack: #212529;
     /*header*/
     --headerHeight: 4rem;
+    /*footer*/
+    --footerHeight: 100px;
+}
+*{
+    box-sizing: border-box;
 }
 html {
     font-size: 16px;

@@ -67,4 +67,15 @@ public class UserService {
         }
         return true;
     }
+
+    /**nickname 이 있는지 확인
+     * @return boolean
+     * */
+    public boolean isUserNameExists(String nickname) {
+        LoginUserDTO login = userMapper.findByNickname(nickname);
+        if(Objects.isNull(login)){
+            return false;
+        }
+        return true;
+    }
 }

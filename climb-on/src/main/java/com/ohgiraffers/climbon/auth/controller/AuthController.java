@@ -1,20 +1,27 @@
 package com.ohgiraffers.climbon.auth.controller;
 
+import com.ohgiraffers.climbon.auth.common.EmailValidator;
+import com.ohgiraffers.climbon.auth.common.NameValidator;
+import com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO;
 import com.ohgiraffers.climbon.auth.service.AuthService;
 import com.ohgiraffers.climbon.auth.model.dto.SignupDTO;
 import com.ohgiraffers.climbon.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 @Controller
 @RequestMapping("/auth/*")
+
 public class AuthController {
 
     @Autowired
@@ -26,10 +33,12 @@ public class AuthController {
         return mv;
     }
 
-    @GetMapping("signup")
-    public ModelAndView signup(ModelAndView mv) {
-        mv.setViewName("auth/signup");
-        return mv;
+    @GetMapping("/auth/signup")
+    public String signupForm(Model model) {
+        if (!model.containsAttribute("formData")) {
+            model.addAttribute("formData", new LinkedHashMap<String, Object>());
+        }
+        return "auth/signup";
     }
 
     @PostMapping("signup")
@@ -37,30 +46,60 @@ public class AuthController {
 
         String message;
         int result = userService.regist(signupDTO);
+
         if(result > 0){
+            System.out.println("성공했는데..");
             message = "회원 가입이 완료 되었습니다.";
+
             redirectAttributes.addFlashAttribute("message", message);
+
             return "redirect:/auth/login";
         }else {
             message = "회원 가입이 실패 하였습니다.";
             redirectAttributes.addFlashAttribute("message", message);
-            return "redirect:/user/signup";
+
+            return "redirect:/auth/signup";
         }
+
     }
 
+    /**아이디 중복검사*/
+    @GetMapping("checkUserId")
+    public ResponseEntity<String> checkUserId(@RequestParam Map<String, Object> parameters){
 
-   /* @GetMapping("checkUserId")
-    public String checkUserId(@RequestParam String userId, RedirectAttributes redirectAttributes){
-
-        if(userService.isUserIdExists(userId)){
-            redirectAttributes.addFlashAttribute("message", "중복된 아이디 입니다. \n다시 입력해주세요.");
-            return "redirect:/user/signup";
-        }else {
-            redirectAttributes.addFlashAttribute("message", "가입 가능한 아이디입니다.");
-            redirectAttributes.addFlashAttribute("id", userId);
-            return "redirect:/user/signup";
+        String userId = (String) parameters.get("userId");
+        // 유효성 검사
+        if(!EmailValidator.isValidEmail(userId)){
+            return ResponseEntity.ok("유효하지않은 형식입니다. \n다시 입력해주세요.");
         }
-    }*/
+
+        // 중복 여부
+        if(userService.isUserIdExists(userId)){
+            return ResponseEntity.ok("중복된 아이디 입니다. \n다시 입력해주세요.");
+        }
+
+        // 성공
+        return ResponseEntity.ok("가입 가능한 아이디입니다.");
+    }
+
+    /**닉네임 중복검사*/
+    @GetMapping("checkName")
+    public ResponseEntity<String> checkName(@RequestParam("nickname") String nickname){
+
+        // 유효성 검사
+        if(!NameValidator.isValidName(nickname)){
+            return ResponseEntity.ok("유효하지않은 형식입니다. \n다시 입력해주세요.");
+        }
+
+        // 중복 여부
+        if(userService.isUserNameExists(nickname)){
+            return ResponseEntity.ok("중복된 닉네임입니다. \n다시 입력해주세요.");
+        }
+
+        // 성공
+        return ResponseEntity.ok("가입 가능한 닉네임입니다.");
+    }
+
 
 
     @GetMapping("fail")
