@@ -110,7 +110,7 @@ button {
 
 /* content */
 .content {
-    padding-top: var(--headerHeight);
+    padding-top: calc(var(--headerHeight)*2);
     padding-bottom: 120px;
 }
 
