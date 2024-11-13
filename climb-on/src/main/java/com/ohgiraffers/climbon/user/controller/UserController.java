@@ -8,7 +8,6 @@ public class UserController {
 
     @GetMapping("mypage")
     public String mypage() {
-        System.out.println("getMapping !!");
         return "mypage/mypage";
     }
 }
