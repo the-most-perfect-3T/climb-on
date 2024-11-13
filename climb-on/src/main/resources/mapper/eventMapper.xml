@@ -20,8 +20,14 @@
         FROM calendar_events;
     </select>
 
-    <insert id="insertEvent">
+    <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         INSERT INTO calendar_events (title, start_datetime, end_datetime, description, color)
         VALUES(#{title}, #{start}, #{end}, #{description}, #{backgroundColor});
     </insert>
+
+    <select id="checkDuplicate" resultType="Integer">
+        SELECT COUNT(*)
+        FROM calendar_events
+        WHERE title = #{title} AND start_datetime = #{start};
+    </select>
 </mapper>

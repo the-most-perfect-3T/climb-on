@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 click: function() {
                     $("#exampleModal").modal("show");
                     //모달창 이벤트
-                    $("#saveChanges").on("click", function () {
+                    $("#saveChanges").on("click", async function () {
                         eventData = {
                             title: $("#title").val(),
                             start: $("#start").val(),
@@ -26,19 +26,52 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Add the event to FullCalendar view
                             calendar.addEvent(eventData);
 
-                            // Send the event to the database
-                            $.ajax({
-                                url: '/events',
-                                method: 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify(eventData),
-                                success: function() {
-                                    calendar.refetchEvents(); // Refresh events from the server
-                                },
-                                error: function() {
-                                    alert("이벤트 저장에 실패했습니다.");
+                            // // Send the event to the database
+                            // $.ajax({
+                            //     url: '/events',
+                            //     method: 'POST',
+                            //     contentType: 'application/json',
+                            //     data: JSON.stringify(eventData),
+                            //     success: function() {
+                            //         calendar.refetchEvents(); // Refresh events from the server
+                            //     },
+                            //     error: function() {
+                            //         alert("이벤트 저장에 실패했습니다.");
+                            //     }
+                            // });
+
+                            // Get all events from the calendar
+                            let allEvents = calendar.getEvents();
+                            let eventsData = allEvents.map(event => ({
+                                title: event.title,
+                                start: event.start.toISOString(),
+                                end: event.end ? event.end.toISOString() : null,
+                                color: event.backgroundColor
+                            }));
+
+                            // Save all events to the database in a batch
+                            try
+                            {
+                                // Save all events to the database in a batch using the fetch API
+                                const response = await fetch('/events/batch', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(eventsData)
+                                });
+                                // Check if the response was successful
+                                if (response.ok) {
+                                    //await calendar.refetchEvents(); // Refresh events from the server
+                                    //등록 완
+                                } else {
+                                    throw new Error("이벤트 저장에 실패했습니다.");
                                 }
-                            });
+                            }
+                            catch(error)
+                            {
+                                alert(error.message);
+                            }
 
                             // Clear form and close modal
                             $("#exampleModal").modal("hide");
@@ -62,23 +95,32 @@ document.addEventListener('DOMContentLoaded', function() {
                             title: event.title,
                             start: event.start.toISOString(),
                             end: event.end ? event.end.toISOString() : null,
-                            color: event.backgroundColor,
+                            color: event.backgroundColor
                         }));
 
                         // Save all events to the database in a batch
-                        $.ajax({
-                            url: '/events/batch',  // Endpoint for batch saving
-                            method: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify(eventsData),
-                            success: function() {
-                                calendar.refetchEvents(); // Refresh events from the server
-                                alert("이벤트가 성공적으로 저장되었습니다.");
-                            },
-                            error: function() {
-                                alert("이벤트 저장에 실패했습니다.");
-                            }
-                        });
+                       try
+                       {
+                           // Save all events to the database in a batch using the fetch API
+                           const response = await fetch('/events/batch', {
+                               method: 'POST',
+                               headers: {
+                                   'Content-Type': 'application/json'
+                               },
+                               body: JSON.stringify(eventsData)
+                           });
+                           // Check if the response was successful
+                           if (response.ok) {
+                               //await calendar.refetchEvents(); // Refresh events from the server
+                               //등록 완
+                           } else {
+                               throw new Error("이벤트 저장에 실패했습니다.");
+                           }
+                       }
+                       catch(error)
+                       {
+                           alert(error.message);
+                       }
                     }
                 }
             }
@@ -99,7 +141,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 calendar.addEvent({
                     title: title,
                     start: arg.start,
-                    end: arg.end
+                    end: arg.end,
+                    color: arg.backgroundColor
                 })
             }
             calendar.unselect()

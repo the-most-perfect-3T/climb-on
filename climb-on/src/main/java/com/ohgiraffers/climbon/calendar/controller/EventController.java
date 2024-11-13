@@ -24,11 +24,23 @@ public class EventController
         return eventService.getAllEvents();
     }
 
-    @PostMapping("/events/batch")
+    @PostMapping("/batch")
     public void addEvent(@RequestBody List<EventDTO> events)
     {
+        if(events==null || events.size()==0)
+        {
+            System.out.println("이벤트가 없습니다!");
+        }
+
         for (EventDTO event : events)
         {
+            System.out.println("이벤트 색깔: " + event.getBackgroundColor());
+
+            if(eventService.checkDuplicate(event.getTitle(), event.getStart()))
+            {
+                // title, start가 일치하는지 count로 반환. 0보다 크면 true
+                continue;
+            }
             eventService.addEvent(event);
         }
     }
