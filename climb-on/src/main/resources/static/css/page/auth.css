@@ -1,6 +1,51 @@
+@charset "utf-8";
 
-.test {
-    font-size: 200px;
+/*공통*/
+.content {
+    height: calc(100vh - var(--footerHeight));
 }
+.section-auth .top-area h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+.section-auth .top-area p {
+    font-size: 16px;
+    margin-bottom: 45px;
+}
+.section-auth .cont {
+    width: 448px;
+    margin: auto;
+}
+.input-wrap {
+    font-size: 14px;
+}
+
+.input-wrap label {
+    display: block;
+}
+.input-wrap input {
+    width: 100%;
+}
+.input-wrap .error-message {
+    color: var(--bs-danger);
+
+}
+.input-wrap .success-message {
+    color: var(--bs-success);
+}
+
+.input-wrap-btn {
+
+}
+.input-wrap-btn input {
+    width: 334px;
+}
+.input-wrap-btn button {
+    width: 100px;
+}
+
+
+/*로그인*/
 
 

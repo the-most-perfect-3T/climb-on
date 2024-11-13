@@ -3,35 +3,40 @@
       layout:decorate="~{/layout/baseLayout}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/page/auth.css}">
+    </th:block>
 
     <th:block layout:fragment="containerFragment">
-        <section>
+        <section class="section-auth section-signup">
             <div class="inner">
-
+                <div class="top-area text-center" th:replace="~{/auth/login :: topArea}"></div>
                 <div class="cont">
-                    <div class="top-area" th:replace="~{/auth/login :: topArea}"></div>
-                    <form action="/auth/signup" method="post">
-                        <div class="input-wrap">
+                    <form action="/auth/signup" method="post" onsubmit="return onSubmitHandler()">
+                        <div class="input-wrap input-wrap-btn">
                             <label for="userId">아이디</label>
-                            <input type="text" id="userId" name="userId" placeholder="example@climb.com" onkeyup="emailValidCheck(event)" required/>
-                            <button type="button">중복확인</button>
-                            <p class="error-message"></p>
+                            <input type="text" id="userId" name="userId" placeholder="example@climb.com" th:value="${formData != null ? formData['id'] : ''}" onkeyup="emailValidCheck(event)" required/>
+                            <button type="button" onclick="checkId()">중복확인</button>
+                            <p class="error-message" id="userId-error"></p>
+                            <p class="success-message" id="userId-success"></p>
+                            <!--<p class="success-message" th:text="${successMessage}"></p>-->
                         </div>
                         <div class="input-wrap">
                             <label for="password">비밀번호</label>
-                            <input type="password" name="password" id="password" placeholder="비밀번호 입력 (6자 이상 20자 이하/ 영문, 숫자 필수포함)" onkeyup="passwordValidCheck(event)" required/>
+                            <input type="password" name="password" id="password" placeholder="비밀번호 입력" th:value="${formData != null ? formData['password'] : ''}" onkeyup="passwordValidCheck(event)" required/>
                             <p class="error-message"></p>
                         </div>
                         <div class="input-wrap">
                             <label for="passwordCheck">비밀번호 확인</label>
-                            <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인" required/>
+                            <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인" th:value="${formData != null ? formData['passwordCheck'] : ''}" onkeyup="passwordCompareCheck(event)" required/>
                             <p class="error-message"></p>
                         </div>
-                        <div class="input-wrap">
+                        <div class="input-wrap input-wrap-btn">
                             <label for="nickname">닉네임</label>
-                            <input type="text" id="nickname" name="nickname" placeholder="닉네임 입력" required/>
-                            <button type="button">중복확인</button>
-                            <p class="error-message"></p>
+                            <input type="text" id="nickname" name="nickname" placeholder="닉네임 입력" th:value="${formData != null ? formData['nickname'] : ''}" onkeyup="nicknameValidCheck(event)" required/>
+                            <button type="button" onclick="checkName()">중복확인</button>
+                            <p class="error-message" id="nickname-error"></p>
+                            <p class="success-message" id="nickname-success"></p>
                         </div>
                         <button type="submit">회원가입</button>
                     </form>
@@ -44,23 +49,38 @@
 
     <th:block layout:fragment="javascript">
         <script th:inline="javascript">
-            const passwordValidCheck = event => {
-                let password = document.getElementById("password");
-                let errorText = findNextTag(password, "p");
 
-                if (password.length < 6) {
-                    errorText.textContent = "비밀번호는 6자 이상이어야 합니다.";
-                } else if (password.length > 20) {
-                    errorText.textContent = "비밀번호는 20자를 초과할 수 없습니다.";
-                } else {
-                    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,20}$/;
-                    if (!passwordPattern.test(password)) {
-                        errorText.textContent = "비밀번호에는 영문과 숫자가 포함되어야 합니다.";
-                    } else {
-                        errorText.textContent = "";
-                    }
-                }
+            // 알럿창 메시지
+            const message = [[${message}]];
+            if(message){
+                alert(message);
+            }
 
+            // 아이디 중복확인 요청보내기
+            const checkId = () => {
+                const userId = document.getElementById("userId").value;
+                fetch(`/auth/checkUserId?userId=${userId}`)
+                    .then(response => response.text())
+                    .then(message => {
+                        document.getElementById("userId-success").innerText = message.includes("가입 가능") ? message : "";
+                        message.includes("중복") ? alert(message) : "";
+                        message.includes("유효") ? alert(message) : "";
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+
+            // 닉네임 중복확인 요청보내기
+            const checkName = () => {
+
+                const nickname = document.getElementById("nickname").value;
+                fetch(`/auth/checkName?nickname=${nickname}`)
+                    .then(response => response.text())
+                    .then(message => {
+                        document.getElementById("nickname-success").innerText = message.includes("가입 가능") ? message : "";
+                        message.includes("중복") ? alert(message) : "";
+                        message.includes("유효") ? alert(message) : "";
+                    })
+                    .catch(error => console.error("Error:", error));
             }
         </script>
         <script th:src="@{/js/page/auth.js}"></script>
