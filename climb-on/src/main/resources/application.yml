@@ -1,15 +1,10 @@
 spring:
   profiles:
     include:
-      - oauth
       - db
   thymeleaf:
     prefix: classpath:templates/
     suffix: .html
     mode: HTML
     cache: false
-logging:
-  level:
-    org:
-      springframework:
-        security: DEBUG
+

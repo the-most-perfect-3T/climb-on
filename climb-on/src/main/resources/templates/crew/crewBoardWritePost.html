@@ -1,0 +1,50 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/page/crew.css}">
+    </th:block>
+
+
+    <th:block layout:fragment="containerFragment">
+        <section>
+            <div class="inner">
+                <div class="content">
+                    <div class="top area">
+                        <h2>크루게시판 글 쓰기</h2>
+                        <p th:text="|${nickname} 님 크루게시판에서 다양한 크루원들과 교류해 보세요.|"></p>
+                    </div>
+                    <form action="/crew/writePost" method="post">
+                        <div class="input-group">
+                            <label for="category">카테고리</label>
+                            <div class="dropdown">
+                                <button id="category" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                        value="카테고리를 선택해주세요">
+                                </button>
+
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">공지</a></li>
+                                    <li><a class="dropdown-item" href="#">내 크루</a></li>
+                                </ul>
+
+                            </div>
+
+
+                        </div>
+                    </form>
+
+
+                </div>
+            </div>
+        </section>
+    </th:block>
+
+
+    <th:block layout:fragment="javascript">
+
+        <script th:src="@{/js/page/crew.js}"></script>
+    </th:block>
+</html>
