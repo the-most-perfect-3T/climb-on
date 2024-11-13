@@ -44,6 +44,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
         }
         // 로그인 성공 시 액세스 토큰을 세션에 저장
         String accessToken = userRequest.getAccessToken().getTokenValue();
+        // 확인용 !
         System.out.println("로그인" + accessToken);
 
 

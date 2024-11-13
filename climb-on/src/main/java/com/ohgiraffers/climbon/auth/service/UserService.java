@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
 public class UserService {
 
@@ -23,13 +25,13 @@ public class UserService {
 
         // 유효성 검증 2차
         if(user.getUserId().isEmpty() || user.getUserId() == null){
-            // 유저 아이디 없음 에러
+            return 0;
         }
         if(user.getPassword().isEmpty() || user.getPassword() == null){
-            // 패스워드 없음 에러
+            return 0;
         }
         if(user.getNickname().isEmpty() || user.getNickname() == null){
-            // 닉네임 없음 에러
+            return 0;
         }
 
         // 비밀번호 암호화
@@ -46,10 +48,23 @@ public class UserService {
         return result;
     }
 
-    /**userId(email) 로 찾기*/
+    /**userId(email) 로 찾기
+     * @return LoginUserDTO
+     * */
     public LoginUserDTO findByUserId(String username) {
         LoginUserDTO loginUserDTO = userMapper.findByUserId(username);
 
         return loginUserDTO;
+    }
+
+    /**userId가 있는지 확인
+     * @return boolean
+     * */
+    public boolean isUserIdExists(String userId) {
+        LoginUserDTO login = userMapper.findByUserId(userId);
+        if(Objects.isNull(login)){
+            return false;
+        }
+        return true;
     }
 }

@@ -1,0 +1,12 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <th:block layout:fragment="javascript">
+        <script th:inline="javascript">
+            alert([[${message}]]);
+            window.location.replace("/auth/login");
+        </script>
+    </th:block>
+</html>
