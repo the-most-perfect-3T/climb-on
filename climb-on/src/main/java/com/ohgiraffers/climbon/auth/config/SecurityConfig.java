@@ -46,11 +46,13 @@ public class SecurityConfig {
     @Autowired
     private Oauth2UserService oauth2UserService;
 
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
+    /**kakao 관련*/
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
 
@@ -63,7 +65,8 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http, OAuth2ClientProperties oAuth2ClientProperties) throws Exception {
 
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/auth/login", "/auth/signup", "/auth/fail", "/", "/user/checkUserId").permitAll();
+            auth.requestMatchers("/auth/login", "/auth/signup", "/auth/fail", "/", "/user/checkUserId",
+                    "/search", "/facilities/*", "/community/*", "/crew/*").permitAll();
             /*auth.requestMatchers("/admin/*").hasAnyAuthority(UserRole.ADMIN.getRole());
             auth.requestMatchers("/user/*").hasAnyAuthority(UserRole.USER.getRole());*/
             auth.anyRequest().authenticated();
@@ -73,7 +76,7 @@ public class SecurityConfig {
             login.usernameParameter("userId");
             login.passwordParameter("password");
             login.defaultSuccessUrl("/", true);
-
+            login.failureHandler(authFailHandler);
         }).logout(logout -> {
             logout.logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"));
             logout.deleteCookies("JSESSIONID");

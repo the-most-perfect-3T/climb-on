@@ -52,6 +52,9 @@
     z-index: -1;
     border-bottom: 1px solid var(--borderColor);
 }
+.header .inner > div:first-child .gnb .depth1 > li .depth2 li a {
+    font-size: 14px;
+}
 
 
 .header .inner .info ul li {

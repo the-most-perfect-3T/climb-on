@@ -25,7 +25,6 @@ public class AuthService implements UserDetailsService {
         LoginUserDTO login = userService.findByUserId(username);
 
         if(Objects.isNull(login)){
-            // 없을 때 에러처리.. 해야함
             throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
         }
 
