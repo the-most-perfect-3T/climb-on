@@ -12,18 +12,12 @@ const depth1 = document.querySelectorAll('.depth1>li');
 depth1.forEach(function(el) {
     el.addEventListener("mouseenter", function() {
         const depth2 = this.querySelector(".depth2");
-        if (depth2) {
-            depth2.style.height = '64px';
-            depth2.style.opacity = '1';
-        }
+        if (depth2) depth2.classList.add("active");
     });
 
     el.addEventListener("mouseleave", function() {
         const depth2 = this.querySelector(".depth2");
-        if (depth2) {
-            depth2.style.height = '0';
-            depth2.style.opacity = '0';
-        }
+        if (depth2) depth2.classList.remove("active");
     });
 });
 
