@@ -105,4 +105,19 @@ public class FacilitiesDTO {
         this.facilityType = facilityType;
 
     }
+
+    @Override
+    public String toString() {
+        return "FacilitiesDTO{" +
+                "id=" + id +
+                ", facilityName='" + facilityName + '\'' +
+                ", address='" + address + '\'' +
+                ", contact='" + contact + '\'' +
+                ", openingTime='" + openingTime + '\'' +
+                ", categoryId=" + categoryId +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", facilityType=" + facilityType +
+                '}';
+    }
 }
