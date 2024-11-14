@@ -3,13 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>게시글 작성</title>
-  <link rel="stylesheet" href="/postForm.css">
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/communityPostForm.css}">
+  </th:block>
 </head>
+
 <body>
-<div layout:fragment="content">
+<main class="content" layout:fragment="containerFragment">
 <div class="container">
   <h1>게시글 작성</h1>
 
@@ -75,5 +75,6 @@
     }
   </script>
 </div>
+</main>
 </body>
 </html>

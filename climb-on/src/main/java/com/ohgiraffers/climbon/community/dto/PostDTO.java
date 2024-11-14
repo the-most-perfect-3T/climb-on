@@ -1,5 +1,7 @@
 package com.ohgiraffers.climbon.community.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +10,11 @@ public class PostDTO {
 
     private int id;
 
-    private int userId;
+    private String userId;
+
+    private String userNickname;
+
+    private String userProfilePic;
 
     private String title;
 
@@ -32,9 +38,10 @@ public class PostDTO {
 
     private byte status;
 
-    private Date eventStartDate;
 
-    private Date eventEndDate;
+    private String eventStartDate;
+
+    private String eventEndDate;
 
     private String dday; // D-Day 계산 결과 저장
 
@@ -42,9 +49,11 @@ public class PostDTO {
     public PostDTO() {
     }
 
-    public PostDTO(int id, int userId, String title, String content, String category, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int commentCount, String imageUrl, boolean isAnonymous, int likes, byte status, Date eventStartDate, Date eventEndDate, String dday) {
+    public PostDTO(int id, String userId, String userNickname, String userProfilePic, String title, String content, String category, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int commentCount, String imageUrl, boolean isAnonymous, int likes, byte status, String eventStartDate, String eventEndDate, String dday) {
         this.id = id;
         this.userId = userId;
+        this.userNickname = userNickname;
+        this.userProfilePic = userProfilePic;
         this.title = title;
         this.content = content;
         this.category = category;
@@ -61,6 +70,21 @@ public class PostDTO {
         this.dday = dday;
     }
 
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public String getUserProfilePic() {
+        return userProfilePic;
+    }
+
+    public void setUserProfilePic(String userProfilePic) {
+        this.userProfilePic = userProfilePic;
+    }
 
     // 작성일을 포맷팅해서 반환하는 메소드 : createdAt 필드가 오늘 날짜인 경우 몇시 몇분 형식으로 반환, 오늘날짜가 아닌경우 년/월/일 형식으로 반환
     public String getFormattedCreatedAt() {
@@ -85,11 +109,11 @@ public class PostDTO {
         this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -181,19 +205,19 @@ public class PostDTO {
         this.status = status;
     }
 
-    public Date getEventStartDate() {
+    public String getEventStartDate() {
         return eventStartDate;
     }
 
-    public void setEventStartDate(Date eventStartDate) {
+    public void setEventStartDate(String eventStartDate) {
         this.eventStartDate = eventStartDate;
     }
 
-    public Date getEventEndDate() {
+    public String getEventEndDate() {
         return eventEndDate;
     }
 
-    public void setEventEndDate(Date eventEndDate) {
+    public void setEventEndDate(String eventEndDate) {
         this.eventEndDate = eventEndDate;
     }
 
@@ -210,6 +234,8 @@ public class PostDTO {
         return "PostDTO{" +
                 "id=" + id +
                 ", userId=" + userId +
+                ", userNickname='" + userNickname + '\'' +
+                ", userProfilePic='" + userProfilePic + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", category='" + category + '\'' +

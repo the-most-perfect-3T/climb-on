@@ -86,7 +86,7 @@
         </if>
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
-        WHERE id = #{id}
+        WHERE p.id = #{id}
     </select>
 
     <!-- 카테고리 필터링 & 전체 게시글 수 조회 -->
@@ -104,7 +104,7 @@
         SELECT p.*, u.nickname, u.profile_pic
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
-        WHERE id &lt; #{id}  <!-- &lt; -> < (부등호)라는뜻-->
+        WHERE p.id &lt; #{id}  <!-- &lt; -> < (부등호)라는뜻-->
         ORDER BY p.id DESC
         LIMIT 1
     </select>

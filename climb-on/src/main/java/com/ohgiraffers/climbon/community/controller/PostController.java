@@ -3,10 +3,15 @@ package com.ohgiraffers.climbon.community.controller;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -41,12 +46,15 @@ public class PostController {
 //            System.out.println(post.getCreatedAt());
 //        }
 
-        return "community/post";
+        return "community/communityPost";  //template/community/post로 반환 (Spring MVC에서 뷰의 이름)
     }
 
     // 특정 게시글 상세 페이지
     @GetMapping("/{id}")
-    public String getPostById(@PathVariable("id") Integer id, Model model){  // previousPost 와 nextPost 정보를 추가로 조회
+    public String getPostById(@PathVariable("id") Integer id, Model model){// previousPost 와 nextPost 정보를 추가로 조회
+        // 조회수 증가
+        postService.incrementViewCount(id);
+
         PostDTO post = postService.getPostById(id);
         // postService의 메소드를사용하여 이전,다음 게시글 정보 가져온다.
         PostDTO previousPost = postService.getPreviousPost(id); // 이전 게시글
@@ -54,7 +62,7 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
         model.addAttribute("nextPost", nextPost);
-        return "community/postDetail"; // 상세보기용 postDetail.html 템플릿 반환
+        return "community/communityPostDetail"; // 상세보기용 communityPostDetail.html 템플릿 반환
     }
 
     // 게시글 작성 폼 페이지
@@ -63,14 +71,40 @@ public class PostController {
         PostDTO post = new PostDTO();
         post.setCategory(category);
         model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달
-        return "community/postForm"; // postForm.html 템플릿 반환
+        return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
     }
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        // "yyyy-MM-dd" 형식의 문자열을 java.sql.Date로 변환하도록 설정  ☆★ 이걸로 오류해결 결국 String으로 입력 받고, 여기서 변환 시켜주면 소식,카테고리 둘다 게시글 작성이 가능해진다. eventdate 필드가 빈값으로 받아서 sql.date 변환하려는것이  (기존은 DTO 임포트를 java.sql.Date로했음 이걸로 하지말자 호환이 잘 안된다.)적용 안됨!
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));  // true는 필드가 null 허용
+    }
 
 
     // 게시글 작성 처리
     @PostMapping("/new")
-    public String createpost(@ModelAttribute PostDTO post){
+    public String createpost(@ModelAttribute PostDTO post, Principal principal){
+        // 로그인한 사용자의 userId 가져오기
+        String userId = principal.getName(); //principal을 통해 로그인한 사용자 ID 가져오기  //principal : Spring security에서 현재 인증된 사용자의 정보를 담고 있는 객체, 이 객체를 사용하여 로그인한 사용자의 ID나 이름 같은 정보를 갖고 올 수 있다.
+        post.setUserId(userId); // post 객체에 userId 설정                                //Principal 객체를 통해 현재 로그인한 사용자의 ID 또는 username을 쉽게 가져올 수 있다. ,로그인한 사용자에게만 특정 데이터를 보여주거나, 해당 사용자가 작성한 게시글 등을 처리할 수 있다. (이 객체는 세션 내에서 관리되기 때문에, 사용자 정보를 안전하게 다룰 수 있다.)
+
+//        // '소식' 카테고리가 아닌 경우, 날짜 필드를 null로 설정  // 이거 안해주면 소식이 아닌 카테고리 게시글 등록할 때 eventstartdate 와 eventenddate 필드가 비어 있어서 이걸 Spring 이 sql.date로 변환하려다 오류남 null로 채워줘야함
+//        // 이제 이거 필요없다 initBinder가 해결한다!
+//        if (!"소식".equals(post.getCategory())){
+//            post.setEventStartDate(null);
+//            post.setEventEndDate(null);
+//        } else {
+//            // '소식' 카테고리인데 날짜 값이 빈 문자열인 경우에도 null로 설정
+//            if (post.getEventStartDate() == null || post.getEventStartDate().toString().isEmpty()) {
+//                post.setEventStartDate(null);
+//            }
+//            if (post.getEventEndDate() == null || post.getEventEndDate().toString().isEmpty()) {
+//                post.setEventEndDate(null);
+//            }
+//        }
+
         postService.insertPost(post); // 새로운 게시글 DB에 추가
         return "redirect:/community"; // 작성 후 게시글 목록으로 리다이렉트
     }

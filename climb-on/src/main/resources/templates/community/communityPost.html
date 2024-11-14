@@ -5,7 +5,7 @@
 
 <head>
 <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/page/post.css}">
+    <link rel="stylesheet" th:href="@{/css/page/communityPost.css}">
 </th:block>
 </head>
 
@@ -107,10 +107,10 @@
                         <span th:text="${post.title}">게시글 제목 예시</span>
                     </a>
                 </td>
-                <td>
-                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 30px; height: 30px; border-radius: 50%;">
-                    <span th:text="${post.userNickname}">작성자 닉네임</span>
-                </td>
+<!--                <td>-->
+<!--                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 30px; height: 30px; border-radius: 50%;">-->
+<!--                    <span th:text="${post.userNickname}">작성자 닉네임</span>-->
+<!--                </td>-->
                 <td th:text="${post.userId}">작성자</td>
                 <td th:text="${post.formattedCreatedAt}">작성일</td>
             </tr>
