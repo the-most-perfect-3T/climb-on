@@ -20,12 +20,19 @@
 .input-wrap {
     font-size: 14px;
 }
-
+.input-wrap + .input-wrap {
+    margin-top: 30px;
+}
 .input-wrap label {
     display: block;
+    margin-bottom: 7px;
 }
 .input-wrap input {
     width: 100%;
+    height: 45px;
+    border: 1px solid var(--borderColor);
+    padding: 0 12px;
+    border-radius: 6px;
 }
 .input-wrap .error-message {
     color: var(--bs-danger);
