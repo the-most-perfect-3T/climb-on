@@ -46,7 +46,10 @@
                 </thead>
                 <tbody>
                 <tr th:each="facility : ${facilitiesList}">
-                    <td th:text="${facility.id}">시설 ID</td>
+                    <td th:text="${facility.id}"
+                        th:onclick="'showFacilityId(' + ${facility.latitude} + ', ' + ${facility.longitude} + ')'">
+                        시설 ID
+                    </td>
                     <td th:text="${facility.facilityName}">시설명</td>
                     <td th:text="${facility.address}">주소</td>
                     <td th:text="${facility.contact}">연락처</td>
@@ -85,6 +88,10 @@
 
                 // 카카오 맵에 마커 추가
               loadKakaoMap(facilities);
+            }
+            function showFacilityId(lat,long){
+                showFacility(lat,long)
+
             }
         </script>
 

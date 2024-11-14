@@ -158,7 +158,38 @@ function loadKakaoMap(facilities) {
         console.log(`Selected Location: ${selectedPosition.lat}, ${selectedPosition.lng}`);
     });
 }
+//해당위치로 지도이동
+let currentMarker = null;  // 이전 마커를 추적하기 위한 변수
 
+function showFacility(lat, long) {
+    // 해당 위치로 지도 이동
+    var moveLatLon = new kakao.maps.LatLng(lat, long);
+    map.panTo(moveLatLon);  // 지도 중심 이동
+
+    // 로컬 서버의 이미지를 마커로 설정
+    var markerImage = new kakao.maps.MarkerImage(
+        '/images/logo.svg', // 상대 경로로 로컬 이미지 지정
+        new kakao.maps.Size(50, 50),  // 마커 크기 (50x50)
+        { offset: new kakao.maps.Point(25, 50) } // 마커의 기준점 (중앙 하단)
+    );
+
+    // 기존 마커가 있으면 제거
+    if (currentMarker) {
+        currentMarker.setMap(null); // 기존 마커 삭제
+    }
+
+    // 새로운 마커 생성
+    var marker = new kakao.maps.Marker({
+        position: moveLatLon,  // 마커 위치 설정
+        image: markerImage      // 커스텀 이미지 설정
+    });
+
+    // 마커 지도에 표시
+    marker.setMap(map);
+
+    // 새로운 마커를 currentMarker에 저장
+    currentMarker = marker;
+}
 // 카카오 지도 API 스크립트 로드
 function loadKakaoApi(facilities) {
     const script = document.createElement('script');
