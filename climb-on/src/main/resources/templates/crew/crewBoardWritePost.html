@@ -6,7 +6,7 @@
 
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/page/crew.css}">
-        <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" />
     </th:block>
 
 
@@ -35,7 +35,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="editor" class="form-label">본문</label>
-                                <textarea th:replace="~{common/ckEditorFragment :: textEditorFragment}"></textarea>
+                                <textarea class="form-control" id="editor" name="content" rows="3" th:replace ="~{/common/quillTextEditor :: textEditorFragment}" required></textarea>
                             </div>
 
                             <div class="form-check form-switch">
@@ -59,11 +59,9 @@
 
     <th:block layout:fragment="javascript">
 
-        <script th:replace="~{common/ckEditorFragment :: importEditor}"></script>
-        <script th:replace="~{common/ckEditorFragment :: editorConfig}"></script>
-        <script th:src="@{/js/page/crew.js}"></script>
-
-
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+        <script th:src="@{/js/common/quillTextEditor.js}"></script>
+        <script type="module" th:src="@{/js/page/crew.js}"></script>
 
     </th:block>
 </html>
