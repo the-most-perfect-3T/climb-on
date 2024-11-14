@@ -137,6 +137,9 @@ function loadKakaoMap(facilities) {
         kakao.maps.event.addListener(facilityMarker, 'click', function () {
 
             console.log(`시설명: ${facility.facilityName}`);
+            showFacility(facility)
+            showFacilityDetails(facility)
+
         });
     });
 
@@ -146,24 +149,25 @@ function loadKakaoMap(facilities) {
         map: map
     });*/
 
-    // 지도 클릭 이벤트
+  /*  // 지도 클릭 이벤트
     kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
         const latlng = mouseEvent.latLng;
 
-      /*  // 마커 위치 변경
+      /!*  // 마커 위치 변경
         marker.setPosition(latlng);
-        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};*/
-
+        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};*!/
+        showFacility
         // 선택된 좌표를 콘솔에 출력
         console.log(`Selected Location: ${selectedPosition.lat}, ${selectedPosition.lng}`);
-    });
+    });*/
 }
 //해당위치로 지도이동
 let currentMarker = null;  // 이전 마커를 추적하기 위한 변수
 
-function showFacility(lat, long) {
+function showFacility(facility) {
     // 해당 위치로 지도 이동
-    var moveLatLon = new kakao.maps.LatLng(lat, long);
+
+    var moveLatLon = new kakao.maps.LatLng(facility.latitude,facility.longitude);
     map.panTo(moveLatLon);  // 지도 중심 이동
 
     // 로컬 서버의 이미지를 마커로 설정
@@ -172,7 +176,7 @@ function showFacility(lat, long) {
         new kakao.maps.Size(50, 50),  // 마커 크기 (50x50)
         { offset: new kakao.maps.Point(25, 50) } // 마커의 기준점 (중앙 하단)
     );
-
+    console.log(facility.latitude,facility.longitude)
     // 기존 마커가 있으면 제거
     if (currentMarker) {
         currentMarker.setMap(null); // 기존 마커 삭제
@@ -189,6 +193,9 @@ function showFacility(lat, long) {
 
     // 새로운 마커를 currentMarker에 저장
     currentMarker = marker;
+
+    showFacilityDetails(facility)
+
 }
 // 카카오 지도 API 스크립트 로드
 function loadKakaoApi(facilities) {
@@ -224,3 +231,30 @@ window.onload = function () {
         closeBtn.addEventListener('click', closeModal);
     }
 };
+
+
+
+//초기화 버튼
+function resetForm() {
+    // 검색 입력 필드를 0으로 설정
+    document.getElementById('codeInput').value = '';
+    // 폼 제출
+    document.getElementById('searchForm').submit();
+}
+function showFacilityDetails(facility){
+    // facility 객체의 값을 조건에 맞게 출력
+    const facilityDetailsHTML = `
+        <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
+        <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
+        <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
+        <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
+        <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
+        <p><strong>위도:</strong> ${facility.latitude ? facility.latitude : '정보 없음'}</p>
+        <p><strong>경도:</strong> ${facility.longitude ? facility.longitude : '정보 없음'}</p>
+        
+    `;
+    // facilityDetailsContainer에 세부 정보를 삽입
+    const detailsContainer = document.getElementById('facilityDetailsContainer');
+    detailsContainer.innerHTML = facilityDetailsHTML;
+
+}
