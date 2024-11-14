@@ -1,27 +1,41 @@
 /* 기본적인 레이아웃과 스타일 */
 
+/* 컨테이너 */
+.container {
+    width: 100%; /* 전체 화면 너비에 맞춤 */
+    max-width: 1200px; /* 너무 넓어지지 않도록 최대 너비 제한 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 페이지 전체 스타일 */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
     margin: 0;
-    padding: 0;
+    padding-top: 60px; /* 헤더 높이만큼 패딩 추가 */
+    padding-bottom: var(--footerHeight); /* 푸터 높이만큼 패딩 추가 */
+    box-sizing: border-box;
 }
 
-.top-banner {
-    background-color: #3B5998; /* 상단 배너 색상 */
-    color: white;
-    padding: 20px;
-    text-align: center;
+
+
+/* 타임라인과 더보기 버튼을 같은 줄에 배치 */
+.timeline-container {
+    display: flex;
+    justify-content: center; /* 전체를 중앙에 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 10px; /* 타임라인과 더보기 버튼 사이 간격 */
+    margin-bottom: 20px; /* 아래쪽 여백 설정 */
 }
 
-.top-banner h2 {
-    font-size: 2em;
-}
-
+/* 타임라인 스타일 (기존과 동일) */
 .timeline {
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 20px 0;
+    gap: 10px; /* 타임라인 아이템 간격 */
 }
 
 .timeline-item {
@@ -34,6 +48,21 @@ body {
     justify-content: center;
     font-size: 0.9em;
     color: #333;
+}
+
+/* 더보기 버튼 스타일 */
+.more-button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 10px; /* 타임라인과의 간격을 조절 */
+}
+
+.more-button:hover {
+    color: #333;
+    background-color: #e1e1e1; /* 호버 시 배경색 */
 }
 
 .category-buttons {
@@ -49,16 +78,6 @@ body {
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 0.9em;
-}
-
-.sort-options {
-    display: flex;
-    gap: 5px;
-}
-
-.sort-options button {
-    width: 20px;
-    height: 20px;
 }
 
 /* 뷰 전환 버튼 스타일 */
@@ -82,6 +101,64 @@ body {
 
 .view-buttons button.active img {
     opacity: 1;
+}
+
+/* 드롭다운 버튼 기본 스타일 */
+.sort-button {
+    background-color: #f2f2f2;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: #FF7A00;
+}
+
+.sort-options {
+    display: flex;
+    gap: 5px;
+}
+
+.sort-options button {
+    width: 20px;
+    height: 20px;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 드롭다운 메뉴 위치 조정 */
+.dropdown-content {
+    right: 0;
 }
 
 /* 선택된 뷰 버튼 스타일 (예: 카드 뷰 선택 시 아이콘 강조) */
@@ -140,35 +217,6 @@ body {
     text-align: left;
 }
 
-/* 드롭다운 메뉴 스타일 */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 100px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
 
 /* 드롭다운 버튼 스타일 */
 .sort-button {
@@ -185,14 +233,11 @@ body {
     background-color: #e1e1e1;
 }
 
-/* 드롭다운 메뉴 위치 조정 */
-.dropdown-content {
-    right: 0;
-}
 
 .post-list {
+    width: 100%;
     margin: 0 auto;
-    width: 90%;
+    max-width: 90%;
 }
 
 .post-list table {
@@ -206,12 +251,20 @@ body {
     text-align: left;
 }
 
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-top: 20px;
+    padding: 20px 0;
+}
+
 .pagination ul {
     list-style: none;
     display: flex;
-    justify-content: center;
     gap: 10px;
-    padding: 20px 0;
+    padding: 0;
 }
 
 .pagination a {
@@ -219,6 +272,17 @@ body {
     border: 1px solid #ddd;
     text-decoration: none;
     color: #333;
+    border-radius: 5px; /* 페이지네이션 버튼에 둥근 모서리 추가 */
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #f1f1f1;
+}
+
+.pagination .active {
+    background-color: #FF7A00;
+    color: white;
 }
 
 footer {

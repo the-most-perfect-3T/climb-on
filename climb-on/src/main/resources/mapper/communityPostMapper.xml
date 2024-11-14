@@ -7,7 +7,9 @@
 
     <resultMap id="postResultMap" type="com.ohgiraffers.climbon.community.dto.PostDTO">
         <id property="id" column="id"/>
-<!--        <result property="userId" column="user_id"/>-->
+        <result property="userId" column="user_id"/>
+        <result property="userNickname" column="nickname"/>
+        <result property="userProfilePic" column="profile_pic"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="createdAt" column="created_at"/> <!-- 명시적인 매핑 설정 -->
@@ -21,19 +23,21 @@
         <result property="eventEndDate" column="event_end_date"/>
     </resultMap>
 
-    <!-- 카테고리 필터 & 페이징 처리 & 검색 게시글 목록 조회 -->
+    <!-- 카테고리 필터 & 페이징 처리 & 검색 & 작성자 정보 포함 게시글 목록 조회 -->
     <select id="getPostsByPageAndCategoryAndSearch" resultMap="postResultMap">
-        SELECT * from community_posts
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
         <where>
             <if test="category != null and category !=''">
-                category = #{category}    <!--category를 파라미터로 받는다-->
+                p.category = #{category}    <!--category를 파라미터로 받는다-->
             </if>
             <if test="searchKeyword != null and searchKeyword != ''">  <!--searchKeyword를 파라미터로 받아 title 또는 content에 searchKeyword가 포함된 게시글 검색-->
                     <if test="searchKeyword != null and searchKeyword != ''">
                 AND
                     </if>
-                (title LIKE CONCAT('%', #{searchKeyword}, '%')       <!--LIKE CONCAT을 사용하여 제목과 내용에 검색어가 포함된 항복을 찾는다-->
-                    OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
+                (p.title LIKE CONCAT('%', #{searchKeyword}, '%')       <!--LIKE CONCAT을 사용하여 제목과 내용에 검색어가 포함된 항복을 찾는다-->
+                    OR p.content LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
             <if test="dday != null">
                 <if test="category != null or searchKeyword != null">
@@ -42,13 +46,13 @@
                 <!-- D-Day 조건 추가--> <!-- <![CDATA[]]> 태그를 사용해 XML 파서가 MyBatis SQL 구문을 그대로 처리하도록 해줄 수 있습니다. -->
                 <choose>
                     <when test="dday == '진행중'">
-                        <![CDATA[ CURRENT_DATE() BETWEEN event_start_date AND event_end_date ]]>
+                        <![CDATA[ CURRENT_DATE() BETWEEN p.event_start_date AND p.event_end_date ]]>
                     </when>
                     <when test="dday == '종료됨'">
-                        <![CDATA[ event_end_date < CURRENT_DATE() ]]>
+                        <![CDATA[ p.event_end_date < CURRENT_DATE() ]]>
                     </when>
                     <otherwise>
-                        <![CDATA[ DATEDIFF(event_start_date, CURRENT_DATE()) = #{dday} ]]>
+                        <![CDATA[ DATEDIFF(p.event_start_date, CURRENT_DATE()) = #{dday} ]]>
                     </otherwise>
                 </choose>
             </if>
@@ -56,31 +60,33 @@
         ORDER BY
             <choose>          <!--MyBatis의 switch-case 구문 특정 조건 만족하는 경우 선택적 적용-->
                 <when test="sort == 'latest'">
-                    created_at DESC   <!-- 최신순 -->
+                    p.created_at DESC   <!-- 최신순 -->
                 </when>
                 <when test="sort == 'comments'">
-                    comments_count DESC
+                    p.comments_count DESC
                 </when>
                 <when test="sort == 'views'">
-                    view_count DESC <!-- 조회순 -->
+                    p.view_count DESC <!-- 조회순 -->
                 </when>
                 <when test="sort == 'likes'">
-                    likes DESC
+                    p.likes DESC
                 </when>
                 <otherwise>
-                    created_at DESC   <!-- 기본값: 최신순-->
+                    p.created_at DESC   <!-- 기본값: 최신순-->
                 </otherwise>
             </choose>
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
-    <!-- 특정 게시글 조회 (id로 조회) -->
+    <!-- 특정 게시글 조회 (id로 조회), 작성자 정보 포함 -->
     <select id="getPostById" resultMap="postResultMap">
-        SELECT id, title, content, created_at, updated_at, view_count, is_anonymous, likes, image_url, category, status
+        SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.likes, p.image_url, p.category, p.status
         <if test="category.equals('소식')"> <!--==는 숫자만 받으므로 equals를 써야한다!-->
-            , event_start_date, event_end_date
+            , p.event_start_date, p.event_end_date
         </if>
-        FROM community_posts WHERE id = #{id}
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE id = #{id}
     </select>
 
     <!-- 카테고리 필터링 & 전체 게시글 수 조회 -->
@@ -95,33 +101,32 @@
 
     <!-- 이전 게시글 -->
     <select id="getPreviousPost" resultMap="postResultMap">
-        SELECT * FROM community_posts
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
         WHERE id &lt; #{id}  <!-- &lt; -> < (부등호)라는뜻-->
-        ORDER BY id DESC
+        ORDER BY p.id DESC
         LIMIT 1
     </select>
 
     <!-- 다음 게시글 -->
     <select id="getNextPost" resultMap="postResultMap">
-        SELECT * FROM community_posts
-        WHERE id &gt; #{id}  <!-- &gt; -> > (부등호)라는 뜻-->
-        ORDER BY id ASC
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id &gt; #{id}  <!-- &gt; -> > (부등호)라는 뜻-->
+        ORDER BY p.id ASC
         LIMIT 1
     </select>
 
-    <!-- 게시글 삽입 user_id 포함-->
-<!--    <insert id="insertPost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">-->
-<!--        INSERT INTO posts (user_id, title, content, view_count, is_anonymous, likes, image_url, category, status, created_at, updated_at)-->
-<!--        VALUES (#{userId}, #{title}, #{content}, #{viewCount}, #{isAnonymous}, #{likes}, #{imageUrl}, #{category}, #{status}, NOW(), NOW())-->
-<!--    </insert>-->
 
     <insert id="insertPost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
-        INSERT INTO community_posts (title, content, view_count, is_anonymous, likes, image_url, category, status, created_at, updated_at
+        INSERT INTO community_posts (user_id, title, content, view_count, is_anonymous, likes, image_url, category, status, created_at, updated_at
         <if test="category == '소식'">
             , event_start_date, event_end_date
         </if>
         )
-        VALUES (#{title}, #{content}, #{viewCount}, #{isAnonymous}, #{likes}, #{imageUrl}, #{category}, #{status}, NOW(), NOW()
+        VALUES (#{userId}, #{title}, #{content}, #{viewCount}, #{isAnonymous}, #{likes}, #{imageUrl}, #{category}, #{status}, NOW(), NOW()
         <if test="category == '소식'">
             , #{eventStartDate}, #{eventEndDate}   <!--카테고리 소식일 때만 행사시작,끝날짜 추가-->
         </if>

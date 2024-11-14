@@ -22,37 +22,43 @@ body {
 /* 게시글 제목 및 작성자 정보 */
 .post-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .post-header h1 {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .post-author {
     display: flex;
     align-items: center;
+    gap: 10px;
+    color: #555;
 }
 
 .author-avatar img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    margin-right: 10px;
 }
 
 .author-info .author-name {
     font-weight: bold;
-    margin-right: 5px;
+    color: #333;
+}
+
+.post-actions {
+    margin-left: auto;
 }
 
 .post-actions button {
-    margin-left: 10px;
-    padding: 5px 10px;
+    margin-left: 5px;
+    padding: 5px 12px;
     font-size: 0.9em;
     border: none;
     background-color: #ff7f50;
@@ -75,11 +81,20 @@ body {
     margin-bottom: 20px;
 }
 
+.post-content p {
+    font-size: 1em;
+    color: #333;
+}
+
 /* 좋아요 및 댓글 수 */
 .post-interactions {
     margin-top: 15px;
     font-size: 0.9em;
     color: #555;
+    display: flex;
+    gap: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
 }
 
 .post-interactions .likes,
@@ -92,10 +107,11 @@ body {
     margin-top: 20px;
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .comment-section textarea {
-    width: 90%;
+    width: 100%;
     height: 50px;
     padding: 10px;
     border: 1px solid #ddd;
@@ -116,12 +132,13 @@ body {
 .comment-list {
     margin-top: 20px;
     border-top: 1px solid #eee;
-    padding-top: 10px;
+    padding-top: 15px;
 }
 
 .comment {
     display: flex;
     margin-bottom: 15px;
+    align-items: flex-start;
 }
 
 .comment-avatar img {
@@ -140,17 +157,18 @@ body {
 
 .comment-author {
     font-weight: bold;
-    margin-right: 10px;
+    color: #333;
 }
 
 .comment-date {
     font-size: 0.8em;
     color: #888;
+    margin-top: 5px;
 }
 
 /* 목록으로 돌아가기 버튼 */
 .back-button {
-    margin-top: 20px;
+    margin-top: 30px;
     text-align: center;
 }
 

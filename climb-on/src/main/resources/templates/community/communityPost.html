@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>커뮤니티 게시판</title>
-    <link rel="stylesheet" href="/post.css"> <!-- CSS 파일 경로 -->
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/post.css}">
+</th:block>
 </head>
 
 <body>
-    <!-- 상단 배너 -->
-    <header class="top-banner">
-        <div class="banner-content">
-            <h2>커뮤니티</h2>
-        </div>
-    </header>
+    <main class="content" layout:fragment="containerFragment">
 
     <!-- 이벤트 타임라인 --> <!--timeline 섹션에 링크 추가하여 D-Day 상태에 따라 소식 게시글을 필터링-->
-    <section class="timeline">
+    <section class="timeline-container">
+        <!-- 타임라인 -->
+        <div class="timeline">
         <div class="timeline-item">
             <a th:href="@{'/community?category=소식&dday=진행중'}">진행중</a>
         </div>
@@ -38,7 +37,11 @@
         <div class="timeline-item">
             <a th:href="@{'/community?category=소식&dday=종료됨'}">지난일정</a>
         </div>
+        </div>
+        <!-- 더보기 버튼-->
+        <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
     </section>
+
 
     <!-- 카테고리 버튼 및 검색 바 -->
     <section class="category-buttons">
@@ -68,7 +71,7 @@
 
         <!-- 정렬 버튼과 드롭다운 -->
         <div class="dropdown">
-            <button class="sort-button">최신순</button>
+            <button class="sort-button" id="sortButton">최신순</button> <!-- 기본값을 최신순으로 설정 -->
         <div class="dropdown-content">
             <a href="#" onclick = "sortPosts('latest')">최신순</a>
             <a href="#" onclick = "sortPosts('comments')">댓글순</a>
@@ -82,17 +85,6 @@
             </div>
         </div>
     </section>
-
-    <!-- 정렬 스크립트 -->
-    <script>
-        function sortPosts(order){
-            // 정렬 조건을 파라미터로 추가하여 서버에 요청
-            const urlParams = new URLSearchParams(window.location.search);
-            urlParams.set('sort', order);
-            window.location.search = urlParams.toString();
-        }
-    </script>
-
 
     <!-- 게시글 목록 -->
     <section class="post-list">
@@ -114,6 +106,10 @@
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">게시글 제목 예시</span>
                     </a>
+                </td>
+                <td>
+                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 30px; height: 30px; border-radius: 50%;">
+                    <span th:text="${post.userNickname}">작성자 닉네임</span>
                 </td>
                 <td th:text="${post.userId}">작성자</td>
                 <td th:text="${post.formattedCreatedAt}">작성일</td>
@@ -139,36 +135,6 @@
         </div>
     </section>
 
-    <!-- 뷰 전환 스크립트-->
-    <script>
-        let viewMode = 'list'; // 기본값을 리스트 뷰로 설정
-
-        function setViewMode(mode){   // 이 함수를 통해 버튼 클릭 시 viewMode를 변경하고 renderPosts 호출
-            viewMode = mode;
-            renderPosts();
-
-            //버튼 스타일 업데이트(선택된 버튼에 active 클래스 추가)
-            document.getElementById('cardViewButton').classList.toggle('active', mode === 'card');
-            document.getElementById('listViewButton').classList.toggle('active', mode === 'list');
-        }
-
-        function renderPosts() {   // 이 함수는 viewMode 값에 따라 .list-view와 .card-container의 display 속성을 조절하여, 한 번에 하나의 뷰만 화면에 나타나게 한다.
-            const listView = document.querySelector('.list-view');
-            const cardView = document.querySelector('.card-container');
-
-            // 뷰 모드에 따라 표시되는 목록 전환
-            if (viewMode === 'card'){
-                listView.style.display = 'none';
-                cardView.style.display = 'flex';
-            } else {
-                listView.style.display = 'table';
-                cardView.style.display = 'none';
-            }
-        }
-
-        // 페이지가 로드될 때 기본적으로 renderPosts 함수 호출
-        document.addEventListener('DOMContentLoaded', renderPosts);
-    </script>
 
     <!-- 페이지네이션 -->
     <section class="pagination">
@@ -188,9 +154,82 @@
             </li>
         </ul>
     </section>
+</main>
+
+    <!-- 정렬 스크립트 -->
+    <th:block layout:fragment="javascript">
+        <script>
+            // 페이지가 로드될 때 URL에서 정렬 상태를 추출하여 버튼 텍스트 업데이트
+            document.addEventListener('DOMContentLoaded', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const currentSort = urlParams.get('sort') || 'latest'; // 기본값은 'latest'로 설정
+                updateSortButtonText(currentSort);
+                renderPosts(); // 초기 뷰 설정
+            });
+
+            // 정렬 버튼 텍스트를 업데이트하는 함수
+            function updateSortButtonText(order) {
+                const sortButton = document.getElementById('sortButton');
+                switch (order) {
+                    case 'latest':
+                        sortButton.textContent = '최신순';
+                        break;
+                    case 'comments':
+                        sortButton.textContent = '댓글순';
+                        break;
+                    case 'views':
+                        sortButton.textContent = '조회순';
+                        break;
+                    case 'likes':
+                        sortButton.textContent = '좋아요순';
+                        break;
+                    default:
+                        sortButton.textContent = '최신순';
+                }
+            }
+
+            // 정렬 버튼 클릭 시 호출되는 함수
+            function sortPosts(order) {
+                updateSortButtonText(order); // 버튼 텍스트 업데이트
+
+                // 정렬 조건을 URL에 추가하여 서버에 요청
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('sort', order);
+                window.location.search = urlParams.toString();
+            }
+
+            // 뷰 전환 스크립트
+            let viewMode = 'list'; // 기본값을 리스트 뷰로 설정
+
+            function setViewMode(mode) {
+                viewMode = mode;
+                renderPosts();
+
+                // 버튼 스타일 업데이트 (선택된 버튼에 active 클래스 추가)
+                document.getElementById('cardViewButton').classList.toggle('active', mode === 'card');
+                document.getElementById('listViewButton').classList.toggle('active', mode === 'list');
+            }
+
+            function renderPosts() { // 뷰 모드에 따라 표시되는 목록 전환
+                const listView = document.querySelector('.list-view');
+                const cardView = document.querySelector('.card-container');
+
+                // 뷰 모드에 따라 표시되는 목록 전환
+                if (viewMode === 'card') {
+                    listView.style.display = 'none';
+                    cardView.style.display = 'flex';
+                } else {
+                    listView.style.display = 'table';
+                    cardView.style.display = 'none';
+                }
+            }
+        </script>
+    </th:block>
 
     <footer>
         <p>&copy; 2024 CL'IMON All Rights Reserved.</p>
     </footer>
+
+
 </body>
 </html>
