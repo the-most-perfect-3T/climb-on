@@ -1,0 +1,229 @@
+/* 기본적인 레이아웃과 스타일 */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.top-banner {
+    background-color: #3B5998; /* 상단 배너 색상 */
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.top-banner h2 {
+    font-size: 2em;
+}
+
+.timeline {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.timeline-item {
+    background-color: #ddd;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+    color: #333;
+}
+
+.category-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.category-buttons button, .category-buttons input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
+.sort-options {
+    display: flex;
+    gap: 5px;
+}
+
+.sort-options button {
+    width: 20px;
+    height: 20px;
+}
+
+/* 뷰 전환 버튼 스타일 */
+.view-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.view-buttons button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.view-buttons img {
+    width: 24px;
+    height: 24px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.view-buttons button.active img {
+    opacity: 1;
+}
+
+/* 선택된 뷰 버튼 스타일 (예: 카드 뷰 선택 시 아이콘 강조) */
+#cardViewButton.active img,
+#listViewButton.active img {
+    opacity: 1;
+}
+
+/* 카드 뷰 스타일을 리스트 뷰와 유사하게 변경 */
+.card-container {
+    display: none; /* 기본적으로 카드 뷰는 숨김 */
+    flex-direction: column; /* 세로로 정렬 */
+    gap: 0; /* 카드 간격 제거 */
+    margin: 0 auto; /* 리스트 뷰와 일관성을 위해 가운데 정렬 */
+    width: 90%; /* 리스트 뷰와 동일한 폭 */
+}
+
+.card {
+    width: 100%; /* 리스트 뷰와 동일한 폭 */
+    padding: 15px; /* 리스트 뷰와 동일한 padding */
+    border-bottom: 1px solid #ddd; /* 리스트 뷰와 같은 스타일로 경계선 추가 */
+    border-radius: 0; /* 카드 모서리 반경 제거 */
+    box-shadow: none; /* 그림자 제거 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-title a {
+    font-size: 16px; /* 리스트 뷰와 유사한 크기 */
+    color: #333;
+    text-decoration: none;
+}
+
+.card-meta {
+    font-size: 12px;
+    color: #666;
+}
+
+.card-content {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 리스트 뷰 스타일 */
+.list-view {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+}
+
+.list-view th, .list-view td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 드롭다운 버튼 스타일 */
+.sort-button {
+    background-color: #f2f2f2;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.sort-button:hover {
+    background-color: #e1e1e1;
+}
+
+/* 드롭다운 메뉴 위치 조정 */
+.dropdown-content {
+    right: 0;
+}
+
+.post-list {
+    margin: 0 auto;
+    width: 90%;
+}
+
+.post-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.post-list th, .post-list td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.pagination ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px 0;
+}
+
+.pagination a {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.8em;
+    color: #aaa;
+}
