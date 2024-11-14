@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>CkEditor Fragment</title>
+</head>
+<body>
+
+
+    <textarea class="form-control" id="editor" name="content" rows="3" th:fragment="textEditorFragment">
+    </textarea>
+
+
+    <script type="importmap" th:fragment="importEditor">
+        {
+            "imports": {
+                "ckeditor5": "https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.js",
+                "ckeditor5/": "https://cdn.ckeditor.com/ckeditor5/43.3.1/"
+            }
+        }
+    </script>
+
+    <script type="module" th:fragment="editorConfig">
+        import {
+            ClassicEditor,
+            Essentials,
+            Bold,
+            Italic,
+            Underline,
+            Strikethrough,
+            Font,
+            Paragraph,
+            Image,
+            ImageToolbar,
+            SimpleUploadAdapter,
+            // ImageInsertUI,
+            ImageUpload
+
+        } from 'ckeditor5';
+        import coreTranslations from 'ckeditor5/translations/ko.js';
+
+
+        ClassicEditor
+            .create( document.querySelector( '#editor' ), {
+                translations: coreTranslations,
+                plugins: [ Essentials, Bold, Italic, Underline, Strikethrough, Font, Paragraph,
+                    Image, ImageToolbar, SimpleUploadAdapter,
+                    ImageUpload
+                ],
+                image:{
+                    insert:{
+                        integrations: ['upload'],
+                        // type:'auto'
+                    }
+                },
+                toolbar: [
+                    'undo', 'redo', '|', 'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'insertImage'
+                ],
+                simpleUpload: {
+                    // The URL that the images are uploaded to.
+                    uploadUrl: '/crew/imgUpload',
+
+                    // Enable the XMLHttpRequest.withCredentials property.
+                    withCredentials: true,
+
+                    // Headers sent along with the XMLHttpRequest to the upload server.
+                    headers: {
+                        'X-CSRF-TOKEN': 'CSRF-Token',
+                        Authorization: 'Bearer <JSON Web Token>'
+                    }
+                },
+
+                language: {
+                    ui: 'ko',
+                    content: 'ko'
+                }
+            })
+            .then( editor => {
+                window.editor = editor;
+            } )
+            .catch( err => {
+                console.error( err.stack );
+            } );
+    </script>
+
+</body>
+</html>

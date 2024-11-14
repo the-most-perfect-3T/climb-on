@@ -65,7 +65,7 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http, OAuth2ClientProperties oAuth2ClientProperties) throws Exception {
 
         http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/auth/login", "/auth/signup", "/auth/fail", "/", "/user/checkUserId",
+            auth.requestMatchers("/auth/login", "/auth/signup", "/auth/fail", "/", "/auth/checkUserId", "/auth/checkName",
                     "/search", "/facilities/*", "/community/*", "/crew/*").permitAll();
             /*auth.requestMatchers("/admin/*").hasAnyAuthority(UserRole.ADMIN.getRole());
             auth.requestMatchers("/user/*").hasAnyAuthority(UserRole.USER.getRole());*/

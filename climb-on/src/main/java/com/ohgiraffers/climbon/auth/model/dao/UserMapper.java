@@ -10,4 +10,6 @@ public interface UserMapper {
     int save(SignupDTO user);
 
     LoginUserDTO findByUserId(String username);
+
+    LoginUserDTO findByNickname(String nickname);
 }
