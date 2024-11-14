@@ -1,22 +1,23 @@
+/*
+ *   2024-11-12 최초 작성
+ *   작성자: 최정민
+ * */
 package com.ohgiraffers.climbon.auth.controller;
 
 import com.ohgiraffers.climbon.auth.common.EmailValidator;
 import com.ohgiraffers.climbon.auth.common.NameValidator;
-import com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO;
-import com.ohgiraffers.climbon.auth.service.AuthService;
 import com.ohgiraffers.climbon.auth.model.dto.SignupDTO;
 import com.ohgiraffers.climbon.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.ohgiraffers.climbon.auth.common.HashUtil.sha256Hex;
 
 
 @Controller
@@ -33,22 +34,27 @@ public class AuthController {
         return mv;
     }
 
-    @GetMapping("/auth/signup")
-    public String signupForm(Model model) {
-        if (!model.containsAttribute("formData")) {
-            model.addAttribute("formData", new LinkedHashMap<String, Object>());
-        }
-        return "auth/signup";
+    @GetMapping("signup")
+    public ModelAndView signupForm(ModelAndView mv) {
+        mv.setViewName("auth/signup");
+        return mv;
     }
 
     @PostMapping("signup")
     public String signup(SignupDTO signupDTO, RedirectAttributes redirectAttributes) {
 
         String message;
+
+        // 프로필 이미지 생성
+        String userId = signupDTO.getUserId().toLowerCase();
+        String hash = sha256Hex(userId);
+        String gravatarURL = "https://gravatar.com/avatar/" + hash + "?&d=identicon";
+
+        signupDTO.setProfilePic(gravatarURL);
+
         int result = userService.regist(signupDTO);
 
         if(result > 0){
-            System.out.println("성공했는데..");
             message = "회원 가입이 완료 되었습니다.";
 
             redirectAttributes.addFlashAttribute("message", message);
@@ -105,7 +111,7 @@ public class AuthController {
     @GetMapping("fail")
     public ModelAndView fail(ModelAndView mv, @RequestParam("message") String message){
         mv.addObject("message", message);
-        mv.setViewName("auth/fail");
+        mv.setViewName("auth/login");
         return mv;
     }
 
