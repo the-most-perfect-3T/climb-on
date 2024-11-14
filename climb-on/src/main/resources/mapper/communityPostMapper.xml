@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ohgiraffers.climbon.community.dao.PostDAO">
+
+    <resultMap id="postResultMap" type="com.ohgiraffers.climbon.community.dto.PostDTO">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userNickname" column="nickname"/>
+        <result property="userProfilePic" column="profile_pic"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/> <!-- 명시적인 매핑 설정 -->
+        <result property="category" column="category"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="isAnonymous" column="is_anonymous"/>
+        <result property="likes" column="likes"/>
+        <result property="status" column="status"/>
+        <result property="eventStartDate" column="event_start_date"/>
+        <result property="eventEndDate" column="event_end_date"/>
+    </resultMap>
+
+    <!-- 카테고리 필터 & 페이징 처리 & 검색 & 작성자 정보 포함 게시글 목록 조회 -->
+    <select id="getPostsByPageAndCategoryAndSearch" resultMap="postResultMap">
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        <where>
+            <if test="category != null and category !=''">
+                p.category = #{category}    <!--category를 파라미터로 받는다-->
+            </if>
+            <if test="searchKeyword != null and searchKeyword != ''">  <!--searchKeyword를 파라미터로 받아 title 또는 content에 searchKeyword가 포함된 게시글 검색-->
+                    <if test="searchKeyword != null and searchKeyword != ''">
+                AND
+                    </if>
+                (p.title LIKE CONCAT('%', #{searchKeyword}, '%')       <!--LIKE CONCAT을 사용하여 제목과 내용에 검색어가 포함된 항복을 찾는다-->
+                    OR p.content LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <if test="dday != null">
+                <if test="category != null or searchKeyword != null">
+                    AND
+                </if>
+                <!-- D-Day 조건 추가--> <!-- <![CDATA[]]> 태그를 사용해 XML 파서가 MyBatis SQL 구문을 그대로 처리하도록 해줄 수 있습니다. -->
+                <choose>
+                    <when test="dday == '진행중'">
+                        <![CDATA[ CURRENT_DATE() BETWEEN p.event_start_date AND p.event_end_date ]]>
+                    </when>
+                    <when test="dday == '종료됨'">
+                        <![CDATA[ p.event_end_date < CURRENT_DATE() ]]>
+                    </when>
+                    <otherwise>
+                        <![CDATA[ DATEDIFF(p.event_start_date, CURRENT_DATE()) = #{dday} ]]>
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        ORDER BY
+            <choose>          <!--MyBatis의 switch-case 구문 특정 조건 만족하는 경우 선택적 적용-->
+                <when test="sort == 'latest'">
+                    p.created_at DESC   <!-- 최신순 -->
+                </when>
+                <when test="sort == 'comments'">
+                    p.comments_count DESC
+                </when>
+                <when test="sort == 'views'">
+                    p.view_count DESC <!-- 조회순 -->
+                </when>
+                <when test="sort == 'likes'">
+                    p.likes DESC
+                </when>
+                <otherwise>
+                    p.created_at DESC   <!-- 기본값: 최신순-->
+                </otherwise>
+            </choose>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 특정 게시글 조회 (id로 조회), 작성자 정보 포함 -->
+    <select id="getPostById" resultMap="postResultMap">
+        SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.likes, p.image_url, p.category, p.status
+        <if test="category.equals('소식')"> <!--==는 숫자만 받으므로 equals를 써야한다!-->
+            , p.event_start_date, p.event_end_date
+        </if>
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id = #{id}
+    </select>
+
+    <!-- 카테고리 필터링 & 전체 게시글 수 조회 -->
+    <select id="getTotalPostCount" resultType="int">
+        SELECT COUNT(*) FROM community_posts
+        <where>
+            <if test="category != null">
+                category = #{category}
+            </if>
+        </where>
+    </select>
+
+    <!-- 이전 게시글 -->
+    <select id="getPreviousPost" resultMap="postResultMap">
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id &lt; #{id}  <!-- &lt; -> < (부등호)라는뜻-->
+        ORDER BY p.id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 다음 게시글 -->
+    <select id="getNextPost" resultMap="postResultMap">
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id &gt; #{id}  <!-- &gt; -> > (부등호)라는 뜻-->
+        ORDER BY p.id ASC
+        LIMIT 1
+    </select>
+
+
+    <insert id="insertPost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
+        INSERT INTO community_posts (user_id, title, content, view_count, is_anonymous, likes, image_url, category, status, created_at, updated_at
+        <if test="category == '소식'">
+            , event_start_date, event_end_date
+        </if>
+        )
+        VALUES (#{userId}, #{title}, #{content}, #{viewCount}, #{isAnonymous}, #{likes}, #{imageUrl}, #{category}, #{status}, NOW(), NOW()
+        <if test="category == '소식'">
+            , #{eventStartDate}, #{eventEndDate}   <!--카테고리 소식일 때만 행사시작,끝날짜 추가-->
+        </if>
+        )
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
+        UPDATE community_posts
+        SET title = #{title}, content = #{content}, view_count = #{viewCount}, is_anonymous = #{isAnonymous},
+        likes = #{likes}, image_url = #{imageUrl}, category = #{category}, status = #{status} ,updated_at = NOW()
+        <if test="category == '소식'">
+            , event_start_date = #{eventStartDate},
+            event_end_date = #{eventEndDate}
+        </if>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost" parameterType="int">
+        DELETE FROM community_posts WHERE id = #{id}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViewCount" parameterType="int">
+        UPDATE community_posts
+        SET view_count = view_count + 1
+        WHERE id = #{id}
+    </update>
+
+</mapper>
