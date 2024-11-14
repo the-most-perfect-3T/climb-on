@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/page/communityPostDetail.css}">
+    </th:block>
+</head>
+
+<body>
+<main class="content" layout:fragment="containerFragment">
+
+<div class="container">
+    <!-- 게시글 제목 및 작성자 정보 -->
+    <div class="post-header">
+        <h1 th:text="${post.title}">게시글 제목 예시</h1>
+        <div class="post-author">
+            <div class="author-avatar">
+                <img src="/images/avatar.png" alt="작성자 프로필 이미지">
+            </div>
+            <div class="author-info">
+                <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                <span class="author-name" th:text="${post.userNickname}">작성자 닉네임</span>
+                <span class="post-date" th:text="${post.createdAt}">작성일</span>
+                <span class="views">조회수 <span th:text="${post.viewCount}">0</span></span>
+            </div>
+        </div>
+        <div class="post-actions">
+            <button onclick="window.location.href='/community/modify'">수정</button>
+            <button>삭제</button>
+        </div>
+    </div>
+
+    <!-- 게시글 내용 -->
+    <div class="post-content">
+        <div class="post-image" th:if="${post.imageUrl != null}">
+            <img th:src="${post.imageUrl}" alt="게시글 이미지">
+        </div>
+        <p th:text="${post.content}">게시글 내용 예시</p>
+    </div>
+
+    <!-- 좋아요 및 댓글 수 -->
+    <div class="post-interactions">
+        <span class="likes">좋아요 <span th:text="${post.likes}">0</span></span>
+        <span class="comments-count">댓글 <span th:text="${post.commentCount}">0</span></span>
+    </div>
+
+    <!-- 댓글 작성 -->
+    <div class="comment-section">
+        <textarea placeholder="댓글을 입력하세요..."></textarea>
+        <button class="submit-comment">작성</button>
+    </div>
+
+    <!-- 댓글 목록 -->
+    <div class="comment-list">
+        <div class="comment" th:each="comment : ${comments}">
+            <div class="comment-avatar">
+                <img src="/images/avatar.png" alt="댓글 작성자 프로필 이미지">
+            </div>
+            <div class="comment-content">
+                <span class="comment-author" th:text="${comment.userId}">댓글 작성자</span>
+                <p th:text="${comment.content}">댓글 내용</p>
+                <span class="comment-date" th:text="${comment.createdAt}">작성일</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="prev-next-container">
+            <!-- 이전글 -->
+            <div class="prev-next-item">
+                <span class="prev-next-label">이전글</span>
+                <span class="prev-next-title">
+                <a href="#" th:if="${previousPost != null}" th:href="@{'/community/' + ${previousPost.id}}" th:text="${previousPost.title}"></a>
+                <span th:if="${previousPost == null}" class="prev-next-disabled">이전 글이 없습니다.</span>
+            </span>
+            </div>
+
+            <!-- 다음글 -->
+            <div class="prev-next-item">
+                <span class="prev-next-label">다음글</span>
+                <span class="prev-next-title">
+                <a href="#" th:if="${nextPost != null}" th:href="@{'/community/' + ${nextPost.id}}" th:text="${nextPost.title}"></a>
+                <span th:if="${nextPost == null}" class="prev-next-disabled">다음 글이 없습니다.</span>
+            </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 목록으로 돌아가기 버튼 -->
+    <div class="back-button">
+        <button onclick="window.location.href='/community'">목록</button>
+    </div>
+</main>
+</body>
+</html>
