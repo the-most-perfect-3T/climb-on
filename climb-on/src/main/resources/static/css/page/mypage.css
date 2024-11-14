@@ -1,0 +1,70 @@
+@charset "utf-8";
+
+.section-mypage .aside {
+    width: 320px;
+    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+    position: relative;
+    padding: 44px 0;
+}
+.section-mypage .aside::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    height: calc(100% - 88px);
+    transform: translateY(-50%);
+    width: 1px;
+    background-color: var(--borderColor);
+}
+.section-mypage .aside > h3 {
+    font-size: 16px;
+    margin-bottom: 30px;
+
+}
+
+.section-mypage .aside ul li button {
+    height: 44px;
+    width: calc(100% - 50px);
+    color: var(--darkGray);
+    text-align: left;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+}
+.section-mypage .aside ul li button i {
+    font-size: 18px;
+    width: 18px;
+    text-align: center;
+}
+.section-mypage .aside ul li button span {
+    margin-left: 12px;
+}
+.section-mypage .aside ul li button.active {
+    background: var(--beige);
+    border-radius: 6px;
+}
+.section-mypage .aside ul li button.active span {
+    font-weight: 600;
+}
+
+.section-mypage .aside .btn-logout {
+    position: absolute;
+    bottom: 44px;
+    left: 0;
+    color: var(--gray);
+}
+.section-mypage .aside .btn-logout i {
+    font-size: 18px;
+    width: 18px;
+    text-align: center;
+}
+.section-mypage .aside .btn-logout span {
+    margin-left: 12px;
+}
+
+
+
+/*tab content*/
+.section-mypage .tab-content {
+    width: calc(100% - 320px);
+}

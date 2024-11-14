@@ -4,6 +4,12 @@
 .content {
     height: calc(100vh - var(--footerHeight));
 }
+.section-auth {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .section-auth .top-area h2 {
     font-size: 32px;
     font-weight: 700;
@@ -36,23 +42,64 @@
 }
 .input-wrap .error-message {
     color: var(--bs-danger);
-
 }
 .input-wrap .success-message {
     color: var(--bs-success);
 }
 
+/*회원가입*/
 .input-wrap-btn {
-
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.input-wrap-btn label {
+    width: 100%;
+    flex-shrink: 0;
 }
 .input-wrap-btn input {
     width: 334px;
 }
 .input-wrap-btn button {
     width: 100px;
+    height: 45px;
+    background: var(--beige);
+    border-radius: 6px;
+}
+.input-wrap-btn p {
+    flex-shrink: 0;
+    width: 100%;
 }
 
+.section-auth .cont .btn-submit {
+    height: 50px;
+    background: var(--point);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    border-radius: 6px;
+    margin-top: 30px;
+}
 
 /*로그인*/
+.section-login .cont .btn-kakao {
+    margin-top: 20px;
+    background: #FEE500;
+    color: #000;
+}
+.section-login .cont .btn-kakao span {
+    margin-left: 12px;
+}
+
+.section-login .cont p {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 14px;
+}
+
+.section-login .cont p a {
+    color: var(--point);
+    font-weight: 500;
+}
 
 
