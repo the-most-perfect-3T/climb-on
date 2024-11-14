@@ -30,7 +30,9 @@
         *
         FROM FACILITIES
         WHERE CATEGORY_ID = #{ categoryId }
+        <if test="facilityName != null and facilityName !=''">
         AND facility_name LIKE CONCAT('%', #{facilityName}, '%')
+        </if>
     </select>
 
     <select id="searchOneFacility" resultMap="FacilityResultMap">

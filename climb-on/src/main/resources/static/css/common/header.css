@@ -34,9 +34,10 @@
 
 .header .inner > div:first-child .gnb .depth1 > li .depth2 {
     top: var(--headerHeight);
-    /*height: var(--headerHeight);*/
-    height: 0;
-    opacity: 0;
+    height: var(--headerHeight);
+    /*height: 0;
+    opacity: 0;*/
+    display: none;
 }
 .header .inner > div:first-child .gnb .depth1 > li .depth2::after {
     content: '';
@@ -45,13 +46,20 @@
     top: calc(var(--headerHeight) + 1px);
     left: 0;
     width: 100%;
-    /*height: 1px;*/
-    height: var(--headerHeight);
-    /*background-color: var(--borderColor);*/
     background-color: #fff;
     z-index: -1;
     border-bottom: 1px solid var(--borderColor);
+    height: var(--headerHeight);
+    display: none;
 }
+
+.header .inner > div:first-child .gnb .depth1 > li .depth2.active {
+    display: flex;
+}
+.header .inner > div:first-child .gnb .depth1 > li .depth2.active::after {
+    display: block;
+}
+
 .header .inner > div:first-child .gnb .depth1 > li .depth2 li a {
     font-size: 14px;
 }
