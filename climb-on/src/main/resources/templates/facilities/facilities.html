@@ -4,24 +4,31 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <th:block layout:fragment = "containerFragment">
-        <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
-        <div class="inner">
-            <!-- 볼더링 카테고리 버튼 -->
-            <br/><br/><br/><br/>
-            <!--검색기능-->
 
-            <form id="searchForm" action="/facilities/search" method="post">
-                코드 : <input type="text" name="code" id="codeInput" oninput="showSuggestions()" autocomplete="off"/><br/>
-                <button type="submit">전송하기</button>
-            </form>
-            <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
-            <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
-            <button type="button" onclick="handleCategorySubmit(2)">리드</button>
-            <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<!--bootstrap-->
 
-        </div>
 
-        <h2 class="inner">시설 목록</h2>
+                <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
+                <div class="inner">
+                    <!-- 볼더링 카테고리 버튼 -->
+                    <br/><br/><br/><br/>
+                    <!--검색기능-->
+
+                    <form id="searchForm" action="/facilities/search" method="post">
+                        코드 : <input type="text" name="code" id="codeInput" oninput="showSuggestions()" autocomplete="off"/><br/>
+                        <button type="submit">전송하기</button>
+                    </form>
+                    <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
+                    <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
+                    <button type="button" onclick="handleCategorySubmit(2)">리드</button>
+                    <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
+
+                </div>
+
+
+
+                <h2 class="inner">시설 목록</h2>
         <div class="inner" th:if="${facilitiesList != null}">
             <table id="facilitiestb">
                 <thead>
@@ -57,6 +64,8 @@
         <div class="inner" th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
             <p>시설 목록이 없습니다.</p>
         </div>
+
+                <!--이거두개도 부트스트랩-->
 
         <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
 

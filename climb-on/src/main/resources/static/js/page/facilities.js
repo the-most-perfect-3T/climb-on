@@ -102,7 +102,7 @@ function handleCategorySubmit(categoryId) {
     document.body.appendChild(form);
     form.submit();
 //세션 클리어
-    sessionStorage.removeItem('searchCode');
+   // sessionStorage.removeItem('searchCode');
 }
 
 let map = null;
