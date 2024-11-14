@@ -20,6 +20,12 @@
         FROM calendar_events;
     </select>
 
+    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">
+        SELECT
+        *
+        FROM tbl_crewevents_test;
+    </select>
+
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         INSERT INTO calendar_events (title, start_datetime, end_datetime, description, color)
         VALUES(#{title}, #{start}, #{end}, #{description}, #{backgroundColor});
@@ -28,6 +34,11 @@
     <select id="checkDuplicate" resultType="Integer">
         SELECT COUNT(*)
         FROM calendar_events
-        WHERE title = #{title} AND start_datetime = #{start};
+        WHERE title = #{title} AND start_datetime = #{start} AND end_datetime = #{end};
     </select>
+
+    <delete id="deleteEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
+        DELETE FROM calendar_events
+        WHERE event_id = #{id};
+    </delete>
 </mapper>

@@ -10,7 +10,12 @@ import java.util.List;
 public interface EventMapper
 {
     List<EventDTO> getAllEvents();
+    List<EventDTO> getAllEventsFromCrew();
+
     void insertEvent(EventDTO event);
 
-    int checkDuplicate(String title, String start);
+    int checkDuplicate(String title, String start, String end);
+
+    void deleteEvent(int id);
+
 }
