@@ -25,7 +25,20 @@
         FROM FACILITIES
     </select>
 
+    <select id="categorySelect" parameterType="com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO" resultMap="FacilityResultMap">
+        SELECT
+        *
+        FROM FACILITIES
+        WHERE CATEGORY_ID = #{ categoryId }
+        AND facility_name LIKE CONCAT('%', #{facilityName}, '%')
+    </select>
 
+    <select id="searchOneFacility" resultMap="FacilityResultMap">
+        SELECT
+        *
+        FROM FACILITIES
+        WHERE facility_name LIKE '%' #{facilityName} '%'
+    </select>
 
 
 
