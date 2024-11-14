@@ -27,10 +27,13 @@
                             <label for="password">비밀번호</label>
                             <input type="password" name="password" id="password" placeholder="비밀번호 입력" required/>
                         </div>
-                        <button type="submit">로그인</button>
+                        <button type="submit" class="btn-submit w-100">로그인</button>
                     </form>
                     <form action="/oauth2/authorization/kakao" method="get">
-                        <button type="submit">카카오 로그인</button>
+                        <button type="submit" class="btn-kakao btn-submit w-100">
+                            <img th:src="@{/images/kakao-logo.svg}" alt="카카오 로고">
+                            <span>카카오 로그인</span>
+                        </button>
                     </form>
                     <p>아직 회원이 아니신가요?&nbsp;&nbsp;<a href="/auth/signup">회원가입</a></p>
                 </div>
@@ -42,7 +45,7 @@
     <th:block layout:fragment="javascript">
         <script th:src="@{/js/page/auth.js}"></script>
         <script th:inline="javascript">
-            const message = [[${message} ?: '']];
+            const message = [[${message}]];
             if(message){
                 alert(message);
             }

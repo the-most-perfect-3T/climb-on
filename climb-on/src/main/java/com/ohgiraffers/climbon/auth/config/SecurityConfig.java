@@ -1,12 +1,12 @@
 package com.ohgiraffers.climbon.auth.config;
 
+
 import com.ohgiraffers.climbon.auth.handler.AuthFailHandler;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.auth.service.Oauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +17,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
@@ -46,7 +45,7 @@ public class SecurityConfig {
     @Autowired
     private Oauth2UserService oauth2UserService;
 
-
+    /**REST API 호출*/
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -60,9 +59,10 @@ public class SecurityConfig {
     private String kakaoLogoutRedirectUri;
 
 
+
     /**필터체인 커스텀*/
     @Bean
-    public SecurityFilterChain configure(HttpSecurity http, OAuth2ClientProperties oAuth2ClientProperties) throws Exception {
+    public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers("/auth/login", "/auth/signup", "/auth/fail", "/", "/auth/checkUserId", "/auth/checkName",
@@ -77,6 +77,12 @@ public class SecurityConfig {
             login.passwordParameter("password");
             login.defaultSuccessUrl("/", true);
             login.failureHandler(authFailHandler);
+
+        }).oauth2Login(oauth2 -> {
+            oauth2.loginPage("/oauth2/authorization/kakao")
+            .defaultSuccessUrl("/", true)
+            .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
+            .failureHandler(authFailHandler);
         }).logout(logout -> {
             logout.logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"));
             logout.deleteCookies("JSESSIONID");
@@ -85,8 +91,7 @@ public class SecurityConfig {
             logout.addLogoutHandler((request, response, authentication) -> {
                 if (authentication != null) {
                     AuthDetail authDetail = (AuthDetail) authentication.getPrincipal();
-                    String accessToken = authDetail.getAccessToken(); // 액세스 토큰 가져오기
-                    System.out.println("로그아웃 시 " + accessToken);
+                    String accessToken = authDetail.getAccessToken();
 
                     if (accessToken != null) {
                         String provider = authDetail.getProvider();
@@ -106,16 +111,18 @@ public class SecurityConfig {
 
                             try {
                                 ResponseEntity<String> responseEntity = restTemplate.postForEntity(url1, entity, String.class);
-                                response.sendRedirect(requestLogout);
 
                                 // 카카오 로그아웃 성공 여부 확인
                                 if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                                    response.sendRedirect(requestLogout);
                                     System.out.println("카카오 로그아웃 성공");
                                 } else {
                                     System.out.println("카카오 로그아웃 실패: " + responseEntity.getStatusCode());
+                                    throw new RuntimeException("카카오 로그아웃 실패: 상태 코드 " + responseEntity.getStatusCode());
                                 }
                             } catch (IOException e) {
                                 System.out.println("카카오 로그아웃 실패: " + e.getMessage());
+                                throw new RuntimeException("카카오 로그아웃 중 IOException 발생: " + e.getMessage(), e);
                             }
                             authDetail.setAccessToken(null);
                         }
@@ -130,11 +137,6 @@ public class SecurityConfig {
             session.invalidSessionUrl("/");
         }).csrf(csrf -> {
             csrf.disable();
-        }).oauth2Login(oauth2 -> {
-            oauth2.loginPage("/oauth2/authorization/kakao")
-                    .defaultSuccessUrl("/", true)
-                    .userInfoEndpoint(userInfo -> userInfo.userService(oauth2UserService))
-                    .failureHandler(authFailHandler);
         });
 
         return http.build();

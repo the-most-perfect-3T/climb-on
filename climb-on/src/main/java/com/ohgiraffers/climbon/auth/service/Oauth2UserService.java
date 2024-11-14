@@ -6,6 +6,7 @@ import com.ohgiraffers.climbon.auth.model.dto.KakaoUserInfo;
 import com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO;
 import com.ohgiraffers.climbon.auth.model.dto.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -26,28 +27,46 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String provider = userRequest.getClientRegistration().getRegistrationId();
+        try {
+            // 토큰 확인
+            String accessToken = userRequest.getAccessToken().getTokenValue();
+            if (accessToken == null || accessToken.isEmpty()) {
+                throw new OAuth2AuthenticationException("유효하지 않은 토큰입니다.");
+            }
 
-        OAuth2UserInfo oAuth2UserInfo = null;
-        if(provider.equals("kakao")) {
-            System.out.println("카카오 로그인 요청");
-            oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
 
-        } else {
-            System.out.println("우리는 카카오만 지원합니다.");
-            throw new OAuth2AuthenticationException("허용되지 않는 인증입니다.");
+            // 제공자 확인
+            String provider = userRequest.getClientRegistration().getRegistrationId();
+
+            OAuth2UserInfo oAuth2UserInfo = null;
+            if(provider.equals("kakao")) {
+                System.out.println("카카오 로그인");
+                oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
+            } else {
+                throw new OAuth2AuthenticationException("허용되지 않는 인증입니다.");
+            }
+
+
+            // 이메일 확인
+            if (oAuth2UserInfo.getEmail() == null || oAuth2UserInfo.getEmail().isEmpty()) {
+                throw new OAuth2AuthenticationException("이메일 정보가 존재하지 않습니다.");
+            }
+
+
+            // db 검증
+            LoginUserDTO dbUser = userMapper.findByUserId(oAuth2UserInfo.getEmail());
+            if(Objects.isNull(dbUser)){
+                throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다. 회원가입 후 로그인해주세요.");
+            }
+
+            return new AuthDetail(dbUser, oAuth2User.getAttributes(), provider, accessToken);
+
+
+        } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("회원정보가 존재하지 않습니다." + e.getMessage());
+        } catch (Exception e) {
+            throw new OAuth2AuthenticationException("토큰 처리 중 오류가 발생했습니다." + e.getMessage());
         }
 
-        LoginUserDTO dbUser = userMapper.findByUserId(oAuth2UserInfo.getEmail());
-        if(Objects.isNull(dbUser)){
-            throw new UsernameNotFoundException("신규 사용자입니다. 회원가입이 필요합니다.");
-        }
-        // 로그인 성공 시 액세스 토큰을 세션에 저장
-        String accessToken = userRequest.getAccessToken().getTokenValue();
-        // 확인용 !
-        System.out.println("로그인" + accessToken);
-
-
-        return new AuthDetail(dbUser, oAuth2User.getAttributes(), provider, accessToken);
     }
 }
