@@ -1,6 +1,8 @@
 package com.ohgiraffers.climbon.auth.service;
 
-import com.ohgiraffers.climbon.auth.model.dao.UserMapper;
+
+import com.ohgiraffers.climbon.auth.Enum.UserRole;
+import com.ohgiraffers.climbon.auth.model.dao.AuthMapper;
 import com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO;
 import com.ohgiraffers.climbon.auth.model.dto.SignupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 
 @Service
-public class UserService {
+public class SignupService {
 
     @Autowired
-    private UserMapper userMapper;
+    private AuthMapper authMapper;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -38,12 +40,12 @@ public class UserService {
         user.setPassword(encoder.encode(user.getPassword()));
 
         // 기본 값 추가
-        user.setUserRole("USER");
+        user.setUserRole(UserRole.USER);
         user.setStatus(1);
 
         // 프로필 이미지 api 나중에 !
 
-        int result = userMapper.save(user);
+        int result = authMapper.save(user);
 
         return result;
     }
@@ -52,7 +54,7 @@ public class UserService {
      * @return LoginUserDTO
      * */
     public LoginUserDTO findByUserId(String username) {
-        LoginUserDTO loginUserDTO = userMapper.findByUserId(username);
+        LoginUserDTO loginUserDTO = authMapper.findByUserId(username);
 
         return loginUserDTO;
     }
@@ -61,7 +63,7 @@ public class UserService {
      * @return boolean
      * */
     public boolean isUserIdExists(String userId) {
-        LoginUserDTO login = userMapper.findByUserId(userId);
+        LoginUserDTO login = authMapper.findByUserId(userId);
         if(Objects.isNull(login)){
             return false;
         }
@@ -72,7 +74,7 @@ public class UserService {
      * @return boolean
      * */
     public boolean isUserNameExists(String nickname) {
-        LoginUserDTO login = userMapper.findByNickname(nickname);
+        LoginUserDTO login = authMapper.findByNickname(nickname);
         if(Objects.isNull(login)){
             return false;
         }
