@@ -7,7 +7,7 @@ package com.ohgiraffers.climbon.auth.controller;
 import com.ohgiraffers.climbon.auth.common.EmailValidator;
 import com.ohgiraffers.climbon.auth.common.NameValidator;
 import com.ohgiraffers.climbon.auth.model.dto.SignupDTO;
-import com.ohgiraffers.climbon.auth.service.UserService;
+import com.ohgiraffers.climbon.auth.service.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ import static com.ohgiraffers.climbon.auth.common.HashUtil.sha256Hex;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private SignupService signupService;
 
     @GetMapping("login")
     public ModelAndView login(ModelAndView mv) {
@@ -48,11 +48,11 @@ public class AuthController {
         // 프로필 이미지 생성
         String userId = signupDTO.getUserId().toLowerCase();
         String hash = sha256Hex(userId);
-        String gravatarURL = "https://gravatar.com/avatar/" + hash + "?&d=identicon";
+        String gravatarURL = "https://gravatar.com/avatar/" + hash + "?&s=200&d=identicon";
 
         signupDTO.setProfilePic(gravatarURL);
 
-        int result = userService.regist(signupDTO);
+        int result = signupService.regist(signupDTO);
 
         if(result > 0){
             message = "회원 가입이 완료 되었습니다.";
@@ -80,12 +80,12 @@ public class AuthController {
         }
 
         // 중복 여부
-        if(userService.isUserIdExists(userId)){
+        if(signupService.isUserIdExists(userId)){
             return ResponseEntity.ok("중복된 아이디 입니다. \n다시 입력해주세요.");
         }
 
         // 성공
-        return ResponseEntity.ok("가입 가능한 아이디입니다.");
+        return ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
 
     /**닉네임 중복검사*/
@@ -98,12 +98,12 @@ public class AuthController {
         }
 
         // 중복 여부
-        if(userService.isUserNameExists(nickname)){
+        if(signupService.isUserNameExists(nickname)){
             return ResponseEntity.ok("중복된 닉네임입니다. \n다시 입력해주세요.");
         }
 
         // 성공
-        return ResponseEntity.ok("가입 가능한 닉네임입니다.");
+        return ResponseEntity.ok("사용 가능한 닉네임입니다.");
     }
 
 

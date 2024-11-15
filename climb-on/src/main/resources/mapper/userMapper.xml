@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.user.dao.UserMapper">
+    <resultMap id="userMap" type="com.ohgiraffers.climbon.user.dto.UserDTO">
+        <id property="id" column="ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="nickname" column="NICKNAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="userRole" column="USER_ROLE"/>
+        <result property="profilePic" column="PROFILE_PIC"/>
+        <result property="oneLiner" column="ONE_LINER"/>
+        <result property="facilityCode" column="FACILITY_CODE"/>
+        <result property="status" column="STATUS"/>
+        <result property="isBusiness" column="IS_BUSINESS"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="inactiveAt" column="INACTIVE_AT"/>
+    </resultMap>
+
+
+    <select id="findByKey" parameterType="com.ohgiraffers.climbon.user.dto.UserDTO" resultMap="userMap">
+        SELECT
+            *
+          FROM USERS
+         WHERE ID = #{id}
+    </select>
+
+    <select id="findCrewName"  parameterType="int" resultType="String">
+        SELECT
+            b.CREW_NAME
+          FROM USER_CREW a
+          JOIN CREWS b
+            ON a.CREW_CODE = b.ID
+         WHERE a.USER_CODE = #{id}
+    </select>
+
+    <select id="findHomeName" parameterType="int" resultType="String">
+        SELECT
+            b.FACILITY_NAME
+          FROM USERS a
+          JOIN FACILITIES b
+            ON a.FACILITY_CODE = b.ID
+        WHERE a.ID = #{id}
+    </select>
+
+    <update id="updateUser" parameterType="com.ohgiraffers.climbon.user.dto.UserDTO">
+        UPDATE
+            USERS
+          SET
+            NICKNAME = #{nickname},
+            PASSWORD = #{password},
+            ONE_LINER = #{oneLiner}
+         WHERE ID = #{id};
+    </update>
+
+</mapper>

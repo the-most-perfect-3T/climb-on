@@ -17,12 +17,12 @@ import java.util.Optional;
 public class AuthService implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private SignupService signupService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        LoginUserDTO login = userService.findByUserId(username);
+        LoginUserDTO login = signupService.findByUserId(username);
 
         if(Objects.isNull(login)){
             throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
