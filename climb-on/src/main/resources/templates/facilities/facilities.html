@@ -10,41 +10,39 @@
                     <!--<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>-->
         <div class="inner">
             <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-                <div class="offcanvas-header">
+               <!-- <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>-->
+
+                <div class="search-container">
+                    <form id="searchForm" action="/facilities/search" method="post">
+                        <input type="text" name="code" class="search-input" id="codeInput" placeholder="  암장이름 검색하기" oninput="showSuggestions()" autocomplete="off"/><br/>
+                        <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
+                        <button  class="search-button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
                 </div>
+                <!-- 초기화 버튼 -->
+                <button type="button" onclick="resetForm()">전체 조회</button>
+
+                <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
+                <button type="button" onclick="handleCategorySubmit(2)">리드</button>
+                <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
+
                 <div class="offcanvas-body">
                     <!-- 볼더링 카테고리 버튼 -->
-                    <br/><br/><br/><br/>
                     <!--검색기능-->
 
-                    <form id="searchForm" action="/facilities/search" method="post">
-                        코드 : <input type="text" name="code" id="codeInput" oninput="showSuggestions()" autocomplete="off"/><br/>
-                        <button type="submit">검색</button>
-                    </form>
-                    <!-- 초기화 버튼 -->
-                    <button type="button" onclick="resetForm()">초기화</button>
-                    <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
-                    <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
-                    <button type="button" onclick="handleCategorySubmit(2)">리드</button>
-                    <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
-
-                    <h2>시설 목록</h2>
                     <div th:if="${facilitiesList != null}">
                         <table id="facilitiestb">
-                            <thead>
-                            <tr>
-                                <th>시설 ID</th>
-                                <th>시설명</th>
-                                <th>주소</th>
-                            </tr>
-                            </thead>
                             <tbody>
                             <tr th:each="facility : ${facilitiesList}"th:onclick="'showFacilityId(' + ${facility.id} + ')'">
-                                <td  th:onclick="showFacilityId(${facility.id})" >아이디</td>
-                                <td th:text="${facility.facilityName}">시설명</td>
-                                <td th:text="${facility.address}">주소</td>
+                                <td>
+                                <div class="facility-info">
+                                    <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
+                                    <div class="facility-address" th:text="${facility.address}">주소</div>
+                                </div>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -58,7 +56,12 @@
 
 
             <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
-            <!--<div id="facilityDetailsContainer"></div>-->
+
+            <div class="facilityDetails" id="facilityDetailsContainer">
+
+
+            </div>
+
         </div>
     </th:block>
 
