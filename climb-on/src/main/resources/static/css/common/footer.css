@@ -3,6 +3,7 @@
     height: var(--footerHeight);
     width: fit-content;
     min-width: 100%;
+    background-color: #fff;
 }
 
 .footer .inner .ft-right {

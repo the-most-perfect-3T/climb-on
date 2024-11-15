@@ -60,7 +60,11 @@ p {
     margin-bottom: 0;
 }
 
-
+textarea {
+    resize: none;
+    outline: none;
+    border: none;
+}
 
 /*버튼 초기화*/
 button {
@@ -86,6 +90,7 @@ button {
         color: #fff;
 
         .header {
+            background-color: var(--darkBgBlack);
             .inner {
                 > div:first-child {
                     .gnb {
@@ -105,6 +110,7 @@ button {
         }
         
         .footer {
+            background-color: var(--darkBgBlack);
             .inner {
                 .ft-right {
                     color: #fff;
@@ -125,3 +131,7 @@ button {
     padding-top: var(--headerHeight);
 }
 
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+}
