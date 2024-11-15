@@ -3,8 +3,10 @@
                   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
                   layout:decorate="~{/layout/baseLayout}"
                   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body>
 
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/calendar.css}">
+</th:block>
     <!--메인에 들어갈 내용들-->
     <th:block layout:fragment="containerFragment">
         <div id = "calendar"></div>
@@ -70,6 +72,5 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </th:block>
-</body>
 
 </html>

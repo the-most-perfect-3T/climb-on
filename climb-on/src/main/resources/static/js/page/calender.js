@@ -133,8 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             calendar.unselect();
         },
-         eventClick: function(arg)
-         {
+         eventClick: function(arg)         {
              $("#addButton").hide();
              $("#modifyButton").show();
              $("#deleteButton").show();

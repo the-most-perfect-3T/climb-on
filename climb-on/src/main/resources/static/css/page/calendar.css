@@ -1,0 +1,100 @@
+@charset "utf-8";
+
+:root {
+    --fc-button-active-bg-color: transparent;
+
+    --fc-event-bg-color: #FAEFDD;
+    --fc-event-border-color: #222;
+    --mainColor1: #FF7F27;
+    --subColor1: #FAEFDD;
+    --subColor2: #343A40;
+}
+
+.modal-header{
+    width: 100%;
+}
+.modal-content {
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-close{
+    float: right;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* 캘린더 */
+.fc {
+    width: 769px;
+    height: 602px;
+
+}
+.fc .fc-col-header-cell-cushion {
+    display: inline-block;
+    padding: 2px 4px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.fc .fc-toolbar-title{
+    font-size: 20px;
+    font-weight: 700;
+    color: #222222;
+}
+
+.fc .fc-header-toolbar{
+    margin: 10px;
+}
+
+.fc .fc-daygrid-day-frame{
+
+}
+
+.fc-day-sun a { /* 일요일 컬러 */
+    color: var(--mainColor1);
+}
+
+.fc-day-sat a { /* 토요일 컬러 */
+    color: var(--subColor2);
+}
+
+.fc .fc-button {
+    background-color: rgb(217, 119, 6);
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    border: none;
+}
+
+.fc .fc-button:hover {
+    background-color: transparent;
+    color: var(--subColor2);
+}
+
+/* 포커스된 상태 테두리 없앰 */
+.fc .fc-button-primary:focus {
+    border: none;
+    box-shadow: none;
+}
+
+/* today 버튼 - 이번 달에 위치할 때 */
+.fc .fc-today-button:disabled {
+    background-color: #EAB77B;
+    color: #fff;
+}
+
+.fc-event-main{
+    border: none;
+}
+
+.fc .fc-event-title{
+    font-size: 12px;
+    color: #fff;
+}
