@@ -76,11 +76,15 @@ button {
 
 /* 다크모드 : 색상 변경 안되는 태그 있으면 추가하기 !!! */
 [data-bs-theme="dark"]{
-
+    h1,h2,h3,h4,h5,h6 {
+        color: #fff;
+    }
+    a {
+        color: #fff;
+    }
     body {
-        a {
-            color: #fff;
-        }
+        color: #fff;
+
         .header {
             .inner {
                 > div:first-child {
@@ -108,6 +112,9 @@ button {
             }
         }
     }
+    .input-wrap-btn button {
+        color: var(--black);
+    }
 }
 
 
@@ -115,7 +122,6 @@ button {
 
 /* content */
 .content {
-    padding-top: calc(var(--headerHeight)*2);
-    padding-bottom: 120px;
+    padding-top: var(--headerHeight);
 }
 

@@ -1,90 +1,101 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <head th:replace="~{/common/head :: headFragment}"></head>
-<body>
-<!--header-->
-<header th:replace ="~{/common/header :: headerFragment}" ></header>
-
-<!--content-->
-<main class="content">
     <th:block layout:fragment = "containerFragment">
-        <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
-        <!-- 폼이 각 카테고리 버튼을 감싸는 구조 -->
+
+        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+<!--bootstrap-->
+
+
+                <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
+                <div class="inner">
+                    <!-- 볼더링 카테고리 버튼 -->
+                    <br/><br/><br/><br/>
+                    <!--검색기능-->
+
+                    <form id="searchForm" action="/facilities/search" method="post">
+                        코드 : <input type="text" name="code" id="codeInput" oninput="showSuggestions()" autocomplete="off"/><br/>
+                        <button type="submit">전송하기</button>
+                    </form>
+                    <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
+                    <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
+                    <button type="button" onclick="handleCategorySubmit(2)">리드</button>
+                    <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
+
+                </div>
 
 
 
+                <h2 class="inner">시설 목록</h2>
+        <div class="inner" th:if="${facilitiesList != null}">
+            <table id="facilitiestb">
+                <thead>
+                <tr>
+                    <th>시설 ID</th>
+                    <th>시설명</th>
+                    <th>주소</th>
+                    <th>연락처</th>
+                    <th>개방 시간</th>
+                    <th>카테고리 ID</th>
+                    <th>위도</th>
+                    <th>경도</th>
+                    <th>시설 타입</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="facility : ${facilitiesList}">
+                    <td th:text="${facility.id}"
+                        th:onclick="'showFacilityId(' + ${facility.latitude} + ', ' + ${facility.longitude} + ')'">
+                        시설 ID
+                    </td>
+                    <td th:text="${facility.facilityName}">시설명</td>
+                    <td th:text="${facility.address}">주소</td>
+                    <td th:text="${facility.contact}">연락처</td>
+                    <td th:text="${facility.openingTime}">개방 시간</td>
+                    <td th:text="${facility.categoryId}">카테고리 ID</td>
+                    <td th:text="${facility.latitude}">위도</td>
+                    <td th:text="${facility.longitude}">경도</td>
+                    <td th:text="${facility.facilityType}">시설 타입</td>
 
-        <div class="inner">
-            <!-- 볼더링 카테고리 버튼 -->
-            <br/><br/><br/><br/>
-            <!--검색기능-->
-
-            <form id="searchForm" action="/facilities/search" method="post">
-                코드 : <input type="text" name="code" id="codeInput" oninput="showSuggestions()" autocomplete="off"/><br/>
-                <button type="submit">전송하기</button>
-            </form>
-            <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
-
-
-            <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
-            <button type="button" onclick="handleCategorySubmit(2)">리드</button>
-            <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
-
+                </tr>
+                </tbody>
+            </table>
         </div>
-
-<h2 class="inner">시설 목록</h2>
-<div class="inner" th:if="${facilitiesList != null}">
-    <table id="facilitiestb">
-        <thead>
-        <tr>
-            <th>시설 ID</th>
-            <th>시설명</th>
-            <th>주소</th>
-            <th>연락처</th>
-            <th>개방 시간</th>
-            <th>카테고리 ID</th>
-            <th>위도</th>
-            <th>경도</th>
-            <th>시설 타입</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="facility : ${facilitiesList}">
-            <td th:href="@{/facilities/select}" th:text="${facility.id}">시설 ID</td>
-            <td th:text="${facility.facilityName}">시설명</td>
-            <td th:text="${facility.address}">주소</td>
-            <td th:text="${facility.contact}">연락처</td>
-            <td th:text="${facility.openingTime}">개방 시간</td>
-            <td th:text="${facility.categoryId}">카테고리 ID</td>
-            <td th:text="${facility.latitude}">위도</td>
-            <td th:text="${facility.longitude}">경도</td>
-            <td th:text="${facility.facilityType}">시설 타입</td>
-        </tr>
-        </tbody>
-    </table>
-</div>
         <!-- 시설 목록이 없을 경우 메시지 표시 -->
         <div class="inner" th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
             <p>시설 목록이 없습니다.</p>
         </div>
+
+                <!--이거두개도 부트스트랩-->
+
+        <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
+
+
     </th:block>
-<!--footer-->
-<footer th:replace ="~{/common/footer :: footerFragment}" ></footer>
-
-<!--공통 js-->
-<!--fontawesome icon-->
-<script src="https://kit.fontawesome.com/5d48c3da4c.js" crossorigin="anonymous"></script>
-<!--부트스트랩-->
-<script th:src="@{/js/plugin/bootstrap.bundle.min.js}"></script>
-<!--공통영역(만듦)-->
-<script th:src="@{/js/common/common.js}"></script>
 
 
-</main>
-<script th:src="@{/js/page/facilities.js}"></script>
-<th:block layout:fragment="javascript"></th:block>
-</body>
+    <th:block layout:fragment="javascript">
+        <script th:inline="javascript">
+            // 서버에서 전달된 시설 리스트를 JSON 형식으로 변환하여 JavaScript 배열로 사용
+            function articleMessage() {
+                // facilitiesList를 JavaScript 배열로 변환하여 변수에 할당
+                const facilities = [[${facilitiesList}]];
+
+                // facilities 배열을 출력하여 확인
+                console.log(facilities);
+
+                // 카카오 맵에 마커 추가
+              loadKakaoMap(facilities);
+            }
+            function showFacilityId(lat,long){
+                showFacility(lat,long)
+
+            }
+        </script>
+
+        <script th:src="@{/js/page/facilities.js}"></script>
+    </th:block>
 </html>
+

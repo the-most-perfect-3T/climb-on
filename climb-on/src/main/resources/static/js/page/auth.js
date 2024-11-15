@@ -76,7 +76,6 @@ const nicknameValidCheck = event => {
     let nicknameInput = document.getElementById("nickname");
     let nickname = nicknameInput.value;
     let errorMessage = findNextTag(nicknameInput, "p");
-    console.log(nickname);
 
     const namePattern = /^[가-힣A-Za-z0-9]{1,20}$/;
 

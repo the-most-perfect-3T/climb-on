@@ -26,13 +26,15 @@
             USER_ID,
             PASSWORD,
             USER_ROLE,
-            STATUS
+            STATUS,
+            PROFILE_PIC
         ) VALUES (
             #{nickname},
             #{userId},
             #{password},
             #{userRole},
-            #{status}
+            #{status},
+            #{profilePic}
         )
     </insert>
 
