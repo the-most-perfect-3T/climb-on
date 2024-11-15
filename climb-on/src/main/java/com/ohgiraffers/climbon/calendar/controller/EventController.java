@@ -6,7 +6,9 @@ package com.ohgiraffers.climbon.calendar.controller;
 
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
+import jdk.jfr.Event;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,14 +36,30 @@ public class EventController
 
         for (EventDTO event : events)
         {
-            System.out.println("이벤트 색깔: " + event.getBackgroundColor());
-
-            if(eventService.checkDuplicate(event.getTitle(), event.getStart()))
+            // 조건 검사
+            if(eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd()))
             {
-                // title, start가 일치하는지 count로 반환. 0보다 크면 true
+                // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
                 continue;
             }
             eventService.addEvent(event);
         }
+    }
+
+    @PostMapping("/modify")
+    public void modifyEvent(@RequestBody EventDTO event)
+    {
+        if(event == null)
+        {
+            System.out.println("이벤트를 수정할 수 없음: null");
+        }
+
+        eventService.modifyEvent(event);
+    }
+
+    @PostMapping("/{id}")
+    public void deleteEvent(@PathVariable("id") int id)
+    {
+        eventService.deleteEvent(id);
     }
 }
