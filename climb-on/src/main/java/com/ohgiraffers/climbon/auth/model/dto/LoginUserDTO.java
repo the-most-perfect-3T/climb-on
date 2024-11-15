@@ -73,5 +73,14 @@ public class LoginUserDTO {
         return new ArrayList<>();
     }
 
-
+    @Override
+    public String toString() {
+        return "LoginUserDTO{" +
+                "id=" + id +
+                ", nickname='" + nickname + '\'' +
+                ", userId='" + userId + '\'' +
+                ", password='" + password + '\'' +
+                ", userRole=" + userRole +
+                '}';
+    }
 }

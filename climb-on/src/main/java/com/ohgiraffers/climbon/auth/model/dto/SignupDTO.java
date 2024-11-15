@@ -1,6 +1,8 @@
 package com.ohgiraffers.climbon.auth.model.dto;
 
 
+import com.ohgiraffers.climbon.auth.Enum.UserRole;
+
 /**signup 회원가입*/
 public class SignupDTO {
 
@@ -8,14 +10,14 @@ public class SignupDTO {
     private String nickname;                    // 사용자 닉네임
     private String userId;                      // 사용자 고유 아이디
     private String password;                    // 사용자 비밀번호 (해시 처리된 값)
-    private String userRole;                    // 사용자 역할 (예: 'user', 'admin')
+    private UserRole userRole;                    // 사용자 역할 (예: 'user', 'admin')
     private String profilePic;                  // 사용자 프로필 사진 URL
     private int status;                         // 사용자 계정 상태 (0: 비활성, 1: 활성)
 
     public SignupDTO() {
     }
 
-    public SignupDTO(Integer id, String nickname, String userId, String password, String userRole, String profilePic, int status) {
+    public SignupDTO(Integer id, String nickname, String userId, String password, UserRole userRole, String profilePic, int status) {
         this.id = id;
         this.nickname = nickname;
         this.userId = userId;
@@ -57,11 +59,11 @@ public class SignupDTO {
         this.password = password;
     }
 
-    public String getUserRole() {
+    public UserRole getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(String userRole) {
+    public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
 
@@ -83,12 +85,12 @@ public class SignupDTO {
 
     @Override
     public String toString() {
-        return "SignUpDTO{" +
+        return "SignupDTO{" +
                 "id=" + id +
                 ", nickname='" + nickname + '\'' +
                 ", userId='" + userId + '\'' +
                 ", password='" + password + '\'' +
-                ", userRole='" + userRole + '\'' +
+                ", userRole=" + userRole +
                 ", profilePic='" + profilePic + '\'' +
                 ", status=" + status +
                 '}';

@@ -4,6 +4,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/common/inputCommon.css}">
         <link rel="stylesheet" th:href="@{/css/page/auth.css}">
     </th:block>
 
@@ -56,32 +57,7 @@
                 alert(message);
             }
 
-            // 아이디 중복확인 요청보내기
-            const checkId = () => {
-                const userId = document.getElementById("userId").value;
-                fetch(`/auth/checkUserId?userId=${userId}`)
-                    .then(response => response.text())
-                    .then(message => {
-                        document.getElementById("userId-success").innerText = message.includes("가입 가능") ? message : "";
-                        message.includes("중복") ? alert(message) : "";
-                        message.includes("유효") ? alert(message) : "";
-                    })
-                    .catch(error => console.error("Error:", error));
-            }
 
-            // 닉네임 중복확인 요청보내기
-            const checkName = () => {
-
-                const nickname = document.getElementById("nickname").value;
-                fetch(`/auth/checkName?nickname=${nickname}`)
-                    .then(response => response.text())
-                    .then(message => {
-                        document.getElementById("nickname-success").innerText = message.includes("가입 가능") ? message : "";
-                        message.includes("중복") ? alert(message) : "";
-                        message.includes("유효") ? alert(message) : "";
-                    })
-                    .catch(error => console.error("Error:", error));
-            }
         </script>
         <script th:src="@{/js/page/auth.js}"></script>
     </th:block>

@@ -1,12 +1,11 @@
 package com.ohgiraffers.climbon.auth.service;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
-import com.ohgiraffers.climbon.auth.model.dao.UserMapper;
+import com.ohgiraffers.climbon.auth.model.dao.AuthMapper;
 import com.ohgiraffers.climbon.auth.model.dto.KakaoUserInfo;
 import com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO;
 import com.ohgiraffers.climbon.auth.model.dto.OAuth2UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -20,7 +19,7 @@ import java.util.Objects;
 public class Oauth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private UserMapper userMapper;
+    private AuthMapper authMapper;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -54,7 +53,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
 
             // db 검증
-            LoginUserDTO dbUser = userMapper.findByUserId(oAuth2UserInfo.getEmail());
+            LoginUserDTO dbUser = authMapper.findByUserId(oAuth2UserInfo.getEmail());
             if(Objects.isNull(dbUser)){
                 throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다. 회원가입 후 로그인해주세요.");
             }
