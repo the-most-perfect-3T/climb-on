@@ -5,6 +5,7 @@
 
 
     <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/common/inputCommon.css}">
         <link rel="stylesheet" th:href="@{/css/page/mypage.css}">
     </th:block>
 
@@ -49,24 +50,10 @@
                 </aside>
 
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        <!-- 확인용 -->
-                        <div sec:authorize="hasAnyAuthority('ADMIN')">
-                            <p>welcome, admin</p>
-                        </div>
-                        <div sec:authorize="hasAnyAuthority('USER')">
-                            <p>welcome, user</p>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="review" role="tabpanel" aria-labelledby="review-tab">
-                        리뷰
-                    </div>
-                    <div class="tab-pane fade" id="board" role="tabpanel" aria-labelledby="board-tab">
-                        게시판
-                    </div>
-                    <div class="tab-pane fade" id="favorite" role="tabpanel" aria-labelledby="favorite-tab">
-                        즐겨찾기
-                    </div>
+                    <th:block  th:replace="~{/mypage/profile-tab :: tabContFragment}"></th:block>
+                    <th:block  th:replace="~{/mypage/review-tab :: tabContFragment}"></th:block>
+                    <th:block  th:replace="~{/mypage/board-tab :: tabContFragment}"></th:block>
+                    <th:block  th:replace="~{/mypage/favorite-tab :: tabContFragment}"></th:block>
                 </div>
             </div>
         </div>
@@ -75,6 +62,25 @@
 
 
     <th:block layout:fragment="javascript">
+        <script th:src="@{/js/page/auth.js}"></script>
         <script th:src="@{/js/page/mypage.js}"></script>
+        <script th:inline="javascript">
+            const message = [[${message}]];
+            if(message){
+                alert(message);
+            }
+
+            // form onsubmit handler에서 실행되도록  ~<< 여기서부터 !!
+            fetch('/mypage/updateUser', {
+                method: "POST",
+                body: JSON.stringify({
+                    nickname:nickname,
+                    password:password,
+                    oneLiner:oneLiner
+                })
+            }).then((response) => response.json())
+                .then((result) => console.log(result));
+
+        </script>
     </th:block>
 </html>
