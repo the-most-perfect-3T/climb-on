@@ -21,21 +21,29 @@
         <result property="status" column="status"/>
         <result property="eventStartDate" column="event_start_date"/>
         <result property="eventEndDate" column="event_end_date"/>
+        <result property="commentsCount" column="comments_count"/>
+    </resultMap>
+
+    <resultMap id="commentResultMap" type="com.ohgiraffers.climbon.community.dto.CommentDTO">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
     </resultMap>
 
     <!-- 카테고리 필터 & 페이징 처리 & 검색 & 작성자 정보 포함 게시글 목록 조회 -->
     <select id="getPostsByPageAndCategoryAndSearch" resultMap="postResultMap">
-        SELECT p.*, u.nickname, u.profile_pic
+        SELECT * FROM (
+        SELECT p.*, u.nickname, u.profile_pic, (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id) AS comments_count
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
         <where>
-            <if test="category != null and category !=''">
+            <if test="category != null and category !='' and category != '전체'">
                 p.category = #{category}    <!--category를 파라미터로 받는다-->
             </if>
             <if test="searchKeyword != null and searchKeyword != ''">  <!--searchKeyword를 파라미터로 받아 title 또는 content에 searchKeyword가 포함된 게시글 검색-->
-                    <if test="searchKeyword != null and searchKeyword != ''">
                 AND
-                    </if>
                 (p.title LIKE CONCAT('%', #{searchKeyword}, '%')       <!--LIKE CONCAT을 사용하여 제목과 내용에 검색어가 포함된 항복을 찾는다-->
                     OR p.content LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
@@ -57,22 +65,23 @@
                 </choose>
             </if>
         </where>
+        ) AS posts_with_comment_count <!--위에서 AS로 만든 comment_count 별칭이 서브쿼리를 ORDER BY 절에서 직접 사용할 수 없기 때문에 임시서브쿼리(테이블처럼) 생성-->
         ORDER BY
             <choose>          <!--MyBatis의 switch-case 구문 특정 조건 만족하는 경우 선택적 적용-->
                 <when test="sort == 'latest'">
-                    p.created_at DESC   <!-- 최신순 -->
+                    posts_with_comment_count.created_at DESC   <!-- 최신순 -->
                 </when>
                 <when test="sort == 'comments'">
-                    p.comments_count DESC
+                    posts_with_comment_count.comments_count DESC
                 </when>
                 <when test="sort == 'views'">
-                    p.view_count DESC <!-- 조회순 -->
+                    posts_with_comment_count.view_count DESC <!-- 조회순 -->
                 </when>
                 <when test="sort == 'likes'">
-                    p.likes DESC
+                    posts_with_comment_count.likes DESC
                 </when>
                 <otherwise>
-                    p.created_at DESC   <!-- 기본값: 최신순-->
+                    posts_with_comment_count.created_at DESC   <!-- 기본값: 최신순-->
                 </otherwise>
             </choose>
         LIMIT #{limit} OFFSET #{offset}
@@ -81,12 +90,22 @@
     <!-- 특정 게시글 조회 (id로 조회), 작성자 정보 포함 -->
     <select id="getPostById" resultMap="postResultMap">
         SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.likes, p.image_url, p.category, p.status
+        , (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id) AS comments_count  <!--댓글 수 계산하는 서브쿼리-->
+
         <if test="category.equals('소식')"> <!--==는 숫자만 받으므로 equals를 써야한다!-->
             , p.event_start_date, p.event_end_date
         </if>
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
         WHERE p.id = #{id}
+    </select>
+
+    <!-- 특정 게시글의 댓글 목록 조회-->
+    <select id="getCommentsByPostId" resultMap="commentResultMap">
+        SELECT id, post_id, user_id, content, created_at
+        FROM community_comments
+        WHERE post_id = #{postId}
+        ORDER BY created_at DESC
     </select>
 
     <!-- 카테고리 필터링 & 전체 게시글 수 조회 -->
@@ -119,7 +138,7 @@
         LIMIT 1
     </select>
 
-
+    <!-- 게시글 추가-->
     <insert id="insertPost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
         INSERT INTO community_posts (user_id, title, content, view_count, is_anonymous, likes, image_url, category, status, created_at, updated_at
         <if test="category == '소식'">
@@ -131,6 +150,12 @@
             , #{eventStartDate}, #{eventEndDate}   <!--카테고리 소식일 때만 행사시작,끝날짜 추가-->
         </if>
         )
+    </insert>
+
+    <!-- 댓글 추가 -->
+    <insert id="insertComment" parameterType="com.ohgiraffers.climbon.community.dto.CommentDTO">
+        INSERT INTO community_comments (post_id, user_id, content, created_at)
+        VALUES (#{postId}, #{userId}, #{content}, NOW())
     </insert>
 
     <!-- 게시글 수정 -->
@@ -156,5 +181,7 @@
         SET view_count = view_count + 1
         WHERE id = #{id}
     </update>
+
+
 
 </mapper>
