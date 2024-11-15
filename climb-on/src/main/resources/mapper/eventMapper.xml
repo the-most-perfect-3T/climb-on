@@ -37,6 +37,12 @@
         WHERE title = #{title} AND start_datetime = #{start} AND end_datetime = #{end};
     </select>
 
+    <update id="modifyEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
+        UPDATE calendar_events
+        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, description = #{description}, color = #{backgroundColor}
+        WHERE event_id = #{id};
+    </update>
+
     <delete id="deleteEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         DELETE FROM calendar_events
         WHERE event_id = #{id};

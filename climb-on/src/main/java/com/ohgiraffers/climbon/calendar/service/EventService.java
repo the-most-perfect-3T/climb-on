@@ -40,4 +40,10 @@ public class EventService
         System.out.println("delete Event 실행");
         eventMapper.deleteEvent(id);
     }
+
+    public void modifyEvent(EventDTO event)
+    {
+        System.out.println("+++ modifyEvent called +++");
+        eventMapper.modifyEvent(event);
+    }
 }

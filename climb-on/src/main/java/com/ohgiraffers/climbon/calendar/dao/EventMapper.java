@@ -18,4 +18,5 @@ public interface EventMapper
 
     void deleteEvent(int id);
 
+    void modifyEvent(EventDTO event);
 }

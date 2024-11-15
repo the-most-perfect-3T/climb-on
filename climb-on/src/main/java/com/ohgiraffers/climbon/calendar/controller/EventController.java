@@ -46,6 +46,17 @@ public class EventController
         }
     }
 
+    @PostMapping("/modify")
+    public void modifyEvent(@RequestBody EventDTO event)
+    {
+        if(event == null)
+        {
+            System.out.println("이벤트를 수정할 수 없음: null");
+        }
+
+        eventService.modifyEvent(event);
+    }
+
     @PostMapping("/{id}")
     public void deleteEvent(@PathVariable("id") int id)
     {
