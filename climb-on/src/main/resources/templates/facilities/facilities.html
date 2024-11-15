@@ -2,19 +2,19 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
-                <th:block layout:fragment = "containerFragment">
-                    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
-
-                    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-
-                <div class="inner">
-
+<body>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/page/facilities.css}">
+    </th:block>
+    <th:block layout:fragment = "containerFragment">
+                    <!--<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>-->
+        <div class="inner">
+            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
                     <!-- 볼더링 카테고리 버튼 -->
                     <br/><br/><br/><br/>
                     <!--검색기능-->
@@ -29,48 +29,37 @@
                     <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
                     <button type="button" onclick="handleCategorySubmit(2)">리드</button>
                     <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
+
+                    <h2>시설 목록</h2>
+                    <div th:if="${facilitiesList != null}">
+                        <table id="facilitiestb">
+                            <thead>
+                            <tr>
+                                <th>시설 ID</th>
+                                <th>시설명</th>
+                                <th>주소</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="facility : ${facilitiesList}"th:onclick="'showFacilityId(' + ${facility.id} + ')'">
+                                <td  th:onclick="showFacilityId(${facility.id})" >아이디</td>
+                                <td th:text="${facility.facilityName}">시설명</td>
+                                <td th:text="${facility.address}">주소</td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
-
-
-
-
-
-
-
-                <h2 class="inner">시설 목록</h2>
-        <div class="inner" th:if="${facilitiesList != null}">
-            <table id="facilitiestb">
-                <thead>
-                <tr>
-                    <th>시설 ID</th>
-                    <th>시설명</th>
-                    <th>주소</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="facility : ${facilitiesList}"th:onclick="'showFacilityId(' + ${facility.id} + ')'">
-                    <td  th:onclick="showFacilityId(${facility.id})" >아이디</td>
-                    <td th:text="${facility.facilityName}">시설명</td>
-                    <td th:text="${facility.address}">주소</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <!-- 시설 목록이 없을 경우 메시지 표시 -->
-        <div class="inner" th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
-            <p>시설 목록이 없습니다.</p>
-        </div>
-
-        <!-- 이곳에 세부 시설 정보가 동적으로 추가될 부분 -->
-
-
-                <!--이거두개도 부트스트랩-->
-
-        <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
-        <div id="facilityDetailsContainer"></div>
-
-                        </div>
+                    <!-- 시설 목록이 없을 경우 메시지 표시 -->
+                    <div th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
+                        <p>시설 목록이 없습니다.</p>
                     </div>
+                </div>
+            </div>
+
+
+            <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
+            <!--<div id="facilityDetailsContainer"></div>-->
+        </div>
     </th:block>
 
 
@@ -114,5 +103,6 @@
 
         <script th:src="@{/js/page/facilities.js}"></script>
     </th:block>
+</body>
 </html>
 

@@ -114,10 +114,12 @@ function loadKakaoMap(facilities) {
     const {kakao} = window;
 
     // 지도와 마커 생성
+    const latitude = facilities[0]?.latitude || selectedPosition.lat;
+    const longitude = facilities[0]?.longitude || selectedPosition.lng;
 
     const container = document.getElementById('map');
     const options = {
-        center: new kakao.maps.LatLng(facilities[0].latitude, facilities[0].longitude),
+        center: new kakao.maps.LatLng(latitude, longitude),
         level: 3
     };
     map = new kakao.maps.Map(container, options);

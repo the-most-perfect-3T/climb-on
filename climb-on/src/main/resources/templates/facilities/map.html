@@ -1,98 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<div th:fragment="mapFragment">
-<head>
-    <meta charset="UTF-8">
-    <title>지도</title>
-    <style>
-        /* 지도 및 모달 스타일 */
-        #map {
-            width: 100%;
-            height: 400px;
-        }
-        .modal-content {
-            position: relative;
-            width: 100%;
-            height: 500px;
-        }
-        .modal-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
-            background-color: rgb(53, 152, 144);
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .modal-text {
-            text-align: center;
-            margin-top: 10px;
-            font-weight: bold;
-            color: #000;
-            z-index: 5;
-            font-size: 16px;
-            background-color: #fff;
-            padding: 5px;
-            position: relative;
-            width: 100%;
-        }
-    </style>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5787c5f817571b9179d48c038390a65f&autoload=false"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5787c5f817571b9179d48c038390a65f&libraries=services,clusterer,drawing"></script>
-</head>
-<body>
-<div id="map-modal" class="modal-content">
-    <div id="map"></div>
-    <button id="close-modal" class="modal-button">닫기</button>
-</div>
+<div th:fragment="mapFragment" class="map-content">
+    <head>
+        <meta charset="UTF-8">
+        <title>지도</title>
+        <style>
+            /* 지도 스타일 */
+            #map {
+                position: absolute;  /* 화면에 고정 */
+                top: 0;  /* 화면 상단에 위치 */
+                left: 700px;  /* 화면 왼쪽에 20px 여백 추가 */
+                width: calc(100% - 700px);  /* 화면 너비에서 20px 제외한 너비로 설정 */
+                height: 100%;  /* 화면 높이 100% */
+                z-index: 1;  /* 다른 요소들 위에 표시 */
+            }
+            .modal-content {
+                position: absolute;
+                top: 50px;  /* 화면 상단에서 50px 아래로 */
+                right: 0px;  /* 화면 오른쪽에서 20px 띄우기 */
+                width: 80%;  /* 모달 크기 */
+                height: 650px;  /* 모달 높이 */
+                background-color: #fff;  /* 배경색을 흰색으로 */
+                padding: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);  /* 그림자 효과 */
+            }
+            .modal-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                z-index: 10;
+                background-color: rgb(53, 152, 144);
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+            .modal-text {
+                text-align: center;
+                margin-top: 10px;
+                font-weight: bold;
+                color: #000;
+                z-index: 5;
+                font-size: 16px;
+                background-color: #fff;
+                padding: 5px;
+                position: relative;
+                width: 100%;
+            }
+        </style>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5787c5f817571b9179d48c038390a65f&autoload=false"></script>
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5787c5f817571b9179d48c038390a65f&libraries=services,clusterer,drawing"></script>
+    </head>
+    <body>
+    <!--<div id="map-modal" class="modal-content">-->
+        <div id="map"></div>
+    </div>
 
-
-<!--<script type="text/javascript">
-    // 스크립트가 로드된 후 실행
-    kakao.maps.load(function() {
-        var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-        var options = { //지도를 생성할 때 필요한 기본 옵션
-            center: new kakao.maps.LatLng(37.23, 126.67), //지도의 중심좌표.
-            level: 3 //지도의 레벨(확대, 축소 정도)
-        };
-
-        var map = new kakao.maps.Map(container, options); //지도 생성
-
-        // 마커 배열을 선언합니다.
-        var markers = [];
-
-        // 마커 생성
-        var marker1 = new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(37.23, 126.67)
-        });
-
-        // 마커를 배열에 추가
-        markers.push(marker1);
-
-        // 클러스터러 설정
-        var clusterer = new kakao.maps.MarkerClusterer({
-            map: map,  // 클러스터러에 지도 객체를 지정
-            markers: markers,  // 클러스터러에 사용할 마커들
-            gridSize: 35,
-            averageCenter: true,
-            minLevel: 6,
-            disableClickZoom: true,
-            styles: [{
-                width: '53px',
-                height: '52px',
-                background: 'url(cluster.png) no-repeat',
-                color: '#fff',
-                textAlign: 'center',
-                lineHeight: '54px'
-            }]
-        });
-
-        // 클러스터러에 마커 추가
-        clusterer.addMarker(marker1);
-
-    });
-</script>-->
 </div>
 </body>
 </html>
