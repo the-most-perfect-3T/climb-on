@@ -1,5 +1,6 @@
 package com.ohgiraffers.climbon.community.controller;
 
+import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +25,39 @@ public class PostController {
     // 게시글 목록 페이지 - 페이지네이션 및 카테고리 필터링 추가 // 검색, 정렬순서 , D-Day(dday)추가
     @GetMapping
     public String getAllPosts(@RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String category, @RequestParam(required = false)
-    String searchKeyword, @RequestParam(defaultValue = "latest") String sort , @RequestParam(required = false) String dday, Model model){  // page 파라미터와 pageSize를 사용해 해당 페이지에 맞는 게시글 목록을 조회
+    String searchKeyword, @RequestParam(defaultValue = "latest") String sort , @RequestParam(required = false) String dday, @RequestParam(defaultValue = "list") String viewMode,Model model){  // page 파라미터와 pageSize를 사용해 해당 페이지에 맞는 게시글 목록을 조회
         // & category 파라미터를 받아 해당 카테고리의 게시글만 조회하도록 설정하고, 카테고리 파라미터가 없으면 모든 게시글 조회
         //  searchKeyword 파라미터를 추가해서 검색어가 있을 때만 검색 결과를 반환하도록 함.
         // 유효성 로직은 templates의 post.html에 있다.
+
+
         int pageSize = 15;
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday);
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
+        // 현재 페이지 값 보정
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+
+//        // page가 1 미만일 때 자동으로 1로 설정
+//        if (page < 1) {
+//            page = 1;
+//        }
+
+        // '전체' 카테고리를 처리
+        if ("전체".equals(category)) {
+            category = null; // null로 설정하여 MyBatis에서 필터 무시
+        }
+
         model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("category", category);
+        model.addAttribute("category", category != null ? category : "전체");
         model.addAttribute("searchKeyword", searchKeyword);
         model.addAttribute("sort", sort);                       // 선택된 정렬 조건을 전달
         model.addAttribute("dday", dday);    //뷰로 dday 값 전달
+        model.addAttribute("viewMode", viewMode);
 
 //        for (PostDTO post: posts) {   게시글에 DTO 값들이 잘 담기는지 확인
 //            System.out.println(post.getTitle());
@@ -56,21 +74,25 @@ public class PostController {
         postService.incrementViewCount(id);
 
         PostDTO post = postService.getPostById(id);
+        List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         // postService의 메소드를사용하여 이전,다음 게시글 정보 가져온다.
         PostDTO previousPost = postService.getPreviousPost(id); // 이전 게시글
         PostDTO nextPost = postService.getNextPost(id); // 다음 게시글
         model.addAttribute("post", post);
         model.addAttribute("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
         model.addAttribute("nextPost", nextPost);
+        model.addAttribute("comments", comments);
         return "community/communityPostDetail"; // 상세보기용 communityPostDetail.html 템플릿 반환
     }
+
 
     // 게시글 작성 폼 페이지
     @GetMapping("/new")
     public String CreatePostForm(@RequestParam(required = false) String category, Model model){
         PostDTO post = new PostDTO();
         post.setCategory(category);
-        model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달
+         model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
+            // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
         return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
     }
 
@@ -117,11 +139,31 @@ public class PostController {
         return "redirect:/community/" + id;
     }
 
+    // 게시글 수정 폼 페이지 (수정 버튼 눌렀을 때 호출 됨)
+    @GetMapping("{id}/modify")
+    public String modifyPostForm(@PathVariable Integer id, Model model){
+        PostDTO post = postService.getPostById(id);
+        model.addAttribute("post", post);
+        return "community/communityPostForm"; // 수정용 폼으로 반환
+    }
+
     // 게시글 삭제
     @PostMapping("/{id}/delete")
     public String deletePost(@PathVariable Integer id){
        postService.deletePost(id);
        return "redirect:/community";
+    }
+
+    // 댓글 작성 처리
+    @PostMapping("/{id}/comment")
+    public String addComment(@PathVariable("id") Integer postId, @RequestParam String content, Principal principal){
+        CommentDTO comment = new CommentDTO();
+        comment.setPostId(postId);
+        comment.setUserId(principal.getName()); // 로그인된 사용자의 ID 설정
+        comment.setContent(content);
+
+        postService.insertComment(comment); // 댓글 추가
+        return "redirect:/community/" + postId;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.community.service;
 
 import com.ohgiraffers.climbon.community.dao.PostDAO;
+import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,6 @@ public class PostService {
     public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday) {
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
 
-        if (offset < 0 ){
-            offset = 0;
-        }
 
         List<PostDTO> posts = postDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, dday);    // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
 
@@ -95,5 +93,14 @@ public class PostService {
 
     public void incrementViewCount(Integer postId) {
         postDAO.incrementViewCount(postId); // postId에 해당하는 게시글의 조회수를 증가시킴
+    }
+
+    // 댓글 조회, 추가 메소드
+    public List<CommentDTO> getCommentsByPostId(Integer postId) {
+        return postDAO.getCommentsByPostId(postId);
+    }
+
+    public void insertComment(CommentDTO comment){
+        postDAO.insertComment(comment);
     }
 }

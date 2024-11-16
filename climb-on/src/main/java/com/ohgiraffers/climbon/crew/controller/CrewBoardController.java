@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +27,25 @@ public class CrewBoardController {
     }
 
     private String imgUrl;
+
+    @PostMapping("/writePost")
+    public String registPost(CrewBoardDTO crewBoardDTO) {
+        crewBoardDTO.setImgUrl(imgUrl);
+        System.out.println(crewBoardDTO);
+        System.out.println(crewBoardDTO.getCategoryCode());
+        int result = crewBoardService.insertPost(crewBoardDTO);
+        return "redirect:/crew/crewBoardList";
+    }
+
+    @GetMapping("/crewBoardList")
+    public ModelAndView crewBoardList(ModelAndView mv) {
+        mv.setViewName("crew/crewBoardList");
+        return mv;
+
+    }
+
+
+
 
     @ResponseBody
     @PostMapping("/imgUpload")
@@ -59,13 +79,4 @@ public class CrewBoardController {
         }
         return paramMap;
     }
-
-    @PostMapping("/writePost")
-    public void registPost(CrewBoardDTO crewBoardDTO) {
-        crewBoardDTO.setImgUrl(imgUrl);
-        int result = crewBoardService.insertPost(crewBoardDTO);
-
-    }
-
-
 }

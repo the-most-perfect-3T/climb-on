@@ -1,8 +1,12 @@
 @charset "utf-8";
 
+.section-mypage .aside,
+.section-mypage .tab-content {
+    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+}
+
 .section-mypage .aside {
     width: 320px;
-    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
     position: relative;
     padding: 44px 0;
 }
@@ -52,6 +56,7 @@
     bottom: 44px;
     left: 0;
     color: var(--gray);
+    font-size: 14px;
 }
 .section-mypage .aside .btn-logout i {
     font-size: 18px;
@@ -67,4 +72,181 @@
 /*tab content*/
 .section-mypage .tab-content {
     width: calc(100% - 320px);
+    overflow-y: auto;
+}
+.section-mypage .tab-content .tab-pane {
+    height: 100%;
+}
+
+/*profile-tab*/
+.section-mypage #profile > div {
+    display: none;
+}
+.section-mypage #profile > div.active {
+    display: block;
+}
+.section-mypage #profile .profile-cont .section00 {
+    padding: 75px 90px 40px 80px;
+}
+.section-mypage #profile .profile-cont .section00 .img-wrap {
+    width: 112px;
+    height: 112px;
+    border-radius: 100%;
+    overflow: hidden;
+    margin-right: 40px;
+    border: 1px solid var(--borderColor);
+    flex-shrink: 0;
+}
+
+.section-mypage #profile .profile-cont .section00 .info-wrap .nickname {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+.section-mypage #profile .profile-cont .section00 .info-wrap .one-liner {
+    font-size: 14px;
+    word-break: keep-all;
+}
+
+.section-mypage #profile .profile-cont .section00 #btn-modify {
+    font-size: 14px;
+    color: var(--darkGray);
+    width: 180px;
+    height: 45px;
+    border: 1px solid var(--borderColor);
+    border-radius: 6px;
+    transition: 0.5s;
+    flex-shrink: 0;
+}
+
+.section-mypage #profile .profile-cont .section00 #btn-modify i {
+    font-size: 22px;
+    margin-right: 12px;
+}
+
+.section-mypage #profile .profile-cont .section00 #btn-modify:hover {
+    background: var(--point);
+    color: #fff;
+}
+
+.section-mypage #profile .profile-cont .section01 .move-wrap {
+    width: 50%;
+    padding: 0 50px 0 80px;
+    height: 172px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.section-mypage #profile .profile-cont .section01 a.move-wrap {
+    border-right: 1px solid var(--borderColor);
+}
+
+.section-mypage #profile .profile-cont .section01 .move-wrap .title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: block;
+    text-align: left;
+}
+
+.section-mypage #profile .profile-cont .section01 .move-wrap .name {
+    font-size: 16px;
+}
+.section-mypage #profile .profile-cont .section01 .move-wrap i {
+    font-size: 24px;
+}
+
+.section-mypage #profile .profile-cont .section02 {
+    padding: 50px 0 50px 80px;
+}
+.section-mypage #profile .profile-cont .section02 .section-title {
+    margin-bottom: 25px;
+}
+
+/* profile-tab : 회원 정보 수정 */
+.section-mypage #profile .modify-cont .section00 {
+    padding: 55px 0 50px 80px;
+    margin-bottom: 50px;
+}
+.section-mypage #profile .modify-cont .section00 .section-title {
+    margin-bottom: 50px;
+}
+.section-mypage #profile .modify-cont .section00 .form-wrap {
+    width: 580px;
+}
+.section-mypage #profile .modify-cont .section00 .form-wrap .input-wrap-btn input {
+    width: 450px;
+}
+.section-mypage #profile .modify-cont .section00 .form-wrap .input-wrap-btn button {
+    width: 120px;
+}
+.section-mypage #profile .modify-cont .section00 .form-wrap .btn-submit {
+    background: var(--point);
+    color: #fff;
+    font-weight: 600;
+    width: 140px;
+    height: 50px;
+    border-radius: 6px;
+    margin-top: 30px;
+}
+
+.section-mypage #profile .modify-cont .section00 .img-wrap {
+    width: 160px;
+    height: 160px;
+    border-radius: 100%;
+    overflow: hidden;
+    border: 1px solid var(--borderColor);
+    margin-bottom: 20px;
+}
+.section-mypage #profile .modify-cont .section00 .img-wrap img {
+    width: 100%;
+}
+.section-mypage #profile .modify-cont .section00 .btn-wrap .btn {
+    padding: 0 15px;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+}
+.section-mypage #profile .modify-cont .section00 .btn-wrap .btn-modify {
+    background: var(--beige);
+    margin-right: 10px;
+}
+.section-mypage #profile .modify-cont .section00 .btn-wrap .btn-delete {
+    border: 1px solid var(--borderColor);
+    background: #fff;
+}
+
+/*profile-tab 계정 삭제*/
+.section-mypage #profile .modify-cont .section01 {
+    padding: 50px 0 80px 50px;
+}
+.section-mypage #profile .modify-cont .section01 .info-wrap {
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.section-mypage #profile .modify-cont .section01 .info-wrap p {
+    font-size: 14px;
+    line-height: 22px;
+}
+.section-mypage #profile .modify-cont .section01 .info-wrap p a {
+    font-weight: 700;
+    border-bottom: 1px solid var(--black);
+}
+
+.section-mypage #profile .modify-cont .section01 .agree-wrap input {
+    width: 16px;
+    height: 16px;
+}
+.section-mypage #profile .modify-cont .section01 .agree-wrap label {
+    font-size: 14px;
+    margin-left: 10px;
+}
+.section-mypage #profile .modify-cont .section01 .btn-withdrawal {
+    width: 150px;
+    height: 40px;
+    background: var(--bs-danger);
+    color: #fff;
+    font-size: 14px;
+    border-radius: 6px;
 }

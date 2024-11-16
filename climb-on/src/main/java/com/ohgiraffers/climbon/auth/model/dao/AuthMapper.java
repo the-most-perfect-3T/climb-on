@@ -5,7 +5,7 @@ import com.ohgiraffers.climbon.auth.model.dto.SignupDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface UserMapper {
+public interface AuthMapper {
 
     int save(SignupDTO user);
 
