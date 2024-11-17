@@ -21,16 +21,34 @@
     </resultMap>
 
     <insert id="insertPost" parameterType="com.ohgiraffers.climbon.crew.dto.CrewBoardDTO">
-        INSERT INTO crew_posts(crew_code, user_id, category_code, title, content, img_url, updated_at, status)
+        INSERT INTO crew_posts(crew_code, user_id, category_code, title, content, img_url, updated_at, is_anonymous, status)
            VALUES(
-            1,
-            1,
+            #{crewCode},
+            #{userId},
             #{categoryCode},
             #{title},
             #{content},
             #{imgUrl},
             NULL,
+            #{isAnonymous},
             1
         )
     </insert>
+
+    <select id="selectLastPost" resultMap="crewBoard">
+        SELECT * FROM crew_posts
+        ORDER BY id DESC
+        LIMIT 1;
+    </select>
+
+    <select id="getCrewCode" parameterType="int" resultType="Integer">
+        SELECT crew_code
+        FROM user_crew
+        WHERE user_code = #{id}
+    </select>
+
+    <select id="selectOnePostById" parameterType="int" resultMap="crewBoard">
+        SELECT * FROM crew_posts
+        WHERE id = #{id}
+    </select>
 </mapper>

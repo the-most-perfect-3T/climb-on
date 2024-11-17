@@ -5,7 +5,7 @@
 
 
     <th:block layout:fragment="css">
-        <link rel="stylesheet" th:href="@{/css/page/crew/crewBoardWritePost.css}">
+        <link rel="stylesheet" th:href="@{/css/page/crew/crewBoardUpdatePost.css}">
         <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
 <!--        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" />-->
     </th:block>
@@ -16,23 +16,23 @@
             <div class="inner">
                 <div class="content container">
                     <div class="top area">
-                        <h2>크루게시판 글 쓰기</h2>
+                        <h2>크루게시판 글 수정</h2>
                         <p th:text="|${nickname} 님 크루게시판에서 다양한 크루원들과 교류해 보세요.|"></p>
                     </div>
                     <br/>
-                    <form action="/crew/writePost" method="post" id="writePostForm">
+                    <form action="/crew/updatePost" method="post" id="writePostForm">
                         <div class="input-wrap">
                             <h4>카테고리</h4>
                             <select class="form-select" aria-label="Default select example" name="categoryCode" required>
                                 <option value="">카테고리를 선택해주세요.</option>
-                                <option value="6">공지</option>
-                                <option value="7">내 크루</option>
+                                <option value="6" th:selected="${crewBoardDTO.categoryCode == 6}">공지</option>
+                                <option value="7" th:selected="${crewBoardDTO.categoryCode == 7}">내 크루</option>
                             </select>
                             <br/>
 
                             <div class="mb-3">
                                 <label for="title" class="form-label">제목</label>
-                                <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요." name="title" required>
+                                <input type="text" class="form-control" id="title" name="title" th:value="${crewBoardDTO.title}" required>
                             </div>
                             <div class="mb-3 form-group">
                                 <label for="editor" class="form-label">본문</label>
@@ -69,9 +69,9 @@
                             </div>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="anonymous">
+                                <input class="form-check-input" type="checkbox" role="switch" id="anonymous" name="isAnonymous"
+                                th:checked="${crewBoardDTO.isAnonymous}">
                                 <label class="form-check-label" for="anonymous">익명</label>
-                                <input type="hidden" id="isAnonymous" name="isAnonymous" value="false">
                             </div>
 
                             <div class="hidden alert" id="liveAlertPlaceHolder"></div>

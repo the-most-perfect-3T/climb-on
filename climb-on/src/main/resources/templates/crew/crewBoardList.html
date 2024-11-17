@@ -1,10 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-</body>
+<th:block layout:fragment="css">
+
+</th:block>
+
+
+<th:block layout:fragment="containerFragment">
+    <section>
+        <div class="inner">
+            <div class="content container">
+
+
+                <div th:object="${boardDTO}">
+                    <p th:text="*{id}"></p>
+                    <p th:text="*{crewCode}"></p>
+                    <p th:text="*{categoryCode}"></p>
+                    <p th:text="*{title}"></p>
+                    <p th:utext="*{content}"></p>
+                    <p th:text="*{imgUrl}"></p>
+                    <p th:text="*{createdAt}"></p>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+</th:block>
+
+
+<th:block layout:fragment="javascript">
+
+</th:block>
+
 </html>
