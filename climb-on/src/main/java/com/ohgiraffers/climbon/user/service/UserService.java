@@ -17,30 +17,46 @@ public class UserService {
 
 
     public UserDTO findByKey(Integer key) {
+        if(key == null){
+            return null;
+        }
         UserDTO user = userMapper.findByKey(key);
 
         return user;
     }
 
     public String findCrewName(Integer key) {
-
+        if(key == null){
+            return null;
+        }
         String crewName = userMapper.findCrewName(key);
 
         return crewName;
     }
 
     public String findHomeName(Integer key) {
+        if(key == null){
+            return null;
+        }
         String homeName = userMapper.findHomeName(key);
 
         return homeName;
     }
 
 
-    public int updateUser(UserDTO user) {
+    public int updateUser(UserDTO user, Integer key) {
+        if (user == null || key == null) {
+            return 0;
+        }
+        user.setId(key);
+        return userMapper.updateUser(user);
+    }
 
-        user.setPassword(encoder.encode(user.getPassword()));
-        int result = userMapper.updateUser(user);
-
-        return result;
+    public int updateProfile(UserDTO user, Integer key) {
+        if (user == null || key == null) {
+            return 0;
+        }
+        user.setId(key);
+        return userMapper.updateProfile(user);
     }
 }
