@@ -14,4 +14,6 @@ public interface UserMapper {
 
 
     int updateUser(UserDTO user);
+
+    int updateProfile(UserDTO user);
 }
