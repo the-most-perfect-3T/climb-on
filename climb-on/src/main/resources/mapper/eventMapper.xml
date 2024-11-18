@@ -11,6 +11,7 @@
         <result property="end" column="END_DATETIME"/>
         <result property="description" column="DESCRIPTION"/>
         <result property="backgroundColor" column="COLOR"/>
+        <result property="userCode" column="USER_CODE"/>
     </resultMap>
 
 
@@ -18,6 +19,7 @@
         SELECT
         *
         FROM calendar_events;
+        WHERE user_code = #{userCode};
     </select>
 
 <!--    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">-->
