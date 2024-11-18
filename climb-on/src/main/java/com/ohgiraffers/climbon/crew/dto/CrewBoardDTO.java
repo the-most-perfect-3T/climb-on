@@ -15,13 +15,13 @@ public class CrewBoardDTO {
     private Date updatedAt;
     private int viewCount;
     private int likeCount;
-    private String isAnonymous;
+    private boolean isAnonymous;
     private int status;
 
     public CrewBoardDTO() {
     }
 
-    public CrewBoardDTO(int id, int crewCode, int userId, int categoryCode, String title, String content, String imgUrl, Date createdAt, Date updatedAt, int viewCount, int likeCount, String isAnonymous, int status) {
+    public CrewBoardDTO(int id, int crewCode, int userId, int categoryCode, String title, String content, String imgUrl, Date createdAt, Date updatedAt, int viewCount, int likeCount, boolean isAnonymous, int status) {
         this.id = id;
         this.crewCode = crewCode;
         this.userId = userId;
@@ -35,6 +35,15 @@ public class CrewBoardDTO {
         this.likeCount = likeCount;
         this.isAnonymous = isAnonymous;
         this.status = status;
+    }
+
+
+    public boolean getIsAnonymous() {
+        return isAnonymous;
+    }
+
+    public void setIsAnonymous(boolean isAnonymous) {
+        this.isAnonymous = isAnonymous;
     }
 
     public String getImgUrl() {
@@ -125,13 +134,6 @@ public class CrewBoardDTO {
         this.likeCount = likeCount;
     }
 
-    public String isAnonymous() {
-        return isAnonymous;
-    }
-
-    public void setAnonymous(String anonymous) {
-        isAnonymous = anonymous;
-    }
 
     public int getStatus() {
         return status;

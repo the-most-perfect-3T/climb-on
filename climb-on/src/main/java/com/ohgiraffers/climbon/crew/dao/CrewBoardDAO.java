@@ -7,4 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CrewBoardDAO {
 
     int insertPost(CrewBoardDTO crewBoardDTO);
+
+    CrewBoardDTO selectLastPost();
+
+    Integer getCrewCode(int id);
+
+    CrewBoardDTO selectOnePostById(int id);
 }
