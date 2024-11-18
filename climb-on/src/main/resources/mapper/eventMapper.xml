@@ -15,10 +15,10 @@
     </resultMap>
 
 
-    <select id="getAllEvents" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">
+    <select id="getAllEvents" parameterType="int" resultMap="eventResult">
         SELECT
         *
-        FROM calendar_events;
+        FROM calendar_events
         WHERE user_code = #{userCode};
     </select>
 

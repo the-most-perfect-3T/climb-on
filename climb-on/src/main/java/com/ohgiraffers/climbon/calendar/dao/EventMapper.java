@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface EventMapper
 {
-    List<EventDTO> getAllEvents();
+    List<EventDTO> getAllEvents(int userCode);
     List<EventDTO> getAllEventsFromCrew();
 
     void insertEvent(EventDTO event);

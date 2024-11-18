@@ -4,11 +4,13 @@
 * */
 package com.ohgiraffers.climbon.calendar.controller;
 
+import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
 import jdk.jfr.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +23,14 @@ public class EventController
     private EventService eventService;
 
     @GetMapping
-    public List<EventDTO> getAllEvents()
+    public List<EventDTO> getAllEvents(@AuthenticationPrincipal AuthDetail userDetails)
     {
-        return eventService.getAllEvents();
+        if(userDetails == null || userDetails.getLoginUserDTO() == null)
+        {
+            // 로그인 하지 않은 유저들에게도 다 보여주는 정보
+            System.out.println("No login user");
+        }
+        return eventService.getAllEvents(userDetails.getLoginUserDTO().getId());
     }
 
     @PostMapping("/batch")

@@ -15,9 +15,9 @@ public class EventService
     @Autowired
     private EventMapper eventMapper;
 
-    public List<EventDTO> getAllEvents()
+    public List<EventDTO> getAllEvents(int userCode)
     {
-        return eventMapper.getAllEvents();
+        return eventMapper.getAllEvents(userCode);
     }
 
     public List<EventDTO> getCrewEvents()
