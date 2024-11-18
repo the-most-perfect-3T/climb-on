@@ -53,7 +53,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
 
 
             // db 검증
-            LoginUserDTO dbUser = authMapper.findByUserId(oAuth2UserInfo.getEmail());
+            LoginUserDTO dbUser = authMapper.findByUserIdStatus(oAuth2UserInfo.getEmail());
             if(Objects.isNull(dbUser)){
                 throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다. 회원가입 후 로그인해주세요.");
             }

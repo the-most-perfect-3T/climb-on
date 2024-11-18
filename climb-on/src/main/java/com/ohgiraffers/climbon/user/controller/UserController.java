@@ -180,14 +180,13 @@ public class UserController {
             mv.setViewName("mypage/mypage");
         }
 
-
         return mv;
     }
 
 
+
     @PostMapping("updateStatus")
     public ModelAndView updateStatus(ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails, RedirectAttributes redirectAttributes){
-        System.out.println("실행됨.");
 
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             redirectAttributes.addFlashAttribute("message", "로그인 정보가 유효하지 않습니다.");
@@ -198,7 +197,7 @@ public class UserController {
         int result = userService.updateStatus(key);
         if (result > 0) {
             redirectAttributes.addFlashAttribute("message", "회원 탈퇴되었습니다. \n그동안 이용해주셔서 감사합니다.");
-            mv.setViewName("redirect:/");
+            mv.setViewName("redirect:/oauth/logout");
         }else {
             populateUserData(mv, key);
             mv.addObject("message", "회원 탈퇴에 실패했습니다.");

@@ -166,7 +166,7 @@
 /* profile-tab : 회원 정보 수정 */
 .section-mypage #profile .modify-cont .section00 {
     padding: 55px 0 50px 80px;
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
 }
 .section-mypage #profile .modify-cont .section00 .section-title {
     margin-bottom: 50px;
