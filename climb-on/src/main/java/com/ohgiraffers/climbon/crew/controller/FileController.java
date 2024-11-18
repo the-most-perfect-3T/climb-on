@@ -71,7 +71,7 @@ public class FileController {
      * 에디터 내 사진 파일 첨부
      * @param fileName
      * @return
-     */
+     *//*
     @ResponseBody
     @GetMapping(value = "/display")
     public ResponseEntity<byte[]> showImageGET(@RequestParam("fileName") String fileName) {
@@ -103,14 +103,14 @@ public class FileController {
             throw new RuntimeException(e);
         }
 
-        /*catch (NoSuchFileException e){
+        *//*catch (NoSuchFileException e){
             log.error("No Such FileException {}", e.getFile());
         } catch (IOException e) {
             log.error(e.getMessage());
-        }*/
+        }*//*
 
         return result;
-    }
+    }*/
 
 
 }
