@@ -56,8 +56,7 @@ public class UserService {
         return userMapper.updateUser(user);
     }
 
-    public int updateProfile(MultipartFile profilePic, Integer key) {
-
+    public int updateProfile(String profilePic, Integer key) {
         if(profilePic == null || key == null){
             return 0;
         }
@@ -65,11 +64,14 @@ public class UserService {
         Map<String, Object> map = new HashMap<>();
         map.put("profilePic", profilePic);
         map.put("id", key);
+        System.out.println("profilePic = " + profilePic);
 
         int result = userMapper.updateProfile(map);
 
         return result;
+
     }
+
 
 
 }

@@ -121,13 +121,13 @@ public class UserController {
 
         try {
             profilePic.transferTo(new File(filePath + "/" + savedName));
+            String newFileName = filePath + "/" + savedName;
 
             Integer key = userDetails.getLoginUserDTO().getId();
-            int result = userService.updateProfile(profilePic, key);
+            int result = userService.updateProfile(newFileName, key);
 
             if (result > 0) {
                 mv.addObject("message", "프로필 이미지를 수정했습니다.");
-                mv.addObject("img", "/img/profile/" + savedName);
                 mv.setViewName("redirect:/mypage/home");
             } else {
                 mv.addObject("message", "프로필 이미지 수정에 실패했습니다.");

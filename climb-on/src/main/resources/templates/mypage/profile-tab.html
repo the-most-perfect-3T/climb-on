@@ -115,7 +115,7 @@
                         </div>
                         <div>
                             <div class="img-wrap">
-                                <img th:src="@{${user.profilePic != null ? user.profilePic : ''}}" alt="프로필 이미지" class="w-100">
+                                <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100">
                             </div>
                             <div class="btn-wrap d-flex justify-content-center">
                                 <form action="/mypage/profileModify" method="post" enctype="multipart/form-data" id="profileForm">
@@ -123,7 +123,7 @@
                                     <button class="btn btn-modify" type="button">수정</button>
                                 </form>
                                 <form action="/mypage/profileDelete" method="post">
-                                    <button class="btn btn-modify">삭제</button>
+                                    <button class="btn btn-delete" disabled>삭제</button>
                                 </form>
                             </div>
                         </div>
