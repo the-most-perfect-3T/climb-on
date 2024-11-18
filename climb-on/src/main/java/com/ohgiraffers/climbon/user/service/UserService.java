@@ -5,6 +5,10 @@ import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -52,11 +56,20 @@ public class UserService {
         return userMapper.updateUser(user);
     }
 
-    public int updateProfile(UserDTO user, Integer key) {
-        if (user == null || key == null) {
+    public int updateProfile(MultipartFile profilePic, Integer key) {
+
+        if(profilePic == null || key == null){
             return 0;
         }
-        user.setId(key);
-        return userMapper.updateProfile(user);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("profilePic", profilePic);
+        map.put("id", key);
+
+        int result = userMapper.updateProfile(map);
+
+        return result;
     }
+
+
 }

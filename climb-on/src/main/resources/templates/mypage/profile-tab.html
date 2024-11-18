@@ -118,8 +118,13 @@
                                 <img th:src="@{${user.profilePic != null ? user.profilePic : ''}}" alt="프로필 이미지" class="w-100">
                             </div>
                             <div class="btn-wrap d-flex justify-content-center">
-                                <a href="/mypage/profileModify" class="btn btn-modify">수정</a>
-                                <a href="/mypage/profileDelete" class="btn btn-delete disabled">삭제</a>
+                                <form action="/mypage/profileModify" method="post" enctype="multipart/form-data" id="profileForm">
+                                    <input type="file" name="profilePic" id="profilePic" />
+                                    <button class="btn btn-modify" type="button">수정</button>
+                                </form>
+                                <form action="/mypage/profileDelete" method="post">
+                                    <button class="btn btn-modify">삭제</button>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -13,8 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/mypage/*")
@@ -86,29 +92,56 @@ public class UserController {
     @PostMapping("profileModify")
     public ModelAndView updateProfile(
             @AuthenticationPrincipal AuthDetail userDetails,
-            UserDTO user,
             RedirectAttributes redirectAttributes,
-            ModelAndView mv) {
+            ModelAndView mv,
+            @RequestParam("profilePic") MultipartFile profilePic) {
 
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
             return new ModelAndView("redirect:/auth/login");
         }
 
+        if (profilePic.isEmpty()) {
+            mv.addObject("message", "파일을 선택해주세요.");
+            mv.setViewName("mypage/mypage");
+            return mv;
+        }
 
-        Integer key = userDetails.getLoginUserDTO().getId();
 
-        int result = userService.updateProfile(user, key);
+        String filePath = "C:/uploads/profile";
+        File fileDir = new File(filePath);
+
+        if(!fileDir.exists()){
+            fileDir.mkdirs();
+        }
+
+        String originFileName = profilePic.getOriginalFilename();
+        String ext = originFileName.substring(originFileName.lastIndexOf("."));
+        String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
+
+        try {
+            profilePic.transferTo(new File(filePath + "/" + savedName));
+
+            Integer key = userDetails.getLoginUserDTO().getId();
+            int result = userService.updateProfile(profilePic, key);
+
+            if (result > 0) {
+                mv.addObject("message", "프로필 이미지를 수정했습니다.");
+                mv.addObject("img", "/img/profile/" + savedName);
+                mv.setViewName("redirect:/mypage/home");
+            } else {
+                mv.addObject("message", "프로필 이미지 수정에 실패했습니다.");
+                mv.setViewName("mypage/mypage");
+            }
 
 
-
-        if (result > 0) {
-            mv.addObject("message", "프로필 이미지를 수정했습니다.");
-            mv.setViewName("redirect:/mypage/home");
-        } else {
-            mv.addObject("message", "프로필 이미지 수정에 실패했습니다.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            mv.addObject("message", "파일 업로드에 실패했습니다.");
             mv.setViewName("mypage/mypage");
         }
+
+
 
         return mv;
     }

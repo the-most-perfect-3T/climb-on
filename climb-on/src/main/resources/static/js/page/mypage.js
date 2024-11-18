@@ -72,7 +72,21 @@ const onSubmitHandlerForMypage = () => {
         }
     }
 
-
-
     return true;
 }
+
+
+// input file 대신 클릭
+const btnModifyProfile = document.querySelector(".section-mypage #profile .modify-cont .btn-modify");
+const profileFile = document.getElementById('profilePic');
+
+
+btnModifyProfile.addEventListener("click", function(e){
+    profileFile.click();
+});
+
+profileFile.addEventListener('change', function () {
+    if (this.files.length > 0) {
+        document.getElementById('profileForm').submit();
+    }
+});
