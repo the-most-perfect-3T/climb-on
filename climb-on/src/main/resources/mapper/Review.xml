@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.facilities.dao.ReviewDAO">
+    <resultMap id="ReviewResultMap" type="com.ohgiraffers.climbon.facilities.dto.ReviewDTO">
+
+        <id property="id" column="id" />
+        <result property="FacilityId" column="FACILITY_ID" />
+        <result property="ReviewerId" column="USER_ID" />
+        <result property="rating" column="RATING" />
+        <result property="comment" column="COMMENT" />
+        <result property="createdAt" column="CREATED_AT" />
+    </resultMap>
+
+    <select id="getReview" resultMap="ReviewResultMap">
+        SELECT
+        *
+        FROM REVIEWS
+        WHERE FACILITY_ID = #{ id }
+    </select>
+
+</mapper>
