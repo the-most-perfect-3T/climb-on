@@ -37,4 +37,8 @@ public class FacilitiesService {
     public List<FacilitiesDTO> getFacilitySuggestions(String code) {
         return facilitiesDAO.searchOneFacility(code);
     }
+
+    public FacilitiesDTO getFacility(int facilityId) {
+        return facilitiesDAO.getFacility(facilityId);
+    }
 }
