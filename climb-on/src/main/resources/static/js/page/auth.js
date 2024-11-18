@@ -151,3 +151,53 @@ const onSubmitHandler = () => {
     return true;
 
 }
+
+// 아이디 중복확인 요청보내기
+const checkId = () => {
+    const userId = document.getElementById("userId").value;
+    fetch(`/auth/checkUserId?userId=${userId}`)
+        .then(response => response.text())
+        .then(message => {
+            document.getElementById("userId-success").innerText = message.includes("사용 가능") ? message : "";
+            message.includes("중복") ? alert(message) : "";
+            message.includes("유효") ? alert(message) : "";
+        })
+        .catch(error => console.error("Error:", error));
+}
+
+// 닉네임 중복확인 요청보내기
+const checkName = () => {
+
+    const nicknameExisting = document.getElementById("nicknameExisting") !== null ? document.getElementById("nicknameExisting") : null;
+    const nickname = document.getElementById("nickname").value;
+    if(nicknameExisting !== null){
+        // 기존값(히든)이 있으면
+        if(nicknameExisting.value !== nickname){
+            // 기존값(히든)과 닉네임 일치하지 않을 때
+            fetch(`/auth/checkName?nickname=${nickname}`)
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById("nickname-success").innerText = message.includes("사용 가능") ? message : "";
+                    message.includes("중복") ? alert(message) : "";
+                    message.includes("유효") ? alert(message) : "";
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    }else {
+        // 기존값(히든)이 없을 때
+        fetch(`/auth/checkName?nickname=${nickname}`)
+            .then(response => response.text())
+            .then(message => {
+                document.getElementById("nickname-success").innerText = message.includes("사용 가능") ? message : "";
+                message.includes("중복") ? alert(message) : "";
+                message.includes("유효") ? alert(message) : "";
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+
+    console.log(nicknameExisting);
+
+
+
+}

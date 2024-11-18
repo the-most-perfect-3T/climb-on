@@ -21,20 +21,15 @@
     </resultMap>
 
     <insert id="insertPost" parameterType="com.ohgiraffers.climbon.crew.dto.CrewBoardDTO">
-        INSERT INTO crew_posts
+        INSERT INTO crew_posts(crew_code, user_id, category_code, title, content, img_url, updated_at, status)
            VALUES(
-            NULL,
             1,
             1,
             #{categoryCode},
             #{title},
             #{content},
             #{imgUrl},
-            DEFAULT,
             NULL,
-            DEFAULT,
-            DEFAULT,
-            DEFAULT,
             1
         )
     </insert>

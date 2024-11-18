@@ -8,7 +8,7 @@
 <body>
 
 
-    <textarea class="form-control" id="editor" name="content" rows="3" th:fragment="textEditorFragment">
+    <textarea class="form-control" id="editor" name="content" rows="3" th:fragment="textEditorFragment" required>
     </textarea>
 
 
@@ -40,6 +40,7 @@
         } from 'ckeditor5';
         import coreTranslations from 'ckeditor5/translations/ko.js';
 
+        let editor;
 
         ClassicEditor
             .create( document.querySelector( '#editor' ), {
@@ -48,6 +49,7 @@
                     Image, ImageToolbar, SimpleUploadAdapter,
                     ImageUpload
                 ],
+
                 image:{
                     insert:{
                         integrations: ['upload'],
@@ -84,6 +86,7 @@
             .catch( err => {
                 console.error( err.stack );
             } );
+
     </script>
 
 </body>
