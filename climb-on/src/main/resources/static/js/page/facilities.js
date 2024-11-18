@@ -146,7 +146,7 @@ function loadKakaoMap(facilities) {
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
             showFacility(facility);
-            showFacilityDetails(facility);
+
 
         });
     });
@@ -235,8 +235,6 @@ window.onload = function () {
 
 };
 
-
-
 //초기화 버튼
 function resetForm() {
     // 검색 입력 필드를 0으로 설정
@@ -257,7 +255,9 @@ function showFacilityDetails(facility){
 
     console.log("클릭두번되나요")
 
+
     const facilityDetailsHTML = `
+ <div class="facility-details">
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
@@ -265,11 +265,37 @@ function showFacilityDetails(facility){
         <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
         <p><strong>위도:</strong> ${facility.latitude ? facility.latitude : '정보 없음'}</p>
         <p><strong>경도:</strong> ${facility.longitude ? facility.longitude : '정보 없음'}</p>
-        
+        </div>
     `;
     // facilityDetailsContainer에 세부 정보를 삽입
     const detailsContainer = document.getElementById('facilityDetailsContainer');
     detailsContainer.innerHTML = facilityDetailsHTML;
 
-    currentfacility = facility;
+    fetch(`/Review/Reviews?code=${encodeURIComponent(facility.id)}`) // 패치요청 responseEntity 로 jason 받음
+        .then(response => {                         // encodeURIComponent 안전하게하는것
+            if (!response.ok) {
+                throw new Error('서버 오류: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // 데이터 구조 확인
+
+            if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
+                data.forEach(Reviews => {
+                    console.log(Reviews.comment + "데이터가있음?"); // 각 메뉴 확인
+                    const item = document.createElement('div');
+                    item.className = 'Review-item';
+                    item.textContent = Reviews.comment; // 메뉴 코드 표시
+
+                    detailsContainer.appendChild(item);
+                });
+
+
+                currentfacility = facility;
+            }
+
+
+        });
+
 }
