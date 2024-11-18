@@ -45,13 +45,13 @@
     margin-left: 12px;
 }
 
-.section-login .cont p {
+.section-login .cont > p {
     text-align: center;
     margin-top: 30px;
     font-size: 14px;
 }
 
-.section-login .cont p a {
+.section-login .cont > p a {
     color: var(--point);
     font-weight: 500;
 }
