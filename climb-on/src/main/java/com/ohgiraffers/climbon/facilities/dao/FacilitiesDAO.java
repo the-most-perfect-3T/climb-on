@@ -18,4 +18,5 @@ public interface FacilitiesDAO {
     List<FacilitiesDTO> searchOneFacility(String code);
 
 
+    FacilitiesDTO getFacility(int facilityId);
 }
