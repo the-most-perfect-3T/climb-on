@@ -54,4 +54,21 @@
          WHERE ID = #{id};
     </update>
 
+    <update id="updateProfile" parameterType="hashmap">
+        UPDATE
+            USERS
+          SET
+            PROFILE_PIC = #{profilePic}
+         WHERE ID = #{id}
+    </update>
+
+    <update id="updateStatus" parameterType="hashmap">
+        UPDATE
+            USERS
+          SET
+            STATUS = 0,
+            INACTIVE_AT = #{inactiveAt}
+         WHERE ID = #{id}
+    </update>
+
 </mapper>

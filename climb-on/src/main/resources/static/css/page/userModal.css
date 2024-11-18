@@ -1,0 +1,45 @@
+@charset "utf-8";
+
+#userModalChoice .modal-dialog {
+    top: 50%;
+    transform: translateY(-50%);
+}
+#userModalChoice .modal-content {
+    overflow: hidden;
+}
+#userModalChoice .modal-body {
+    padding: 30px 30px 40px;
+}
+#userModalChoice .modal-body .logo {
+    margin-bottom: 25px;
+}
+#userModalChoice .modal-body .logo img {
+    width: 103px;
+}
+#userModalChoice .modal-body h5 {
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+#userModalChoice .modal-body p {
+    width: 330px;
+    word-break: keep-all;
+    line-height: 22px;
+    font-size: 14px;
+    margin: 0 auto;
+}
+#userModalChoice .modal-body p a {
+    font-weight: 600;
+    text-decoration: underline;
+}
+#userModalChoice .modal-footer button {
+    font-weight: 600;
+    border-radius: 0;
+}
+#userModalChoice .modal-footer button:first-of-type {
+    background: var(--borderColor);
+}
+#userModalChoice .modal-footer button:last-of-type {
+    color: #fff;
+    background: var(--bs-danger);
+}

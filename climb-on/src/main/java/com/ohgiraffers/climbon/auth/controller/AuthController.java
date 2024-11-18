@@ -106,8 +106,6 @@ public class AuthController {
         return ResponseEntity.ok("사용 가능한 닉네임입니다.");
     }
 
-
-
     @GetMapping("fail")
     public ModelAndView fail(ModelAndView mv, @RequestParam("message") String message){
         mv.addObject("message", message);

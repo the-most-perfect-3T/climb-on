@@ -12,4 +12,6 @@ public interface AuthMapper {
     LoginUserDTO findByUserId(String username);
 
     LoginUserDTO findByNickname(String nickname);
+
+    LoginUserDTO findByUserIdStatus(String username);
 }
