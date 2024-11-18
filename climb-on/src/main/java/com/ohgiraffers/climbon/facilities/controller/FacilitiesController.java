@@ -66,14 +66,21 @@ public class FacilitiesController {
     }
     //검색시 실시간
     @GetMapping("/suggestions")
-    public ResponseEntity<List<FacilitiesDTO>> getSuggestions(@RequestParam String code) {
+    public ResponseEntity<List<FacilitiesDTO>> getSuggestions(@RequestParam String code) { // 이건 쿼리파라미터
 
         List<FacilitiesDTO> suggestions = facilitiesService.getFacilitySuggestions(code);
         return ResponseEntity.ok(suggestions);
 
 
     }
+    //하나만 가져오기
+    @GetMapping("facility/{id}")
+    public ResponseEntity<FacilitiesDTO> getFacility(@PathVariable("id") int facilityId) { //이건 그냥 단순값
 
+        FacilitiesDTO facilityDTO = facilitiesService.getFacility(facilityId);
+        System.out.println("facilityDTO = " + facilityDTO);
+        return ResponseEntity.ok(facilityDTO);
+    }
 
 
 

@@ -2,77 +2,67 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
+<body>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/page/facilities.css}">
+    </th:block>
     <th:block layout:fragment = "containerFragment">
+                    <!--<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>-->
+        <div class="inner">
+            <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+               <!-- <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>-->
 
-        <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
-<!--bootstrap-->
+                <div class="search-container">
+                    <form id="searchForm" action="/facilities/search" method="post">
+                        <input type="text" name="code" class="search-input" id="codeInput" placeholder="  암장이름 검색하기" oninput="showSuggestions()" autocomplete="off"/><br/>
+                        <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
+                        <button  class="search-button" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    </form>
+                </div>
+                <!-- 초기화 버튼 -->
+                <button type="button" onclick="resetForm()">전체 조회</button>
 
+                <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
+                <button type="button" onclick="handleCategorySubmit(2)">리드</button>
+                <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
 
-                <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
-                <div class="inner">
+                <div class="offcanvas-body">
                     <!-- 볼더링 카테고리 버튼 -->
-                    <br/><br/><br/><br/>
                     <!--검색기능-->
 
-                    <form id="searchForm" action="/facilities/search" method="post">
-                        코드 : <input type="text" name="code" id="codeInput" oninput="showSuggestions()" autocomplete="off"/><br/>
-                        <button type="submit">전송하기</button>
-                    </form>
-                    <div id="suggestions"></div> <!-- 추천 결과를 보여줄 부분 -->
-                    <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
-                    <button type="button" onclick="handleCategorySubmit(2)">리드</button>
-                    <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
-
+                    <div th:if="${facilitiesList != null}">
+                        <table id="facilitiestb">
+                            <tbody>
+                            <tr th:each="facility : ${facilitiesList}"th:onclick="'showFacilityId(' + ${facility.id} + ')'">
+                                <td>
+                                <div class="facility-info">
+                                    <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
+                                    <div class="facility-address" th:text="${facility.address}">주소</div>
+                                </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- 시설 목록이 없을 경우 메시지 표시 -->
+                    <div th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
+                        <p>시설 목록이 없습니다.</p>
+                    </div>
                 </div>
+            </div>
 
 
+            <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
 
-                <h2 class="inner">시설 목록</h2>
-        <div class="inner" th:if="${facilitiesList != null}">
-            <table id="facilitiestb">
-                <thead>
-                <tr>
-                    <th>시설 ID</th>
-                    <th>시설명</th>
-                    <th>주소</th>
-                    <th>연락처</th>
-                    <th>개방 시간</th>
-                    <th>카테고리 ID</th>
-                    <th>위도</th>
-                    <th>경도</th>
-                    <th>시설 타입</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="facility : ${facilitiesList}">
-                    <td th:text="${facility.id}"
-                        th:onclick="'showFacilityId(' + ${facility.latitude} + ', ' + ${facility.longitude} + ')'">
-                        시설 ID
-                    </td>
-                    <td th:text="${facility.facilityName}">시설명</td>
-                    <td th:text="${facility.address}">주소</td>
-                    <td th:text="${facility.contact}">연락처</td>
-                    <td th:text="${facility.openingTime}">개방 시간</td>
-                    <td th:text="${facility.categoryId}">카테고리 ID</td>
-                    <td th:text="${facility.latitude}">위도</td>
-                    <td th:text="${facility.longitude}">경도</td>
-                    <td th:text="${facility.facilityType}">시설 타입</td>
+            <div class="facilityDetails" id="facilityDetailsContainer">
 
-                </tr>
-                </tbody>
-            </table>
+
+            </div>
+
         </div>
-        <!-- 시설 목록이 없을 경우 메시지 표시 -->
-        <div class="inner" th:if="${facilitiesList == null or facilitiesList.isEmpty()}">
-            <p>시설 목록이 없습니다.</p>
-        </div>
-
-                <!--이거두개도 부트스트랩-->
-
-        <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
-
-
     </th:block>
 
 
@@ -89,13 +79,33 @@
                 // 카카오 맵에 마커 추가
               loadKakaoMap(facilities);
             }
-            function showFacilityId(lat,long){
-                showFacility(lat,long)
+            //th 쓰는 함수
+            function showFacilityId(id){
+               // const facility = JSON.parse(facilityJson);
+                fetch(`/facilities/facility/${id}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`네트워크 응답에 문제가 있습니다. 상태 코드: ${response.status}`);
+                        }
+                        return response.json(); // JSON 형식으로 응답을 파싱
+                    })
+                    .then(data => {
+                        console.log("시설 상세 정보:", data);
+                        // 데이터 받아온 후, showFacility 호출
+                        showFacility(data);
+                    })
+                    .catch(error => {
+                        console.error('시설 정보 로드 실패:', error);
+                        // 에러가 발생한 경우, 적절히 사용자에게 알림 처리
+                        alert("시설 정보를 불러오는 데 실패했습니다.");
+                    });
 
             }
         </script>
 
+
         <script th:src="@{/js/page/facilities.js}"></script>
     </th:block>
+</body>
 </html>
 

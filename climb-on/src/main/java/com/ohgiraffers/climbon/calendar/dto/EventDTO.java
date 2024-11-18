@@ -6,6 +6,7 @@ public class EventDTO
 {
     private int id;
     private String title;
+    private int userCode;
     private String start;
     private String end;
     private String description;
@@ -15,10 +16,11 @@ public class EventDTO
     {
     }
 
-    public EventDTO(int id, String title, String start, String end, String description, String backgroundColor)
+    public EventDTO(int id, String title, int userCode, String start, String end, String description, String backgroundColor)
     {
         this.id = id;
         this.title = title;
+        this.userCode = userCode;
         this.start = start;
         this.end = end;
         this.description = description;
@@ -43,6 +45,16 @@ public class EventDTO
     public void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public int getUserCode()
+    {
+        return userCode;
+    }
+
+    public void setUserCode(int userCode)
+    {
+        this.userCode = userCode;
     }
 
     public String getStart()

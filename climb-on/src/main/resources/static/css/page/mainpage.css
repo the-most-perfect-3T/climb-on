@@ -10,6 +10,7 @@
 .main-content{
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 
     margin-top: 124px;
     padding: 20px;
@@ -22,13 +23,15 @@
     font-weight: 700;
 }
 
+
+/* 이벤트(리스트, 캘린더) */
 .event-container{
     display: flex;
     width: 1106px;
     height: 700px;
 
     align-items: center;
-    justify-content: center;
+    margin: 0 auto;
 }
 
 .event-container .events-section{
@@ -37,14 +40,15 @@
     height: 100%;
 }
 
-.event-list {
+.event-container .event-list {
     background-color: #fff;
     padding: 32px;
     border: 1px solid #ddd;
     border-radius: 8px;
 }
 
-.event-list h5{
+.event-container .event-list h5{
+    color: #222222;
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -52,4 +56,37 @@
 
 .event-container .calendar-section {
     height: 662px;
+}
+
+/* 오늘의 암장 */
+
+.featured-locations{
+    margin-top: 123px;
+}
+
+.featured-locations .facility-list{
+    margin: 0 auto;
+    display: flex;
+    width: 1106px;
+    height: 500px;
+}
+
+.featured-locations .facility-item{
+    margin-right: 13px;
+    width: 360px;
+    height: 100%;
+    background-color: #DEE2E6;
+    border-radius: 6px;
+}
+
+/* 커뮤니티 게시판 */
+.community-container{
+    margin-top: 100px;
+    display: flex;
+    width: 1106px;
+    height: 500px;
+}
+
+.community-container .community-posts{
+    height: 100%;
 }
