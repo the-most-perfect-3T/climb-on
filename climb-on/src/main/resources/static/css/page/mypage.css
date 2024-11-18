@@ -166,7 +166,7 @@
 /* profile-tab : 회원 정보 수정 */
 .section-mypage #profile .modify-cont .section00 {
     padding: 55px 0 50px 80px;
-    margin-bottom: 50px;
+    /*margin-bottom: 50px;*/
 }
 .section-mypage #profile .modify-cont .section00 .section-title {
     margin-bottom: 50px;
@@ -206,6 +206,9 @@
     font-size: 14px;
     height: 30px;
     line-height: 30px;
+}
+.section-mypage #profile .modify-cont .section00 .btn-wrap input[type='file']{
+    display: none;
 }
 .section-mypage #profile .modify-cont .section00 .btn-wrap .btn-modify {
     background: var(--beige);
