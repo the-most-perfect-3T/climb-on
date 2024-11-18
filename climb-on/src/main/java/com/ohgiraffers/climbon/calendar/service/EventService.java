@@ -18,7 +18,7 @@ public class EventService
     public List<EventDTO> getAllEvents()
     {
         List<EventDTO> allEvents = eventMapper.getAllEvents();
-        allEvents.addAll(eventMapper.getAllEventsFromCrew());
+        //allEvents.addAll(eventMapper.getAllEventsFromCrew());
 
         return allEvents;
     }

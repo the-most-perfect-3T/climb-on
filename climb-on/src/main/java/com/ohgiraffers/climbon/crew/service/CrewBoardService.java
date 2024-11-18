@@ -17,4 +17,17 @@ public class CrewBoardService {
         return result;
 
     }
+
+    public CrewBoardDTO selectLastPost() {
+        return crewBoardDAO.selectLastPost();
+    }
+
+
+    public Integer getCrewCode(int id) {
+        return crewBoardDAO.getCrewCode(id);
+    }
+
+    public CrewBoardDTO selectOnePostById(int id) {
+        return crewBoardDAO.selectOnePostById(id);
+    }
 }
