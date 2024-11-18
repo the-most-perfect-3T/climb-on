@@ -285,12 +285,19 @@ function showFacilityDetails(facility){
                 data.forEach(Reviews => {
                     console.log(Reviews.comment + "데이터가있음?"); // 각 메뉴 확인
                     const item = document.createElement('div');
+                    const reviewDate = new Date("2024-08-01T12:00:00Z"); // 예시 날짜
+                    const timeText = timeAgo(reviewDate);
                     item.className = 'Review-item';
-                    item.textContent = Reviews.comment; // 메뉴 코드 표시
+                    // Using innerHTML to insert the review comment
+                    item.innerHTML = `<p>${Reviews.userNickname}</p>
+                                        <span>${timeText}</span>
+                                        <p>${Reviews.rating}</p>
+                                        <p>${Reviews.likeCount}</p>
+                                        <p>${Reviews.comment || '댓글이 없습니다'}</p>`;
+                    // Append the review item div to the details container
 
                     detailsContainer.appendChild(item);
                 });
-
 
                 currentfacility = facility;
             }
@@ -299,3 +306,32 @@ function showFacilityDetails(facility){
         });
 
 }
+
+// 주어진 날짜(예: 리뷰 작성일)와 현재 시간의 차이를 계산하는 함수
+function timeAgo(date) {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(diffInSeconds / 3600);
+    const days = Math.floor(diffInSeconds / (3600 * 24));
+    const months = Math.floor(diffInSeconds / (3600 * 24 * 30)); // 대략적으로 한 달을 30일로 계산
+    const years = Math.floor(diffInSeconds / (3600 * 24 * 365)); // 대략적으로 1년을 365일로 계산
+
+    if (years > 0) {
+        return `${years}년 전`;
+    } else if (months > 0) {
+        return `${months}개월 전`;
+    } else if (days > 0) {
+        return `${days}일 전`;
+    } else if (hours > 0) {
+        return `${hours}시간 전`;
+    } else if (minutes > 0) {
+        return `${minutes}분 전`;
+    } else {
+        return `방금 전`;
+    }
+}
+
+// 사용 예시
+

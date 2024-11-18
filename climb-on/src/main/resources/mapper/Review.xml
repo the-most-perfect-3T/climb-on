@@ -11,13 +11,30 @@
         <result property="rating" column="RATING" />
         <result property="comment" column="COMMENT" />
         <result property="createdAt" column="CREATED_AT" />
+        <result property="userNickname" column="userNickname"/>
+        <result property="likeCount" column="likeCount"/>
     </resultMap>
 
     <select id="getReview" resultMap="ReviewResultMap">
         SELECT
-        *
-        FROM REVIEWS
-        WHERE FACILITY_ID = #{ id }
+        r.ID AS review_id,        <!-- 리뷰 ID -->
+        r.RATING,                 <!-- 평점 -->
+        r.COMMENT,                <!-- 댓글 -->
+        r.CREATED_AT,             <!-- 작성 시간 -->
+        u.nickname AS userNickname,   <!-- 유저 닉네임 -->
+        COUNT(urh.user_code) AS likeCount  <!-- 좋아요 수 -->
+        FROM
+        REVIEWS r
+        JOIN
+        USERS u ON r.USER_ID = u.ID    <!-- USERS 테이블과 USER_ID로 연결 -->
+        LEFT JOIN
+        user_review_heart urh ON r.ID = urh.review_code  <!-- 리뷰에 좋아요를 누른 사용자 정보 -->
+        WHERE
+        r.FACILITY_ID = #{id}  <!-- FACILITY_ID를 파라미터로 받음 -->
+        GROUP BY
+        r.ID, r.RATING, r.COMMENT, r.CREATED_AT, u.nickname  <!-- 각 리뷰에 대한 정보 그룹화 -->
+        ORDER BY
+        r.CREATED_AT DESC;          <!-- 최신 리뷰가 먼저 나오도록 정렬 -->
     </select>
 
 </mapper>
