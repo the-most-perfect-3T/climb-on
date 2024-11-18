@@ -13,13 +13,13 @@
     <th:block layout:fragment="containerFragment">
         <section>
             <div class="inner">
-                <div class="content">
+                <div class="content container">
                     <div class="top area">
                         <h2>크루게시판 글 쓰기</h2>
                         <p th:text="|${nickname} 님 크루게시판에서 다양한 크루원들과 교류해 보세요.|"></p>
                     </div>
                     <br/>
-                    <form action="/crew/writePost" method="post" id="writePostForm" onsubmit="onSubmitHandler2(event)">
+                    <form action="/crew/writePost" method="post" id="writePostForm">
                         <div class="input-wrap">
                             <h4>카테고리</h4>
                             <select class="form-select" aria-label="Default select example" name="categoryCode" required>
@@ -33,9 +33,37 @@
                                 <label for="title" class="form-label">제목</label>
                                 <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요." name="title" required>
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 form-group">
                                 <label for="editor" class="form-label">본문</label>
-                                <textarea class="form-control" id="editor" name="content" rows="3" th:replace ="~{/common/quillTextEditor :: textEditorFragment}" required></textarea>
+                                <div id="toolbar-container">
+                                    <span class="ql-formats">
+                                      <select class="ql-font"></select>
+                                      <select class="ql-size"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                      <button class="ql-bold"></button>
+                                      <button class="ql-italic"></button>
+                                      <button class="ql-underline"></button>
+                                      <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                      <select class="ql-color"></select>
+                                      <select class="ql-background"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                      <button class="ql-direction" value="rtl"></button>
+                                      <select class="ql-align"></select>
+                                    </span>
+                                    <span class="ql-formats">
+                                      <button class="ql-image"></button>
+                                      <button class="ql-video"></button>
+                                    </span>
+                                </div>
+
+                                <div id="editor"></div>
+                                <input type="hidden" id="hidden_input" name="content" required>
+
+<!--                                <textarea class="form-control" id="editor" th:replace ="~{/common/quillTextEditor :: textEditorFragment}" required></textarea>-->
                             </div>
 
                             <div class="form-check form-switch">
@@ -43,8 +71,9 @@
                                 <label class="form-check-label" for="anonymous">익명</label>
                             </div>
 
+                            <div class="hidden alert" id="liveAlertPlaceHolder"></div>
                             <button type="reset" class="btn">취소</button>
-                            <button type="submit" class="btn" >등록</button>
+                            <input type="submit" class="btn" value="등록">
 
                         </div>
 
@@ -60,8 +89,8 @@
     <th:block layout:fragment="javascript">
 
         <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-        <script th:src="@{/js/common/quillTextEditor.js}"></script>
-        <script type="module" th:src="@{/js/page/crew.js}"></script>
+<!--        <script th:src="@{/js/common/quillTextEditor.js}"></script>-->
+        <script type="module"  th:src="@{/js/page/crew.js}"></script>
 
     </th:block>
 </html>

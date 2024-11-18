@@ -1,26 +1,40 @@
 package com.ohgiraffers.climbon.community.dto;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class CommentDTO {
     private Integer id;
     private Integer postId;
-    //    private Integer userId;
+    private String userId;
     private String content;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private int commentCount;
+    private int commentsCount;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(Integer id, Integer postId, String content, LocalDateTime createdAt, LocalDateTime updatedAt, int commentCount) {
+    public CommentDTO(Integer id, Integer postId, String userId, String content, LocalDateTime createdAt, int commentsCount) {
         this.id = id;
         this.postId = postId;
+        this.userId = userId;
         this.content = content;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.commentCount = commentCount;
+        this.commentsCount = commentsCount;
+    }
+
+    public String getFormattedCreatedAt() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter;
+
+        if (createdAt.toLocalDate().isEqual(now.toLocalDate())) {
+            // 오늘 날짜인 경우 시간만 표시
+            formatter = DateTimeFormatter.ofPattern("HH:mm");
+        } else {
+            // 오늘 아닌 경우 날짜만 표시
+            formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
+        }
+        return createdAt.format(formatter);
     }
 
     public Integer getId() {
@@ -39,6 +53,14 @@ public class CommentDTO {
         this.postId = postId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getContent() {
         return content;
     }
@@ -47,28 +69,17 @@ public class CommentDTO {
         this.content = content;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public int getCommentsCount() {
+        return commentsCount;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public int getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(int commentCount) {
-        this.commentCount = commentCount;
+    public void setCommentsCount(int commentsCount) {
+        this.commentsCount = commentsCount;
     }
 
     @Override
@@ -76,10 +87,11 @@ public class CommentDTO {
         return "CommentDTO{" +
                 "id=" + id +
                 ", postId=" + postId +
+                ", userId='" + userId + '\'' +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", commentCount=" + commentCount +
+                ", commentsCount=" + commentsCount +
                 '}';
     }
+
 }

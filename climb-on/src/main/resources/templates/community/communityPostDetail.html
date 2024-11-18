@@ -22,13 +22,15 @@
             <div class="author-info">
                 <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
                 <span class="author-name" th:text="${post.userNickname}">작성자 닉네임</span>
-                <span class="post-date" th:text="${post.createdAt}">작성일</span>
+                <span class="post-date" th:text="${post.formattedCreatedAt}">작성일</span>
                 <span class="views">조회수 <span th:text="${post.viewCount}">0</span></span>
             </div>
         </div>
         <div class="post-actions">
-            <button onclick="window.location.href='/community/modify'">수정</button>
-            <button>삭제</button>
+            <button th:onclick="|window.location.href='/community/${post.id}/modify'|">수정</button>
+            <form th:action="@{'/community/' + ${post.id} + '/delete'}" method="post" style="display:inline;">
+            <button type="submit" onlick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            </form>
         </div>
     </div>
 
@@ -43,13 +45,15 @@
     <!-- 좋아요 및 댓글 수 -->
     <div class="post-interactions">
         <span class="likes">좋아요 <span th:text="${post.likes}">0</span></span>
-        <span class="comments-count">댓글 <span th:text="${post.commentCount}">0</span></span>
+        <span class="comments-count">댓글 <span th:text="${post.commentsCount}">0</span></span>
     </div>
 
     <!-- 댓글 작성 -->
     <div class="comment-section">
-        <textarea placeholder="댓글을 입력하세요..."></textarea>
+        <form th:action="@{'/community/' + ${post.id} + '/comment'}" method="post">
+        <textarea name="content" placeholder="댓글을 입력해주세요" required></textarea>
         <button class="submit-comment">작성</button>
+        </form>
     </div>
 
     <!-- 댓글 목록 -->
@@ -61,7 +65,7 @@
             <div class="comment-content">
                 <span class="comment-author" th:text="${comment.userId}">댓글 작성자</span>
                 <p th:text="${comment.content}">댓글 내용</p>
-                <span class="comment-date" th:text="${comment.createdAt}">작성일</span>
+                <span class="comment-date" th:text="${comment.formattedCreatedAt}">작성일</span>
             </div>
         </div>
     </div>

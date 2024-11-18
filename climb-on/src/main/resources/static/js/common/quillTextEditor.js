@@ -1,3 +1,4 @@
+/*
 const quill = new Quill('#editor', {
     modules: {
         syntax: true,
@@ -5,4 +6,4 @@ const quill = new Quill('#editor', {
     },
     placeholder: 'Compose an epic...',
     theme: 'snow',
-});
+});*/

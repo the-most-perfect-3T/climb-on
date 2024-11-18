@@ -1,5 +1,6 @@
 package com.ohgiraffers.climbon.community.dao;
 
+import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,4 +29,8 @@ public interface PostDAO {
     PostDTO getPreviousPost(@Param("id") Integer id);
 
     PostDTO getNextPost(@Param("id") Integer id);
+
+    List<CommentDTO> getCommentsByPostId(Integer postId);
+
+    void insertComment(CommentDTO comment);
 }

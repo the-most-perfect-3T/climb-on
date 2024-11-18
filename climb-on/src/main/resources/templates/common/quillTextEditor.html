@@ -2,7 +2,8 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 
-    <div id="standalone-container" th:fragment="textEditorFragment">
+    <div id="standalone-container" th:fragment="textEditorFragment" >
+
         <div id="toolbar-container">
             <span class="ql-formats">
               <select class="ql-font"></select>
@@ -27,8 +28,7 @@
               <button class="ql-video"></button>
             </span>
         </div>
-
-        <div id="editor" style="height: 220px">
+        <div id="editor" name="content" style="width: 1400px">
         </div>
     </div>
 
