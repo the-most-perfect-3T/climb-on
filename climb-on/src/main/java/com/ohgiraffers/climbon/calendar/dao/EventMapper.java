@@ -14,7 +14,7 @@ public interface EventMapper
 
     void insertEvent(EventDTO event);
 
-    int checkDuplicate(String title, String start, String end);
+    int checkDuplicate(String title, String start, String end, int userCode);
 
     void deleteEvent(int id);
 

@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController
 {
+    public int userCode =0;
     @Autowired
     private EventService eventService;
 
@@ -30,21 +31,23 @@ public class EventController
             // 로그인 하지 않은 유저들에게도 다 보여주는 정보
             System.out.println("No login user");
         }
-        return eventService.getAllEvents(userDetails.getLoginUserDTO().getId());
+        userCode = userDetails.getLoginUserDTO().getId();
+        return eventService.getAllEvents(userCode);
     }
 
     @PostMapping("/batch")
     public void addEvent(@RequestBody List<EventDTO> events)
     {
-        if(events==null || events.size()==0)
+        if(events==null || events.size()==0 || userCode==0)
         {
-            System.out.println("이벤트가 없습니다!");
+            System.out.println("이벤트를 저장할 수 없습니다.");
         }
 
         for (EventDTO event : events)
         {
+            event.setUserCode(userCode);
             // 조건 검사
-            if(eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd()))
+            if(eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode()))
             {
                 // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
                 continue;
