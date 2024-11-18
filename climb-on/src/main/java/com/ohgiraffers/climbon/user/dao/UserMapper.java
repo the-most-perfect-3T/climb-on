@@ -2,7 +2,7 @@ package com.ohgiraffers.climbon.user.dao;
 
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.Map;
 
@@ -20,4 +20,6 @@ public interface UserMapper {
 
 
     int updateProfile(Map<String, Object> map);
+
+    int updateStatus(Map<String, Object> map);
 }

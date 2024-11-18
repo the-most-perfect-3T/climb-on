@@ -5,8 +5,10 @@ import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +49,7 @@ public class UserService {
         return homeName;
     }
 
-
+    @Transactional
     public int updateUser(UserDTO user, Integer key) {
         if (user == null || key == null) {
             return 0;
@@ -55,7 +57,7 @@ public class UserService {
         user.setId(key);
         return userMapper.updateUser(user);
     }
-
+    @Transactional
     public int updateProfile(String profilePic, Integer key) {
         if(profilePic == null || key == null){
             return 0;
@@ -69,9 +71,22 @@ public class UserService {
         int result = userMapper.updateProfile(map);
 
         return result;
-
     }
 
 
+    public int updateStatus(Integer key) {
 
+        if(key == null){
+            return 0;
+        }
+
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", key);
+        map.put("inactiveAt", LocalDateTime.now());
+
+        int result = userMapper.updateStatus(map);
+
+        return result;
+    }
 }

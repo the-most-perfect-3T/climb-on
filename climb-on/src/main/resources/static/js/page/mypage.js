@@ -76,10 +76,19 @@ const onSubmitHandlerForMypage = () => {
 }
 
 
-// input file 대신 클릭
+// 회원정보수정 - 프로필이미지 input file 대신 클릭
 const btnModifyProfile = document.querySelector(".section-mypage #profile .modify-cont .btn-modify");
 const profileFile = document.getElementById('profilePic');
+const btnDeleteProfile = document.querySelector(".section-mypage #profile .modify-cont .btn-delete");
 
+const profileImg = document.getElementById('profileImg');
+const profileImgSrc = profileImg.getAttribute("src");
+
+if (profileImgSrc.includes("/img/profile")) {
+    btnDeleteProfile.removeAttribute("disabled");
+} else {
+    btnDeleteProfile.setAttribute("disabled", true);
+}
 
 btnModifyProfile.addEventListener("click", function(e){
     profileFile.click();
@@ -87,6 +96,26 @@ btnModifyProfile.addEventListener("click", function(e){
 
 profileFile.addEventListener('change', function () {
     if (this.files.length > 0) {
+        btnDeleteProfile.removeAttribute("disabled");
+    } else {
+        btnDeleteProfile.setAttribute("disabled", true);
+    }
+
+    if (this.files.length > 0) {
         document.getElementById('profileForm').submit();
     }
+});
+
+
+// 프로필수정-계정삭제 checkbox 클릭시 disabled 해제
+const inputDeleteAgree = document.getElementById("agreeCheck");
+const btnWithdrawal = document.querySelector(".section-mypage #profile .modify-cont .btn-withdrawal");
+inputDeleteAgree.addEventListener("change", function(){
+   console.log(this);
+   const is_checked = this.checked;
+   if(is_checked){
+       btnWithdrawal.removeAttribute("disabled");
+   }else {
+        btnWithdrawal.setAttribute("disabled", true);
+   }
 });
