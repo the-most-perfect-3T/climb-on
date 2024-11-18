@@ -42,6 +42,11 @@
         WHERE facility_name LIKE '%' #{facilityName} '%'
     </select>
 
-
+    <select id="getFacility" resultMap="FacilityResultMap">
+        SELECT
+        *
+        FROM FACILITIES
+        WHERE id = #{ id }
+    </select>
 
 </mapper>
