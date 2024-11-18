@@ -31,7 +31,7 @@ public class CrewBoardController {
     // 소속 crew 가 있어야만 게시글 작성 가능
 
 
-    @PostMapping("/writePost")
+    @PostMapping("/writepost")
     public String registPost(CrewBoardDTO crewBoardDTO, @AuthenticationPrincipal AuthDetail userDetails) {
         int id = userDetails.getLoginUserDTO().getId();
         Integer crew_code = crewBoardService.getCrewCode(id);
@@ -57,8 +57,26 @@ public class CrewBoardController {
     @GetMapping("/updatepost/{id}")
     public ModelAndView updatePost(@PathVariable int id, ModelAndView mv) {
         CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
+        System.out.println(crewBoardDTO);
         mv.addObject("crewBoardDTO", crewBoardDTO);
         mv.setViewName("crew/crewBoardUpdatePost");
+        return mv;
+    }
+
+    @PostMapping("/updatepost/{id}")
+    public String updatePost(@PathVariable int id, CrewBoardDTO crewBoardDTO, ModelAndView mv) {
+        crewBoardDTO.setId(id);
+        int result = crewBoardService.updatePostById(crewBoardDTO);
+
+        return "redirect:/crew/updatedpost?id=" + id;
+
+    }
+
+    @GetMapping("/updatedpost")
+    public ModelAndView updatedpost(@RequestParam int id, ModelAndView mv) {
+        CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
+        mv.addObject("boardDTO", crewBoardDTO);
+        mv.setViewName("crew/crewBoardList");
         return mv;
     }
 

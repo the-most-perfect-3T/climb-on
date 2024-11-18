@@ -28,7 +28,7 @@
         </div>
         <div class="post-actions">
             <button th:onclick="|window.location.href='/community/${post.id}/modify'|">수정</button>
-            <form th:action="@{'/community/' + ${post.id} + '/delete'}" method="post" style="display:inline;">
+            <form th:action="@{'/community/'  + ${post.id} + '/delete'}" method="post" style="display:inline;">
             <button type="submit" onlick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
             </form>
         </div>

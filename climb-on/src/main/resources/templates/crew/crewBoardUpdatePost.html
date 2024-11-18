@@ -20,7 +20,7 @@
                         <p th:text="|${nickname} 님 크루게시판에서 다양한 크루원들과 교류해 보세요.|"></p>
                     </div>
                     <br/>
-                    <form action="/crew/updatePost" method="post" id="writePostForm">
+                    <form th:action="@{'/crew/updatepost/' + ${crewBoardDTO.id}}" method="post" id="writePostForm">
                         <div class="input-wrap">
                             <h4>카테고리</h4>
                             <select class="form-select" aria-label="Default select example" name="categoryCode" required>
@@ -63,7 +63,9 @@
 
                                 <div id="editor"></div>
                                 <input type="hidden" id="hidden_content_input" name="content" required>
+                                <input type="hidden" id="hiddenContent" th:value="${crewBoardDTO.content}">
                                 <input type="hidden" id="hidden_imgURL_input" name="imgUrl">
+                                <input type="hidden" id="hiddenImgURL" th:value="${crewBoardDTO.imgUrl}">
 
 <!--                                <textarea class="form-control" id="editor" th:replace ="~{/common/quillTextEditor :: textEditorFragment}" required></textarea>-->
                             </div>

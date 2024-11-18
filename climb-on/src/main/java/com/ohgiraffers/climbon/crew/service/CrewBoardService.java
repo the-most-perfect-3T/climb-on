@@ -30,4 +30,8 @@ public class CrewBoardService {
     public CrewBoardDTO selectOnePostById(int id) {
         return crewBoardDAO.selectOnePostById(id);
     }
+
+    public int updatePostById(CrewBoardDTO crewBoardDTO) {
+        return crewBoardDAO.updatePostById(crewBoardDTO);
+    }
 }

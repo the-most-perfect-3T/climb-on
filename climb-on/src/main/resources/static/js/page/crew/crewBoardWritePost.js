@@ -1,3 +1,5 @@
+// 카테고리 선택시 자격 확인(자격 없으면 appendAlert)
+
 
 Quill.register('modules/imageResize', ImageResize.default || ImageResize);
 

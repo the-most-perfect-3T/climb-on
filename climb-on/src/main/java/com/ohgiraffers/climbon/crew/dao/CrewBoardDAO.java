@@ -13,4 +13,6 @@ public interface CrewBoardDAO {
     Integer getCrewCode(int id);
 
     CrewBoardDTO selectOnePostById(int id);
+
+    int updatePostById(CrewBoardDTO crewBoardDTO);
 }
