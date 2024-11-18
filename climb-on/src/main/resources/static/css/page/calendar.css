@@ -30,7 +30,7 @@
 /* 캘린더 */
 .fc {
     width: 769px;
-    height: 602px;
+    height: 100%
 
 }
 .fc .fc-col-header-cell-cushion {
@@ -53,7 +53,7 @@
 }
 
 .fc .fc-daygrid-day-frame{
-
+    height: min-content;
 }
 
 .fc-day-sun a { /* 일요일 컬러 */

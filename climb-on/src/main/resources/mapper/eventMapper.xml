@@ -20,11 +20,11 @@
         FROM calendar_events;
     </select>
 
-    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">
-        SELECT
-        *
-        FROM tbl_crewevents_test;
-    </select>
+<!--    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">-->
+<!--        SELECT-->
+<!--        *-->
+<!--        FROM tbl_crewevents_test;-->
+<!--    </select>-->
 
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         INSERT INTO calendar_events (title, start_datetime, end_datetime, description, color)

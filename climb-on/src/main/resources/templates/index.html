@@ -5,12 +5,72 @@
                   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/mainpage.css}">
     <link rel="stylesheet" th:href="@{/css/page/calendar.css}">
 </th:block>
     <!--메인에 들어갈 내용들-->
     <th:block layout:fragment="containerFragment">
-        <div id = "calendar"></div>
 
+        <div class="banner-content"></div>
+        <div class="main-content">
+
+            <h3>주목할만한 이벤트</h3>
+            <div class="event-container">
+                <section class="events-section">
+                    <div class="event-list">
+                        <h5>대회 안내</h5>
+                        <ul>
+                            <li>2024 여기에 이벤트 뿌려줘야 함</li><hr/>
+                            <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
+                            <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
+                        </ul>
+                    </div>
+                </section>
+                <section class="calendar-section">
+                    <div id = "calendar"></div>
+                </section>
+            </div>
+
+            <div class="featured-locations">
+                <h3>오늘의 암장</h3>
+                <div class="facility-list">
+                    <div class="facility-item">
+                        <span class="rating"> 4.5</span>
+                        <p>더클라임 클라이밍 짐앤샵 신림점</p>
+                    </div>
+                    <div class="facility-item">
+                        <span class="rating"> 4.5</span>
+                        <p>뚝섬한강공원 인공암벽장</p>
+                    </div>
+                    <div class="facility-item">
+                        <span class="rating"> 4.5</span>
+                        <p>하이미디어학원</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="community-section">
+                <h2>커뮤니티</h2>
+                <div class="community-posts">
+                    <ul>
+                        <li>오늘도 열심히!</li>
+                        <li>여기다가 커뮤니티 포스트 상위 n개</li>
+                        <li>홍창기 안타 안타 날려 홍창기</li>
+                    </ul>
+                    <button>게시글 더 보기</button>
+                </div>
+
+                <div class="popular-posts">
+                    <h3>인기게시글</h3>
+                    <ul>
+                        <li>제목 1</li>
+                        <li>제목 2</li>
+                        <li>제목 3</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
         <!-- 부트스트랩 modal 부분 -->
         <!-- Modal -->
         <div
