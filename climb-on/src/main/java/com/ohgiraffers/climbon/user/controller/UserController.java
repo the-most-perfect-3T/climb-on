@@ -196,8 +196,15 @@ public class UserController {
 
         int result = userService.updateStatus(key);
         if (result > 0) {
+
             redirectAttributes.addFlashAttribute("message", "회원 탈퇴되었습니다. \n그동안 이용해주셔서 감사합니다.");
-            mv.setViewName("redirect:/oauth/logout");
+
+            if(userDetails.getProvider().equals("kakao")){
+                // 여기 추가
+            }else {
+                mv.setViewName("redirect:/auth/logout");
+            }
+
         }else {
             populateUserData(mv, key);
             mv.addObject("message", "회원 탈퇴에 실패했습니다.");
