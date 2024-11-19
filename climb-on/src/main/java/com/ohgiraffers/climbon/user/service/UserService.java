@@ -22,9 +22,7 @@ public class UserService {
     private PasswordEncoder encoder;
 
     /**
-     * user의 pk로 user정보 불러오기
-     * @Param Integer key
-     * @return UserDTO
+     * user 의 pk로 user 전체 정보 불러오기
      * */
     public UserDTO findByKey(Integer key) {
         if(key == null){
@@ -36,9 +34,7 @@ public class UserService {
     }
 
     /**
-     * user의 pk로 크루이름 찾기
-     * @Param Integer key
-     * @return String
+     * user 의 pk로 크루이름 찾기
      * */
     public String findCrewName(Integer key) {
         if(key == null){
@@ -50,9 +46,7 @@ public class UserService {
     }
 
     /**
-     * user의 pk로 홈짐 찾기
-     * @Param Integer key
-     * @return String
+     * user 의 pk로 홈짐 찾기
      * */
     public String findHomeName(Integer key) {
         if(key == null){
@@ -65,8 +59,6 @@ public class UserService {
 
     /**
      * user 정보 업데이트 (닉네임, 비밀번호, 한줄소개)
-     * @Param UserDTO user, Integer key
-     * @return int
      * */
     @Transactional
     public int updateUser(UserDTO user, Integer key) {
@@ -79,8 +71,6 @@ public class UserService {
 
     /**
      * user 프로필 업데이트
-     * @Param String profilePic, Integer key
-     * @return int
      * */
     @Transactional
     public int updateProfile(String profilePic, Integer key) {
@@ -100,8 +90,6 @@ public class UserService {
 
     /**
      * user 상태 업데이트(비활성)
-     * @Param Integer key
-     * @return int
      * */
     @Transactional
     public int updateStatus(Integer key) {
@@ -114,6 +102,25 @@ public class UserService {
         map.put("inactiveAt", LocalDateTime.now());
 
         int result = userMapper.updateStatus(map);
+
+        return result;
+    }
+
+    /**
+     * 비즈니스계정 전환 신청
+     * */
+    @Transactional
+    public int registBusiness(String newFileName, Integer key) {
+
+        if(newFileName == null || key == null){
+            return 0;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", key);
+        map.put("attachFile", newFileName);
+
+        int result = userMapper.saveNotice(map);
 
         return result;
     }

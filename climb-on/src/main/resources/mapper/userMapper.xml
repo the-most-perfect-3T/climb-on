@@ -71,4 +71,16 @@
          WHERE ID = #{id}
     </update>
 
+    <insert id="saveNotice">
+        INSERT INTO manager_notice(
+            USER_CODE,
+            ATTACH_FILE,
+            CATEGORY
+        ) VALUES (
+            #{key},
+            #{attachFile},
+            1
+        )
+    </insert>
+
 </mapper>

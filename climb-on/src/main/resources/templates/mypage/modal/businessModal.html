@@ -1,0 +1,40 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <th:block th:fragment="modalFragment">
+        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="userApplyModalChoice" aria-labelledby="userApplyModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content shadow">
+                    <div class="modal-body">
+                        <h5 class="section-title text-center" id="userApplyModalLabel">비즈니스 계정 전환 신청</h5>
+                        <form action="" method="get">
+                            <div class="input-wrap d-flex position-relative justify-content-between align-items-center">
+                                <label for="facilityName">시설명</label>
+                                <input type="search" name="facilityName" id="facilityName" placeholder="운동 시설을 검색하세요"  required/>
+                                <button class="btn-search position-absolute"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </form>
+                        <form action="/mypage/businessFile" method="post" enctype="multipart/form-data" id="businessForm">
+                            <div class="input-wrap d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label for="businessFile">사업자등록증</label>
+                                    <small>※ 이미지 파일로 업로드해주세요. ( jpeg, jpg, gif, bmp, png )</small>
+                                </div>
+                                <input type="file" name="businessFile" id="businessFile" required/>
+                                <button class="btn-fileupload border" type="button"><i class="fa-solid fa-plus"></i><span>파일첨부</span></button>
+                            </div>
+                        </form>
+                    </div>
+                    <form action="/mypage/applyBusiness" method="post">
+                        <div class="modal-footer flex-nowrap p-0">
+                            <button type="button" class="btn col-6 py-3 m-0 " data-bs-dismiss="modal">취소</button>
+                            <button type="submit" class="btn col-6 py-3 m-0">신청</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</html>
