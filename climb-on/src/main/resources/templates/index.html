@@ -50,23 +50,21 @@
                 </div>
 
                 <div class="community-container">
-                <h2>커뮤니티</h2>
+                <h3>커뮤니티</h3>
                     <div class="community-posts">
-                        <ul>
-                            <li>오늘도 열심히!</li>
-                            <li>여기다가 커뮤니티 포스트 상위 n개</li>
-                            <li>홍창기 안타 안타 날려 홍창기</li>
-                        </ul>
+                        <table id="table post-table">
+                            <tbody id="recent-posts">
+                            <!-- 최근 포스트 6개 여기-->
+                            </tbody>
+                        </table>
                         <button>게시글 더 보기</button>
                     </div>
 
                     <div class="popular-posts">
-                        <h3>인기게시글</h3>
-                        <ul>
-                            <li>제목 1</li>
-                            <li>제목 2</li>
-                            <li>제목 3</li>
-                        </ul>
+                        <h5>인기게시글</h5>
+                        <ol class="popular-list" id="popular-posts">
+                            <!-- 인기게시글 10개 여기 -->
+                        </ol>
                     </div>
                 </div>
 
@@ -133,6 +131,7 @@
     <th:block layout:fragment="javascript">
         <script th:src="@{/js/plugin/index.global.js}"></script>
         <script th:src="@{/js/page/calender.js}"></script>
+        <script th:src="@{/js/page/mainpage.js}"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script th:inline="javascript">

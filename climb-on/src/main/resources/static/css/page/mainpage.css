@@ -81,12 +81,16 @@
 
 /* 커뮤니티 게시판 */
 .community-container{
-    margin-top: 100px;
     display: flex;
+    margin-top: 100px;
     width: 1106px;
     height: 500px;
 }
 
 .community-container .community-posts{
-    height: 100%;
+    display: flex;
+}
+
+.community-container .popular-lists{
+    display: flex;
 }
