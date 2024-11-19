@@ -51,14 +51,15 @@
                 </aside>
 
                 <div class="tab-content">
-                    <th:block th:replace="~{/mypage/profile-tab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/review-tab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/board-tab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/favorite-tab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/profileTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/reviewTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/boardTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/favoriteTab :: tabContFragment}"></th:block>
                 </div>
             </div>
         </div>
-        <th:block th:replace="~{/mypage/user-modal :: modalFragment}"></th:block>
+        <th:block th:replace="~{/mypage/modal/userModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{/mypage/modal/businessModal :: modalFragment}"></th:block>
     </th:block>
 
 
