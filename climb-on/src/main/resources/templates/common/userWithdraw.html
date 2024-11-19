@@ -1,0 +1,29 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+                xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <head th:replace="~{/common/head :: headFragment}"></head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/common/noHeader.css}">
+    </th:block>
+    <body>
+        <main class="content no-header">
+            <div class="inner">
+                <div class="cont">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <h2>회원 탈퇴가 완료되었습니다.</h2>
+                    <p>
+                        CLI'MON을 이용해주시고 사랑해주셔서 감사합니다.<br/>
+                        더욱더 노력하고 발전하는 CLI'MON이 되겠습니다.
+                    </p>
+                    <form action="/auth/logout" method="post">
+                        <button class="btn-home">홈으로</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+        <script src="https://kit.fontawesome.com/5d48c3da4c.js" crossorigin="anonymous"></script>
+        <script>
+            setTimeout(function(){window.location.replace("/auth/logout")}, 3000);
+        </script>
+    </body>
+</html>

@@ -4,12 +4,12 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <th:block th:fragment="modalFragment">
-        <div class="modal fade p-4 py-md-5" tabindex="-1" role="dialog" id="userModalChoice" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="userModalChoice" aria-labelledby="userModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content shadow">
                     <div class="modal-body text-center">
                         <h3 class="logo"><img th:src="@{/images/logo.svg}" alt="CLLI'MON 로고"></h3>
-                        <h5 class="">회원 탈퇴 시 아래와 같이 처리됩니다.</h5>
+                        <h5 class="section-title" id="userModalLabel">회원 탈퇴 시 아래와 같이 처리됩니다.</h5>
                         <p class="">회원 탈퇴일로부터 계정과 닉네임을 포함한 계정 정보
                             (아이디/이메일/닉네임)는 <a href="javascript:void(0)">개인정보 보호정책</a>에 따라
                             60일간 보관(잠김)되며, 60일 경과된 후에는 모든 개인

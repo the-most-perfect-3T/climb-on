@@ -22,4 +22,6 @@ public interface UserMapper {
     int updateProfile(Map<String, Object> map);
 
     int updateStatus(Map<String, Object> map);
+
+    int saveNotice(Map<String, Object> map);
 }

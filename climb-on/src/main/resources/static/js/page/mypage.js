@@ -1,3 +1,4 @@
+/* 프로필탭에서 회원정보수정으로 이동 */
 const btnModify = document.querySelector(".section-mypage #btn-modify");
 const profileCont = document.querySelector(".section-mypage .profile-cont");
 const modifyCont = document.querySelector(".section-mypage .modify-cont");
@@ -107,15 +108,42 @@ profileFile.addEventListener('change', function () {
 });
 
 
-// 프로필수정-계정삭제 checkbox 클릭시 disabled 해제
+// 회원정보수정 - 비즈니스계정전환 checkbox 클릭시 disabled 해제
+const inputDeleteAgree1 = document.getElementById("agreeCheck1");
+const btnApply = document.querySelector(".section-mypage #profile .modify-cont .btn-apply");
+inputDeleteAgree1.addEventListener("change", function(){
+    const is_checked = this.checked;
+    if(is_checked){
+        btnApply.removeAttribute("disabled");
+    }else {
+        btnApply.setAttribute("disabled", true);
+    }
+});
+
+
+// 회원정보수정 - 계정삭제 checkbox 클릭시 disabled 해제
 const inputDeleteAgree = document.getElementById("agreeCheck");
 const btnWithdrawal = document.querySelector(".section-mypage #profile .modify-cont .btn-withdrawal");
 inputDeleteAgree.addEventListener("change", function(){
-   console.log(this);
    const is_checked = this.checked;
    if(is_checked){
        btnWithdrawal.removeAttribute("disabled");
    }else {
         btnWithdrawal.setAttribute("disabled", true);
    }
+});
+
+
+// 회원정보수정 - 비즈니스 계정 파일첨부 버튼 input file 대신 클릭
+const btnFileUpload = document.querySelector("#userApplyModalChoice .btn-fileupload");
+const businessFile = document.getElementById('businessFile');
+
+btnFileUpload.addEventListener("click", function(e){
+    businessFile.click();
+});
+
+businessFile.addEventListener('change', function () {
+    if (this.files.length > 0) {
+        document.getElementById('businessForm').submit();
+    }
 });

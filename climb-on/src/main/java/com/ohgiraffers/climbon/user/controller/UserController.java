@@ -63,6 +63,8 @@ public class UserController {
         return mv;
     }
 
+
+
     @PostMapping("updateUser")
     public ModelAndView updateUser(
             ModelAndView mv,
@@ -144,7 +146,6 @@ public class UserController {
         }
 
 
-
         return mv;
     }
 
@@ -196,8 +197,8 @@ public class UserController {
 
         int result = userService.updateStatus(key);
         if (result > 0) {
-            redirectAttributes.addFlashAttribute("message", "회원 탈퇴되었습니다. \n그동안 이용해주셔서 감사합니다.");
-            mv.setViewName("redirect:/oauth/logout");
+            mv.setViewName("/common/userWithdraw");
+
         }else {
             populateUserData(mv, key);
             mv.addObject("message", "회원 탈퇴에 실패했습니다.");
@@ -205,5 +206,64 @@ public class UserController {
         }
         return mv;
     }
+
+
+
+    @PostMapping("applyBusiness")
+    public ModelAndView applyBusiness(
+            @AuthenticationPrincipal AuthDetail userDetails,
+            RedirectAttributes redirectAttributes,
+            ModelAndView mv,
+            @RequestParam("businessFile") MultipartFile businessFile) {
+
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인 정보가 유효하지 않습니다.");
+            return new ModelAndView("redirect:/auth/login");
+        }
+
+        if (businessFile.isEmpty()) {
+            mv.addObject("message", "파일을 선택해주세요.");
+            mv.setViewName("mypage/mypage");
+            return mv;
+        }
+
+        String filePath = "C:/uploads/business";
+        File fileDir = new File(filePath);
+
+        if(!fileDir.exists()){
+            fileDir.mkdirs();
+        }
+
+        String originFileName = businessFile.getOriginalFilename();
+        String ext = originFileName.substring(originFileName.lastIndexOf("."));
+        String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
+
+        try {
+            businessFile.transferTo(new File(filePath + "/" + savedName));
+            String newFileName = "/img/business/" + savedName;
+
+            Integer key = userDetails.getLoginUserDTO().getId();
+            int result = userService.registBusiness(newFileName, key);
+
+            if (result > 0) {
+                redirectAttributes.addFlashAttribute("message", "비즈니스계정 전환 신청이 완료되었습니다. \n관리자 승인 후 전환 됩니다.");
+                mv.setViewName("redirect:/mypage/home");
+            } else {
+                populateUserData(mv, key);
+                mv.addObject("message", "비즈니스계정 전환에 실패했습니다.");
+                mv.setViewName("mypage/mypage");
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            mv.addObject("message", "파일 업로드에 실패했습니다.");
+            mv.setViewName("mypage/mypage");
+        }
+
+
+        return mv;
+    }
+
 
 }
