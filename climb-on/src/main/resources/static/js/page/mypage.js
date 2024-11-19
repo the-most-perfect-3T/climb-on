@@ -144,6 +144,109 @@ btnFileUpload.addEventListener("click", function(e){
 
 businessFile.addEventListener('change', function () {
     if (this.files.length > 0) {
-        document.getElementById('businessForm').submit();
+
+        // 이미지인지 확인
+
+
+        // 이미지이면
+        //파일이름 추가
+
+        /*document.getElementById("fileAttach").submit();*/
+      /*  /!*document.getElementById('businessForm').submit();*!/
+        fetch("/mypage/applyBusiness", {
+            method: "POST",
+            body: JSON.stringify({
+                businessFile: businessFile
+            })
+        })
+            .then(response => response.json())
+            .then(data => console.log(data));*/
     }
 });
+
+
+
+
+//검색
+let formName = document.getElementById("searchFacilities"); // formName 만 바꿔서 재활용
+
+function showSuggestions2() {
+    const inputSearch = formName.querySelector('input[type="search"]');
+    const inputValue = inputSearch.value;
+    const suggestionsDiv = formName.querySelector('.suggestions');
+    const btnSearch = formName.querySelector(".btn-search");
+    btnSearch.style.display = 'block';
+    formName.classList.remove("active");
+
+    if (inputValue) {
+        fetch(`/facilities/suggestions?code=${encodeURIComponent(inputValue)}`) // 패치요청 responseEntity 로 jason 받음
+            .then(response => {                         // encodeURIComponent 안전하게하는것
+                if (!response.ok) {
+                    throw new Error('서버 오류: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                suggestionsDiv.textContent = '';
+
+                if (data && data.length > 0) {
+                    data.forEach(facilities => {
+                        const item = document.createElement('div');
+                        item.className = 'suggestion-item';
+                        item.textContent = facilities.facilityName; // 메뉴 코드 표시
+                        item.onclick = () => selectSuggestion(facilities.facilityName);
+                        /*console.log(facilities.facilityName);*/
+                        suggestionsDiv.appendChild(item);
+                    });
+                    suggestionsDiv.style.display = 'block'; // 추천 결과 표시
+                } else {
+                    /*suggestionsDiv.style.display = 'none'; // 추천 결과 숨김*/
+                    const item = document.createElement('div');
+                    item.className = 'no-result';
+                    item.textContent = "검색 결과가 없습니다.";
+                    suggestionsDiv.appendChild(item);
+                }
+
+            })
+            .catch(error => {
+                console.error('AJAX 오류:', error);
+                suggestionsDiv.style.display = 'none'; // 오류 발생 시 숨김
+            });
+    } else {
+        suggestionsDiv.textContent = '';
+        suggestionsDiv.style.display = 'none'; // 입력이 없을 경우 숨김
+    }
+}
+
+// 추천검색어 선택
+function selectSuggestion(facilities) {
+    const inputSearch = formName.querySelector('input[type="search"]');
+    const btnSearch = formName.querySelector(".btn-search");
+    const suggestionsDiv = formName.querySelector('.suggestions');
+
+    formName.classList.add("active");
+    btnSearch.style.display = 'none';
+    inputSearch.value = facilities;
+    suggestionsDiv.style.display = 'none';
+}
+const inputSearch = formName.querySelector('input[type="search"]');
+const btnSearch = formName.querySelector(".btn-search");
+
+// 엔터 누르면 검색버튼 클릭
+inputSearch.addEventListener("keyup", function(event){
+    if(event.key === 'Enter'){
+        btnSearch.click();
+    }
+});
+
+// 검색버튼 클릭 시 맨 첫번쨰 검색결과 선택
+btnSearch.addEventListener("click", function(){
+    const suggestionsDiv = formName.querySelector('.suggestions');
+    const suggestionItem = suggestionsDiv.querySelectorAll(".suggestion-item");
+    if(suggestionItem.length > 0){
+        selectSuggestion(suggestionItem[0].textContent);
+    }
+});
+
+
+
