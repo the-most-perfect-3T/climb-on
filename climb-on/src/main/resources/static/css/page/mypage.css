@@ -115,7 +115,7 @@
     height: 45px;
     border: 1px solid var(--borderColor);
     border-radius: 6px;
-    transition: 0.5s;
+    transition: 0.3s;
     flex-shrink: 0;
 }
 
@@ -127,6 +127,7 @@
 .section-mypage #profile .profile-cont .section00 #btn-modify:hover {
     background: var(--point);
     color: #fff;
+    border-color: var(--point);
 }
 
 .section-mypage #profile .profile-cont .section01 .move-wrap {
@@ -219,37 +220,53 @@
     background: #fff;
 }
 
-/*profile-tab 계정 삭제*/
+/*profile-tab 비즈니스계정, 계정 삭제*/
 .section-mypage #profile .modify-cont .section01 {
+    padding: 50px 0 50px 50px;
+}
+.section-mypage #profile .modify-cont .section02 {
     padding: 50px 0 80px 50px;
 }
-.section-mypage #profile .modify-cont .section01 .info-wrap {
+
+.section-mypage #profile .modify-cont .section01 .info-wrap,
+.section-mypage #profile .modify-cont .section02 .info-wrap {
     border-radius: 6px;
     padding: 20px;
     margin-top: 20px;
 }
-.section-mypage #profile .modify-cont .section01 .info-wrap p {
+.section-mypage #profile .modify-cont .section01 .info-wrap ol {
+    padding-left: 1rem;
+}
+.section-mypage #profile .modify-cont .section01 .info-wrap ol li,
+.section-mypage #profile .modify-cont .section02 .info-wrap p {
     font-size: 14px;
     line-height: 22px;
+    list-style: auto;
 }
-.section-mypage #profile .modify-cont .section01 .info-wrap p a {
+.section-mypage #profile .modify-cont .section02 .info-wrap p a {
     font-weight: 700;
     border-bottom: 1px solid var(--black);
 }
 
-.section-mypage #profile .modify-cont .section01 .agree-wrap input {
+.section-mypage #profile .modify-cont .section01 .agree-wrap input,
+.section-mypage #profile .modify-cont .section02 .agree-wrap input {
     width: 16px;
     height: 16px;
 }
-.section-mypage #profile .modify-cont .section01 .agree-wrap label {
+.section-mypage #profile .modify-cont .section01 .agree-wrap label,
+.section-mypage #profile .modify-cont .section02 .agree-wrap label {
     font-size: 14px;
     margin-left: 10px;
 }
-.section-mypage #profile .modify-cont .section01 .btn-withdrawal {
+.section-mypage #profile .modify-cont .section01 button,
+.section-mypage #profile .modify-cont .section02 button {
     width: 150px;
     height: 40px;
-    background: var(--bs-danger);
-    color: #fff;
     font-size: 14px;
     border-radius: 6px;
+}
+
+.section-mypage #profile .modify-cont .section02 .btn-withdrawal {
+    background: var(--bs-danger);
+    color: #fff;
 }
