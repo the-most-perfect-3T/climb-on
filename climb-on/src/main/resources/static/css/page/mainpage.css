@@ -9,7 +9,6 @@
 
 .main-content{
     flex-direction: column;
-    align-items: center;
     justify-content: center;
 
     margin-top: 124px;
@@ -18,13 +17,20 @@
 
 .main-content h3{
     color: #343A40;
-
     font-size: 24px;
     font-weight: 700;
+    text-align: center;
 }
 
 
 /* 이벤트(리스트, 캘린더) */
+
+.main-content h4{
+    color: #343A40;
+    font-size: 24px;
+    font-weight: 700;
+}
+
 .event-container{
     display: flex;
     width: 1106px;
@@ -55,6 +61,7 @@
 }
 
 .event-container .calendar-section {
+    width: 769px;
     height: 662px;
 }
 
@@ -65,7 +72,7 @@
 }
 
 .featured-locations .facility-list{
-    margin: 0 auto;
+    margin: 28px auto auto;
     display: flex;
     width: 1106px;
     height: 500px;
@@ -81,14 +88,47 @@
 
 /* 커뮤니티 게시판 */
 .community-container{
-    display: flex;
     margin-top: 100px;
-    width: 1106px;
-    height: 500px;
 }
 
 .community-container .community-posts{
     display: flex;
+    margin: 28px auto auto;
+    width: 1106px;
+    height: 500px;
+}
+
+.community-container .community-posts-list{
+    width: 832px;
+    height: 100%;
+    margin-right: 16px;
+    border: 1px solid #DEE2E6;
+    border-radius: 6px;
+    padding: 58px;
+}
+
+.community-container #recent-posts{
+    width: 716px;
+}
+
+.community-container button{
+    width: 717px;
+    height: 62px;
+    background-color: #FAEFDD;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.community-container .popular-posts{
+    width: 258px;
+    height: 100%;
+    border: 1px solid #DEE2E6;
+    border-radius: 6px;
+
+    padding-top: 52px;
+    padding-bottom: 52px;
+    padding-left: 30px;
 }
 
 .community-container .popular-lists{

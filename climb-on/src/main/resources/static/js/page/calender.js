@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         headerToolbar: {
-            left: 'prev,next today,myCustomButton',
+            left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: 'myCustomButton' //dayGridMonth 있을 필요 없을 것 같아서
         },
         height: '700px', // calendar 높이 설정
         expandRows: true, // 화면에 맞게 높이 재설정
-        navLinks: true, // can click day/week names to navigate views
+        //navLinks: true, // can click day/week names to navigate views
         selectable: true,
         selectMirror: true,
         select: async function(arg) {
