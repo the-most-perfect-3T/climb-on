@@ -68,7 +68,7 @@ h1 {
     padding: 10px 20px;
     font-size: 1em;
     color: white;
-    background-color: #ff7f50;
+    background-color: var(--point);
     border: none;
     border-radius: 5px;
     cursor: pointer;

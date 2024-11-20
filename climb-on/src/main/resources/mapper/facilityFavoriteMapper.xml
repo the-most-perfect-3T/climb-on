@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.facilities.dao.FacilityFavoriteDAO">
+    <resultMap id="FavoriteResultMap" type="com.ohgiraffers.climbon.facilities.dto.FacilityFavoriteDTO">
+        <result property="facilityId" column="favorite_code" />
+        <result property="userId" column="user_code" />
+        <result property="favorite" column="favorite" />
+    </resultMap>
+
+    <select id="getIsFavorite" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM user_favorite
+        WHERE user_code = #{userId}  AND favorite_code = #{id};
+    </select>
+
+
+    <insert id="addFavorite" parameterType="com.ohgiraffers.climbon.facilities.dto.FacilityFavoriteDTO">
+        INSERT INTO user_favorite (user_code, favorite_code)
+        VALUES (#{userId}, #{facilityId});
+    </insert>
+</mapper>
