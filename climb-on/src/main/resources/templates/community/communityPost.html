@@ -66,10 +66,10 @@
         <!-- 뷰 전환 버튼-->
         <div class="view-buttons">
             <button onclick="setViewMode('card')" id="cardViewButton">
-                <img width="64" height="64" src="https://img.icons8.com/hatch/64/activity-grid-2.png" alt="activity-grid-2"/>
+                <i class="fa-solid fa-bars-progress"></i>
             </button>
             <button onclick="setViewMode('list')" id="listViewButton">
-                <img width="60" height="60" src="https://img.icons8.com/metro/26/list.png" alt="list"/>
+                <i class="fa-solid fa-list"></i>
             </button>
         </div>
 
@@ -186,7 +186,7 @@
     </section>
 </main>
 
-    <!-- 정렬 스크립트 -->
+    <!-- 뷰모드, 정렬 스크립트 -->
     <th:block layout:fragment="javascript">
         <script>
             let viewMode = 'list'; // 기본값을 리스트 뷰로 설정

@@ -23,14 +23,14 @@
                 <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
                 <span th:text="${post.userId}">작성자 ID</span>
                 <span class="author-name" th:text="${post.userNickname}">작성자 닉네임</span>
-                <span class="post-date" th:text="${post.formattedCreatedAt}">작성일</span>
+                <span class="post-date" th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                 <span class="views">조회수 <span th:text="${post.viewCount}">0</span></span>
             </div>
         </div>
-        <div class="post-actions">
+        <div class="post-actions" th:if="${post.userId == currentUserId}">  <!-- 수정 , 삭제 버튼을 현재 사용자가 작성자인 경우에만 표시하도록 조건 추가-->
             <button th:onclick="|window.location.href='/community/${post.id}/modify'|">수정</button>
             <form th:action="@{'/community/'  + ${post.id} + '/delete'}" method="post" style="display:inline;">
-            <button type="submit" onlick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
             </form>
         </div>
     </div>
@@ -45,8 +45,11 @@
 
     <!-- 좋아요 및 댓글 수 -->
     <div class="post-interactions">
-        <button class="heart-button" th:data-post-id="${post.id}">  <!--JS를 위한 변수 선언! JS에서는 dataset.postId(카멜케이스로씀)-->
-            ❤️<span th:text="${post.heartsCount}">0</span>
+        <!-- 좋아요 버튼 -->                            <!-- data-post-id="${post.id}"  게시글 ID를 데이터 속성에 바인딩,  data-liked="${post.isLiked}" 서버에서 현재 사용자가 좋아요 했는지 여부 전달-->
+        <button class="heart-button"
+                th:attr="data-post-id=${post.id},
+                data-liked=${post.isLiked}"> <!-- isLiked 값을  data-liked 속성으로 전달하고, 좋아요 여부에 따라 하트 아이콘을 변경-->
+            <i class="fa-regular fa-heart" th:classappend="${post.isLiked} ? 'fa-solid' : ''"></i>   <!--th:classappend를 사용해 isLiked 값에 따라 fa-solid 클래스를 추가하여 하트 아이콘을 채운다-->
         </button>
         <span class="comments-count">댓글 <span th:text="${post.commentsCount}">0</span></span>
     </div>
@@ -61,15 +64,35 @@
 
     <!-- 댓글 목록 -->
     <div class="comment-list">
-        <div class="comment" th:each="comment : ${comments}">
+        <div class="comment" th:each="comment : ${comments}" th:attr="data-comment-id=${comment.id}">
             <div class="comment-avatar">
                 <img src="/images/avatar.png" alt="댓글 작성자 프로필 이미지">
             </div>
             <div class="comment-content">
                 <span class="comment-author" th:text="${comment.userNickname}">댓글 작성자</span>
-                <p th:text="${comment.content}">댓글 내용</p>
-                <span class="comment-date" th:text="${comment.formattedCreatedAt}">작성일</span>
+                <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
+                <span class="comment-date" th:text="${comment.updatedAt != null ? comment.formattedUpdatedAt : comment.formattedCreatedAt}">작성일</span>
             </div>
+                <!-- 댓글 수정/삭제 메뉴 버튼 -->
+                <div class="comment-actions-menu" th:if="${comment.userId == currentUserId}">
+                    <button class="menu-button"><i class="fa-solid fa-bars"></i></button>
+                    <div class="dropdown-menu" style="display: none;">
+                        <button class="edit-button" data-comment-id="${comment.id}">수정</button>
+                        <form th:action="@{'/community/' + ${post.id} + '/comment/' + ${comment.id} + '/delete'}" method="post">
+                            <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 수정 폼 (기본적으로 숨김)-->
+                <div class="comment-edit-form" style="display: none;">
+                    <form th:action="@{'/community/' + ${post.id} + '/comment/' + ${comment.id} + '/edit'}" method="post">
+                        <textarea name="content" th:text="${comment.content}" placeholder="댓글을 입력해주세요" required></textarea>
+                        <button type="submit" class="save-edit-button">저장</button>
+                        <button type="button" class="cancel-edit-button">취소</button>
+                    </form>
+                </div>
+
         </div>
     </div>
 
@@ -100,41 +123,142 @@
     </div>
 </main>
 
+
 <th:block layout:fragment="javascript">
     <!-- 좋아요 버튼 클릭 시 AJAX 요청 처리-->
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // 좋아요 버튼 이벤트 리스너 추가
-            document.querySelectorAll('.heart-button').forEach(button => {
-                button.addEventListener('click', async (event) => {
-
+               async function toggleHeart(event) {
                     // 클릭된 버튼에서 postId 가져오기, 정확한 버튼 요소 가져오기
                     const buttonElement = event.currentTarget;
                     const postId = buttonElement.dataset.postId;
+                    const heartIcon = buttonElement.querySelector('i'); // 버튼 안의 아이콘 가져오기
+                    const isLiked = buttonElement.getAttribute('data-liked') === 'true'; // 현재 상태 확인
 
+                    // UI 상태 즉시 업데이트
+                    buttonElement.setAttribute('data-liked', !isLiked);
+                    if (!isLiked) {
+                        heartIcon.classList.remove('fa-regular');
+                        heartIcon.classList.add('fa-solid');
+                    } else {
+                        heartIcon.classList.remove('fa-solid');
+                        heartIcon.classList.add('fa-regular');
+                    }
+
+                    // 서버로 요청 보내기
                     try {
                         const response = await fetch(`/community/${postId}/heart`, {
                             method: 'POST',
-                            headers: {'Content-Type': 'application/json'}
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({liked: !isLiked}), // 요청데이터
                         });
 
-                        if (response.ok) {
-                            const heartsSpan = event.target.querySelector('span'); // 좋아요 수를 표시하는 <span> 태그 요소를 참조 //querySelector('span')는 그 버튼 내부에서 <span> 태그를 찾습니다. 이 <span> 태그는 좋아요 수를 표시하는 역할을 한다.
-                            const currentHearts = parseInt(heartsSpan.textContent, 10) || 0; // 현재 좋아요 수 // parseInt하여 텍스트를 정수로 변환, 10진수로, textContent가 비어있거나 숫자가 아닐 경우 NaN이 될 수있기때문에 기본값 0으로 설정
-                            heartsSpan.textContent = currentHearts + (button.classList.contains('liked') ? -1 : 1); // 좋아요 수 업데이트 함수 // button.classList.contains('liked')는 버튼에 'liked' 클래스가 있는지 확인 liked 있다면 증가, 없으면 -1, 있으면 +1
-                            button.classList.toggle('liked'); // toggle 메서드는 클래스가 존재하면 제거하고, 존재하지 않으면 추가하는 메서드입니다. 이 경우, 버튼에 'liked' 클래스가 있으면 제거하고, 없으면 추가합니다.
-                        }else{
+                        if (!response.ok) {
+                            console.error('좋아요 상태 변경 실패');
+                            // 서버 응답 실패 시 UI 를 백
+                            buttonElement.setAttribute('data-liked', isLiked);
+                            if (isLiked) {
+                                heartIcon.classList.remove('fa-regular');
+                                heartIcon.classList.add('fa-solid');
+                            } else {
+                                heartIcon.classList.remove('fa-solid');
+                                heartIcon.classList.add('fa-regular');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('네트워크 오류:', error); // 네트워크 오류 처리
+                        // 네트워크 오류 시 UI 를 백
+                        buttonElement.setAttribute('data-liked', isLiked);
+                        if (isLiked) {
+                            heartIcon.classList.remove('fa-regular');
+                            heartIcon.classList.add('fa-solid');
+                        } else {
+                            heartIcon.classList.remove('fa-solid');
+                            heartIcon.classList.add('fa-regular');
+                        }
+                    }
+                }
 
-                            console.error('하트 추가에 실패 하셨습니다.'); // 실패 로그
-                        }
-                    }catch (error){
-                            console.error('에러', error); // 네트워크 오류 처리
-                        }
-                    });
+                // 드롭다운 메뉴 토글 처리
+               function setupDropdownMenus() {
+                   document.querySelectorAll('.menu-button').forEach(button => {
+                       button.addEventListener('click', function (event) {
+                           const dropdownMenu = event.target.closest('.comment-actions-menu').querySelector('.dropdown-menu');
+
+                           const isVisible = dropdownMenu.style.display === 'block';
+
+                           // 모든 드롭다운 메뉴 닫기
+                           document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                               menu.style.display = 'none';
+                           });
+
+                           // 클릭된 드롭다운 메뉴 열기
+                           if (!isVisible) {
+                               dropdownMenu.style.display = 'block';
+                           }
+                       });
+                   });
+
+                   // 외부 클릭 시 드롭다운 닫기
+                   document.addEventListener('click', function (event) {
+                       if (!event.target.closest('.menu-button') && !event.target.closest('.dropdown-menu')) {
+                           document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                               menu.style.display = 'none';
+                           });
+                       }
+                   });
+               }
+
+               // 댓글 수정 기능 처리
+               function setupCommentEdit() {
+                   // 수정 버튼 클릭 이벤트
+                   document.querySelectorAll(".edit-button").forEach(button => {
+                       button.addEventListener("click", function () {
+                           const commentId = this.getAttribute("data-comment-id");
+                           console.log("commentId:", commentId);
+                           const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                           console.log("commentElement:", commentElement);
+                           const editForm = document.querySelector(".comment-edit-form");
+                           console.log("editForm", editForm);
+                           const commentText = document.querySelector(".comment-text");
+                           console.log("commentText",commentText);
+                           const dropdownMenu = this.closest('.dropdown-menu');
+                           console.log("dropdownMenu",dropdownMenu);
+                           // 수정 폼 보이기
+                           editForm.style.display = "block";
+                           commentText.style.display = "none";
+                           dropdownMenu.style.display = "none"; // 드롭다운 메뉴 닫기
+                       });
+                   });
+
+                   // 취소 버튼 클릭 이벤트
+                   document.querySelectorAll(".cancel-edit-button").forEach(button => {
+                       button.addEventListener("click", function () {
+                           const editForm = this.closest(".comment-edit-form");
+                           const commentElement = editForm.closest(".comment");
+                           const commentText = commentElement.querySelector(".comment-text");
+
+                           // 수정 폼 숨기기
+                           editForm.style.display = "none";
+                           commentText.style.display = "block";
+                       });
+                   });
+               }
+
+                // DOMContentLoaded 이벤트 리스너
+                document.addEventListener("DOMContentLoaded", () => {
+                   // 좋아요 버튼 이벤트 리스너 추가
+                   document.querySelectorAll('.heart-button').forEach(button => {
+                       button.addEventListener('click', toggleHeart); //toggleHeart 함수 연결
+                   });
+
+                   // 드롭다운 메뉴 이벤트 리스너 추가
+                    setupDropdownMenus();
+
+                    // 댓글 수정 기능 이벤트 리스너 추가
+                    setupCommentEdit();
                 });
-            });
-
     </script>
 </th:block>
+
 </body>
 </html>

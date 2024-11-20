@@ -3,7 +3,7 @@ package com.ohgiraffers.climbon.community.controller;
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
-import jakarta.servlet.http.HttpSession;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
@@ -12,13 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/community")
@@ -30,13 +29,13 @@ public class PostController {
     // 게시글 목록 페이지 - 페이지네이션 및 카테고리 필터링 추가 // 검색, 정렬순서 , D-Day(dday)추가
     @GetMapping
     public String getAllPosts(@RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String category, @RequestParam(required = false)
-    String searchKeyword, @RequestParam(defaultValue = "latest") String sort , @RequestParam(required = false) String dday, @RequestParam(defaultValue = "list") String viewMode, Model model){  // page 파라미터와 pageSize를 사용해 해당 페이지에 맞는 게시글 목록을 조회
+    String searchKeyword, @RequestParam(defaultValue = "latest") String sort , @RequestParam(required = false) String dday, @RequestParam(defaultValue = "list") String viewMode, @Param("status") Boolean status, Model model){  // page 파라미터와 pageSize를 사용해 해당 페이지에 맞는 게시글 목록을 조회
         // & category 파라미터를 받아 해당 카테고리의 게시글만 조회하도록 설정하고, 카테고리 파라미터가 없으면 모든 게시글 조회
         //  searchKeyword 파라미터를 추가해서 검색어가 있을 때만 검색 결과를 반환하도록 함.
         // 유효성 로직은 templates의 post.html에 있다.
 
         int pageSize = 15;
-        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday);
+        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -74,20 +73,21 @@ public class PostController {
         model.addAttribute("dday", dday);    //뷰로 dday 값 전달
         model.addAttribute("viewMode", viewMode);
 
-        for (PostDTO post: posts) {   //게시글에 DTO 값들이 잘 담기는지 확인
-            System.out.println(post.getUserNickname());
-            System.out.println(post.getUserId());
-        }
+//        for (PostDTO post: posts) {   //게시글에 DTO 값들이 잘 담기는지 확인
+//            System.out.println(post.getUserNickname());
+//            System.out.println(post.getUserId());
+//        }
 
         return "community/communityPost";  //template/community/post로 반환 (Spring MVC에서 뷰의 이름)
     }
 
     // 특정 게시글 상세 페이지
     @GetMapping("/{id}")
-    public String getPostById(@PathVariable("id") Integer id, Model model){// previousPost 와 nextPost 정보를 추가로 조회
-
-        PostDTO post = postService.getPostById(id);
+    public String getPostById(@PathVariable("id") Integer id, Model model, Principal principal){// previousPost 와 nextPost 정보를 추가로 조회
+        Integer userId = postService.getUserIdByUserName(principal.getName()); // 현재 사용자 ID 가져오기
+        PostDTO post = postService.getPostById(id, userId); // 좋아요 여부 포함
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
+
         // postService의 메소드를 사용하여 이전,다음 게시글 정보 가져온다.
         PostDTO previousPost = postService.getPreviousPost(id); // 이전 게시글
         PostDTO nextPost = postService.getNextPost(id); // 다음 게시글
@@ -95,6 +95,7 @@ public class PostController {
         model.addAttribute("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("comments", comments);
+        model.addAttribute("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로드인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
         return "community/communityPostDetail"; // 상세보기용 communityPostDetail.html 템플릿 반환
     }
 
@@ -139,6 +140,7 @@ public class PostController {
         // PostDTO에 userId와 nickname 설정
         post.setUserId(userId);      //Principal 객체를 통해 현재 로그인한 사용자의 ID 또는 username을 쉽게 가져올 수 있다. ※대신에 principal.getName은 로그인한 이메일주소(유저아이디)만 가져올 수 있다! ,로그인한 사용자에게만 특정 데이터를 보여주거나, 해당 사용자가 작성한 게시글 등을 처리할 수 있다. (이 객체는 세션 내에서 관리되기 때문에, 사용자 정보를 안전하게 다룰 수 있다.)
         post.setUserNickname(userNickname);
+        post.setStatus(true); // 게시글 상태 기본값 설정
 //        System.out.println(userNickname); //닉네임 잘 담기는지확인 결과: 잘담긴다
 //        // '소식' 카테고리가 아닌 경우, 날짜 필드를 null로 설정  // 이거 안해주면 소식이 아닌 카테고리 게시글 등록할 때 eventstartdate 와 eventenddate 필드가 비어 있어서 이걸 Spring 이 sql.date로 변환하려다 오류남 null로 채워줘야함
 //        // 이제 이거 필요없다 initBinder가 해결한다!
@@ -185,7 +187,7 @@ public class PostController {
 
     // 게시글 수정 처리
     @PostMapping("/{id}/edit")
-    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post){
+    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, Principal principal){
         post.setId(id);
         postService.updatePost(post);
         return "redirect:/community/" + id;
@@ -193,16 +195,17 @@ public class PostController {
 
     // 게시글 수정 폼 페이지 (수정 버튼 눌렀을 때 호출 됨)
     @GetMapping("{id}/modify")
-    public String modifyPostForm(@PathVariable Integer id, Model model){
-        PostDTO post = postService.getPostById(id);
+    public String modifyPostForm(@PathVariable Integer id, Model model, Principal principal){
+        Integer userId = postService.getUserIdByUserName(principal.getName());
+        PostDTO post = postService.getPostById(id, userId);
         model.addAttribute("post", post);
         return "community/communityPostForm"; // 수정용 폼으로 반환
     }
 
     // 게시글 삭제
     @PostMapping("/{id}/delete")
-    public String deletePost(@PathVariable Integer id){
-       postService.deletePost(id);
+    public String deletePost(@PathVariable("id") Integer postId){
+       postService.deletePost(postId);
        return "redirect:/community";
     }
 
@@ -225,6 +228,31 @@ public class PostController {
         model.addAttribute("userNickname", userNickname);
 
         postService.insertComment(comment); // 댓글 추가
+        return "redirect:/community/" + postId;
+    }
+
+    // 댓글 수정
+    @PostMapping("/{postId}/comment/{id}/edit")
+    public String modifyComment(@PathVariable("postId") Integer postId, @PathVariable("id") Integer commentId, @ModelAttribute CommentDTO comment, Principal principal){
+
+        Integer userId = postService.getUserIdByUserName(principal.getName());
+        comment.setUserId(userId);
+
+        // 댓글 ID 설정 (URL에서 받은 ID를 사용)
+        comment.setId(commentId);
+
+        comment.setUpdatedAt(java.time.LocalDateTime.now());
+
+        postService.updateComment(comment);
+
+        return "redirect:/community/" + postId;
+    }
+
+    // 댓글 삭제
+    @PostMapping("/{postId}/comment/{id}/delete")
+    public String deleteComment(@PathVariable("postId") Integer postId, @PathVariable("id") Integer commentId, @ModelAttribute CommentDTO comment){
+        comment.setId(commentId);
+        postService.deleteComment(comment);
         return "redirect:/community/" + postId;
     }
 

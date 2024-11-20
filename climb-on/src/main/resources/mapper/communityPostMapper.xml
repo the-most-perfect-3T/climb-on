@@ -30,6 +30,8 @@
         <result property="userId" column="user_id"/>
         <result property="content" column="content"/>
         <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <!-- 카테고리 필터 & 페이징 처리 & 검색 & 작성자 정보 & 댓글 & 댓글 개수 & 조회수 게시글 목록 조회 -->
@@ -37,12 +39,15 @@
         SELECT posts_with_comment_count.*
         FROM (
         SELECT p.*, u.nickname AS userNickname, u.user_id AS userID, u.profile_pic AS userProfilePic,
-        (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id) AS comments_count
+        (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1 ) AS comments_count
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
         <where>
+            <if test="status != 0">   <!--where절에 조건문 넣으려면 if 절로 채워 줘야 되므로 이렇게 억지 조건을 추가했다.-->
+            p.status = 1 <!-- 활성화된 게시글만 -->
+            </if>
             <if test="category != null and category !='' and category != '전체'">
-                p.category = #{category}    <!--category를 파라미터로 받는다-->
+                AND p.category = #{category}    <!--category를 파라미터로 받는다-->
             </if>
             <if test="searchKeyword != null and searchKeyword != ''">  <!--searchKeyword를 파라미터로 받아 title 또는 content에 searchKeyword가 포함된 게시글 검색-->
                 AND
@@ -92,21 +97,21 @@
     <!-- 특정 게시글 조회 (id로 조회), 작성자 정보 포함 -->
     <select id="getPostById" resultMap="postResultMap">
         SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.hearts_count, p.image_url, p.category, p.status
-        , (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id) AS comments_count  <!--댓글 수 계산하는 서브쿼리-->
+        , (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1) AS comments_count  <!--댓글 수 계산하는 서브쿼리-->
 
         <if test="category.equals('소식')"> <!--==는 숫자만 받으므로 equals를 써야한다!-->
             , p.event_start_date, p.event_end_date
         </if>
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
-        WHERE p.id = #{id}
+        WHERE p.id = #{id} AND p.status = 1
     </select>
 
     <!-- 특정 게시글의 댓글 목록 조회-->
     <select id="getCommentsByPostId" resultMap="commentResultMap">
-        SELECT id, post_id, user_id, content, created_at
+        SELECT id, post_id, user_id, content, created_at, status
         FROM community_comments
-        WHERE post_id = #{postId}
+        WHERE post_id = #{postId} AND status = 1
         ORDER BY created_at DESC
     </select>
 
@@ -114,8 +119,9 @@
     <select id="getTotalPostCount" resultType="int">
         SELECT COUNT(*) FROM community_posts
         <where>
+                status = 1
             <if test="category != null and category != '전체'">
-                category = #{category}
+                AND category = #{category}
             </if>
         </where>
     </select>
@@ -125,7 +131,7 @@
         SELECT p.*, u.nickname, u.profile_pic
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
-        WHERE p.id &lt; #{id}  <!-- &lt; -> < (부등호)라는뜻-->
+        WHERE p.id &lt; #{id} AND p.status = 1  <!-- &lt; -> < (부등호)라는뜻-->
         ORDER BY p.id DESC
         LIMIT 1
     </select>
@@ -135,20 +141,20 @@
         SELECT p.*, u.nickname, u.profile_pic
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
-        WHERE p.id &gt; #{id}  <!-- &gt; -> > (부등호)라는 뜻-->
+        WHERE p.id &gt; #{id} AND p.status = 1  <!-- &gt; -> > (부등호)라는 뜻-->
         ORDER BY p.id ASC
         LIMIT 1
     </select>
 
     <!-- 게시글 추가-->
     <insert id="insertPost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
-        INSERT INTO community_posts (user_id, title, content, view_count, is_anonymous, hearts_count, image_url, category, status, created_at, updated_at
+        INSERT INTO community_posts (user_id, title, content, view_count, is_anonymous, hearts_count, image_url, category, status, created_at
         <if test="category == '소식'">
             , event_start_date, event_end_date
         </if>
         )
         VALUES (
-        #{userId}, #{title}, #{content}, #{viewCount}, #{isAnonymous}, #{heartsCount}, #{imageUrl}, #{category}, #{status}, NOW(), NOW()
+        #{userId}, #{title}, #{content}, #{viewCount}, #{isAnonymous}, #{heartsCount}, #{imageUrl}, #{category}, #{status}, NOW()
         <if test="category == '소식'">
             , #{eventStartDate}, #{eventEndDate}
         </if>
@@ -157,9 +163,11 @@
 
     <!-- 댓글 추가 -->
     <insert id="insertComment" parameterType="com.ohgiraffers.climbon.community.dto.CommentDTO">
-        INSERT INTO community_comments (post_id, user_id, content, created_at)
-        VALUES (#{postId}, #{userId}, #{content}, NOW())
+        INSERT INTO community_comments (post_id, user_id, content, created_at, status)
+        VALUES (#{postId}, #{userId}, #{content}, NOW(), #{status})
     </insert>
+
+
 
     <!-- 게시글 수정 -->
     <update id="updatePost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
@@ -173,10 +181,33 @@
         WHERE id = #{id}
     </update>
 
-    <!-- 게시글 삭제 -->
-    <delete id="deletePost" parameterType="int">
-        DELETE FROM community_posts WHERE id = #{id}
-    </delete>
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="com.ohgiraffers.climbon.community.dto.CommentDTO">
+        UPDATE community_comments
+        SET post_id = #{postId}, user_id = #{userId}, content = #{content}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 게시글 삭제(비활성화) -->
+    <update id="deletePost" parameterType="int">
+        UPDATE community_posts
+        SET status = 0 <!-- false -->
+        WHERE id = #{id};
+    </update>
+
+    <!-- 특정 게시글의 모든 댓글 status = 0으로 업데이트 게시글과 연동해서 댓글 삭제 쿼리문(트랜잭션처리 위해 짯다)-->
+    <update id="deleteCommentsByPostId" parameterType="int">
+        UPDATE community_comments
+        SET status = 0
+        WHERE post_id = #{postId};
+    </update>
+
+    <!-- 댓글 삭제(비활성화) -->
+    <update id="deleteComment" parameterType="com.ohgiraffers.climbon.community.dto.CommentDTO">
+        UPDATE community_comments
+        SET status = 0
+        WHERE id = #{id}
+    </update>
 
     <!-- 조회수 증가 -->
     <update id="incrementViewCount" parameterType="int">
