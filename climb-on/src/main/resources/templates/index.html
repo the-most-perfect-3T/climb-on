@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
                   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
                   layout:decorate="~{/layout/baseLayout}"
@@ -53,12 +52,26 @@
                 <h3>커뮤니티</h3>
                    <div class="community-posts">
                        <div class="community-posts-list">
+                           <ul class="nav nav-tabs" id="category-tabs">
+                               <li class="nav-item">
+                                   <button class="nav-link active" data-category="">전체</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="일반">일반</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="모집">모집</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="질문">질문</button>
+                               </li>
+                           </ul>
                            <table id="table post-table">
                                <tbody id="recent-posts">
                                <!-- 최근 포스트 6개 여기-->
                                </tbody>
                            </table>
-                           <button>게시글 더 보기</button>
+                           <button class="btn-more-posts">게시글 더 보기</button>
                        </div>
 
                        <div class="popular-posts">

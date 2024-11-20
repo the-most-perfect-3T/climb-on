@@ -111,7 +111,7 @@
     width: 716px;
 }
 
-.community-container button{
+.community-container .btn-more-posts{
     width: 717px;
     height: 62px;
     background-color: #FAEFDD;
