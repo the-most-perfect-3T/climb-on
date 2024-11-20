@@ -14,7 +14,44 @@ public class FacilitiesDTO {
     private BigDecimal latitude;        //소수점 6자리의 값까지 저장가능 좌표 위도
     private BigDecimal longitude;       //경도
     private FacilityType facilityType;   // 시설 타입
+    private boolean isFavorite;
 
+    @Override
+    public String toString() {
+        return "FacilitiesDTO{" +
+                "id=" + id +
+                ", facilityName='" + facilityName + '\'' +
+                ", address='" + address + '\'' +
+                ", contact='" + contact + '\'' +
+                ", openingTime='" + openingTime + '\'' +
+                ", categoryId=" + categoryId +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", facilityType=" + facilityType +
+                ", isFavorite=" + isFavorite +
+                '}';
+    }
+
+    public FacilitiesDTO(int id, String facilityName, String address, String contact, String openingTime, int categoryId, BigDecimal latitude, BigDecimal longitude, FacilityType facilityType, boolean isFavorite) {
+        this.id = id;
+        this.facilityName = facilityName;
+        this.address = address;
+        this.contact = contact;
+        this.openingTime = openingTime;
+        this.categoryId = categoryId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.facilityType = facilityType;
+        this.isFavorite = isFavorite;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public int getId() {
         return id;
@@ -106,18 +143,5 @@ public class FacilitiesDTO {
 
     }
 
-    @Override
-    public String toString() {
-        return "FacilitiesDTO{" +
-                "id=" + id +
-                ", facilityName='" + facilityName + '\'' +
-                ", address='" + address + '\'' +
-                ", contact='" + contact + '\'' +
-                ", openingTime='" + openingTime + '\'' +
-                ", categoryId=" + categoryId +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", facilityType=" + facilityType +
-                '}';
-    }
+
 }
