@@ -1,7 +1,7 @@
-package com.ohgiraffers.climbon.crew.service;
+package com.ohgiraffers.climbon.crew.crewHome.service;
 
-import com.ohgiraffers.climbon.crew.dao.CrewBoardDAO;
-import com.ohgiraffers.climbon.crew.dto.CrewBoardDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dao.CrewBoardDAO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

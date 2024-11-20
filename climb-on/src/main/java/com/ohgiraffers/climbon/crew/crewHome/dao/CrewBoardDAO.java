@@ -1,6 +1,6 @@
-package com.ohgiraffers.climbon.crew.dao;
+package com.ohgiraffers.climbon.crew.crewHome.dao;
 
-import com.ohgiraffers.climbon.crew.dto.CrewBoardDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

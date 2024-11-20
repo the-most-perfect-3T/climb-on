@@ -1,4 +1,4 @@
-package com.ohgiraffers.climbon.crew.controller;
+package com.ohgiraffers.climbon.crew.crewHome.controller;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
