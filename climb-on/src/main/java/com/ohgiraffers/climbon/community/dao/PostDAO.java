@@ -2,8 +2,9 @@ package com.ohgiraffers.climbon.community.dao;
 
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.*;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -33,4 +34,28 @@ public interface PostDAO {
     List<CommentDTO> getCommentsByPostId(Integer postId);
 
     void insertComment(CommentDTO comment);
+
+    @Select("SELECT id FROM users WHERE user_id = #{userId}")
+    Integer getUserIdByUserName(@Param("userId") String userId);
+
+    @Select("SELECT nickname FROM users WHERE id = #{userId}")
+    String getUserNicknameById(@Param("userId") Integer userId);
+
+    @Select("SELECT id FROM users WHERE user_id = #{email}")
+    Integer getUserIdByEmail(@Param("email") String email);
+
+    @Update("UPDATE community_posts SET hearts_count = hearts_count + 1 WHERE id = #{postId}")
+    void incrementHearts(@Param("postId") int postId);
+
+    @Update("UPDATE community_posts SET hearts_count = hearts_count - 1 WHERE id = #{postId}")
+    void decrementHearts(@Param("postId") int postId);
+
+    @Select("SELECT COUNT(*) FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
+    boolean hasUserLikedPost(@Param("postId") int postId, @Param("userId") int userId);
+
+    @Delete("DELETE FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
+    void removeLike(int postId, Integer userId);
+
+    @Insert("INSERT INTO user_post_heart (post_code, user_code) VALUES (#{postId}, #{userId})")
+    void addLike(int postId, Integer userId);
 }

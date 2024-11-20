@@ -3,6 +3,7 @@ package com.ohgiraffers.climbon.community.service;
 import com.ohgiraffers.climbon.community.dao.PostDAO;
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class PostService {
 
     public PostDTO getPostById(Integer id) {
         postDAO.incrementViewCount(id); // 조회시 조회수 증가
-        return postDAO.getPostById(id); // 게시글 자겨오기
+        return postDAO.getPostById(id); // 게시글 가져오기
     }
 
     public void insertPost(PostDTO post) {
@@ -76,6 +77,12 @@ public class PostService {
     }
 
     public void updatePost(PostDTO post) {
+        // 수정 시 이미지 URL이 존재하지 않을 경우 기존 값을 유지
+        PostDTO existingPost = postDAO.getPostById(post.getId());
+        if (post.getImageUrl() == null || post.getImageUrl().isEmpty()){
+            post.setImageUrl(existingPost.getImageUrl());
+        }
+
         postDAO.updatePost(post);
     }
 
@@ -91,10 +98,6 @@ public class PostService {
         return postDAO.getNextPost(id);
     }
 
-    public void incrementViewCount(Integer postId) {
-        postDAO.incrementViewCount(postId); // postId에 해당하는 게시글의 조회수를 증가시킴
-    }
-
     // 댓글 조회, 추가 메소드
     public List<CommentDTO> getCommentsByPostId(Integer postId) {
         return postDAO.getCommentsByPostId(postId);
@@ -103,4 +106,41 @@ public class PostService {
     public void insertComment(CommentDTO comment){
         postDAO.insertComment(comment);
     }
+
+    public Integer getUserIdByUserName(String userId) {
+        return postDAO.getUserIdByUserName(userId);
+    }
+
+    public String getUserNicknameById(Integer userId) {
+        return postDAO.getUserNicknameById(userId);
+    }
+
+    public Integer findUserIdByEmail(String email) {
+        return postDAO.getUserIdByEmail(email);
+    }
+
+    public void incrementHearts(int postId) {
+        postDAO.incrementHearts(postId);
+    }
+
+    public void decrementHearts(int postId) {
+        postDAO.decrementHearts(postId);
+    }
+
+    public boolean hasUserLikedPost(int postId, int userId) {
+        return postDAO.hasUserLikedPost(postId, userId);
+    }
+
+    public void toggleLike(int postId, Integer userId) {
+        if (hasUserLikedPost(postId, userId)) {
+            postDAO.removeLike(postId, userId); // 좋아요 취소
+            decrementHearts(postId); // 좋아요 수 감소
+        } else {
+            postDAO.addLike(postId, userId); // 좋아요 추가
+            incrementHearts(postId); // 좋아요 수 증가
+        }
+    }
+
+
+
 }

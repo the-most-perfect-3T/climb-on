@@ -21,33 +21,66 @@ body {
     box-sizing: border-box;
 }
 
+/* 게시글 제목 옆 댓글 수 스타일 */
+.post-list a .comment-count {
+    margin-left: 5px; /* 제목과 댓글 수 사이 간격 */
+    color: var(--point); /* 댓글 수를 색 표시 */
+    font-size: 0.9em; /* 댓글 수를 작게 표시 */
+}
 
+.main-container {
+    padding-top: 100px; /* 상단 패딩 추가 */
+}
 
-/* 타임라인과 더보기 버튼을 같은 줄에 배치 */
+/* 타임라인 컨테이너 스타일 */
 .timeline-container {
     display: flex;
-    justify-content: center; /* 전체를 중앙에 배치 */
-    align-items: center; /* 수직 가운데 정렬 */
-    gap: 10px; /* 타임라인과 더보기 버튼 사이 간격 */
-    margin-bottom: 20px; /* 아래쪽 여백 설정 */
-}
-
-/* 타임라인 스타일 (기존과 동일) */
-.timeline {
-    display: flex;
-    gap: 10px; /* 타임라인 아이템 간격 */
-}
-
-.timeline-item {
-    background-color: #ddd;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 가운데 정렬 */
     align-items: center;
+    margin-bottom: 120px; /* 아래쪽 여백 */
+}
+
+/* 소식 제목 스타일 */
+.timeline-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px; /* 제목과 타임라인 사이 간격 */
+    color: #333; /* 제목 색상 */
+}
+
+/* 타임라인 */
+.timeline {
+    display: flex; /* 버튼들을 가로로 배치 */
+    gap: 16px; /* 버튼 사이의 간격 */
+}
+
+/* 타임라인 아이템 */
+.timeline-item {
+    display: flex;
     justify-content: center;
-    font-size: 0.9em;
+    align-items: center;
+    width: 80px; /* 버튼 크기 */
+    height: 80px;
+    background-color: #ddd; /* 배경색 */
+    border-radius: 20px; /* 모서리를 둥글게 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.timeline-item a {
+    text-decoration: none;
     color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 호버 효과 */
+.timeline-item:hover {
+    background-color: #f5a623; /* 호버 시 배경색 변경 */
+    transform: translateY(-5px); /* 살짝 위로 올라가는 효과 */
+    cursor: pointer;
 }
 
 /* 더보기 버튼 스타일 */
@@ -58,6 +91,7 @@ body {
     cursor: pointer;
     font-size: 0.9em;
     margin-left: 10px; /* 타임라인과의 간격을 조절 */
+    margin-top: 20px;
 }
 
 .more-button:hover {
@@ -105,16 +139,19 @@ body {
 
 /* 드롭다운 버튼 기본 스타일 */
 .sort-button {
-    background-color: #f2f2f2;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-    color: #FF7A00;
+    display: inline-flex; /* 아이콘과 텍스트를 나란히 배치 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+    padding: 10px 16px; /* 버튼 내부 여백 */
+    background-color: #f2f2f2; /* 배경색 */
+    border: 1px solid #ddd; /* 테두리 */
+    border-radius: 6px; /* 버튼 모서리 둥글게 */
+    font-size: 16px; /* 텍스트 크기 */
+    color: var(--point); /* 텍스트 색상 */
+    cursor: pointer; /* 클릭 가능한 마우스 포인터 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
+
 
 .sort-options {
     display: flex;
@@ -124,6 +161,26 @@ body {
 .sort-options button {
     width: 20px;
     height: 20px;
+}
+
+/* 아이콘을 네모 박스 안에 넣기 */
+.icon-box {
+    display: flex; /* 아이콘 박스 안의 내용 중앙 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    justify-content: center; /* 가로 가운데 정렬 */
+    width: 32px; /* 네모 박스 너비 */
+    height: 32px; /* 네모 박스 높이 */
+    background-color: #f2f2f2; /* 네모 박스 배경 */
+    border: 1px solid #ddd; /* 네모 박스 테두리 */
+    border-radius: 4px; /* 네모 박스 모서리 둥글게 */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    margin-right: 8px; /* 텍스트와의 간격 */
+}
+
+.icon-box i {
+    font-size: 16px; /* 아이콘 크기 */
+    color: #333; /* 아이콘 색상 */
+    line-height: 1; /* 아이콘 세로 중앙 정렬 */
 }
 
 /* 드롭다운 메뉴 스타일 */
@@ -220,18 +277,44 @@ body {
 
 /* 드롭다운 버튼 스타일 */
 .sort-button {
-    background-color: #f2f2f2;
-    border: none;
-    padding: 8px 16px;
-    font-size: 14px;
+    display: flex; /* 아이콘과 텍스트를 나란히 배치 */
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
+    padding: 10px 16px; /* 버튼 내부 여백 */
+    background-color: #f2f2f2; /* 배경색 */
+    border: 1px solid #ddd; /* 테두리 */
+    border-radius: 6px; /* 모서리 둥글게 */
+    font-size: 14px; /* 텍스트 크기 */
     cursor: pointer;
-    display: flex;
-    align-items: center;
 }
 
-.sort-button:hover {
-    background-color: #e1e1e1;
+.sort-button i {
+    font-size: 16px; /* 아이콘 크기 */
+    color: #333; /* 아이콘 색상 */
+    line-height: 1;
 }
+
+/* 글쓰기 버튼 컨테이너 */
+.create-button-container {
+    display: flex;
+    justify-content: flex-end; /* 기본적으로 오른쪽 정렬 */
+    margin-left: 10px; /* 필요 시 여백 추가 */
+}
+
+/* 글쓰기 버튼 스타일 */
+.create-button {
+    padding: 10px 16px;
+    background-color: var(--point);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s;
+}
+
 
 
 .post-list {
@@ -281,7 +364,7 @@ body {
 }
 
 .pagination .active {
-    background-color: #FF7A00;
+    background-color: var(--point);
     color: white;
 }
 
