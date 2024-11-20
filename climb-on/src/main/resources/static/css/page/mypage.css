@@ -106,9 +106,10 @@
 .section-mypage #profile .profile-cont .section00 .info-wrap .one-liner {
     font-size: 14px;
     word-break: keep-all;
+    margin-right: 10px;
 }
 
-.section-mypage #profile .profile-cont .section00 #btn-modify {
+.section-mypage #profile .profile-cont .section00 .btn-wrap button {
     font-size: 14px;
     color: var(--darkGray);
     width: 180px;
@@ -119,16 +120,37 @@
     flex-shrink: 0;
 }
 
-.section-mypage #profile .profile-cont .section00 #btn-modify i {
+.section-mypage #profile .profile-cont .section00 .btn-wrap button i {
     font-size: 22px;
     margin-right: 12px;
 }
 
-.section-mypage #profile .profile-cont .section00 #btn-modify:hover {
+.section-mypage #profile .profile-cont .section00 .btn-wrap button:hover {
     background: var(--point);
     color: #fff;
     border-color: var(--point);
 }
+.section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice {
+    width: 134px;
+    margin-right: 20px;
+}
+.section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice .notice-count{
+    top: 0;
+    right: 10px;
+    font-size: 8px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: var(--point);
+}
+.section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice:hover .notice-count{
+    background: #fff;
+    color: var(--point);
+}
+
 
 .section-mypage #profile .profile-cont .section01 .move-wrap {
     width: 50%;

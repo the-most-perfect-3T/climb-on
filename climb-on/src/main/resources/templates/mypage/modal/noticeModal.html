@@ -1,0 +1,23 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <th:block th:fragment="modalFragment">
+        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="noticeModalChoice" aria-labelledby="noticeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content shadow">
+                    <div class="modal-body text-center">
+                        <div class="top d-flex justify-content-between align-items-center">
+                            <h5 class="section-title" id="noticeModalLabel">알림</h5>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <!--<th:block th:each="item : ${noticeList}">
+
+                        </th:block>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</html>

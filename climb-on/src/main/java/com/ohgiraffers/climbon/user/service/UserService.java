@@ -66,6 +66,8 @@ public class UserService {
             return 0;
         }
         user.setId(key);
+        // 비밀번호 암호화
+        user.setPassword(encoder.encode(user.getPassword()));
         return userMapper.updateUser(user);
     }
 

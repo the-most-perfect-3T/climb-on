@@ -72,14 +72,12 @@
     </update>
 
     <insert id="saveNotice" parameterType="hashmap">
-        INSERT INTO manager_notice(
+        INSERT INTO BUSINESS_APPLY (
             USER_CODE,
-            ATTACH_FILE,
-            CATEGORY
+            ATTACH_FILE
         ) VALUES (
             #{id},
-            #{attachFile},
-            1
+            #{attachFile}
         )
     </insert>
 

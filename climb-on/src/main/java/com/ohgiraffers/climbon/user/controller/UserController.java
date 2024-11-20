@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.*;
 
 import static com.ohgiraffers.climbon.auth.common.HashUtil.sha256Hex;
 
@@ -48,6 +48,18 @@ public class UserController {
             mv.setViewName("/auth/login");
             return mv;
         }
+
+        String role = String.valueOf(userDetails.getLoginUserDTO().getUserRole());
+        if(role.equals("USER")){
+            // user 알림 테이블 가져오기
+            // user 알림 카테고리가
+        }else if(role.equals("ADMIN")){
+            // admin 알림 테이블 가져오기
+        }else if(role.equals("BUSINESS")){
+            // business 알림 테이블 가져오기
+
+        }
+
 
         Integer key = userDetails.getLoginUserDTO().getId();
         UserDTO user = userService.findByKey(key);
@@ -110,6 +122,17 @@ public class UserController {
             mv.setViewName("mypage/mypage");
             return mv;
         }
+
+        // 이미지 파일 형식인지 재확인
+        String contentType = profilePic.getContentType();
+        Set<String> allowedMimeTypes = new HashSet<>(Arrays.asList("image/jpeg", "image/png", "image/gif"));
+
+        if (!allowedMimeTypes.contains(contentType)) {
+            mv.addObject("message", "지원하지 않는 파일 형식입니다.");
+            mv.setViewName("mypage/mypage");
+            return mv;
+        }
+
 
         String filePath = "C:/uploads/profile";
         File fileDir = new File(filePath);
@@ -209,26 +232,50 @@ public class UserController {
 
 
 
+
     @PostMapping("applyBusiness")
     public ModelAndView applyBusiness(
             @AuthenticationPrincipal AuthDetail userDetails,
             RedirectAttributes redirectAttributes,
             ModelAndView mv,
-            @RequestParam("businessFile") MultipartFile businessFile) {
+            @RequestParam("map") Map<Object, Object> map) {
 
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             redirectAttributes.addFlashAttribute("message", "로그인 정보가 유효하지 않습니다.");
             return new ModelAndView("redirect:/auth/login");
         }
 
-        if (businessFile.isEmpty()) {
+        String facilityName = (String) map.get("facilityName");
+        MultipartFile businessFile = (MultipartFile) map.get("businessFile");
+
+        System.out.println("facilityName = " + facilityName);
+        System.out.println("businessFile = " + businessFile);
+
+        if (businessFile.isEmpty() || facilityName.isEmpty()) {
             mv.addObject("message", "파일을 선택해주세요.");
             mv.setViewName("mypage/mypage");
             return mv;
         }
 
 
+        // 이미지 파일 형식인지 재확인
+        String contentType = businessFile.getContentType();
+        Set<String> allowedMimeTypes = new HashSet<>(Arrays.asList("image/jpeg", "image/png", "image/gif"));
 
+        if (!allowedMimeTypes.contains(contentType)) {
+            mv.addObject("message", "지원하지 않는 파일 형식입니다.");
+            mv.setViewName("mypage/mypage");
+            return mv;
+        }
+
+
+        // facilityName 으로 facility id 찾아오기
+        
+
+
+
+
+        // 첨부파일 저장
         String filePath = "C:/uploads/business";
         File fileDir = new File(filePath);
 
@@ -245,7 +292,7 @@ public class UserController {
             String newFileName = "/img/business/" + savedName;
 
             Integer key = userDetails.getLoginUserDTO().getId();
-            int result = userService.registBusiness(newFileName, key);
+            int result = userService.registBusiness(newFileName, key); // facility_id 찾아오기 추가
 
             if (result > 0) {
                 redirectAttributes.addFlashAttribute("message", "비즈니스계정 전환 신청이 완료되었습니다. \n관리자 승인 후 전환 됩니다.");

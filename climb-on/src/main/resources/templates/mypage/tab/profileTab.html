@@ -31,10 +31,22 @@
                             </div>
                         </div>
 
-                        <button type="button" id="btn-modify" class="d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-gear"></i>
-                            <span>프로필 수정</span>
-                        </button>
+                        <div class="btn-wrap d-flex align-items-center">
+                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center">
+                                <div class="position-relative">
+                                    <i class="fa-solid fa-bell"></i>
+                                    <th:block th:if="${noticeCount != null}">
+                                        <span th:text="${noticeCount}" class="notice-count position-absolute">1</span>
+                                    </th:block>
+                                </div>
+                                <span>알림</span>
+                            </button>
+                            <button type="button" id="btn-modify" class="d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-gear"></i>
+                                <span>프로필 수정</span>
+                            </button>
+                        </div>
+
                     </div>
 
                 </section>
@@ -113,11 +125,11 @@
                                 <button type="submit" class="btn-submit">수정하기</button>
                             </form>
                         </div>
-                        <div>
+                        <div class="text-center">
                             <div class="img-wrap d-flex align-items-center">
                                 <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100" id="profileImg">
                             </div>
-                            <div class="btn-wrap d-flex justify-content-center">
+                            <div class="btn-wrap d-flex justify-content-center mb-3">
                                 <form action="/mypage/profileModify" method="post" enctype="multipart/form-data" id="profileForm">
                                     <input type="file" name="profilePic" id="profilePic" />
                                     <button class="btn btn-modify" type="button">수정</button>
@@ -126,6 +138,7 @@
                                     <button class="btn btn-delete">삭제</button>
                                 </form>
                             </div>
+                            <small>※ 지원하는 이미지 파일 형식<br/>( jpeg, jpg, gif, png )</small>
                         </div>
                     </div>
 
