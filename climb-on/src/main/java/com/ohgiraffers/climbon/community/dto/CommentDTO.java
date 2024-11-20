@@ -6,7 +6,8 @@ import java.time.format.DateTimeFormatter;
 public class CommentDTO {
     private Integer id;
     private Integer postId;
-    private String userId;
+    private Integer userId;
+    private String userNickname;
     private String content;
     private LocalDateTime createdAt;
     private int commentsCount;
@@ -14,10 +15,11 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(Integer id, Integer postId, String userId, String content, LocalDateTime createdAt, int commentsCount) {
+    public CommentDTO(Integer id, Integer postId, Integer userId, String userNickname, String content, LocalDateTime createdAt, int commentsCount) {
         this.id = id;
         this.postId = postId;
         this.userId = userId;
+        this.userNickname = userNickname;
         this.content = content;
         this.createdAt = createdAt;
         this.commentsCount = commentsCount;
@@ -53,11 +55,11 @@ public class CommentDTO {
         this.postId = postId;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
@@ -82,12 +84,25 @@ public class CommentDTO {
         this.commentsCount = commentsCount;
     }
 
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
     @Override
     public String toString() {
         return "CommentDTO{" +
                 "id=" + id +
                 ", postId=" + postId +
-                ", userId='" + userId + '\'' +
+                ", userId=" + userId +
+                ", userNickname='" + userNickname + '\'' +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 ", commentsCount=" + commentsCount +

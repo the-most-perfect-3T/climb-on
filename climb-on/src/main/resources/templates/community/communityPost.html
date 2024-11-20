@@ -12,8 +12,13 @@
 <body>
     <main class="content" layout:fragment="containerFragment">
 
+
     <!-- 이벤트 타임라인 --> <!--timeline 섹션에 링크 추가하여 D-Day 상태에 따라 소식 게시글을 필터링-->
     <section class="timeline-container">
+
+        <!-- 소식 제목 -->
+        <h2 class="timeline-title">소식</h2>
+
         <!-- 타임라인 -->
         <div class="timeline">
         <div class="timeline-item">
@@ -42,40 +47,40 @@
         <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
     </section>
 
-    <!-- 카테고리 버튼 및 검색 바 -->
+    <!-- 카테고리 버튼 및 검색 바 및 글쓰기 -->
     <section class="category-buttons">
-<!--        <button onclick="navigateWithSort('/community/new')">글쓰기</button>  &lt;!&ndash; 글쓰기 버튼 경로 컨트롤러에서 지정한대로&ndash;&gt; &lt;!&ndash; 각 카테고리 버튼 클릭 시 현재 선택된 정렬 옵션을 URL에 포함해야 한다. 이를 위해, JavaScript에서 선택된 정렬 순서를 URL에 추가하고, 카테고리 변경 버튼을 누를 때도 해당 정렬 파라미터가 전달되도록 한다. &ndash;&gt;-->
-        <button onclick="window.location.href='/community/new'">글쓰기</button>
-        <button onclick="window.location.href='/community'">전체</button>
-        <button onclick="window.location.href='/community?category=공지'">공지</button>
-        <button onclick="window.location.href='/community?category=가이드'">가이드</button>
-        <button onclick="window.location.href='/community?category=소식'">소식</button>
+<!--        <button onclick="navigateWithSort('/community/new')">글쓰기</button>  &lt;!&ndash; 글쓰기 버튼 경로 컨트롤러에서 지정한대로&ndash;&gt; &lt;!&ndash; 각 카테고리 버튼 클릭 시 현재 선택된 정렬 옵션을 URL에 포함해야 한다. 이를 위해, JavaScript에서 선택된 정렬 순서를 URL에 추가하고, 카테고리 변경 버튼을 누를 때도 해당 정렬 파라미터가 전달되도록 한다. &ndash;&gt; 이 함수 안쓰는게 나아서 다른걸 썼다.-->
+        <button onclick="window.location.href='/community?category=전체&viewMode=' + viewMode">전체</button>
+        <button onclick="window.location.href='/community?category=공지&viewMode=' + viewMode">공지</button>
+        <button onclick="window.location.href='/community?category=가이드&viewMode=' + viewMode">가이드</button>
+        <button onclick="window.location.href='/community?category=소식&viewMode=' + viewMode">소식</button>
 
         <!-- 검색 입력 필드와 버튼 -->
         <form action="/community" method="get" style="display:inline;">
         <input type="hidden" name="category" th:value="${category}"/>     <!--category와 searchKeyword를 함께 서버로 전송하여, 해당 카테고리의 검색 결과를 표시할 수 있게 했다-->
-        <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
+        <input type="hidden" name="viewMode" th:value="${viewMode}"/> <!--뷰모드 유지-->
+            <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
         <button type="submit">검색</button>
         </form>
 
         <!-- 뷰 전환 버튼-->
         <div class="view-buttons">
             <button onclick="setViewMode('card')" id="cardViewButton">
-                <img src="/images/icon_card.png" alt="Card View Icon">
+                <img width="64" height="64" src="https://img.icons8.com/hatch/64/activity-grid-2.png" alt="activity-grid-2"/>
             </button>
             <button onclick="setViewMode('list')" id="listViewButton">
-                <img src="/images/icon_list.png" alt="List View Icon">
+                <img width="60" height="60" src="https://img.icons8.com/metro/26/list.png" alt="list"/>
             </button>
         </div>
 
         <!-- 정렬 버튼과 드롭다운 -->
-        <div class="dropdown">
-            <button class="sort-button" id="sortButton">최신순</button> <!-- 기본값을 최신순으로 설정 -->
+        <div class="dropdown">   <!-- 기본값을 최신순으로 설정 -->
+            <button class="sort-button" id="sortButton"><i class="fa-regular fa-arrow-down-short-wide"></i>최신순</button>
         <div class="dropdown-content">
             <a href="#" onclick = "sortPosts('latest')">최신순</a>
             <a href="#" onclick = "sortPosts('comments')">댓글순</a>
             <a href="#" onclick = "sortPosts('views')">조회순</a>
-            <a href="#" onclick = "sortPosts('likes')">좋아요순</a>
+            <a href="#" onclick = "sortPosts('heartsCount')">좋아요순</a>
             <!-- 일반 버튼 정렬
             <button onclick="window.location.href='/community?sort=latest'" th:classappend="${sort == 'latest'} ? 'active' : ''">최신순</button>
             <button>댓글순</button>
@@ -83,6 +88,13 @@
             <button>좋아요순</button>-->
             </div>
         </div>
+
+        <!-- 글쓰기 버튼 -->
+        <div class="create-button-container">
+            <button class="create-button" onclick="window.location.href='/community/new'"><i class="fa-solid fa-pencil"></i>글쓰기
+            </button>
+        </div>
+
     </section>
 
     <!-- 게시글 목록 -->
@@ -104,13 +116,14 @@
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">게시글 제목 예시</span>
+                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
 <!--                <td>-->
 <!--                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 30px; height: 30px; border-radius: 50%;">-->
 <!--                    <span th:text="${post.userNickname}">작성자 닉네임</span>-->
 <!--                </td>-->
-                <td th:text="${post.userId}">작성자</td>
+                <td th:text="${post.userNickname}">작성자</td>
                 <td th:text="${post.formattedCreatedAt}">작성일</td>
             </tr>
             </tbody>
@@ -126,8 +139,10 @@
                     </a>
                 </div>
                 <div class="card-meta">
-                    <span th:text="${post.userId}">작성자</span> |
+                    <span th:text="${post.userNickname}">작성자</span> |
                     <span th:text="${post.formattedCreatedAt}">작성일</span>
+                    <span th:text="${post.viewCount}">0</span>
+                    <span th:text="${post.commentsCount}">0</span>
                 </div>
                 <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
             </div>
@@ -147,12 +162,13 @@
             </li>  <!--currentPage에 따라 이전 페이지링크가 표시--> <!-- 페이지네이션이 되도 링크 생성 할 때 현재 URL에 포함된 category, searchKeyword, sort 등의 파라미터를 함께 전달하여 커뮤니티게시판의 기존 기능 유지-->
             </li>
             <!-- 페이지 번호 링크 -->
-            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조-->
+            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조--> <!--첫번째 인자가 null인 경우 두번째 인수 반환-->
                 <a th:href="@{'/community?page=' + ${pageNum}
                         + '&category=' + ${#strings.defaultString(category, '전체')}
                         + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
                         + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
+                   onclick="navigateWithViewMode(event, ${pageNum})"
                    th:text="${pageNum}"
                    th:classappend="${pageNum == currentPage} ? 'active' : ''">
                 </a> <!--@: Thymeleaf에서 URL을 생성할 때 사용-->
@@ -175,26 +191,38 @@
         <script>
             let viewMode = 'list'; // 기본값을 리스트 뷰로 설정
 
-            // 현재 URL의 정렬 상태를 유지하여 다른 페이지로 이동  // 카테고리 버튼 클릭 시 호출되는 함수로, 현재 선택된 정렬 순서를 URL에 포함해 페이지를 이동합니다.
-            function navigateWithSort(url){
+            //  URL에 포함해 페이지를 이동합니다.
+            function navigateWithViewMode(event, page){
+                event.preventDefault(); // 기본 동작 방지
                 const urlParams = new URLSearchParams(window.location.search);
-                const currentSort = urlParams.get('sort') || 'latest'; //정렬 기본값을 최신으로 설정
-                const currentViewMode = urlParams.get('viewMode') || 'list'; // 뷰모드 기본값을 리스트로 설정
 
-                const separator = url.includes('?') ? '&' : '?'; // URL에 '?' 가 없으면 추가
-                // 선택된 정렬 순서, 뷰 모드 및 카테고리 정보를 URL에 추가하여 페이지 이동
-                window.location.href = `${url}${separator}sort=${currentSort}&viewMode=${currentViewMode}`;
+                const currentCategory = urlParams.get('category') || '전체'; // 카테고리가 없으면 기본값 "전체"로 설정
+                const currentViewMode = urlParams.get('viewMode') || 'list'; // 뷰모드 기본값을 리스트로 설정
+                urlParams.set('page', page); //페이지 번호 설정
+                urlParams.set('category', currentCategory); //카테고리 설정
+                urlParams.set('viewMode', currentViewMode); //뷰모드 설정
+                // 선택된 뷰 모드를 URL에 추가하여 페이지 이동
+                window.location.href = `/community?${urlParams.toString()}`;
             }
 
             // 페이지가 로드될 때 URL에서 정렬 상태와 뷰 모드 상태를 추출하여 버튼 텍스트 업데이트
             document.addEventListener('DOMContentLoaded', () => {
                 const urlParams = new URLSearchParams(window.location.search);
+
+                // LocalStorage에서 저장된 뷰모드 가져오기
+                const storedViewMode = localStorage.getItem('viewMode');
                 const currentSort = urlParams.get('sort') || 'latest'; // 기본값은 'latest'로 설정
-                const currentViewMode = urlParams.get('viewMode') || 'list'; // 기본값 'list'로 설정
-                viewMode = currentViewMode;
+                // const currentViewMode = urlParams.get('viewMode') ||'list'; // URL, 기본값 'list' 순으로 설정
+                viewMode = storedViewMode || urlParams.get('viewMode') || 'list'; // 저장된 값, URL, 기본값 순으로 설정
 
                 updateSortButtonText(currentSort);
                 setViewMode(viewMode); // 페이지 로드 시 현재 뷰 설정 (초기 뷰설정)
+
+                // if (!urlParams.get('category')){
+                //     urlParams.set('category', '전체');
+                //     window.location.search = urlParams.toString();
+                // }  // 바로 커뮤니티 눌렀을 때 http://localhost:8080/community?category=전체&viewMode=list 로 이동 // 했으나 뷰리스트 고정 안되는건 계속되므로 삭제
+
             });
 
             // 정렬 버튼 텍스트를 업데이트하는 함수
@@ -210,7 +238,7 @@
                     case 'views':
                         sortButton.textContent = '조회순';
                         break;
-                    case 'likes':
+                    case 'heartsCount':
                         sortButton.textContent = '좋아요순';
                         break;
                     default:
@@ -240,13 +268,14 @@
 
             function setViewMode(mode) {
                 viewMode = mode || 'list'; // 기본값 설정
+                localStorage.setItem('viewMode', viewMode); // LocalStorage에 뷰모드 상태 저장
                 renderPosts();
 
                 // URL에 viewMode 파라미터를 추가하여 현재 모드를 반영
                 const urlParams = new URLSearchParams(window.location.search);
                 urlParams.set('viewMode', viewMode);
-                //history : 브라우저의 히스토리 API를 활용용하여 브라우저의 탐색 기록을 조작할 수 있는 객체
-                history.replaceState(null, '', `${location.pathname}?${urlParams.toString()}`); // 이걸 사용하면 브라우저 기록을 변경하거나 새로운 상태를 추가하지 않고, 현재 페이지의 URL을 수정하는데 사용된다! (뷰모드에 맣이 쓰인다.)
+                //history : 브라우저의 히스토리 API를 활용하여 브라우저의 탐색 기록을 조작할 수 있는 객체
+                history.replaceState(null, '', `${location.pathname}?${urlParams.toString()}`); // 이걸 사용하면 브라우저 기록을 변경하거나 새로운 상태를 추가하지 않고, 현재 페이지의 URL을 수정하는데 사용된다! (뷰모드에 많이 쓰인다.)
                 //첫 번째 파라미터 : 상태 객체(null) : 현재 상태와 연결할 데이터를 저장할 수 있다. 현재사용x
                 //두 번째 파라미터:제목(''): 업데이트된 URL과 연결된 페이지의 제목입니다. 이 예시에서는 빈 문자열로 설정되어 무시된다.
                 //세 번째 파라미터:URL(~): 브라우저의 URL표시줄에 나타날 새로운 URL이다. 페이지를 새로고침하지 않고 URL만 변경된다. cf) location.pathname:현재 페이지의 경로(쿼리 문자열 제외)., urlParams.toString(): 수정된 쿼리 문자열
