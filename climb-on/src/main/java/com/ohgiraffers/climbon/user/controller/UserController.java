@@ -5,6 +5,9 @@
 package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
+import com.ohgiraffers.climbon.user.dto.BusinessDTO;
+import com.ohgiraffers.climbon.user.dto.NoticeDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import com.ohgiraffers.climbon.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private FacilitiesService facilitiesService;
 
     private void populateUserData(ModelAndView mv, Integer userId) {
         UserDTO user = userService.findByKey(userId);
@@ -43,25 +48,67 @@ public class UserController {
 
     @GetMapping("home")
     public ModelAndView mypage(ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
+
+        // 로그인 정보 없으면
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
             mv.setViewName("/auth/login");
             return mv;
         }
 
-        String role = String.valueOf(userDetails.getLoginUserDTO().getUserRole());
+        // 유저 pk
+        Integer key = userDetails.getLoginUserDTO().getId();
+
+        // 유저 role
+        String role = userDetails.getLoginUserDTO().getUserRole().getRole();
+        System.out.println("role = " + role);
+
+
         if(role.equals("USER")){
             // user 알림 테이블 가져오기
-            // user 알림 카테고리가
+
         }else if(role.equals("ADMIN")){
+
             // admin 알림 테이블 가져오기
+            List<NoticeDTO> noticeList = userService.selectAdminNotice();
+            System.out.println("noticeList = " + noticeList);
+
+            // 알림 데이터를 저장할 리스트
+            List<Map<String, Object>> noticeMapList = new ArrayList<>();
+
+            // 알림 수
+            mv.addObject("noticeCount", noticeList.size());
+
+
+
+            for(NoticeDTO notice : noticeList){
+                Map<String, Object> noticeMap = new HashMap<>();
+
+                Integer userCode = (Integer) notice.getUserCode();
+                String nickname = userService.findById(userCode); // userCode 로 닉네임 찾아오기
+                System.out.println("nickname = " + nickname);
+                /*mv.addObject("name", nickname);*/
+
+                noticeMap.put("userCode", notice.getUserCode());
+                noticeMap.put("category", notice.getCategory());
+                noticeMap.put("facilityCode", notice.getFacilityCode());
+                noticeMap.put("attachFile", notice.getAttachFile());
+                noticeMap.put("isApproval", notice.getIsApproval());
+                noticeMap.put("nickname", nickname);
+
+                noticeMapList.add(noticeMap);
+            }
+
+
+            mv.addObject("noticeMapList", noticeMapList);
+
+
         }else if(role.equals("BUSINESS")){
-            // business 알림 테이블 가져오기
 
         }
 
 
-        Integer key = userDetails.getLoginUserDTO().getId();
+        // 유저 pk 로 정보 전체 가져오기
         UserDTO user = userService.findByKey(key);
 
         if (user == null) {
@@ -238,15 +285,15 @@ public class UserController {
             @AuthenticationPrincipal AuthDetail userDetails,
             RedirectAttributes redirectAttributes,
             ModelAndView mv,
-            @RequestParam("map") Map<Object, Object> map) {
+            BusinessDTO businessDTO) {
 
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             redirectAttributes.addFlashAttribute("message", "로그인 정보가 유효하지 않습니다.");
             return new ModelAndView("redirect:/auth/login");
         }
 
-        String facilityName = (String) map.get("facilityName");
-        MultipartFile businessFile = (MultipartFile) map.get("businessFile");
+        String facilityName = businessDTO.getFacilityName();
+        MultipartFile businessFile = businessDTO.getBusinessFile();
 
         System.out.println("facilityName = " + facilityName);
         System.out.println("businessFile = " + businessFile);
@@ -270,9 +317,8 @@ public class UserController {
 
 
         // facilityName 으로 facility id 찾아오기
-        
-
-
+        int id = facilitiesService.getFacilityIdByName(facilityName);
+        System.out.println("id = " + id);
 
 
         // 첨부파일 저장
@@ -292,9 +338,13 @@ public class UserController {
             String newFileName = "/img/business/" + savedName;
 
             Integer key = userDetails.getLoginUserDTO().getId();
-            int result = userService.registBusiness(newFileName, key); // facility_id 찾아오기 추가
+            // 비즈니스 전환신청 테이블에 추가
+            int result = userService.registBusiness(newFileName, key, id);
+            // 관리자 알림 테이블에 추가
+            int result2 = userService.registAdminNotice(key);
 
-            if (result > 0) {
+
+            if (result > 0 && result2 > 0) {
                 redirectAttributes.addFlashAttribute("message", "비즈니스계정 전환 신청이 완료되었습니다. \n관리자 승인 후 전환 됩니다.");
                 mv.setViewName("redirect:/mypage/home");
             } else {
@@ -315,4 +365,42 @@ public class UserController {
     }
 
 
+    @PostMapping("updateNotice")
+    public String updateNotice(NoticeDTO notice, RedirectAttributes redirectAttributes) {
+        int isApproval = notice.getIsApproval();
+        switch (isApproval) {
+            case 1:
+                // 승인 로직
+                System.out.println("approval");
+                notice.setIsApproval(1);
+                System.out.println(notice.getUserCode());
+                int result = userService.updateNotice(notice);
+
+                if(result > 0){
+                    redirectAttributes.addFlashAttribute("message", "요청을 승인했습니다.");
+                    return "redirect:/mypage/home";
+                }else {
+                    redirectAttributes.addFlashAttribute("message", "요청 승인을 실패했습니다.");
+                    return "redirect:/mypage/home";
+                }
+
+            case -1:
+                // 거절 로직
+                System.out.println("refusal");
+                notice.setIsApproval(-1);
+                System.out.println(notice.getUserCode());
+                int result2 = userService.updateNotice(notice);
+                if(result2 > 0){
+                    redirectAttributes.addFlashAttribute("message", "요청을 거절했습니다.");
+                    return "redirect:/mypage/home";
+                }else {
+                    redirectAttributes.addFlashAttribute("message", "요청 거절을 실패했습니다.");
+                    return "redirect:/mypage/home";
+                }
+
+
+        }
+
+        return "redirect:/mypage/home";
+    }
 }

@@ -86,7 +86,7 @@
     display: block;
 }
 .section-mypage #profile .profile-cont .section00 {
-    padding: 75px 90px 40px 80px;
+    padding: 75px 0 40px 80px;
 }
 .section-mypage #profile .profile-cont .section00 .img-wrap {
     width: 112px;
@@ -141,10 +141,11 @@
     font-weight: 600;
     color: #fff;
     display: block;
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 100%;
     background: var(--point);
+    line-height: 12px;
 }
 .section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice:hover .notice-count{
     background: #fff;

@@ -1,6 +1,8 @@
 package com.ohgiraffers.climbon.user.service;
 
 import com.ohgiraffers.climbon.user.dao.UserMapper;
+import com.ohgiraffers.climbon.user.dto.BusinessDTO;
+import com.ohgiraffers.climbon.user.dto.NoticeDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -112,7 +115,7 @@ public class UserService {
      * 비즈니스계정 전환 신청
      * */
     @Transactional
-    public int registBusiness(String newFileName, Integer key) {
+    public int registBusiness(String newFileName, Integer key, int id) {
 
         if(newFileName == null || key == null){
             return 0;
@@ -121,8 +124,46 @@ public class UserService {
         Map<String, Object> map = new HashMap<>();
         map.put("id", key);
         map.put("attachFile", newFileName);
+        map.put("facilityId", id);
 
-        int result = userMapper.saveNotice(map);
+
+        int result = userMapper.saveApply(map);
+
+        return result;
+    }
+
+    public String findById(Integer userCode) {
+
+        if(userCode == null){
+            return null;
+        }
+
+        String nickname = userMapper.findById(userCode);
+        return nickname;
+    }
+
+    public int registAdminNotice(Integer key) {
+
+        if(key == null){
+            return 0;
+        }
+
+        int result = userMapper.saveAdminNotice(key);
+        return result;
+    }
+
+    public List<NoticeDTO> selectAdminNotice() {
+        List<NoticeDTO> notice = userMapper.selectAdminNotice();
+        return notice;
+    }
+
+
+    public int updateNotice(NoticeDTO notice) {
+
+        if(notice == null){
+            return 0;
+        }
+        int result = userMapper.updateNotice(notice);
 
         return result;
     }
