@@ -11,6 +11,7 @@ const quill = new Quill('#editor', {
             displaySize: true
         },
     },
+    placeholder: "   내용을 입력 해주세요.(1,000자 이내)",
 
     // placeholder: 'Compose an epic...',
     theme: 'snow',
