@@ -22,4 +22,5 @@ public interface FacilitiesDAO {
     FacilitiesDTO getFacility(int facilityId);
 
 
+    int getFacilityIdByName(String facilityName);
 }

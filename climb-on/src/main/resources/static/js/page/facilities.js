@@ -296,9 +296,9 @@ async function showFacilityDetails(facility){
 
 
     fetch('/Review/Reviews', {
-        method: 'POST',   // POST 요청으로 변경
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/json'  // JSON 형식으로 데이터를 보냄
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             code: facility.id  // POST 요청 본문에 데이터를 포함
