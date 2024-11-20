@@ -8,6 +8,7 @@ import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface FacilitiesDAO {
@@ -19,4 +20,6 @@ public interface FacilitiesDAO {
 
 
     FacilitiesDTO getFacility(int facilityId);
+
+
 }
