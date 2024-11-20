@@ -11,30 +11,32 @@
         <result property="end" column="END_DATETIME"/>
         <result property="description" column="DESCRIPTION"/>
         <result property="backgroundColor" column="COLOR"/>
+        <result property="userCode" column="USER_CODE"/>
     </resultMap>
 
 
-    <select id="getAllEvents" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">
+    <select id="getAllEvents" parameterType="int" resultMap="eventResult">
         SELECT
         *
-        FROM calendar_events;
+        FROM calendar_events
+        WHERE user_code = #{userCode};
     </select>
 
-    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">
-        SELECT
-        *
-        FROM tbl_crewevents_test;
-    </select>
+<!--    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">-->
+<!--        SELECT-->
+<!--        *-->
+<!--        FROM tbl_crewevents_test;-->
+<!--    </select>-->
 
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
-        INSERT INTO calendar_events (title, start_datetime, end_datetime, description, color)
-        VALUES(#{title}, #{start}, #{end}, #{description}, #{backgroundColor});
+        INSERT INTO calendar_events (title, user_code, start_datetime, end_datetime, description, color)
+        VALUES(#{title}, #{userCode}, #{start}, #{end}, #{description}, #{backgroundColor});
     </insert>
 
     <select id="checkDuplicate" resultType="Integer">
         SELECT COUNT(*)
         FROM calendar_events
-        WHERE title = #{title} AND start_datetime = #{start} AND end_datetime = #{end};
+        WHERE title = #{title} AND start_datetime = #{start} AND end_datetime = #{end} AND user_code = #{userCode};
     </select>
 
     <update id="modifyEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
