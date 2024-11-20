@@ -6,15 +6,9 @@ import com.ohgiraffers.climbon.crew.service.CrewBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/crew")
@@ -24,11 +18,14 @@ public class CrewBoardController {
     private CrewBoardService crewBoardService;
 
     @GetMapping("/writepost")
-    public String writePost() {
+    public String writePost( Model model) {
+//        model.addAttribute("nickname", userDetails.getLoginUserDTO().getNickname());
+
+        // crew 인지 확인하는 메소드 추가
+        // 소속 crew 가 있어야만 게시글 작성 가능
         return "/crew/crewBoardWritePost";
     }
-    // crew 인지 확인하는 메소드 추가
-    // 소속 crew 가 있어야만 게시글 작성 가능
+
 
 
     @PostMapping("/writepost")
@@ -43,6 +40,10 @@ public class CrewBoardController {
         System.out.println(crewBoardDTO.getIsAnonymous());
 
         int result = crewBoardService.insertPost(crewBoardDTO);
+        if (result == 0) {
+            String message = "등록 실패";
+        }
+
         return "redirect:/crew/crewBoardList";
     }
 
@@ -77,6 +78,12 @@ public class CrewBoardController {
         CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
         mv.addObject("boardDTO", crewBoardDTO);
         mv.setViewName("crew/crewBoardList");
+        return mv;
+    }
+
+    @GetMapping("/crewlist")
+    public ModelAndView crewList(ModelAndView mv) {
+        mv.setViewName("crew/crewHome/crewList");
         return mv;
     }
 

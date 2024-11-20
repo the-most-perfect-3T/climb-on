@@ -15,8 +15,6 @@ const quill = new Quill('#editor', {
 });
 
 const content = document.getElementById('hiddenContent').value;
-const hiddenImgUrl = document.getElementById('hiddenImgURL').value;
-console.log(typeof hiddenImgUrl);
 quill.clipboard.dangerouslyPasteHTML(content);
 
 
