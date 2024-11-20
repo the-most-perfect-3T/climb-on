@@ -1,4 +1,4 @@
-package com.ohgiraffers.climbon.crew.controller;
+package com.ohgiraffers.climbon.crew.crewHome.controller;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

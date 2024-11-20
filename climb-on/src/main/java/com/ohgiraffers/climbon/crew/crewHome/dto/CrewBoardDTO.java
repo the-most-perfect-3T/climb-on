@@ -1,4 +1,4 @@
-package com.ohgiraffers.climbon.crew.dto;
+package com.ohgiraffers.climbon.crew.crewHome.dto;
 
 import java.sql.Date;
 

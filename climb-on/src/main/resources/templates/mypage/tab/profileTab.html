@@ -7,13 +7,6 @@
         <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
             <!--프로필 기본 -->
             <div class="profile-cont active">
-                <!-- 확인용 -->
-                <!--<div sec:authorize="hasAnyAuthority('ADMIN')">
-                    <p>welcome, admin</p>
-                </div>
-                <div sec:authorize="hasAnyAuthority('USER')">
-                    <p>welcome, user</p>
-                </div>-->
                 <section class="section section00 border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
@@ -31,47 +24,61 @@
                             </div>
                         </div>
 
-                        <button type="button" id="btn-modify" class="d-flex align-items-center justify-content-center">
-                            <i class="fa-solid fa-gear"></i>
-                            <span>프로필 수정</span>
-                        </button>
+                        <div class="btn-wrap d-flex align-items-center">
+                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#noticeModal">
+                                <div class="position-relative">
+                                    <i class="fa-solid fa-bell"></i>
+                                    <th:block th:if="${noticeCount != null}">
+                                        <span th:text="${noticeCount}" class="notice-count position-absolute">1</span>
+                                    </th:block>
+                                </div>
+                                <span>알림</span>
+                            </button>
+                            <button type="button" id="btn-modify" class="d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-gear"></i>
+                                <span>프로필 수정</span>
+                            </button>
+                        </div>
+
                     </div>
 
                 </section>
 
-                <section class="section section01 border-bottom d-flex">
-                    <th:block th:if="${crewName != null}">
-                        <!--해당 크루 페이지로 이동 ! - 링크 추가 해야함 -->
-                        <a href="#" class="move-wrap">
-                            <div>
-                                <span class="title">크루</span>
+                <th:block sec:authorize="hasAnyAuthority('USER')">
+                    <section class="section section01 border-bottom d-flex">
+                        <th:block th:if="${crewName != null}">
+                            <!--해당 크루 페이지로 이동 ! - 링크 추가 해야함 -->
+                            <a href="#" class="move-wrap">
+                                <div>
+                                    <span class="title">크루</span>
                                     <span class="name" th:text="${crewName}"></span>
-                            </div>
-                            <i class="fa-solid fa-chevron-right"></i>
-                        </a>
-                    </th:block>
-                    <th:block th:if="${crewName == null}">
-                        <a href="/crew/home" class="move-wrap">
+                                </div>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </th:block>
+                        <th:block th:if="${crewName == null}">
+                            <a href="/crew/home" class="move-wrap">
+                                <div>
+                                    <span class="title">크루</span>
+                                    <span class="name">가입된 크루가 없습니다.</span>
+                                </div>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </a>
+                        </th:block>
+                        <button type="button" class="move-wrap">
                             <div>
-                                <span class="title">크루</span>
-                                <span class="name">가입된 크루가 없습니다.</span>
+                                <span class="title">홈짐</span>
+                                <th:block th:if="${homeName != null}">
+                                    <span class="name" th:text="${homeName}"></span>
+                                </th:block>
+                                <th:block th:if="${homeName == null}">
+                                    <span class="name">홈짐을 설정해주세요.</span>
+                                </th:block>
                             </div>
                             <i class="fa-solid fa-chevron-right"></i>
-                        </a>
-                    </th:block>
-                    <button type="button" class="move-wrap">
-                        <div>
-                            <span class="title">홈짐</span>
-                            <th:block th:if="${homeName != null}">
-                                <span class="name" th:text="${homeName}"></span>
-                            </th:block>
-                            <th:block th:if="${homeName == null}">
-                                <span class="name">홈짐을 설정해주세요.</span>
-                            </th:block>
-                        </div>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </section>
+                        </button>
+                    </section>
+                </th:block>
 
                 <section class="section section02">
                     <h2 class="section-title">일정 관리</h2>
@@ -83,7 +90,7 @@
 
             <!--회원정보 수정-->
             <div class="modify-cont">
-                <section class="section section00 border-bottom">
+                <section class="section section00">
                     <h2 class="section-title">회원정보 수정</h2>
                     <div class="d-flex justify-content-between">
                         <div class="form-wrap">
@@ -113,11 +120,11 @@
                                 <button type="submit" class="btn-submit">수정하기</button>
                             </form>
                         </div>
-                        <div>
+                        <div class="text-center">
                             <div class="img-wrap d-flex align-items-center">
                                 <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100" id="profileImg">
                             </div>
-                            <div class="btn-wrap d-flex justify-content-center">
+                            <div class="btn-wrap d-flex justify-content-center mb-3">
                                 <form action="/mypage/profileModify" method="post" enctype="multipart/form-data" id="profileForm">
                                     <input type="file" name="profilePic" id="profilePic" />
                                     <button class="btn btn-modify" type="button">수정</button>
@@ -126,54 +133,61 @@
                                     <button class="btn btn-delete">삭제</button>
                                 </form>
                             </div>
+                            <small>※ 지원하는 이미지 파일 형식<br/>( jpeg, jpg, gif, png )</small>
                         </div>
                     </div>
 
                 </section>
-                <section class="section section01">
-                    <h2 class="section-title">비즈니스계정 전환</h2>
-                    <div class="info-wrap border">
-                        <ol>
-                            <li>비즈니스 계정 전환 후 다시 개인 아이디로 되돌릴 수 없으니, 신중하게 결정하세요.</li>
-                            <li>비즈니스 아이디 전환을 원하는 아이디로 로그인 후 접수 바랍니다.</li>
-                            <li>관리자 승인 후, 비즈니스 계정으로 전환됩니다.</li>
-                        </ol>
-                    </div>
 
-                    <div class="d-flex align-items-center justify-content-between mt-4">
-                        <div class="agree-wrap d-flex align-items-center">
-                            <input type="checkbox" name="agreeCheck" id="agreeCheck1" required />
-                            <label for="agreeCheck1">계정 전환에 관한 정책을 읽고 이에 동의합니다.</label>
+                <!--유저만-->
+                <th:block sec:authorize="hasAnyAuthority('USER')">
+                    <section class="section section01 border-top">
+                        <h2 class="section-title">비즈니스계정 전환</h2>
+                        <div class="info-wrap border">
+                            <ol>
+                                <li>비즈니스 계정 전환 후 다시 개인 아이디로 되돌릴 수 없으니, 신중하게 결정하세요.</li>
+                                <li>비즈니스 아이디 전환을 원하는 아이디로 로그인 후 접수 바랍니다.</li>
+                                <li>관리자 승인 후, 비즈니스 계정으로 전환됩니다.</li>
+                            </ol>
                         </div>
-                        <button type="button" class="btn btn-apply border" data-bs-toggle="modal" data-bs-target="#userApplyModalChoice" disabled>
-                            <i class="fa-solid fa-business-time"></i>
-                            <span>신청하기</span>
-                        </button>
-                    </div>
 
-                </section>
-                <section class="section section02 border-top">
-                    <h2 class="section-title">계정 삭제</h2>
-                    <div class="info-wrap border">
-                        <p>
-                            회원회원 탈퇴일로부터 계정과 닉네임을 포함한 계정 정보(아이디/이메일/닉네임)는<br/>
-                            <a href="javascript:void(0)">개인정보 처리방침</a>에 따라 60일간 보관(잠김)되며, 60일 경과된 후에는 모든 개인 정보는 완전히 삭제되며 더 이상 복구할 수 없게 됩니다.<br/>
-                            작성된 게시물은 삭제되지 않으며, 익명처리 후 CLI’MON 으로 소유권이 귀속됩니다.
-                        </p>
-                    </div>
-
-                    <div class="d-flex align-items-center justify-content-between mt-4">
-                        <div class="agree-wrap d-flex align-items-center">
-                            <input type="checkbox" name="agreeCheck" id="agreeCheck" required />
-                            <label for="agreeCheck">계정 삭제에 관한 정책을 읽고 이에 동의합니다.</label>
+                        <div class="d-flex align-items-center justify-content-between mt-4">
+                            <div class="agree-wrap d-flex align-items-center">
+                                <input type="checkbox" name="agreeCheck" id="agreeCheck1" required />
+                                <label for="agreeCheck1">계정 전환에 관한 정책을 읽고 이에 동의합니다.</label>
+                            </div>
+                            <button type="button" class="btn btn-apply border" data-bs-toggle="modal" data-bs-target="#userApplyModalChoice" disabled>
+                                <i class="fa-solid fa-business-time"></i>
+                                <span>신청하기</span>
+                            </button>
                         </div>
-                        <button type="button" class="btn btn-withdrawal" data-bs-toggle="modal" data-bs-target="#userModalChoice" disabled>
-                            <i class="fa-solid fa-user-slash"></i>
-                            <span>회원탈퇴</span>
-                        </button>
-                    </div>
+                    </section>
+                </th:block>
 
-                </section>
+                <!--유저/업체만 -->
+                <th:block th:if="${#authorization.expression('hasAnyAuthority(''USER'', ''BUSINESS'')')}">
+                    <section class="section section02 border-top">
+                        <h2 class="section-title">계정 삭제</h2>
+                        <div class="info-wrap border">
+                            <p>
+                                회원회원 탈퇴일로부터 계정과 닉네임을 포함한 계정 정보(아이디/이메일/닉네임)는<br/>
+                                <a href="javascript:void(0)">개인정보 처리방침</a>에 따라 60일간 보관(잠김)되며, 60일 경과된 후에는 모든 개인 정보는 완전히 삭제되며 더 이상 복구할 수 없게 됩니다.<br/>
+                                작성된 게시물은 삭제되지 않으며, 익명처리 후 CLI’MON 으로 소유권이 귀속됩니다.
+                            </p>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-4">
+                            <div class="agree-wrap d-flex align-items-center">
+                                <input type="checkbox" name="agreeCheck" id="agreeCheck" required />
+                                <label for="agreeCheck">계정 삭제에 관한 정책을 읽고 이에 동의합니다.</label>
+                            </div>
+                            <button type="button" class="btn btn-withdrawal" data-bs-toggle="modal" data-bs-target="#userModalChoice" disabled>
+                                <i class="fa-solid fa-user-slash"></i>
+                                <span>회원탈퇴</span>
+                            </button>
+                        </div>
+                    </section>
+                </th:block>
             </div>
         </div>
     </th:block>

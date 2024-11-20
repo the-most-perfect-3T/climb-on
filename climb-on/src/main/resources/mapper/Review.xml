@@ -11,13 +11,30 @@
         <result property="rating" column="RATING" />
         <result property="comment" column="COMMENT" />
         <result property="createdAt" column="CREATED_AT" />
+        <result property="userNickname" column="userNickname"/>
+        <result property="likeCount" column="likeCount"/>
     </resultMap>
 
     <select id="getReview" resultMap="ReviewResultMap">
         SELECT
-        *
-        FROM REVIEWS
-        WHERE FACILITY_ID = #{ id }
+        r.ID AS review_id,
+        r.RATING,
+        r.COMMENT,
+        r.CREATED_AT,
+        u.nickname AS userNickname,
+        COUNT(urh.user_code) AS likeCount
+        FROM
+        REVIEWS r
+        JOIN
+        USERS u ON r.USER_ID = u.ID
+        LEFT JOIN
+        user_review_heart urh ON r.ID = urh.review_code
+        WHERE
+        r.FACILITY_ID = #{id}
+        GROUP BY
+        r.ID, r.RATING, r.COMMENT, r.CREATED_AT, u.nickname
+        ORDER BY
+        r.CREATED_AT DESC;
     </select>
 
 </mapper>
