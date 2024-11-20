@@ -6,7 +6,7 @@
     <resultMap id="mainResult" type="com.ohgiraffers.climbon.community.dto.PostDTO">
         <id property="id" column="ID"/>
         <result property="title" column="TITLE"/>
-        <result property="likes" column="LIKES"/>
+        <result property="heartsCount" column="LIKES"/>
         <result property="createdAt" column="CREATED_AT"/>
     </resultMap>
 
