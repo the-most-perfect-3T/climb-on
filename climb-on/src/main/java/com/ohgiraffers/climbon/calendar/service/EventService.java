@@ -15,9 +15,9 @@ public class EventService
     @Autowired
     private EventMapper eventMapper;
 
-    public List<EventDTO> getAllEvents()
+    public List<EventDTO> getAllEvents(int userCode)
     {
-        return eventMapper.getAllEvents();
+        return eventMapper.getAllEvents(userCode);
     }
 
     public List<EventDTO> getCrewEvents()
@@ -30,9 +30,9 @@ public class EventService
         eventMapper.insertEvent(event);
     }
 
-    public boolean checkDuplicate(String title, String start, String end)
+    public boolean checkDuplicate(String title, String start, String end, int userCode)
     {
-        int result = eventMapper.checkDuplicate(title, start, end);
+        int result = eventMapper.checkDuplicate(title, start, end, userCode);
         System.out.println(result + " <= 이것은 result 값");
         return result > 0 ? true : false;
     }

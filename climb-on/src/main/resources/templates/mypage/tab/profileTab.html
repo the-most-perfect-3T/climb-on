@@ -17,11 +17,11 @@
                 <section class="section section00 border-bottom">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
-                            <div class="img-wrap">
-                                <img th:src="@{${user.profilePic}}" alt="프로필 이미지" class="w-100">
+                            <div class="img-wrap d-flex align-items-center">
+                                <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100">
                             </div>
                             <div class="info-wrap">
-                                <p class="nickname" th:text="${user.nickname}"></p>
+                                <p class="nickname" th:text="${user.nickname != null ? user.nickname : ''}"></p>
                                 <th:block th:if="${user.oneLiner != null}">
                                     <p class="one-liner" th:text="${user.oneLiner}"></p>
                                 </th:block>
@@ -114,18 +114,45 @@
                             </form>
                         </div>
                         <div>
-                            <div class="img-wrap">
-                                <img th:src="@{${user.profilePic != null ? user.profilePic : ''}}" alt="프로필 이미지" class="w-100">
+                            <div class="img-wrap d-flex align-items-center">
+                                <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100" id="profileImg">
                             </div>
                             <div class="btn-wrap d-flex justify-content-center">
-                                <a href="/mypage/profileModify" class="btn btn-modify">수정</a>
-                                <a href="/mypage/profileDelete" class="btn btn-delete disabled">삭제</a>
+                                <form action="/mypage/profileModify" method="post" enctype="multipart/form-data" id="profileForm">
+                                    <input type="file" name="profilePic" id="profilePic" />
+                                    <button class="btn btn-modify" type="button">수정</button>
+                                </form>
+                                <form action="/mypage/profileDelete" method="post">
+                                    <button class="btn btn-delete">삭제</button>
+                                </form>
                             </div>
                         </div>
                     </div>
 
                 </section>
                 <section class="section section01">
+                    <h2 class="section-title">비즈니스계정 전환</h2>
+                    <div class="info-wrap border">
+                        <ol>
+                            <li>비즈니스 계정 전환 후 다시 개인 아이디로 되돌릴 수 없으니, 신중하게 결정하세요.</li>
+                            <li>비즈니스 아이디 전환을 원하는 아이디로 로그인 후 접수 바랍니다.</li>
+                            <li>관리자 승인 후, 비즈니스 계정으로 전환됩니다.</li>
+                        </ol>
+                    </div>
+
+                    <div class="d-flex align-items-center justify-content-between mt-4">
+                        <div class="agree-wrap d-flex align-items-center">
+                            <input type="checkbox" name="agreeCheck" id="agreeCheck1" required />
+                            <label for="agreeCheck1">계정 전환에 관한 정책을 읽고 이에 동의합니다.</label>
+                        </div>
+                        <button type="button" class="btn btn-apply border" data-bs-toggle="modal" data-bs-target="#userApplyModalChoice" disabled>
+                            <i class="fa-solid fa-business-time"></i>
+                            <span>신청하기</span>
+                        </button>
+                    </div>
+
+                </section>
+                <section class="section section02 border-top">
                     <h2 class="section-title">계정 삭제</h2>
                     <div class="info-wrap border">
                         <p>
@@ -134,23 +161,20 @@
                             작성된 게시물은 삭제되지 않으며, 익명처리 후 CLI’MON 으로 소유권이 귀속됩니다.
                         </p>
                     </div>
-                    <form action="/mypage/updateStatus" method="post">
-                        <div class="d-flex align-items-center justify-content-between mt-4">
-                            <div class="agree-wrap d-flex align-items-center">
-                                <input type="checkbox" name="agreeCheck" id="agreeCheck">
-                                <label for="agreeCheck">계정 삭제에 관한 정책을 읽고 이에 동의합니다.</label>
-                            </div>
-                            <button type="submit" class="btn-withdrawal">
-                                <i class="fa-solid fa-user-slash"></i>
-                                <span>회원탈퇴</span>
-                            </button>
+
+                    <div class="d-flex align-items-center justify-content-between mt-4">
+                        <div class="agree-wrap d-flex align-items-center">
+                            <input type="checkbox" name="agreeCheck" id="agreeCheck" required />
+                            <label for="agreeCheck">계정 삭제에 관한 정책을 읽고 이에 동의합니다.</label>
                         </div>
-                    </form>
+                        <button type="button" class="btn btn-withdrawal" data-bs-toggle="modal" data-bs-target="#userModalChoice" disabled>
+                            <i class="fa-solid fa-user-slash"></i>
+                            <span>회원탈퇴</span>
+                        </button>
+                    </div>
+
                 </section>
             </div>
         </div>
-
-
-
     </th:block>
 </html>

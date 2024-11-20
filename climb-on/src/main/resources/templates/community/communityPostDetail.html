@@ -21,6 +21,7 @@
             </div>
             <div class="author-info">
                 <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                <span th:text="${post.userId}">작성자 ID</span>
                 <span class="author-name" th:text="${post.userNickname}">작성자 닉네임</span>
                 <span class="post-date" th:text="${post.formattedCreatedAt}">작성일</span>
                 <span class="views">조회수 <span th:text="${post.viewCount}">0</span></span>
@@ -28,7 +29,7 @@
         </div>
         <div class="post-actions">
             <button th:onclick="|window.location.href='/community/${post.id}/modify'|">수정</button>
-            <form th:action="@{'/community/' + ${post.id} + '/delete'}" method="post" style="display:inline;">
+            <form th:action="@{'/community/'  + ${post.id} + '/delete'}" method="post" style="display:inline;">
             <button type="submit" onlick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
             </form>
         </div>
@@ -37,14 +38,16 @@
     <!-- 게시글 내용 -->
     <div class="post-content">
         <div class="post-image" th:if="${post.imageUrl != null}">
-            <img th:src="${post.imageUrl}" alt="게시글 이미지">
+            <img th:src="${post.imageUrl != null ? post.imageUrl : '/images/default-image.png'}" alt="게시글 이미지">
         </div>
         <p th:text="${post.content}">게시글 내용 예시</p>
     </div>
 
     <!-- 좋아요 및 댓글 수 -->
     <div class="post-interactions">
-        <span class="likes">좋아요 <span th:text="${post.likes}">0</span></span>
+        <button class="heart-button" th:data-post-id="${post.id}">  <!--JS를 위한 변수 선언! JS에서는 dataset.postId(카멜케이스로씀)-->
+            ❤️<span th:text="${post.heartsCount}">0</span>
+        </button>
         <span class="comments-count">댓글 <span th:text="${post.commentsCount}">0</span></span>
     </div>
 
@@ -63,7 +66,7 @@
                 <img src="/images/avatar.png" alt="댓글 작성자 프로필 이미지">
             </div>
             <div class="comment-content">
-                <span class="comment-author" th:text="${comment.userId}">댓글 작성자</span>
+                <span class="comment-author" th:text="${comment.userNickname}">댓글 작성자</span>
                 <p th:text="${comment.content}">댓글 내용</p>
                 <span class="comment-date" th:text="${comment.formattedCreatedAt}">작성일</span>
             </div>
@@ -96,5 +99,42 @@
         <button onclick="window.location.href='/community'">목록</button>
     </div>
 </main>
+
+<th:block layout:fragment="javascript">
+    <!-- 좋아요 버튼 클릭 시 AJAX 요청 처리-->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 좋아요 버튼 이벤트 리스너 추가
+            document.querySelectorAll('.heart-button').forEach(button => {
+                button.addEventListener('click', async (event) => {
+
+                    // 클릭된 버튼에서 postId 가져오기, 정확한 버튼 요소 가져오기
+                    const buttonElement = event.currentTarget;
+                    const postId = buttonElement.dataset.postId;
+
+                    try {
+                        const response = await fetch(`/community/${postId}/heart`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'}
+                        });
+
+                        if (response.ok) {
+                            const heartsSpan = event.target.querySelector('span'); // 좋아요 수를 표시하는 <span> 태그 요소를 참조 //querySelector('span')는 그 버튼 내부에서 <span> 태그를 찾습니다. 이 <span> 태그는 좋아요 수를 표시하는 역할을 한다.
+                            const currentHearts = parseInt(heartsSpan.textContent, 10) || 0; // 현재 좋아요 수 // parseInt하여 텍스트를 정수로 변환, 10진수로, textContent가 비어있거나 숫자가 아닐 경우 NaN이 될 수있기때문에 기본값 0으로 설정
+                            heartsSpan.textContent = currentHearts + (button.classList.contains('liked') ? -1 : 1); // 좋아요 수 업데이트 함수 // button.classList.contains('liked')는 버튼에 'liked' 클래스가 있는지 확인 liked 있다면 증가, 없으면 -1, 있으면 +1
+                            button.classList.toggle('liked'); // toggle 메서드는 클래스가 존재하면 제거하고, 존재하지 않으면 추가하는 메서드입니다. 이 경우, 버튼에 'liked' 클래스가 있으면 제거하고, 없으면 추가합니다.
+                        }else{
+
+                            console.error('하트 추가에 실패 하셨습니다.'); // 실패 로그
+                        }
+                    }catch (error){
+                            console.error('에러', error); // 네트워크 오류 처리
+                        }
+                    });
+                });
+            });
+
+    </script>
+</th:block>
 </body>
 </html>

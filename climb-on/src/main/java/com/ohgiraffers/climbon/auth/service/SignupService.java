@@ -54,7 +54,7 @@ public class SignupService {
      * @return LoginUserDTO
      * */
     public LoginUserDTO findByUserId(String username) {
-        LoginUserDTO loginUserDTO = authMapper.findByUserId(username);
+        LoginUserDTO loginUserDTO = authMapper.findByUserIdStatus(username);
 
         return loginUserDTO;
     }

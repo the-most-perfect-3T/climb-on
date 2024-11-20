@@ -10,8 +10,7 @@
 </th:block>
     <!--메인에 들어갈 내용들-->
     <th:block layout:fragment="containerFragment">
-        <div class="banner-content"></div>
-
+    <div class="banner-content"></div>
         <div class="inner">
             <div class="main-content">
 
@@ -136,6 +135,12 @@
         <script th:src="@{/js/page/calender.js}"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script th:inline="javascript">
+            const message = [[${message}]];
+            if(message){
+                alert(message);
+            }
+        </script>
     </th:block>
 
 </html>

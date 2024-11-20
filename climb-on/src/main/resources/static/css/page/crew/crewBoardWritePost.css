@@ -1,0 +1,106 @@
+/* Header styling */
+.top.area {
+    margin-top: var(--headerHeight);
+    margin-bottom: 2rem;
+}
+
+.top.area h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.top.area p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Category and input fields */
+.input-wrap {
+    margin-bottom: 10rem;
+}
+
+.input-wrap h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+
+}
+
+.form-label {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* Quill editor toolbar styling */
+#toolbar-container {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: var(--beige);
+}
+
+#editor {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 1rem;
+    font-size: 1rem;
+    height: 400px;
+}
+
+/* Anonymous toggle switch */
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.form-check-input {
+    margin-right: 1rem;
+}
+
+.form-check-input:checked {
+    background-color: var(--point);
+    border-color: var(--point);
+}
+
+.form-check-input:checked:focus {
+    box-shadow: 0 0 0 0.25rem rgba(255, 127, 80, 0.5);
+}
+
+.form-check-label {
+    font-size: 1rem;
+}
+
+.button-container {
+    gap: 2rem;
+}
+
+/* Buttons styling */
+.btn {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: var(--point);
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease;
+    width: 150px;
+}
+
+.btn-light {
+    background-color: white;
+    border: 1px solid var(--borderColor);
+    color: var(--black);
+}
+
+.btn:hover {
+    background-color: #b54a02;
+}
+
+.btn:active {
+    background-color: #993d00;
+}
+
+
+.section .inner .content .form .input-wrap .alert {
+    color: var(--point);
+}
