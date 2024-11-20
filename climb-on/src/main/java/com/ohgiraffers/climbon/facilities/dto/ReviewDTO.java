@@ -9,6 +9,8 @@ public class ReviewDTO {
     private int rating;
     private String comment;
     private LocalDateTime createdAt;
+    private String userNickname;
+    private int likeCount;
 
     @Override
     public String toString() {
@@ -19,7 +21,46 @@ public class ReviewDTO {
                 ", rating=" + rating +
                 ", comment='" + comment + '\'' +
                 ", createdAt=" + createdAt +
+                ", userNickname='" + userNickname + '\'' +
+                ", likeCount=" + likeCount +
                 '}';
+    }
+
+    public ReviewDTO(Integer id, Integer facilityId, Integer reviewerId, int rating, String comment, LocalDateTime createdAt, String userNickname, int likeCount) {
+        Id = id;
+        FacilityId = facilityId;
+        ReviewerId = reviewerId;
+        this.rating = rating;
+        this.comment = comment;
+        this.createdAt = createdAt;
+        this.userNickname = userNickname;
+        this.likeCount = likeCount;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public ReviewDTO(Integer id, Integer facilityId, Integer reviewerId, int rating, String comment, LocalDateTime createdAt, String userNickname) {
+        Id = id;
+        FacilityId = facilityId;
+        ReviewerId = reviewerId;
+        this.rating = rating;
+        this.comment = comment;
+        this.createdAt = createdAt;
+        this.userNickname = userNickname;
+    }
+
+    public String getUserNickname() {
+        return userNickname;
+    }
+
+    public void setUserNickname(String userNickname) {
+        this.userNickname = userNickname;
     }
 
     public ReviewDTO() {
