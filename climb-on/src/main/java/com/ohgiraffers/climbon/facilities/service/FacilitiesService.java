@@ -63,4 +63,9 @@ public class FacilitiesService {
     public int getIsFavorite(int id, Integer userId) {
         return facilityFavoriteDAO.getIsFavorite(id,userId);
     }
+
+
+     public int getFacilityIdByName(String facilityName) {
+        return facilitiesDAO.getFacilityIdByName(facilityName);
+     }
 }
