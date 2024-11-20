@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: arg.backgroundColor
                 })
 
-                // Get all events from the calendar
+                // 캘린 더 내 모든 이벤트 저장
                 let allEvents = calendar.getEvents();
                 let eventsData = allEvents.map(event => ({
                     title: event.title,
@@ -110,10 +110,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: event.backgroundColor
                 }));
 
-                // 모든 이벤트 저장
+                /**
+                 * @todo 저장 로직 수정해야 할 것 같음 중복체크랑 같이 테스트 하면서 손봐야함
+                 */
                 try
                 {
-                    // Save all events to the database in a batch using the fetch API
                     const response = await fetch('/events/batch', {
                         method: 'POST',
                         headers: {

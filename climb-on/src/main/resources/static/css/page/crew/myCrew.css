@@ -1,0 +1,67 @@
+.crew-aside{
+    width: 320px;
+    height: 900px;
+    background-color: #0dcaf0;
+}
+
+.crew-aside .crew-profile-img{
+    width: 270px;
+    height: 200px;
+    background-color: #222222;
+    margin-top: 48px;
+    border-radius: 6px;
+}
+
+.crew-main{
+    margin-left: 80px;
+    margin-top: 56px;
+    padding: 0;
+}
+.crew-tab-nav {
+    display: flex;
+    list-style: none;
+}
+
+.crew-tab-nav .tab-item {
+    padding: 10px 20px;
+    cursor: pointer;
+
+    font-size: 24px;
+    font-weight: 600;
+    color: #6C757D;
+}
+
+.crew-tab-nav .tab-item.active {
+    color: #222222;
+}
+
+/* 마이크루 메인 */
+
+.tab-mycrew-home{
+    width: 870px;
+}
+
+/* 공지 탭 */
+
+.tab-mycrew-home .crew-notification {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.crew-notification .crew-notification-tag {
+    background-color: #FF7F27;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.crew-notification .crew-notification-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #343A40;
+}
