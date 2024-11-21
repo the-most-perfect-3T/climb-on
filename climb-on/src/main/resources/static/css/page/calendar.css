@@ -29,8 +29,8 @@
 
 /* 캘린더 */
 .fc {
-    width: 769px;
-    height: 100%
+    width: 100%;
+    height: 100%;
 
 }
 .fc .fc-col-header-cell-cushion {

@@ -1,0 +1,39 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="tabContFragment">
+  <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+    <div class="crew-limit-access">
+      <!--조건 걸어야 함. 지금 접속한 유저가 해당 크루에 가입되어있는지 확인 후 문구 보여줄지 말지...-->
+      <p>공개 설정된 활동만 표시됩니다. 더 많은 글을 보려면 크루에 가입해 주세요!</p>
+    </div>
+
+    <div class="crew-activity-event-item">
+      <div class="crew-event-info">
+        <span class="crew-event-status-tag">예정</span>
+        <div class="crew-event-details">
+            <p class="crew-event-date">11/17 목요일 · 14:00</p>
+            <p class="crew-event-location">서울숲클라이밍 종로점</p>
+        </div>
+      </div>
+      <div class="crew-event-center">
+        <p class="crew-event-title">여기에 이벤트 타이틀</p>
+      </div>
+      <div class="crew-event-right">
+        <button class="participate-btn">
+          <i class="fa-solid fa-child-reaching"></i><br/>
+          <span> 참여 + </span> <!-- 참여 눌렀을 때 링크테이블에 추가-->
+        </button>
+      </div>
+    </div>
+
+    <div class="calendar-section">
+      <div id = "calendar"></div>
+    </div>
+
+  </div>
+</th:block>
+
+</html>

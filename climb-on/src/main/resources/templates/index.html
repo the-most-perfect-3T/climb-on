@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
                   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
                   layout:decorate="~{/layout/baseLayout}"
@@ -10,16 +9,31 @@
 </th:block>
     <!--메인에 들어갈 내용들-->
     <th:block layout:fragment="containerFragment">
-    <div class="banner-content"></div>
+    <div class="banner-content">
+
+        <div class="mySlides">
+            <img src="/images/img1.jpg" style="height: 621px" alt="배너1"/>
+        </div>
+        <div class="mySlides">
+            <img src="/images/img2.png" style="height: 621px" alt="배너2"/>
+        </div>
+        <div class="mySlides">
+            <img src="/images/img3.png" style="height: 621px" alt="배너3"/>
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
         <div class="inner">
             <div class="main-content">
 
-                <h3>주목할만한 이벤트</h3>
+                <h4>주목할만한 이벤트</h4>
                 <div class="event-container">
                     <section class="events-section">
                         <div class="event-list">
                             <h5>대회 안내</h5>
                             <ul>
+                                <!--추후 처리 post category에서 어떻게 나뉘는지 더 생각해보고 ...-->
                                 <li>2024 여기에 이벤트 뿌려줘야 함</li><hr/>
                                 <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
                                 <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
@@ -49,26 +63,40 @@
                     </div>
                 </div>
 
-                <div class="community-container">
-                <h2>커뮤니티</h2>
-                    <div class="community-posts">
-                        <ul>
-                            <li>오늘도 열심히!</li>
-                            <li>여기다가 커뮤니티 포스트 상위 n개</li>
-                            <li>홍창기 안타 안타 날려 홍창기</li>
-                        </ul>
-                        <button>게시글 더 보기</button>
-                    </div>
+               <div class="community-container">
+                <h3>커뮤니티</h3>
+                   <div class="community-posts">
+                       <div class="community-posts-list">
+                           <ul class="nav nav-tabs" id="category-tabs">
+                               <li class="nav-item">
+                                   <button class="nav-link active" data-category="">전체</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="일반">일반</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="모집">모집</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="질문">질문</button>
+                               </li>
+                           </ul>
+                           <table id="table post-table">
+                               <tbody id="recent-posts">
+                               <!-- 최근 포스트 6개 여기-->
+                               </tbody>
+                           </table>
+                           <button class="btn-more-posts">게시글 더 보기</button>
+                       </div>
 
-                    <div class="popular-posts">
-                        <h3>인기게시글</h3>
-                        <ul>
-                            <li>제목 1</li>
-                            <li>제목 2</li>
-                            <li>제목 3</li>
-                        </ul>
-                    </div>
-                </div>
+                       <div class="popular-posts">
+                           <h5>인기게시글</h5>
+                           <ol class="popular-list" id="popular-posts">
+                               <!-- 인기게시글 10개 여기 -->
+                           </ol>
+                       </div>
+                   </div>
+               </div>
 
             </div>
         </div>
@@ -133,6 +161,7 @@
     <th:block layout:fragment="javascript">
         <script th:src="@{/js/plugin/index.global.js}"></script>
         <script th:src="@{/js/page/calender.js}"></script>
+        <script th:src="@{/js/page/mainpage.js}"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script th:inline="javascript">
