@@ -80,7 +80,7 @@
             <a href="#" onclick = "sortPosts('latest')">최신순</a>
             <a href="#" onclick = "sortPosts('comments')">댓글순</a>
             <a href="#" onclick = "sortPosts('views')">조회순</a>
-            <a href="#" onclick = "sortPosts('heartsCount')">좋아요순</a>
+            <a href="#" onclick = "sortPosts('hearts')">좋아요순</a>
             <!-- 일반 버튼 정렬
             <button onclick="window.location.href='/community?sort=latest'" th:classappend="${sort == 'latest'} ? 'active' : ''">최신순</button>
             <button>댓글순</button>
@@ -100,7 +100,9 @@
     <!-- 게시글 목록 -->
     <section class="post-list">
         <!-- 리스트 뷰 형식 -->
-        <table class="list-view" style="display: table;">
+        <div class="list-view">
+        <table style="width: 100%; border-collapse: collapse;">
+
             <thead>
             <tr>
                 <th>카테고리</th>
@@ -110,8 +112,59 @@
             </tr>
             </thead>
             <tbody>
-            <!-- 게시글 리스트를 반복문으로 출력-->
-            <tr th:each="post : ${posts}">
+            <!-- 공지 핀포스트 -->
+            <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
+                <td th:text="${post.category}">공지</td>
+                <td>
+                    <a th:href="@{'/community/' + ${post.id}}">
+                        <span th:text="${post.title}">공지 게시글 제목</span>
+                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
+                    </a>
+                </td>
+                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
+            </tr>
+
+            <!-- 가이드 핀포스트 -->
+            <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
+                <td th:text="${post.category}">가이드</td>
+                <td>
+                    <a th:href="@{'/community/' + ${post.id}}">
+                        <span th:text="${post.title}">가이드 게시글 제목</span>
+                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
+                    </a>
+                </td>
+                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
+            </tr>
+<!--            &lt;!&ndash; 공지 게시글 출력(핀 포스트) &ndash;&gt;  이렇게 하면 공지 카테고리 들어갔을 때 공지 핀포스트 다음에 일반공지게시글이 나옴 핀포스트 가이드는 나중에 나옴-->
+<!--            <tr th:each="post : ${posts}" th:if="${post.category == '공지'}" class="pinned-post">-->
+<!--                <td th:text="${post.category}">공지</td>-->
+<!--                <td>-->
+<!--                    <a th:href="@{'/community/' + ${post.id}}">-->
+<!--                        <span th:text="${post.title}">공지 게시글 제목</span>-->
+<!--                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>-->
+<!--                    </a>-->
+<!--                </td>-->
+<!--                <td th:text="${post.displayName}">작성자</td>-->
+<!--                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>-->
+<!--            </tr>-->
+
+<!--            &lt;!&ndash; 가이드 게시글 출력 (핀 포스트) &ndash;&gt;-->
+<!--            <tr th:each="post : ${posts}" th:if="${post.category == '가이드'}" class="pinned-post">-->
+<!--                <td th:text="${post.category}">가이드</td>-->
+<!--                <td>-->
+<!--                    <a th:href="@{'/community/' + ${post.id}}">-->
+<!--                        <span th:text="${post.title}">가이드 게시글 제목</span>-->
+<!--                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>-->
+<!--                    </a>-->
+<!--                </td>-->
+<!--                <td th:text="${post.displayName}">작성자</td>-->
+<!--                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>-->
+<!--            </tr>-->
+
+            <!-- 일반 게시글 출력 -->
+            <tr th:each="post : ${generalPosts}">
                 <td th:text="${post.category}">카테고리</td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
@@ -119,18 +172,52 @@
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-<!--                <td>-->
-<!--                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 30px; height: 30px; border-radius: 50%;">-->
-<!--                    <span th:text="${post.userNickname}">작성자 닉네임</span>-->
-<!--                </td>-->
-                <td th:text="${post.userNickname}">작성자</td>
-                <td th:text="${post.formattedCreatedAt}">작성일</td>
+                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
+
             </tbody>
         </table>
-
+        </div>
         <!-- 카드 뷰 형식 -->
         <div class="card-container" style="display: none;">
+            <table style="width: 100%; border-collapse: collapse;">
+
+                <thead>
+                <tr>
+                    <th>카테고리</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 공지 핀포스트 -->
+                <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
+                    <td th:text="${post.category}">공지</td>
+                    <td>
+                        <a th:href="@{'/community/' + ${post.id}}">
+                            <span th:text="${post.title}">공지 게시글 제목</span>
+                            <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
+                        </a>
+                    </td>
+                    <td th:text="${post.displayName}">작성자</td>
+                    <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
+                </tr>
+                <!-- 가이드 핀포스트 -->
+                <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
+                    <td th:text="${post.category}">가이드</td>
+                    <td>
+                        <a th:href="@{'/community/' + ${post.id}}">
+                            <span th:text="${post.title}">가이드 게시글 제목</span>
+                            <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
+                        </a>
+                    </td>
+                    <td th:text="${post.displayName}">작성자</td>
+                    <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
+                </tr>
+                </tbody>
+            </table>
             <div th:each="post : ${posts}" class="card">
                 <div class="card-category" th:text="${post.category}">카테고리</div>
                 <div class="card-title">
@@ -139,9 +226,10 @@
                     </a>
                 </div>
                 <div class="card-meta">
-                    <span th:text="${post.userNickname}">작성자</span> |
-                    <span th:text="${post.formattedCreatedAt}">작성일</span>
+                    <span th:text="${post.displayName}">작성자</span>
+                    <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                     <span th:text="${post.viewCount}">0</span>
+                    <span th:text="${post.heartsCount}">0</span>
                     <span th:text="${post.commentsCount}">0</span>
                 </div>
                 <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
@@ -238,7 +326,7 @@
                     case 'views':
                         sortButton.textContent = '조회순';
                         break;
-                    case 'heartsCount':
+                    case 'hearts':
                         sortButton.textContent = '좋아요순';
                         break;
                     default:

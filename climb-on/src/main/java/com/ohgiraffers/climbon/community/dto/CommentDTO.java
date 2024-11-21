@@ -82,7 +82,7 @@ public class CommentDTO {
             return "하루전";
         } else if (daysAgo == 2){
             return "이틀전";
-        } else if (daysAgo ==3 ){
+        } else if (daysAgo == 3){
             return "3일전";
         } else {
             // 3일 이상 지난 경우 날짜 형식으로 표시

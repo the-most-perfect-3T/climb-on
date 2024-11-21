@@ -221,6 +221,10 @@ public class PostDTO {
         isAnonymous = anonymous;
     }
 
+    public String getDisplayName() {
+        return isAnonymous ? "익명" : userNickname;
+    }
+
     public int getHeartsCount() {
         return heartsCount;
     }

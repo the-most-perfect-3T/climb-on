@@ -13,6 +13,7 @@
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="createdAt" column="created_at"/> <!-- 명시적인 매핑 설정 -->
+        <result property="updatedAt" column="updated_at"/>
         <result property="category" column="category"/>
         <result property="viewCount" column="view_count"/>
         <result property="imageUrl" column="image_url"/>
@@ -39,7 +40,7 @@
         SELECT posts_with_comment_count.*
         FROM (
         SELECT p.*, u.nickname AS userNickname, u.user_id AS userID, u.profile_pic AS userProfilePic,
-        (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1 ) AS comments_count
+        (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1) AS comments_count
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
         <where>
@@ -58,7 +59,7 @@
                 <if test="category != null or searchKeyword != null">
                     AND
                 </if>
-                <!-- D-Day 조건 추가--> <!-- <![CDATA[]]> 태그를 사용해 XML 파서가 MyBatis SQL 구문을 그대로 처리하도록 해줄 수 있습니다. -->
+                <!-- D-Day 조건 추가--> <!-- <![CDATA[]]> 태그를 사용해 XML 파서가 MyBatis SQL 구문을 그대로 처리하도록 해줄 수 있다. -->
                 <choose>
                     <when test="dday == '진행중'">
                         <![CDATA[ CURRENT_DATE() BETWEEN p.event_start_date AND p.event_end_date ]]>
@@ -84,7 +85,7 @@
                 <when test="sort == 'views'">
                     posts_with_comment_count.view_count DESC <!-- 조회순 -->
                 </when>
-                <when test="sort == 'heartsCount'">
+                <when test="sort == 'hearts'">
                     posts_with_comment_count.hearts_count DESC
                 </when>
                 <otherwise>
@@ -94,9 +95,25 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
+    <!-- 고정 게시글 쿼리 -->
+    <select id="getFixedPostsByCategory" resultMap="postResultMap">
+        SELECT
+        p.*,
+        u.nickname AS userNickname,
+        u.user_id AS userID,
+        u.profile_pic AS userProfilePic,
+        (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1) AS comments_count
+        FROM community_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.status = 1 AND p.category = #{category}
+        ORDER BY p.created_at DESC
+        LIMIT #{limit}
+    </select>
+
+
     <!-- 특정 게시글 조회 (id로 조회), 작성자 정보 포함 -->
     <select id="getPostById" resultMap="postResultMap">
-        SELECT p.id, p.user_id, p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.hearts_count, p.image_url, p.category, p.status
+        SELECT p.id, p.user_id, u.nickname AS userNickname , p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.hearts_count, p.image_url, p.category, p.status
         , (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1) AS comments_count  <!--댓글 수 계산하는 서브쿼리-->
 
         <if test="category.equals('소식')"> <!--==는 숫자만 받으므로 equals를 써야한다!-->
