@@ -93,10 +93,11 @@ public class FacilitiesController {
 
         if (favorite) {
             result =  facilitiesService.addFavorite(userId, facilityId);
-            System.out.println("result = " + result);
+            System.out.println("성공 추가되면1 아니면 0 = " + result);
             return "즐겨찾기 추가되었습니다.";
         } else {
-            facilitiesService.removeFavorite(userId, facilityId);
+            result =facilitiesService.removeFavorite(userId, facilityId);
+            System.out.println("삭제 추가되면1 아니면 0 = " + result);
             return "즐겨찾기 삭제되었습니다.";
         }
     }
@@ -107,17 +108,6 @@ public class FacilitiesController {
         System.out.println("여기맞지? = " + result);
         return ResponseEntity.ok(result);
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
