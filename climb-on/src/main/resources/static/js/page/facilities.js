@@ -292,13 +292,12 @@ async function showFacilityDetails(facility) {
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
+            <div class="facility-banner-content"></div></br>
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
         <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
-        <p><strong>위도:</strong> ${facility.latitude ? facility.latitude : '정보 없음'}</p>
-        <p><strong>경도:</strong> ${facility.longitude ? facility.longitude : '정보 없음'}</p>
         <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
         ${isFavorite ?? false ? '즐겨찾기 취소' : '즐겨찾기 추가'}
           </button>
@@ -322,6 +321,24 @@ async function showFacilityDetails(facility) {
 
 }
 
+function renderStars(averageRating) {
+    let starsHtml = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (averageRating >= i) {
+            starsHtml += '<span class="filled"><i class="fa fa-star" aria-hidden="true"></i></span>';
+        } else if (averageRating >= i - 0.5) {
+            starsHtml += '<span class="half-filled"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
+        } else {
+            starsHtml += ''; // 별을 표시하지 않음
+        }
+    }
+
+    return starsHtml;
+}
+
+
+
 
     function loadReviews(facilityId) {
 
@@ -343,10 +360,21 @@ async function showFacilityDetails(facility) {
             .then(async data => {
                 if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
 
-                    detailsContainer.innerHTML += `<p className="review-sum">리뷰 : ${data.length}</p>
-                                                    <p className="review-avg">평점 : ${data[0].averageRating}/5</p>`;
+                    detailsContainer.innerHTML += `<p> <span class="review-sum">리뷰 : ${data.length}</span>
+                                                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span></p>
+                                                     <div id="stars-container"></div>
+                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                     작성
+                                                     </button>
 
-//<p>평점 : ${data.averageRating}</p>
+                                                     </br></br></br></br>      
+                                                    </div>
+                                                  `;
+
+
+
+                    document.getElementById('stars-container').innerHTML = renderStars(data[0].averageRating); //별그리기
+
                     for (const Reviews of data) {
                         const isFavorite = await reviewcheckFavorite(Reviews.id);
                         console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
@@ -359,7 +387,9 @@ async function showFacilityDetails(facility) {
                               <div class="review-detail">
                               <p>${Reviews.userNickname}</p>
                               <span>${timeText}</span>
-                              <p>${Reviews.rating}</p>
+                                <div class="review-rating">
+                                    <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                                </div>
                               <p>${Reviews.likeCount}</p>
                               <p>${Reviews.comment || '댓글이 없습니다'}</p>
                               <button className ="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
@@ -368,12 +398,17 @@ async function showFacilityDetails(facility) {
                                   </div>
                               `;
 
-                        // facilityDetailsHTML.appendChild(item);
-                        // const reviewContainer = document.getElementById('reviewContainer');
+
+
                         detailsContainer.appendChild(item);
-                        // reviewContainer.appendChild(item);
+
+                        const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
+                        starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
+
 
                     }
+
+
                 }
             })
             .catch(error => {
@@ -413,6 +448,10 @@ function timeAgo(date) {
 }
 
 // 즐겨찾기 추가/삭제 함수
+function insertReview(id){
+
+}
+
 
 async function reviewtoggleFavorite(id,isFavorite) {
     // 즐겨찾기 목록에서 해당 시설이 이미 존재하는지 확인

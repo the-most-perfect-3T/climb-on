@@ -195,3 +195,78 @@ div#facilityDetailsContainer::-webkit-scrollbar-thumb {
     color: #333;
     font-weight: 600;
 }
+.review-sum, .review-avg {
+    font-size: 16px;       /* 글씨 크기 */
+    font-weight: bold;     /* 굵은 글씨 */
+    margin-right: 20px;    /* 두 span 요소 사이에 여백 추가 */
+}
+
+/* '리뷰'와 '평점' 텍스트 색상 */
+.review-sum {
+    color: #333;           /* 리뷰 텍스트 색상 */
+}
+
+.review-avg {
+    color: #ff9900;        /* 평점 텍스트 색상 (예: 노란색) */
+}
+
+/* p 요소 스타일 (필요한 경우) */
+p {
+    margin: 0;             /* p 태그의 기본 여백 제거 */
+    padding: 10px 0;       /* 위아래 여백 추가 */
+}
+
+.facility-banner-content{
+    width: 100%;
+    height: 150px;
+    background-color: #f79256; /* Orange background */
+    position: relative;
+}
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+}
+.rating > span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+}
+.rating > span:hover:before,
+.rating > span:hover ~ span:before {
+    content: "\2605";
+    position: absolute;
+}
+
+/* 기본 별 스타일 */
+.review-rating span {
+    font-size: 20px; /* 별 크기 */
+    color: gray; /* 빈 별 색상 */
+}
+
+#stars-container{
+    display: inline-block;
+    font-size: 20px;
+
+}
+
+#stars-container .filled {
+    color: #f79256;
+}
+
+#stars-container .half-filled{
+    color: #f79256;
+}
+
+/* 채워진 별 스타일 */
+.review-rating span.filled {
+    color: #f79256; /* 채워진 별 색상 */
+}
+
+
+.avg-rating {
+    display: inline-block;
+    font-size: 20px;
+
+}
+
+/* 반별을 위한 스타일 */
