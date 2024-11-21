@@ -91,13 +91,13 @@
         )
     </insert>
 
-    <insert id="saveAdminNotice" parameterType="Integer">
+    <insert id="saveAdminNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO">
         INSERT INTO ADMIN_NOTICE (
             USER_CODE,
             CATEGORY
         ) VALUES (
-            #{id},
-            1
+            #{userCode},
+            #{category}
         )
     </insert>
 
@@ -108,11 +108,6 @@
          WHERE ID = #{userCode};
     </select>
 
-    <!--<select id="selectManagerNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO" resultMap="noticeMap">
-        SELECT
-        *
-        FROM MANAGER_NOTICE;
-    </select>-->
 
     <select id="selectAdminNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO" resultMap="noticeMap">
         SELECT
@@ -134,4 +129,37 @@
          WHERE USER_CODE = #{userCode}
     </update>
 
+
+    <insert id="saveBusinessNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO">
+        INSERT INTO BUSINESS_NOTICE (
+            USER_CODE,
+            CATEGORY
+        ) VALUES (
+            #{userCode},
+            #{category}
+        )
+    </insert>
+
+    <insert id="saveUserNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO">
+        INSERT INTO USER_NOTICE (
+            USER_CODE,
+            CATEGORY
+        ) VALUES (
+            #{userCode},
+            #{category}
+        )
+    </insert>
+
+    <select id="findByIdIsApproval" parameterType="Integer" resultType="int">
+        SELECT
+            IS_APPROVAL
+          FROM BUSINESS_APPLY
+         WHERE USER_CODE = #{id};
+    </select>
+
+    <update id="updateRole" parameterType="com.ohgiraffers.climbon.user.dto.UserDTO">
+        UPDATE USERS
+           SET USER_ROLE = #{userRole}
+         WHERE ID = #{id}
+    </update>
 </mapper>

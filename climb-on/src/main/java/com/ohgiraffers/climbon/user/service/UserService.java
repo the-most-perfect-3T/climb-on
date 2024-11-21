@@ -1,5 +1,6 @@
 package com.ohgiraffers.climbon.user.service;
 
+import com.ohgiraffers.climbon.auth.Enum.UserRole;
 import com.ohgiraffers.climbon.user.dao.UserMapper;
 import com.ohgiraffers.climbon.user.dto.BusinessDTO;
 import com.ohgiraffers.climbon.user.dto.NoticeDTO;
@@ -132,6 +133,9 @@ public class UserService {
         return result;
     }
 
+    /**
+     * 유저코드로 닉네임 찾기
+     * */
     public String findById(Integer userCode) {
 
         if(userCode == null){
@@ -142,22 +146,34 @@ public class UserService {
         return nickname;
     }
 
+    /**
+     * 관리자 알림 에 추가
+     * */
+    @Transactional
     public int registAdminNotice(Integer key) {
 
         if(key == null){
             return 0;
         }
-
-        int result = userMapper.saveAdminNotice(key);
+        NoticeDTO noticeDTO = new NoticeDTO();
+        noticeDTO.setUserCode(key);
+        noticeDTO.setCategory(1);
+        int result = userMapper.saveAdminNotice(noticeDTO);
         return result;
     }
 
+    /**
+     * 관리자 알림 (승인대기상태인 것만 찾기)
+     * */
     public List<NoticeDTO> selectAdminNotice() {
         List<NoticeDTO> notice = userMapper.selectAdminNotice();
         return notice;
     }
 
-
+    /**
+     * 비즈니스 전환 신청 상태 변경
+     * */
+    @Transactional
     public int updateNotice(NoticeDTO notice) {
 
         if(notice == null){
@@ -167,4 +183,56 @@ public class UserService {
 
         return result;
     }
+
+    /**
+     * 비즈니스 알림창 추가
+     * */
+    @Transactional
+    public int registBusinessNotice(int userCode) {
+
+        NoticeDTO noticeDTO = new NoticeDTO();
+        noticeDTO.setUserCode(userCode);
+        noticeDTO.setCategory(1);
+        int result = userMapper.saveBusinessNotice(noticeDTO);
+        return result;
+    }
+
+    /**
+     * 유저 알림창 추가
+     * */
+    @Transactional
+    public int registUserNotice(int userCode) {
+
+        NoticeDTO noticeDTO = new NoticeDTO();
+        noticeDTO.setUserCode(userCode);
+        noticeDTO.setCategory(1);
+        int result = userMapper.saveUserNotice(noticeDTO);
+        return result;
+    }
+
+    /**
+     * 비즈니스 전환 승인 상태 확인
+     * */
+    public int findByIdIsApproval(Integer key) {
+        if(key == null){
+            return 0;
+        }
+
+        int result = userMapper.findByIdIsApproval(key);
+        return result;
+    }
+
+    /**
+     * userRole BUSINESS 로 변경
+     * */
+    @Transactional
+    public int updateRole(UserDTO userDTO, int userCode) {
+
+        userDTO.setId(userCode);
+        userDTO.setUserRole(UserRole.BUSINESS);
+
+        int result = userMapper.updateRole(userDTO);
+        return result;
+    }
+
 }

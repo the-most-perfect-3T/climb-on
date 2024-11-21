@@ -148,63 +148,63 @@
 
 
 /* 알림 모달 */
-#noticeModal .modal-dialog {
+.modal-notice .modal-dialog {
     width: 650px;
 }
-#noticeModal .modal-body {
+.modal-notice .modal-body {
     padding: 0;
 }
-#noticeModal .modal-body .top {
+.modal-notice .modal-body .top {
 
     padding: 15px 30px;
 }
 
 
-#noticeModal .modal-body .top button {
+.modal-notice .modal-body .top button {
     font-size: 24px;
 }
-#noticeModal .modal-body ul li {
+.modal-notice .modal-body ul li {
     padding: 25px 0 20px;
     margin: 0 30px;
     flex-wrap: wrap;
 }
 
-#noticeModal .modal-body ul li .left {
+.modal-notice .modal-body ul li .left {
     text-align: left;
     width: 76%;
 }
-#noticeModal .modal-body ul li .left p {
+.modal-notice .modal-body ul li .left p {
     font-weight: 600;
     margin-bottom: 5px;
 }
-#noticeModal .modal-body ul li .left dl {
+.modal-notice .modal-body ul li .left dl {
     color: var(--darkGray);
     font-size: 14px;
 }
-#noticeModal .modal-body ul li .left dl dt {
+.modal-notice .modal-body ul li .left dl dt {
     font-weight: 400;
     flex-shrink: 0;
 
 }
-#noticeModal .modal-body ul li .left dl dd {
+.modal-notice .modal-body ul li .left dl dd {
     margin-bottom: 0;
     padding-left: 10px;
 }
-#noticeModal .modal-body ul li .left dl dd a {
+.modal-notice .modal-body ul li .left dl dd a {
     font-weight: 600;
     text-decoration: underline;
     word-break: break-all;
 }
-#noticeModal .modal-body ul li .right {
+.modal-notice .modal-body ul li .right {
     flex-shrink: 0;
     width: 22%;
 }
-#noticeModal .modal-body ul li .right button {
+.modal-notice .modal-body ul li .right button {
     font-size: 14px;
     padding: 5px 15px;
     border-radius: 999px;
 }
-#noticeModal .modal-body ul li .right .btn-approval {
+.modal-notice .modal-body ul li .right .btn-approval {
     margin-right: 10px;
     font-weight: 600;
     color: #fff;

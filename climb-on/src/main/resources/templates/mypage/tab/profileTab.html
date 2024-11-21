@@ -14,18 +14,19 @@
                                 <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100">
                             </div>
                             <div class="info-wrap">
+                                <div th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''BUSINESS'')')}"
+                                     th:text="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? '관리자' : '비즈니스'}"
+                                     th:class="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? 'badge admin' : 'badge business'}">
+                                </div>
                                 <p class="nickname" th:text="${user.nickname != null ? user.nickname : ''}"></p>
-                                <th:block th:if="${user.oneLiner != null}">
-                                    <p class="one-liner" th:text="${user.oneLiner}"></p>
-                                </th:block>
-                                <th:block th:if="${user.oneLiner == null}">
-                                    <p class="one-liner">한 줄 소개를 입력해주세요.</p>
-                                </th:block>
+                                <p class="one-liner" sec:authorize="hasAnyAuthority('USER')" th:text="${user.oneLiner != null ? user.oneLiner : '한 줄 소개를 입력해주세요.'}"></p>
+                                <p class="facility-name" sec:authorize="hasAnyAuthority('BUSINESS')" th:text="${facilityName != null ? facilityName : ''}"></p>
                             </div>
                         </div>
 
                         <div class="btn-wrap d-flex align-items-center">
-                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#noticeModal">
+                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center" data-bs-toggle="modal"
+                                    th:attr="data-bs-target=${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? '#adminNoticeModal' : (#authorization.expression('hasAnyAuthority(''BUSINESS'')') ? '#businessNoticeModal' : '#userNoticeModal')}">
                                 <div class="position-relative">
                                     <i class="fa-solid fa-bell"></i>
                                     <th:block th:if="${noticeCount != null}">
@@ -113,7 +114,7 @@
                                     <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인" onkeyup="passwordCompareCheck(event)" required/>
                                     <p class="error-message"></p>
                                 </div>
-                                <div class="input-wrap">
+                                <div class="input-wrap" sec:authorize="hasAnyAuthority('USER')">
                                     <label for="oneLiner">소개</label>
                                     <textarea id="oneLiner" name="oneLiner" placeholder="소개 문구를 입력해 주세요 (최대 120자)" maxlength="120" th:text="${user.oneLiner != null ? user.oneLiner : ''}"></textarea>
                                 </div>

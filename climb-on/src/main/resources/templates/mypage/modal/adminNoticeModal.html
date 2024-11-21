@@ -4,18 +4,21 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <th:block th:fragment="modalFragment">
-        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="noticeModal" aria-labelledby="noticeModalLabel" aria-hidden="true">
+        <div class="modal modal-user fade p-4 py-md-5 modal-notice" tabindex="-1" role="dialog" id="adminNoticeModal" aria-labelledby="adminNoticeModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content shadow">
                     <div class="modal-body text-center">
                         <div class="top d-flex justify-content-between align-items-center">
-                            <h5 class="section-title" id="noticeModalLabel">알림</h5>
+                            <h5 class="section-title" id="adminNoticeModalLabel">알림</h5>
                             <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                         </div>
 
                         <ul th:with="removePart='/img/business/'">
+                            <li th:if="${noticeMapList == null or #lists.isEmpty(noticeMapList)}" class="list-item border-top">
+                                알림이 없습니다.
+                            </li>
                             <th:block th:each="notice : ${noticeMapList}">
-                                <th:block  th:if="${notice['category'] == 1}">
+                                <th:block th:if="${notice['category'] == 1}">
                                     <li class="list-item d-flex align-items-center justify-content-between border-top">
                                         <div class="left">
                                             <p>
@@ -31,9 +34,9 @@
                                                 </dd>
                                             </dl>
                                         </div>
-                                        <form action="/mypage/updateNotice"  method="post">
+                                        <form action="/mypage/updateNotice"  method="post" class="right">
                                             <input type="hidden" name="userCode" th:value="${notice['userCode']}"/>
-                                            <div class="right d-flex align-items-center">
+                                            <div class="d-flex align-items-center">
                                                 <button class="btn-approval border" name="isApproval" value="1">승인</button>
                                                 <button class="btn-refusal border" name="isApproval" value="-1">거절</button>
                                             </div>
