@@ -11,7 +11,10 @@ import javax.xml.stream.events.Comment;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -22,9 +25,17 @@ public class PostService {
 
     // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다.
     public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
+
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
 
 
+        // 1. 공지 게시글 (2개 고정)
+        List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
+
+        // 2. 가이드 게시글 (1개 고정)
+        List<PostDTO> guidePosts = postDAO.getFixedPostsByCategory("가이드", 1);
+
+        // 3. 일반 게시글 (페이징 적용)
         List<PostDTO> posts = postDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, dday, status);    // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
 
         // 소식 카테고리의 게시글에 대해 D-Day 계산
@@ -33,9 +44,54 @@ public class PostService {
                 post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
             }
         }
+        //4. 게시글 합치기
+        List<PostDTO> allPosts = new ArrayList<>();
+        allPosts.addAll(noticePosts);
+        allPosts.addAll(guidePosts);
+        allPosts.addAll(posts);
 
 //        System.out.println(dday); dday 들어오는지 확인용 출력
-        return posts;
+        return allPosts;
+    }
+
+    public Map<String, List<PostDTO>> getPostsWithPinned(
+            int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
+        int offset = (page - 1) * pageSize;
+
+        Map<String, List<PostDTO>> result = new HashMap<>();
+
+        // 1. 공지 2개 고정
+        List<PostDTO> pinnedNoticePosts = postDAO.getFixedPostsByCategory("공지", 2);
+        result.put("pinnedNoticePosts", pinnedNoticePosts);
+
+        for (PostDTO post : pinnedNoticePosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  postDAO.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+        // 2. 가이드 1개 고정
+        List<PostDTO> pinnedGuidePosts = postDAO.getFixedPostsByCategory("가이드", 1);
+        result.put("pinnedGuidePosts", pinnedGuidePosts);
+
+        for (PostDTO post : pinnedGuidePosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  postDAO.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+        // 3. 일반 게시글
+        List<PostDTO> generalPosts = postDAO.getPostsByPageAndCategoryAndSearch(
+                offset, pageSize, category, searchKeyword, sort, dday, status);
+        result.put("generalPosts", generalPosts);
+
+        for (PostDTO post : generalPosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  postDAO.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+        return result;
     }
 
     // D-Day 계산 메소드
@@ -159,4 +215,5 @@ public class PostService {
     public void deleteComment(CommentDTO comment) {
         postDAO.deleteComment(comment);
     }
+
 }
