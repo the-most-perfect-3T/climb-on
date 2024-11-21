@@ -58,7 +58,7 @@
     </select>
     <select id="getFacilityNameById" parameterType="int" resultType="string">
         SELECT
-        facilityName
+        facility_name
         FROM FACILITIES
         WHERE id = #{ id }
     </select>
