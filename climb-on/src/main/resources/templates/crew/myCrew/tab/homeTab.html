@@ -1,0 +1,22 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="tabContFragment">
+    <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="home-tab">
+
+        <div class="crew-notification">
+            <span class="crew-notification-tag">공지</span>
+            <span class="crew-notification-text">
+                    대구 라이온즈 파크 삼성 라이온즈 경기 직관 가실 분은 바뀐 거임? 최강삼성 ...
+                </span>
+        </div>
+
+        <section class="calendar-section">
+            <div id = "calendar"></div>
+        </section>
+    </div>
+</th:block>
+
+</html>

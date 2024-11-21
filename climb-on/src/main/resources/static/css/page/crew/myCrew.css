@@ -1,0 +1,161 @@
+@charset "utf-8";
+
+.crew-aside
+.crew-main{
+    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+}
+/* 사이드 */
+.crew-aside{
+    position: relative;
+    width: 270px;
+    height: 850px;
+    margin-top: 98px;
+    background-color: #0dcaf0;
+
+    text-align: center;
+    justify-content: center;
+}
+
+.crew-aside .crew-profile-img{
+    width: 270px;
+    height: 200px;
+    background-color: #222222;
+    border-radius: 6px;
+}
+
+.crew-aside .crew-join-apply{
+
+    width: 250px;
+    height: 55px;
+    background-color: #FF7F27;
+    border-radius: 6px;
+}
+
+.crew-aside .crew-join-apply p{
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+
+.crew-main{
+    margin-left: 80px;
+    margin-top: 56px;
+    padding: 0;
+}
+.crew-tab-nav {
+    display: flex;
+    list-style: none;
+}
+
+.crew-tab-nav li button span {
+    padding: 10px 20px;
+    cursor: pointer;
+
+    font-size: 24px;
+    font-weight: 600;
+    color: #6C757D;
+}
+
+.crew-tab-nav li button.active span {
+    color: #222222;
+}
+
+/* 마이크루 메인 */
+
+.tab-pane{
+    width: 870px;
+}
+
+/* 공지 탭 */
+
+.tab-pane .crew-notification {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.crew-notification .crew-notification-tag {
+    background-color: #FF7F27;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.crew-notification .crew-notification-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #343A40;
+}
+
+/* 크루 활동 이벤트 */
+.crew-activity-event-item {
+    display: flex;
+    align-items: center;
+    height: 154px;
+    background-color: #fdf7ed;
+    border-radius: 10px;
+}
+
+.crew-activity-event-item .crew-event-info {
+    display: flex;
+    align-items: center;
+    flex: 2;
+    margin-left: 23px;
+}
+
+.crew-activity-event-item .crew-event-info .crew-event-status-tag {
+    background-color: #ff8040; /* Orange badge color */
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    padding: 5px 10px;
+    border-radius: 50px;
+    margin-right: 10px;
+}
+
+.crew-activity-event-item .crew-event-details{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.crew-activity-event-item .crew-event-center {
+    flex: 2;
+    text-align: left;
+    font-size: 20px;
+    font-weight: bold;
+    color: #222222;
+}
+
+.crew-activity-event-item .crew-event-right{
+    flex: 1;
+    text-align: right;
+}
+
+.crew-activity-event-item .participate-btn{
+    background-color: #FAEFDD;
+    width: 145px;
+    height: 154px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.crew-activity-event-item .participate-btn:hover{
+    background-color: #FFE4B5;
+}
+
+.crew-activity-event-item .participate-btn .fa-solid{
+    color: #FF7F27;
+    font-size: 32px;
+}
+
+.crew-activity-event-item .participate-btn span{
+    font-size: 14px;
+    font-weight: bold;
+}
