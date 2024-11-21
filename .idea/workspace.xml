@@ -10,9 +10,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 4
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
   <component name="ProjectId" id="2oq7MWlyk8sEOWI1huuBQ2T2Y6X" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
@@ -20,9 +20,9 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/crew",
+    "git-widget-placeholder": "feature/crew-fromhome",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/20240801-gangnam/project3/climb-on",
+    "last_opened_file_path": "C:/2024Gangnam/climb-on/climb-on",
     "nodejs_package_manager_path": "npm",
     "vue.rearranger.settings.migration": "true"
   }
@@ -44,6 +44,7 @@
       <option name="presentableId" value="Default" />
       <updated>1731585205084</updated>
       <workItem from="1731585206181" duration="22000" />
+      <workItem from="1731931365333" duration="84000" />
     </task>
     <servers />
   </component>

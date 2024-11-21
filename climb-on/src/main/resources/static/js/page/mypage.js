@@ -1,6 +1,6 @@
 /* 프로필탭에서 회원정보수정으로 이동 */
 const btnModify = document.querySelector(".section-mypage #btn-modify");
-const profileCont = document.querySelector(".section-mypage .profile-cont");
+const profileCont = document.querySelector(".section-mypage .profi le-cont");
 const modifyCont = document.querySelector(".section-mypage .modify-cont");
 const btnProfileTab = document.querySelector(".section-mypage #profile-tab");
 
