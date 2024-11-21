@@ -1,13 +1,19 @@
-// 시설 검색
-let wrapName = document.getElementById("searchFacilities"); // wrapName 만 바꿔서 재활용
+// 시설 검색 - 비즈니스 전환신청 모달
+const inputSearch = document.getElementById("facilityName");
+inputSearch.addEventListener("input", function(){
+    const wrapName = document.getElementById("searchFacilities");
+    showSuggestions2(wrapName);
+});
 
-function showSuggestions2() {
+function showSuggestions2(wrapName){
     const inputSearch = wrapName.querySelector('input[type="search"]');
     const inputValue = inputSearch.value;
     const suggestionsDiv = wrapName.querySelector('.suggestions');
     const btnSearch = wrapName.querySelector(".btn-search");
     btnSearch.style.display = 'block';
     wrapName.classList.remove("active");
+
+    console.log(inputSearch, inputValue, suggestionsDiv, btnSearch);
 
     if (inputValue) {
         fetch(`/facilities/suggestions?code=${encodeURIComponent(inputValue)}`) // 패치요청 responseEntity 로 jason 받음
@@ -25,7 +31,7 @@ function showSuggestions2() {
                         const item = document.createElement('div');
                         item.className = 'suggestion-item';
                         item.textContent = facilities.facilityName; // 메뉴 코드 표시
-                        item.onclick = () => selectSuggestion(facilities.facilityName);
+                        item.onclick = () => selectSuggestion(facilities.facilityName, wrapName);
                         /*console.log(facilities.facilityName);*/
                         suggestionsDiv.appendChild(item);
                     });
@@ -50,7 +56,8 @@ function showSuggestions2() {
 }
 
 // 추천검색어 선택
-function selectSuggestion(facilities) {
+function selectSuggestion(facilities, wrapName) {
+    console.log(wrapName);
     const inputSearch = wrapName.querySelector('input[type="search"]');
     const btnSearch = wrapName.querySelector(".btn-search");
     const suggestionsDiv = wrapName.querySelector('.suggestions');
@@ -60,20 +67,24 @@ function selectSuggestion(facilities) {
     inputSearch.value = facilities;
     suggestionsDiv.style.display = 'none';
 }
-const inputSearch = wrapName.querySelector('input[type="search"]');
-const btnSearch = wrapName.querySelector(".btn-search");
 
+
+const btnSearch = document.getElementById("btnSearch");
 
 // 엔터 누르면 검색버튼 클릭
-inputSearch.addEventListener("keyup", function(event){
+/*inputSearch.addEventListener("keyup", function(event){
     if(event.key === 'Enter'){
         btnSearch.click();
     }
+});*/
+
+btnSearch.addEventListener("click", function(){
+    const wrapName =  document.getElementById("searchFacilities");
+    onClickFirstResult(wrapName);
 });
 
-
 // 검색버튼 클릭 시 첫번째 검색결과 선택 / 입력한게 없으면 알럿창
-btnSearch.addEventListener("click", function(){
+function onClickFirstResult(wrapName){
     const suggestionsDiv = wrapName.querySelector('.suggestions');
     const suggestionItem = suggestionsDiv.querySelectorAll(".suggestion-item");
     if(suggestionItem.length > 0){
@@ -83,7 +94,8 @@ btnSearch.addEventListener("click", function(){
     if(inputSearch.value === ""){
         alert("검색할 업체명을 입력해주세요.");
     }
-});
+}
+
 
 
 

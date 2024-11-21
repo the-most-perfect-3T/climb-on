@@ -20,4 +20,8 @@
         INSERT INTO user_favorite (user_code, favorite_code)
         VALUES (#{userId}, #{facilityId});
     </insert>
+    <delete id="removeFavorite" parameterType="com.ohgiraffers.climbon.facilities.dto.FacilityFavoriteDTO">
+        DELETE FROM user_favorite
+        WHERE user_code = #{userId} AND favorite_code = #{facilityId};
+    </delete>
 </mapper>

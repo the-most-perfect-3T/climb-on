@@ -4,6 +4,7 @@
  * */
 package com.ohgiraffers.climbon.user.controller;
 
+import com.ohgiraffers.climbon.auth.Enum.UserRole;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
 import com.ohgiraffers.climbon.user.dto.BusinessDTO;
@@ -65,11 +66,35 @@ public class UserController {
 
 
         if(role.equals("USER")){
-            // user 알림 테이블 가져오기
+            // user 알림 테이블 가져오기 - 비즈니스전환거절
+            List<NoticeDTO> noticeList = userService.selectUserNotice(key);
+            System.out.println("noticeList = " + noticeList);
+
+            // 알림 데이터를 저장할 리스트
+            List<Map<String, Object>> noticeMapList = new ArrayList<>();
+
+            // 알림 수
+            mv.addObject("noticeCount", noticeList.size());
+
+            for(NoticeDTO notice : noticeList){
+                Map<String, Object> noticeMap = new HashMap<>();
+
+                Integer userCode = (Integer) notice.getUserCode();
+
+                noticeMap.put("userCode", userCode);
+                noticeMap.put("category", notice.getCategory());
+                noticeMap.put("facilityCode", notice.getFacilityCode());
+                noticeMap.put("attachFile", notice.getAttachFile());
+                noticeMap.put("isApproval", notice.getIsApproval());
+
+                noticeMapList.add(noticeMap);
+            }
+
+            mv.addObject("noticeMapList", noticeMapList);
 
         }else if(role.equals("ADMIN")){
 
-            // admin 알림 테이블 가져오기
+            // admin 알림 테이블 가져오기 - 비즈니스전환신청시
             List<NoticeDTO> noticeList = userService.selectAdminNotice();
             System.out.println("noticeList = " + noticeList);
 
@@ -79,15 +104,11 @@ public class UserController {
             // 알림 수
             mv.addObject("noticeCount", noticeList.size());
 
-
-
             for(NoticeDTO notice : noticeList){
                 Map<String, Object> noticeMap = new HashMap<>();
 
                 Integer userCode = (Integer) notice.getUserCode();
                 String nickname = userService.findById(userCode); // userCode 로 닉네임 찾아오기
-                System.out.println("nickname = " + nickname);
-                /*mv.addObject("name", nickname);*/
 
                 noticeMap.put("userCode", notice.getUserCode());
                 noticeMap.put("category", notice.getCategory());
@@ -99,11 +120,41 @@ public class UserController {
                 noticeMapList.add(noticeMap);
             }
 
-
             mv.addObject("noticeMapList", noticeMapList);
 
-
         }else if(role.equals("BUSINESS")){
+
+            // business 알림 테이블 가져오기 - 비즈니스전환승인
+            List<NoticeDTO> noticeList = userService.selectBusinessNotice(key);
+            System.out.println("noticeList = " + noticeList);
+
+            // 알림 데이터를 저장할 리스트
+            List<Map<String, Object>> noticeMapList = new ArrayList<>();
+
+            // 알림 수
+            mv.addObject("noticeCount", noticeList.size());
+
+            for(NoticeDTO notice : noticeList){
+                Map<String, Object> noticeMap = new HashMap<>();
+
+                Integer userCode = (Integer) notice.getUserCode();
+                String nickname = userService.findById(userCode); // userCode 로 닉네임 찾아오기
+                String facilityName = facilitiesService.getFacilityNameById(notice.getFacilityCode());
+                System.out.println("facilityName = " + facilityName);
+
+                mv.addObject("facilityName", facilityName);
+
+                noticeMap.put("userCode", userCode);
+                noticeMap.put("category", notice.getCategory());
+                noticeMap.put("facilityCode", notice.getFacilityCode());
+                noticeMap.put("attachFile", notice.getAttachFile());
+                noticeMap.put("isApproval", notice.getIsApproval());
+                noticeMap.put("nickname", nickname);
+
+                noticeMapList.add(noticeMap);
+            }
+
+            mv.addObject("noticeMapList", noticeMapList);
 
         }
 
@@ -291,12 +342,26 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message", "로그인 정보가 유효하지 않습니다.");
             return new ModelAndView("redirect:/auth/login");
         }
+        
+
+        // 신청했었던 사람인지 확인
+        Integer key = userDetails.getLoginUserDTO().getId();
+        Integer isApproval = userService.findByIdIsApproval(key);
+
+        if (isApproval != null) {
+            if (isApproval == 0) {
+                redirectAttributes.addFlashAttribute("message", "관리자 승인 대기중입니다. 잠시만 기다려주세요.");
+                return new ModelAndView("redirect:/mypage/home");
+            } else if (isApproval == 1) {
+                redirectAttributes.addFlashAttribute("message", "이미 비즈니스 계정으로 승인되었습니다.");
+                return new ModelAndView("redirect:/mypage/home");
+            }
+        }
+
 
         String facilityName = businessDTO.getFacilityName();
         MultipartFile businessFile = businessDTO.getBusinessFile();
 
-        System.out.println("facilityName = " + facilityName);
-        System.out.println("businessFile = " + businessFile);
 
         if (businessFile.isEmpty() || facilityName.isEmpty()) {
             mv.addObject("message", "파일을 선택해주세요.");
@@ -317,8 +382,7 @@ public class UserController {
 
 
         // facilityName 으로 facility id 찾아오기
-        int id = facilitiesService.getFacilityIdByName(facilityName);
-        System.out.println("id = " + id);
+        int facilityCode = facilitiesService.getFacilityIdByName(facilityName);
 
 
         // 첨부파일 저장
@@ -337,9 +401,9 @@ public class UserController {
             businessFile.transferTo(new File(filePath + "/" + savedName));
             String newFileName = "/img/business/" + savedName;
 
-            Integer key = userDetails.getLoginUserDTO().getId();
+
             // 비즈니스 전환신청 테이블에 추가
-            int result = userService.registBusiness(newFileName, key, id);
+            int result = userService.registBusiness(newFileName, key, facilityCode); // 첨부파일, 유저코드, 시설코드
             // 관리자 알림 테이블에 추가
             int result2 = userService.registAdminNotice(key);
 
@@ -371,12 +435,18 @@ public class UserController {
         switch (isApproval) {
             case 1:
                 // 승인 로직
-                System.out.println("approval");
                 notice.setIsApproval(1);
-                System.out.println(notice.getUserCode());
+                // user role 변경 (BUSINESS)
+                int userCode = notice.getUserCode();
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(userCode);
+                int result0 = userService.updateRole(userDTO, userCode);
+                // 비즈니스전환테이블에 상태변경(승인)
                 int result = userService.updateNotice(notice);
+                // 비즈니스알림 테이블에 추가
+                int result1 = userService.registBusinessNotice(userCode);
 
-                if(result > 0){
+                if(result > 0 && result1 > 0 && result0 > 0){
                     redirectAttributes.addFlashAttribute("message", "요청을 승인했습니다.");
                     return "redirect:/mypage/home";
                 }else {
@@ -385,12 +455,16 @@ public class UserController {
                 }
 
             case -1:
+                System.out.println("isApproval 세팅 전" + notice.getIsApproval());
                 // 거절 로직
-                System.out.println("refusal");
                 notice.setIsApproval(-1);
-                System.out.println(notice.getUserCode());
+                // 비즈니스 전환 테이블에 상태변경(거절)
                 int result2 = userService.updateNotice(notice);
-                if(result2 > 0){
+                // 유저알림 테이블에 추가
+                int userCode2 = notice.getUserCode();
+                int result3 = userService.registUserNotice(userCode2);
+
+                if(result2 > 0 && result3 > 0){
                     redirectAttributes.addFlashAttribute("message", "요청을 거절했습니다.");
                     return "redirect:/mypage/home";
                 }else {
@@ -398,9 +472,58 @@ public class UserController {
                     return "redirect:/mypage/home";
                 }
 
-
         }
 
         return "redirect:/mypage/home";
+    }
+
+
+    @PostMapping("confirmNotice")
+    public ModelAndView confirmNotice(ModelAndView mv, @RequestParam("userRole") UserRole userRole, @RequestParam("userCode") int userCode, RedirectAttributes redirectAttributes) {
+
+        switch (userRole) {
+            case USER:
+                    // 유저 알림 테이블에서 삭제
+                    int userResult = userService.deleteUserNotice(userCode);
+                    if (userResult > 0) {
+                        mv.setViewName("redirect:/mypage/home");
+                        return mv;
+                    }else {
+                        System.out.println("유저 알림 지우기 실패");
+                        mv.setViewName("redirect:/mypage/home");
+                        return mv;
+                    }
+
+            case BUSINESS:
+                // 비즈니스 알림 테이블에서 삭제
+                // 유저 알림 테이블에서 삭제
+                int businessResult = userService.deleteBusinessNotice(userCode);
+                if (businessResult > 0) {
+                    mv.setViewName("redirect:/mypage/home");
+                    return mv;
+                }else {
+                    System.out.println("업체 알림 지우기 실패");
+                    mv.setViewName("redirect:/mypage/home");
+                    return mv;
+                }
+
+            case ADMIN:
+                // 관리자 알림 테이블에서 삭제
+                // 비즈니스 전환신청 알림만 있을 때는 필요없어서 안쓰지만 만들어둠
+                // 비즈니스 전환신청에서 쓰려면 승인/거절 시 에도 하기 로직 추가해야함
+                int adminResult = userService.deleteAdminNotice(userCode);
+                if (adminResult > 0) {
+                    mv.setViewName("redirect:/mypage/home");
+                    return mv;
+                }else {
+                    System.out.println("관리자 알림 지우기 실패");
+                    mv.setViewName("redirect:/mypage/home");
+                    return mv;
+                }
+
+        }
+
+
+        return mv;
     }
 }

@@ -97,16 +97,28 @@
     border: 1px solid var(--borderColor);
     flex-shrink: 0;
 }
+.section-mypage #profile .profile-cont .section00 .info-wrap .badge {
+    margin-bottom: 8px;
+    border-radius: 999px;
+    background: var(--point);
+}
+.section-mypage #profile .profile-cont .section00 .info-wrap .badge.business {
+    background: var(--darkGray);
+}
 
 .section-mypage #profile .profile-cont .section00 .info-wrap .nickname {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 7px;
+
 }
 .section-mypage #profile .profile-cont .section00 .info-wrap .one-liner {
+    margin-top: 7px;
     font-size: 14px;
     word-break: keep-all;
     margin-right: 10px;
+}
+.section-mypage #profile .profile-cont .section00 .info-wrap .facility-name {
+    margin-top: 5px;
 }
 
 .section-mypage #profile .profile-cont .section00 .btn-wrap button {
@@ -209,7 +221,7 @@
     color: #fff;
     font-weight: 600;
     width: 140px;
-    height: 50px;
+    height: 45px;
     border-radius: 6px;
     margin-top: 30px;
 }

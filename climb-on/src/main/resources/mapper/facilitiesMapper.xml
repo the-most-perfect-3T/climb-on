@@ -56,5 +56,11 @@
         FROM FACILITIES
         WHERE facility_name = #{ facilityName }
     </select>
+    <select id="getFacilityNameById" parameterType="int" resultType="string">
+        SELECT
+        facility_name
+        FROM FACILITIES
+        WHERE id = #{ id }
+    </select>
 
 </mapper>
