@@ -1,5 +1,5 @@
 const btnModify = document.querySelector(".section-mypage #btn-modify");
-const profileCont = document.querySelector(".section-mypage .profile-cont");
+const profileCont = document.querySelector(".section-mypage .profi le-cont");
 const modifyCont = document.querySelector(".section-mypage .modify-cont");
 const btnProfileTab = document.querySelector(".section-mypage #profile-tab");
 
