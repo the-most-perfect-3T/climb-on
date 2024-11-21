@@ -4,8 +4,12 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <th:block th:fragment="tabContFragment">
-  <div class="tab-mycrew-activity fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
+  <div class="tab-pane fade" id="activity" role="tabpanel" aria-labelledby="activity-tab">
     활동
+
+    <section class="calendar-section">
+      <div id = "calendar"></div>
+    </section>
   </div>
 </th:block>
 </html>
