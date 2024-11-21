@@ -43,4 +43,6 @@ public interface UserMapper {
     int findByIdIsApproval(Integer id);
 
     int updateRole(UserDTO userDTO);
+
+    List<NoticeDTO> selectBusinessNotice();
 }

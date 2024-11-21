@@ -162,4 +162,17 @@
            SET USER_ROLE = #{userRole}
          WHERE ID = #{id}
     </update>
+
+    <select id="selectBusinessNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO" resultMap="noticeMap">
+        SELECT
+            a.USER_CODE,
+            a.CATEGORY,
+            b.FACILITY_CODE,
+            b.ATTACH_FILE,
+            b.IS_APPROVAL
+          FROM BUSINESS_NOTICE a
+          JOIN BUSINESS_APPLY b
+            ON a.USER_CODE = b.USER_CODE
+         WHERE b.IS_APPROVAL = 1;
+    </select>
 </mapper>

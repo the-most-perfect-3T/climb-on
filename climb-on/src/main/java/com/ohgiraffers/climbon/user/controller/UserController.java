@@ -79,15 +79,11 @@ public class UserController {
             // 알림 수
             mv.addObject("noticeCount", noticeList.size());
 
-
-
             for(NoticeDTO notice : noticeList){
                 Map<String, Object> noticeMap = new HashMap<>();
 
                 Integer userCode = (Integer) notice.getUserCode();
                 String nickname = userService.findById(userCode); // userCode 로 닉네임 찾아오기
-                System.out.println("nickname = " + nickname);
-                /*mv.addObject("name", nickname);*/
 
                 noticeMap.put("userCode", notice.getUserCode());
                 noticeMap.put("category", notice.getCategory());
@@ -99,12 +95,39 @@ public class UserController {
                 noticeMapList.add(noticeMap);
             }
 
-
             mv.addObject("noticeMapList", noticeMapList);
-
 
         }else if(role.equals("BUSINESS")){
 
+            // business 알림 테이블 가져오기
+            List<NoticeDTO> noticeList = userService.selectBusinessNotice();
+            System.out.println("noticeList = " + noticeList);
+
+            // 알림 데이터를 저장할 리스트
+            List<Map<String, Object>> noticeMapList = new ArrayList<>();
+
+            // 알림 수
+            mv.addObject("noticeCount", noticeList.size());
+
+            for(NoticeDTO notice : noticeList){
+                Map<String, Object> noticeMap = new HashMap<>();
+
+                Integer userCode = (Integer) notice.getUserCode();
+                String nickname = userService.findById(userCode); // userCode 로 닉네임 찾아오기
+                String facilityName = facilitiesService.getFacilityNameById(notice.getFacilityCode());
+
+                noticeMap.put("userCode", userCode);
+                noticeMap.put("category", notice.getCategory());
+                noticeMap.put("facilityCode", notice.getFacilityCode());
+                noticeMap.put("attachFile", notice.getAttachFile());
+                noticeMap.put("isApproval", notice.getIsApproval());
+                noticeMap.put("nickname", nickname);
+                noticeMap.put("facilityName", facilityName);
+
+                noticeMapList.add(noticeMap);
+            }
+
+            mv.addObject("noticeMapList", noticeMapList);
         }
 
 
@@ -379,8 +402,9 @@ public class UserController {
             case 1:
                 // 승인 로직
                 notice.setIsApproval(1);
-                // user role / nickname-facilityName 으로 변경
+                // user role
                 int userCode = notice.getUserCode();
+
 
                 UserDTO userDTO = new UserDTO();
                 userDTO.setId(userCode);

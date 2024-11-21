@@ -62,7 +62,7 @@ public class UserService {
     }
 
     /**
-     * user 정보 업데이트 (닉네임, 비밀번호, 한줄소개)
+     * user 정보수정 (닉네임, 비밀번호, 한줄소개)
      * */
     @Transactional
     public int updateUser(UserDTO user, Integer key) {
@@ -185,7 +185,7 @@ public class UserService {
     }
 
     /**
-     * 비즈니스 알림창 추가
+     * 비즈니스 알림 추가
      * */
     @Transactional
     public int registBusinessNotice(int userCode) {
@@ -198,7 +198,7 @@ public class UserService {
     }
 
     /**
-     * 유저 알림창 추가
+     * 유저 알림 추가
      * */
     @Transactional
     public int registUserNotice(int userCode) {
@@ -235,4 +235,13 @@ public class UserService {
         return result;
     }
 
+    /**
+     * 비즈니스 알림 (승인대기상태인 것만 찾기)
+     * */
+    public List<NoticeDTO> selectBusinessNotice() {
+
+        List<NoticeDTO> noticeDTOList = userMapper.selectBusinessNotice();
+
+        return noticeDTOList;
+    }
 }

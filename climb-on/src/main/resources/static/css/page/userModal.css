@@ -168,6 +168,9 @@
     margin: 0 30px;
     flex-wrap: wrap;
 }
+.modal-notice .modal-body ul li.no-notice {
+    text-align: left;
+}
 
 .modal-notice .modal-body ul li .left {
     text-align: left;

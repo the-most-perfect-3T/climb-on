@@ -14,7 +14,7 @@
                         </div>
 
                         <ul th:with="removePart='/img/business/'">
-                            <li th:if="${noticeMapList == null or #lists.isEmpty(noticeMapList)}" class="list-item border-top">
+                            <li th:if="${noticeMapList == null or #lists.isEmpty(noticeMapList)}" class="no-notice list-item border-top">
                                 알림이 없습니다.
                             </li>
                             <th:block th:each="notice : ${noticeMapList}">
