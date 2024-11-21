@@ -60,7 +60,6 @@
     background-color: #f2f2f2;
 }
 
-/* Add padding around elements for mobile-friendly design */
 .container-forall {
     margin-top: var(--headerHeight);
 }
@@ -74,19 +73,129 @@
     gap: 0.2rem;
 }
 
-/* Modal Center Alignment */
+/* 모달 */
+.custom-modal-width {
+    max-width: 1000px;
+    width: 100%;
+}
+
+
 .modal-content {
     border-radius: 10px;
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-
+/*크루이미지*/
 .img-wrap {
     width: 112px;
     height: 112px;
     border-radius: 100%;
     overflow: hidden;
     margin-right: 40px;
-    border: 1px solid var(--borderColor);
+    margin-bottom: 6px;
+    background-color: var(--beige);
     flex-shrink: 0;
 }
+
+/*크루이름*/
+#crewName {
+    flex: 1;
+}
+
+#crewNameBtn {
+    white-space: nowrap; /* Prevents the button's text from wrapping */
+    padding: 0.5rem 1rem; /* Adjust padding for aesthetics */
+    background-color: var(--beige);
+    border: none;
+}
+
+#crewNameBtn:enabled {
+    background-color: var(--point);
+    color: white;
+}
+
+/*카테고리*/
+.custom-dropdown {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    align-items: center;
+}
+
+.dropdown-toggle::after {
+    display: none !important; /* Hides the default arrow */
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+    border: none;
+    height: 100%;
+}
+
+.dropdown-menu {
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.dropdown-item:hover{
+    background-color: var(--point);
+}
+
+#selectedCategories .btn {
+    background-color: var(--beige);
+    color: var(--black);
+    border: none;
+    margin: 0 0.5rem 0.5rem 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+#selectedCategories .btn i {
+    margin-left: 0.5rem;
+    cursor: pointer;
+}
+
+/*회원모집, 가입방식*/
+.radio-btn .btn {
+    background-color: var(--gray);
+    color: var(--borderColor);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.radio-btn .btn:hover {
+    background-color: var(--beige);
+    color: var(--point);
+}
+
+.radio-btn input[type="radio"]:checked + .btn {
+    background-color: var(--point);
+    color: white;
+}
+
+.btnDiv {
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    background-color: var(--point);
+}
+
+.btnArea {
+    height: 100%;
+    border: none;
+    background: none;
+}
+
+.insertArea {
+    text-wrap: nowrap;
+}
+
+#areaSelectModal {
+    z-index: 1060 !important; /* Must be above the first modal */
+}
+

@@ -15,7 +15,7 @@
         <div class="container-forall">
 
             <div class="register border-bottom">
-                <button type="button" class="btn btn-light btn-lg w-100 text-start d-flex align-items-center gap-3 btn-primary"data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                <button type="button" class="btn btn-light btn-lg w-100 text-start d-flex align-items-center gap-3 btn-primary" data-bs-toggle="modal" data-bs-target="#creWRegisterModal"
                     style="height: 100px;">
                     <div class="rounded-circle text-white d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
                         <i class="fa-solid fa-plus"></i>
@@ -90,8 +90,7 @@
         </div>
     </div>
 
-    <th:block th:replace="~{crew/crewHome/crewRegisterModal :: modalFragment}"></th:block>
-
+    <th:block th:replace="~{crew/crewHome/crewRegisterModal :: crewRegisterModalFragment}"></th:block>
 
 </th:block>
 
