@@ -14,13 +14,21 @@
 <th:block layout:fragment="containerFragment">
     <div class="inner d-flex">
         <aside class="crew-aside">
-            <h3> 사이드 테스트</h3>
-            <div class="crew-profile-img"></div>
+            <div class="crew-info">
+                <div class="crew-profile-img"></div>
+                <h3>크루명</h3>
+                <span>멤버 n명</span>
+            </div>
+
             <!--사이드 내용-->
+
+            <button class="crew-join-apply">
+                <p>가입신청하기</p>
+            </button>
         </aside>
 
         <div class="crew-main">
-            <ul class="crew-tab-nav">
+            <ul role="tablist" class="crew-tab-nav">
                 <li role="presentation">
                     <button class="active" id="home-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="home" aria-selected="true">
                         <span>홈</span>
@@ -54,6 +62,58 @@
                 <th:block th:replace="~{/crew/myCrew/tab/activityTab :: tabContFragment}"></th:block>
                 <th:block th:replace="~{/crew/myCrew/tab/albumTab :: tabContFragment}"></th:block>
                 <th:block th:replace="~{/crew/myCrew/tab/memberTab :: tabContFragment}"></th:block>
+            </div>
+        </div>
+
+        <!-- 부트스트랩 modal 부분 -->
+        <!-- Modal -->
+        <div
+                class="modal fade"
+                id="exampleModal"
+                tabindex="-1"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">일정 추가하기</h5>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        일정이름 : <input type="text" id="title" /><br />
+                        시작시간 : <input type="date" id="start" /><br />
+                        종료시간 : <input type="date" id="end"/><br />
+                        배경색상 :
+                        <select id="color">
+                            <option value="red">빨강색</option>
+                            <option value="orange">주황색</option>
+                            <option value="yellow">노랑색</option>
+                            <option value="green">초록색</option>
+                            <option value="blue">파랑색</option>
+                            <option value="indigo">남색</option>
+                            <option value="purple">보라색</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                        >
+                            취소
+                        </button>
+
+                        <button type="button" id="addButton" class="btn btn-primary" style="display: none;">Add</button>
+                        <button type="button" id="modifyButton" class="btn btn-success" style="display: none;">Modify</button>
+                        <button type="button" id="deleteButton" class="btn btn-danger" style="display: none;">Delete</button>
+                    </div>
+                </div>
             </div>
         </div>
 
