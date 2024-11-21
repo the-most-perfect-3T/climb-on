@@ -23,7 +23,7 @@ public interface PostDAO {
 
     // @Param 어노테이션을 사용해 MyBatis에서 offset, limit(pageSize로 설정), category 파라미터를 전달받는다. // LIMIT과 OFFSET을 사용하여 특정 페이지에 해당하는 게시글만 가져온다. //검색어 추가 //정렬조건 추가
     // 검색어와 카테고리를 기반으로 페이징 처리 및 정렬 조건에 따라 게시글 목록을 가져오는 메소드
-    List<PostDTO> getPostsByPageAndCategoryAndSearch(@Param("offset")int offset, @Param("limit") int pageSize, @Param("category") String category, @Param("searchKeyword") String searchKeyword, @Param("sort") String sort, @Param("dday") String dday);
+    List<PostDTO> getPostsByPageAndCategoryAndSearch(@Param("offset") int offset, @Param("limit") int pageSize, @Param("category") String category, @Param("searchKeyword") String searchKeyword, @Param("sort") String sort, @Param("dday") String dday, @Param("status") Boolean status);
 
     int getTotalPostCount(@Param("category") String category, @Param("searchKeyword") String searchKeyword); //전체 게시글 수를 반환하여 페이지 수 계산에 사용된다. //검색어 추가
 
@@ -58,4 +58,14 @@ public interface PostDAO {
 
     @Insert("INSERT INTO user_post_heart (post_code, user_code) VALUES (#{postId}, #{userId})")
     void addLike(int postId, Integer userId);
+
+    @Select("SELECT COUNT(*) > 0 FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
+    boolean isPostLikedByUser(@Param("postId") Integer id, @Param("userId") Integer userId);
+
+    void updateComment(CommentDTO comment);
+
+    void deleteComment(CommentDTO comment);
+
+    // 게시글과 댓글 연동 삭제를 위한 댓글 삭제 메소드 추가
+    void deleteCommentsByPostId(Integer postId);
 }

@@ -37,8 +37,9 @@ public class PostDTO {
 
     private int heartsCount;
 
-    private byte status;
+    private boolean isLiked; // 좋아요 여부
 
+    private boolean status = true; // 기본값을 활성 상태로 설정
 
     private String eventStartDate;
 
@@ -46,11 +47,10 @@ public class PostDTO {
 
     private String dday; // D-Day 계산 결과 저장
 
-
     public PostDTO() {
     }
 
-    public PostDTO(Integer id, Integer userId, String userNickname, String userProfilePic, String title, String content, String category, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int commentsCount, String imageUrl, boolean isAnonymous, int heartsCount, byte status, String eventStartDate, String eventEndDate, String dday) {
+    public PostDTO(Integer id, Integer userId, String userNickname, String userProfilePic, String title, String content, String category, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int commentsCount, String imageUrl, boolean isAnonymous, int heartsCount, boolean isLiked, boolean status, String eventStartDate, String eventEndDate, String dday) {
         this.id = id;
         this.userId = userId;
         this.userNickname = userNickname;
@@ -65,6 +65,7 @@ public class PostDTO {
         this.imageUrl = imageUrl;
         this.isAnonymous = isAnonymous;
         this.heartsCount = heartsCount;
+        this.isLiked = isLiked;
         this.status = status;
         this.eventStartDate = eventStartDate;
         this.eventEndDate = eventEndDate;
@@ -107,6 +108,28 @@ public class PostDTO {
         } else {
             // 3일 이상 지난 경우 날짜 형식으로 표시
             return createdAt.format(dateFormatter);
+        }
+    }
+
+    public String getFormattedUpdatedAt() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        long daysAgo = ChronoUnit.DAYS.between(updatedAt.toLocalDate(), now.toLocalDate());
+
+        if (daysAgo == 0){
+            // 오늘 작성된 경우 시간만 표시
+            return updatedAt.format(timeFormatter);
+        } else if (daysAgo == 1){
+            return "하루전";
+        } else if (daysAgo == 2){
+            return "이틀전";
+        } else if (daysAgo ==3 ){
+            return "3일전";
+        } else {
+            // 3일 이상 지난 경우 날짜 형식으로 표시
+            return updatedAt.format(dateFormatter);
         }
     }
 
@@ -206,11 +229,11 @@ public class PostDTO {
         this.heartsCount = heartsCount;
     }
 
-    public byte getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(byte status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 
@@ -238,6 +261,14 @@ public class PostDTO {
         this.dday = dday;
     }
 
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
     @Override
     public String toString() {
         return "PostDTO{" +
@@ -255,6 +286,7 @@ public class PostDTO {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", isAnonymous=" + isAnonymous +
                 ", heartsCount=" + heartsCount +
+                ", isLiked=" + isLiked +
                 ", status=" + status +
                 ", eventStartDate='" + eventStartDate + '\'' +
                 ", eventEndDate='" + eventEndDate + '\'' +

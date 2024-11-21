@@ -1,0 +1,153 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="modalFragment">
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4">
+                <!-- Modal Header -->
+                <div class="modal-header border-0">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <h1 class="w-100 text-center fw-bold">함께 성장하는 크루 커뮤니티</h1>
+                    <p class="w-100 text-center text-muted">cl'mon에서 함께할 크루를 만들어주세요!</p>
+
+                    <!-- Crew Image Upload Section -->
+                    <form action="/crew/registerCrew" method="post" id="registerCrewForm" enctype="multipart/form-data">
+                        <div class="text-center mb-4">
+                            <div class="position-relative mx-auto" style="width: 120px; height: 120px;">
+                                <div class="img-wrap d-flex align-items-center">
+                                    <img src="default-image.png" alt="프로필 이미지" class="w-100" id="crewPic">
+                                </div>
+                                <input type="file" name="crewPic" id="crewPicInput" style="display: none;"/>
+                                <button type="button" class="btn btn-light" id="imgInsert">
+                                    사진 수정
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="fw-bold"><span class="text-danger">*</span> 는 필수 입력 사항입니다.</p>
+                        </div>
+
+                        <!-- Crew Name Input -->
+                        <div class="mb-3">
+                            <label for="crewNameInput" class="form-label fw-bold">
+                                <span class="text-danger">*</span>크루 이름
+                            </label>
+                            <div class="input-wrap input-wrap-btn">
+                                <input type="text" id="crewNameInput" class="form-control" placeholder="크루명을 입력해주세요" required>
+                                <button type="button" class="btn" id="crewNameBtn">중복확인</button>
+                                <p class="error-message" id="crewName-error"></p>
+                                <p class="success-message" id="crewName-success"></p>
+                            </div>
+                        </div>
+
+                        <!-- Crew Introduction Input -->
+                        <div class="mb-3">
+                            <label for="crewIntro" class="form-label fw-bold">
+                                <span class="text-danger">*</span>크루 소개글
+                            </label>
+                            <textarea id="crewIntro" class="form-control" rows="3" placeholder="소개글을 입력해주세요 (최대 160자)" maxlength="160"></textarea>
+                            <small class="form-text text-muted">0/160</small>
+                        </div>
+
+                        <!-- Instagram Profile Input -->
+                        <div class="mb-3">
+                            <label for="instagramProfile" class="form-label fw-bold">
+                                인스타그램 프로필 ID
+                            </label>
+                            <input type="text" id="instagramProfile" class="form-control" placeholder="크루 인스타그램 프로필 ID를 입력해주세요">
+                            <small class="form-text text-muted">ex) climon_2024</small>
+                        </div>
+
+                        <!-- Climbing Category Dropdown -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>클라이밍 카테고리
+                            </label>
+                            <select id="climbingCategory" class="form-select">
+                                <option disabled selected>카테고리를 선택해주세요</option>
+                                <option value="1">지구력</option>
+                                <option value="2">볼더링</option>
+                            </select>
+                            <div id="selectedCategories" class="mt-2">
+                                <!-- Dynamically add buttons here for selected categories -->
+                                <button type="button" class="btn btn-warning btn-sm rounded-pill me-2">
+                                    지구력 <i class="fa-solid fa-xmark ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Recruiting Status Radio -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>회원 모집 여부
+                            </label>
+                            <div class="d-flex gap-3">
+                                <div>
+                                    <input type="radio" id="recruitingYes" name="recruitingStatus" class="form-check-input">
+                                    <label for="recruitingYes" class="form-check-label">신규 모집 중</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="recruitingNo" name="recruitingStatus" class="form-check-input">
+                                    <label for="recruitingNo" class="form-check-label">회원 모집 중지</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Joining Method Radio -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>가입방식 선택
+                            </label>
+                            <div class="d-flex gap-3">
+                                <div>
+                                    <input type="radio" id="approval" name="joinMethod" class="form-check-input">
+                                    <label for="approval" class="form-check-label">승인 신청 가입</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="auto" name="joinMethod" class="form-check-input">
+                                    <label for="auto" class="form-check-label">가입 옵션 제거</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Operating Area Filter -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>활동 지역
+                            </label>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" placeholder="활동 지역을 선택해주세요">
+                                <button type="button" class="btn btn-outline-secondary">추가하기</button>
+                            </div>
+                            <div id="selectedAreas">
+                                <!-- Dynamically add buttons here for selected areas -->
+                                <button type="button" class="btn btn-warning btn-sm rounded-pill me-2">
+                                    서울 전체 <i class="fa-solid fa-xmark ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer justify-content-center border-0">
+                            <button type="button" class="btn btn-orange px-5 py-2">등록하기</button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- Modal Footer -->
+
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>
