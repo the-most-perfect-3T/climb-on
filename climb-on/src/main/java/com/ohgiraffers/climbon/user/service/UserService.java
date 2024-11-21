@@ -213,12 +213,12 @@ public class UserService {
     /**
      * 비즈니스 전환 승인 상태 확인
      * */
-    public int findByIdIsApproval(Integer key) {
+    public Integer findByIdIsApproval(Integer key) {
         if(key == null){
             return 0;
         }
 
-        int result = userMapper.findByIdIsApproval(key);
+        Integer result = userMapper.findByIdIsApproval(key);
         return result;
     }
 
@@ -238,9 +238,33 @@ public class UserService {
     /**
      * 비즈니스 알림 (승인대기상태인 것만 찾기)
      * */
-    public List<NoticeDTO> selectBusinessNotice() {
+    public List<NoticeDTO> selectBusinessNotice(Integer key) {
 
-        List<NoticeDTO> noticeDTOList = userMapper.selectBusinessNotice();
+        List<NoticeDTO> noticeDTOList = userMapper.selectBusinessNotice(key);
+
+        return noticeDTOList;
+    }
+
+    @Transactional
+    public int deleteUserNotice(int userCode) {
+
+        int result = userMapper.deleteUserNotice(userCode);
+        return result;
+    }
+    @Transactional
+    public int deleteBusinessNotice(int userCode) {
+
+        int result = userMapper.deleteBusinessNotice(userCode);
+        return result;
+    }
+    @Transactional
+    public int deleteAdminNotice(int userCode) {
+        int result = userMapper.deleteAdminNotice(userCode);
+        return result;
+    }
+
+    public List<NoticeDTO> selectUserNotice(Integer key) {
+        List<NoticeDTO> noticeDTOList = userMapper.selectUserNotice(key);
 
         return noticeDTOList;
     }

@@ -4,12 +4,12 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
     <th:block th:fragment="modalFragment">
-        <div class="modal modal-user fade p-4 py-md-5 modal-notice" tabindex="-1" role="dialog" id="businessNoticeModal" aria-labelledby="businessNoticeModalLabel" aria-hidden="true">
+        <div class="modal modal-user fade p-4 py-md-5 modal-notice" tabindex="-1" role="dialog" id="userNoticeModal" aria-labelledby="userNoticeModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content shadow">
                     <div class="modal-body text-center">
                         <div class="top d-flex justify-content-between align-items-center">
-                            <h5 class="section-title" id="businessNoticeModalLabel">알림</h5>
+                            <h5 class="section-title" id="userNoticeModalLabel">알림</h5>
                             <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                         </div>
 
@@ -22,7 +22,7 @@
                                     <li class="list-item d-flex align-items-center justify-content-between border-top">
                                         <div class="left">
                                             <p>
-                                                비즈니스 계정 전환이 완료되었습니다.
+                                                관리자가 비즈니스 계정 전환을 거절했습니다.
                                             </p>
                                             <dl class="d-flex">
                                                 <dt>사업자 등록증&nbsp;&nbsp;| </dt>

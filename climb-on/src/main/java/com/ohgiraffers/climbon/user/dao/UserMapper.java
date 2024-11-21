@@ -40,9 +40,17 @@ public interface UserMapper {
 
     int saveUserNotice(NoticeDTO noticeDTO);
 
-    int findByIdIsApproval(Integer id);
+    Integer findByIdIsApproval(Integer id);
 
     int updateRole(UserDTO userDTO);
 
-    List<NoticeDTO> selectBusinessNotice();
+    List<NoticeDTO> selectBusinessNotice(Integer id);
+
+    int deleteUserNotice(int userCode);
+
+    int deleteBusinessNotice(int userCode);
+
+    int deleteAdminNotice(int userCode);
+
+    List<NoticeDTO> selectUserNotice(Integer id);
 }

@@ -1,0 +1,38 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <th:block th:fragment="modalFragment">
+        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="facilityModal" aria-labelledby="facilityModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content shadow">
+                    <div class="modal-body text-center">
+                        <div class="top d-flex justify-content-between align-items-center border-bottom">
+                            <div id="searchHomeFacilities" class="position-relative">
+                                <input type="search" name="facilityName" id="facilityHomeName" placeholder="운동시설을 검색하세요" autocomplete="off" oninput="showSuggestions2()" class="border"/>
+                                <div class="suggestions"></div>
+                                <button class="btn-search position-absolute" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                            <button type="button" class="btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <ul>
+                            <li class="d-flex align-items-center justify-content-between border-bottom">
+                                <div class="left">
+                                    <p class="name">더클라임 연남점</p>
+                                    <p class="address">서울 마포구 양화로 186</p>
+                                </div>
+                                <div class="right">
+                                    <div class="img-wrap">
+                                        <img src="" alt="">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</html>

@@ -3,8 +3,8 @@
 /*마이페이지 모달 공통*/
 .modal-user .modal-dialog {
     max-width: unset;
-    top: 50%;
-    transform: translateY(-50%) !important;
+    /*top: 50%;
+    transform: translateY(-50%) !important;*/
 }
 .modal-user .modal-content {
     overflow: hidden;
@@ -155,13 +155,12 @@
     padding: 0;
 }
 .modal-notice .modal-body .top {
-
     padding: 15px 30px;
 }
 
-
 .modal-notice .modal-body .top button {
     font-size: 24px;
+    padding: 0;
 }
 .modal-notice .modal-body ul li {
     padding: 25px 0 20px;
@@ -202,6 +201,14 @@
     flex-shrink: 0;
     width: 22%;
 }
+.modal-notice .modal-body ul li .right.confirm {
+    width: auto;
+}
+.modal-notice .modal-body ul li .right.confirm button {
+    color: #fff;
+    background: var(--point);
+    border-color: var(--point) !important;
+}
 .modal-notice .modal-body ul li .right button {
     font-size: 14px;
     padding: 5px 15px;
@@ -213,4 +220,73 @@
     color: #fff;
     background: var(--point);
     border-color: var(--point) !important;
+}
+
+
+/* 홈짐 모달 */
+#facilityModal .modal-dialog {
+    width: 380px;
+}
+#facilityModal .modal-body {
+    padding: 0;
+}
+#facilityModal .modal-body .top {
+    padding: 25px 20px;
+}
+#facilityModal .modal-body .top .btn {
+    font-size: 24px;
+    padding: 0;
+}
+#facilityModal .modal-body #searchFacilities input {
+    width: 300px;
+    height: 45px;
+    border-radius: 999px;
+    padding: 0 60px 0 20px;
+
+}
+#facilityModal .modal-body #searchFacilities input[type="search" i]::-webkit-search-cancel-button {
+    cursor: pointer;
+}
+#facilityModal .modal-body #searchFacilities .suggestions {
+    width: 300px;
+    position: absolute;
+    top: 45px;
+    left: 0;
+}
+#facilityModal .modal-body #searchFacilities button {
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+#facilityModal .modal-body ul {
+    padding: 0 20px;
+}
+#facilityModal .modal-body ul li {
+    padding: 15px 0;
+}
+#facilityModal .modal-body ul li:hover,
+#facilityModal .modal-body ul li:active {
+    border-bottom-color: var(--point) !important;
+    border-bottom-width: 2px !important;
+}
+#facilityModal .modal-body ul li .name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-align: left;
+}
+#facilityModal .modal-body ul li .address {
+    font-size: 14px;
+    color: var(--darkGray);
+}
+#facilityModal .modal-body ul li .img-wrap {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+#facilityModal .modal-body ul li .img-wrap img {
+    width: 100%;
 }

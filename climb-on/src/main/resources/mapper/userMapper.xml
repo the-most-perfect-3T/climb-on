@@ -150,7 +150,7 @@
         )
     </insert>
 
-    <select id="findByIdIsApproval" parameterType="Integer" resultType="int">
+    <select id="findByIdIsApproval" parameterType="Integer" resultType="Integer">
         SELECT
             IS_APPROVAL
           FROM BUSINESS_APPLY
@@ -173,6 +173,35 @@
           FROM BUSINESS_NOTICE a
           JOIN BUSINESS_APPLY b
             ON a.USER_CODE = b.USER_CODE
-         WHERE b.IS_APPROVAL = 1;
+         WHERE b.IS_APPROVAL = 1
+           AND a.USER_CODE = #{id}
+    </select>
+
+    <delete id="deleteUserNotice" parameterType="int">
+        DELETE FROM USER_NOTICE
+              WHERE USER_CODE = #{userCode}
+    </delete>
+
+    <delete id="deleteBusinessNotice" parameterType="int">
+        DELETE FROM BUSINESS_NOTICE
+              WHERE USER_CODE = #{userCode}
+    </delete>
+    <delete id="deleteAdminNotice" parameterType="int">
+        DELETE FROM ADMIN_NOTICE
+        WHERE USER_CODE = #{userCode}
+    </delete>
+
+    <select id="selectUserNotice" parameterType="com.ohgiraffers.climbon.user.dto.NoticeDTO" resultMap="noticeMap">
+        SELECT
+            a.USER_CODE,
+            a.CATEGORY,
+            b.FACILITY_CODE,
+            b.ATTACH_FILE,
+            b.IS_APPROVAL
+        FROM USER_NOTICE a
+        JOIN BUSINESS_APPLY b
+        ON a.USER_CODE = b.USER_CODE
+        WHERE b.IS_APPROVAL = -1
+          AND a.USER_CODE = #{id}
     </select>
 </mapper>
