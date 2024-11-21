@@ -9,4 +9,6 @@ public interface FacilityFavoriteDAO {
     int addFavorite(Map<String, Integer> params);
 
     int getIsFavorite(int id, Integer userId);
+
+    int removeFavorite(Map<String, Integer> params);
 }

@@ -15,8 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -35,7 +37,11 @@ public class PostController {
         // 유효성 로직은 templates의 post.html에 있다.
 
         int pageSize = 15;
+
+        // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+
+
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -45,24 +51,17 @@ public class PostController {
             post.setUserNickname(userNickname);
         }
 
-
-//        // 현재 페이지 값 보정
-//        if (page < 1) page = 1;
-//        if (page > totalPages) page = totalPages;
-
-//        // page가 1 미만일 때 자동으로 1로 설정
-//        if (page < 1) {
-//            page = 1;
-//        }
-
         // '전체' 카테고리를 처리
         if ("전체".equals(category)) {
             category = null; // null로 설정하여 MyBatis에서 필터 무시
         }
 
-//        if (category == null){
-//            return "redirect:/community?category=전체&viewMode" + viewMode; //전체 카테고리로 바로 리다이렉트
-//        }
+        Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(
+                page, pageSize, category, searchKeyword, sort, dday, status);
+
+        model.addAttribute("pinnedNoticePosts", postsWithPinned.get("pinnedNoticePosts"));
+        model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
+        model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
         model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
@@ -73,11 +72,6 @@ public class PostController {
         model.addAttribute("dday", dday);    //뷰로 dday 값 전달
         model.addAttribute("viewMode", viewMode);
 
-//        for (PostDTO post: posts) {   //게시글에 DTO 값들이 잘 담기는지 확인
-//            System.out.println(post.getUserNickname());
-//            System.out.println(post.getUserId());
-//        }
-
         return "community/communityPost";  //template/community/post로 반환 (Spring MVC에서 뷰의 이름)
     }
 
@@ -87,7 +81,7 @@ public class PostController {
         Integer userId = postService.getUserIdByUserName(principal.getName()); // 현재 사용자 ID 가져오기
         PostDTO post = postService.getPostById(id, userId); // 좋아요 여부 포함
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
-
+        post.setUserNickname(postService.getUserNicknameById(userId));
         // postService의 메소드를 사용하여 이전,다음 게시글 정보 가져온다.
         PostDTO previousPost = postService.getPreviousPost(id); // 이전 게시글
         PostDTO nextPost = postService.getNextPost(id); // 다음 게시글
@@ -119,7 +113,7 @@ public class PostController {
 
     // 게시글 작성 처리
     @PostMapping("/new")
-    public String createpost(@ModelAttribute PostDTO post, @RequestParam("image") MultipartFile imageFile, Principal principal) throws IOException {
+    public String createpost(@ModelAttribute PostDTO post, @RequestParam("image") MultipartFile imageFile, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal) throws IOException {
         // principal.getName()이 이메일일 경우, 이를 기반으로 userId 조회
         String email = principal.getName(); //principal을 통해 로그인한 사용자 ID (로그인한 user_id가 이메일이라서 email변수를 씀) 가져오기  //principal : Spring security에서 현재 인증된 사용자의 정보를 담고 있는 객체, 이 객체를 사용하여 로그인한 사용자의 ID나 이름 같은 정보를 갖고 올 수 있다.
 
@@ -141,6 +135,7 @@ public class PostController {
         post.setUserId(userId);      //Principal 객체를 통해 현재 로그인한 사용자의 ID 또는 username을 쉽게 가져올 수 있다. ※대신에 principal.getName은 로그인한 이메일주소(유저아이디)만 가져올 수 있다! ,로그인한 사용자에게만 특정 데이터를 보여주거나, 해당 사용자가 작성한 게시글 등을 처리할 수 있다. (이 객체는 세션 내에서 관리되기 때문에, 사용자 정보를 안전하게 다룰 수 있다.)
         post.setUserNickname(userNickname);
         post.setStatus(true); // 게시글 상태 기본값 설정
+        post.setAnonymous(isAnonymous);
 //        System.out.println(userNickname); //닉네임 잘 담기는지확인 결과: 잘담긴다
 //        // '소식' 카테고리가 아닌 경우, 날짜 필드를 null로 설정  // 이거 안해주면 소식이 아닌 카테고리 게시글 등록할 때 eventstartdate 와 eventenddate 필드가 비어 있어서 이걸 Spring 이 sql.date로 변환하려다 오류남 null로 채워줘야함
 //        // 이제 이거 필요없다 initBinder가 해결한다!
@@ -166,7 +161,6 @@ public class PostController {
 //            imageFile.transferTo(file);
 //            post.setImageUrl("/" + uploadDir + fileName); // 이미지 URL 설정
 //        }
-
         postService.insertPost(post); // 새로운 게시글 DB에 추가
         return "redirect:/community"; // 작성 후 게시글 목록으로 리다이렉트
     }
@@ -187,8 +181,9 @@ public class PostController {
 
     // 게시글 수정 처리
     @PostMapping("/{id}/edit")
-    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, Principal principal){
+    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal){
         post.setId(id);
+        post.setAnonymous(isAnonymous);  // 수정 폼에도 따로 html에서의 isAnonymous값을 가져와야 하므로 여기서 set을 해준다! 다른 PostDTO들은 ModelAttribute로 받음
         postService.updatePost(post);
         return "redirect:/community/" + id;
     }
@@ -198,7 +193,7 @@ public class PostController {
     public String modifyPostForm(@PathVariable Integer id, Model model, Principal principal){
         Integer userId = postService.getUserIdByUserName(principal.getName());
         PostDTO post = postService.getPostById(id, userId);
-        model.addAttribute("post", post);
+        model.addAttribute("post", post); // 가져온 PostDTO 객체를 "post"라는 이름으로 뷰에 전달 (그래서 게시글페이지에서 PostDTO 들의 필드값들을 볼 수 있다.)
         return "community/communityPostForm"; // 수정용 폼으로 반환
     }
 
