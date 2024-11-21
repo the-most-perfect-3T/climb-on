@@ -1,0 +1,103 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/crew/crewList.css}">
+
+</th:block>
+
+
+<th:block layout:fragment="containerFragment">
+
+    <div class="inner">
+        <div class="container-forall">
+
+            <div class="register border-bottom">
+                <button type="button" class="btn btn-light btn-lg w-100 text-start d-flex align-items-center gap-3 btn-primary"data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    style="height: 100px;">
+                    <div class="rounded-circle text-white d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <span class="fs-4 fw-bold">크루 등록하기</span>
+                </button>
+            </div>
+
+            <div class="filter border-bottom py-3 d-flex align-items-center">
+                <div class="d-flex align-items-center justify-content-start">
+                    <span class="text-muted me-2">총</span>
+                    <span class="count-number fs-5 fw-bold" th:text="|'*{count}' 개|">101개</span>
+                </div>
+                <div class="d-flex gap-2 justify-content-end">
+                    <button type="button" class="btn btn-light d-flex align-items-center gap-1">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i>
+                        최신순
+                    </button>
+                    <button type="button" class="btn btn-light d-flex align-items-center gap-1">
+                        <i class="fa-solid fa-filter"></i>
+                        지역
+                    </button>
+                </div>
+                <div class="selected-filters">
+                    <!-- Dynamically add selected filters here -->
+                </div>
+            </div>
+
+            <div class="container-list">
+                <table>
+                    <tr class="d-none">
+                        <th>크루 이미지, 모집여부</th>
+                        <th>크루명, 활동지역</th>
+                        <th>크루 소개글</th>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td>크루 이미지</td>
+                        <td>크루명</td>
+                        <td rowspan="2">크루 소개글</td>
+                    </tr>
+                    <tr>
+                        <td>크루 모집여부</td>
+                        <td>활동 지역</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="container-list py-4">
+                <table class="table align-middle">
+                    <tr class="d-none">
+                        <th>크루 이미지, 모집여부</th>
+                        <th>크루명, 활동지역</th>
+                        <th>크루 소개글</th>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="d-flex align-items-center gap-3">
+                            <img src="crew-image.jpg" alt="Crew" class="rounded-circle" style="width: 60px; height: 60px;">
+                            <span class="badge bg-warning text-dark">모집중</span>
+                        </td>
+                        <td>
+                            <p class="mb-1 fw-bold">크루명</p>
+                            <small class="text-muted">활동 지역</small>
+                        </td>
+                        <td>크루소개글 ~ 우리 크루는 최고입니다!</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="text-center">
+                <button type="button" class="btn btn-orange px-5 py-2 fw-bold">더보기</button>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{crew/crewHome/crewRegisterModal :: modalFragment}"></th:block>
+
+
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script type="module"  th:src="@{/js/page/crew/crewList.js}"></script>
+
+</th:block>
+
+</html>

@@ -1,3 +1,4 @@
+/* 프로필탭에서 회원정보수정으로 이동 */
 const btnModify = document.querySelector(".section-mypage #btn-modify");
 const profileCont = document.querySelector(".section-mypage .profi le-cont");
 const modifyCont = document.querySelector(".section-mypage .modify-cont");
@@ -97,21 +98,42 @@ btnModifyProfile.addEventListener("click", function(e){
 profileFile.addEventListener('change', function () {
     if (this.files.length > 0) {
         btnDeleteProfile.removeAttribute("disabled");
+
+        const originalName = this.files[0].name;
+        const ext = originalName.substring(originalName.lastIndexOf(".")).slice(1);
+        const allowedType = ["jpeg", "jpg", "gif", "png"];
+
+        if(allowedType.includes(ext.toLowerCase())){
+            document.getElementById('profileForm').submit();
+        }else {
+            profileFile.value = "";
+            return alert("지원하지 않는 형식입니다. 다시 업로드해주세요.");
+        }
+
     } else {
         btnDeleteProfile.setAttribute("disabled", true);
     }
 
-    if (this.files.length > 0) {
-        document.getElementById('profileForm').submit();
+});
+
+
+// 회원정보수정 - 비즈니스계정전환 checkbox 클릭시 disabled 해제
+const inputDeleteAgree1 = document.getElementById("agreeCheck1");
+const btnApply = document.querySelector(".section-mypage #profile .modify-cont .btn-apply");
+inputDeleteAgree1.addEventListener("change", function(){
+    const is_checked = this.checked;
+    if(is_checked){
+        btnApply.removeAttribute("disabled");
+    }else {
+        btnApply.setAttribute("disabled", true);
     }
 });
 
 
-// 프로필수정-계정삭제 checkbox 클릭시 disabled 해제
+// 회원정보수정 - 계정삭제 checkbox 클릭시 disabled 해제
 const inputDeleteAgree = document.getElementById("agreeCheck");
 const btnWithdrawal = document.querySelector(".section-mypage #profile .modify-cont .btn-withdrawal");
 inputDeleteAgree.addEventListener("change", function(){
-   console.log(this);
    const is_checked = this.checked;
    if(is_checked){
        btnWithdrawal.removeAttribute("disabled");
@@ -119,3 +141,7 @@ inputDeleteAgree.addEventListener("change", function(){
         btnWithdrawal.setAttribute("disabled", true);
    }
 });
+
+
+
+

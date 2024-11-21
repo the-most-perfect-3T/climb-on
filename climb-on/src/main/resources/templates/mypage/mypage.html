@@ -24,24 +24,28 @@
                                 <span>내 프로필</span>
                             </button>
                         </li>
-                        <li role="presentation">
-                            <button id="review-tab"  data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">
-                                <i class="fas fa-comment-dots"></i>
-                                <span>리뷰 관리</span>
-                            </button>
-                        </li>
+                        <th:block sec:authorize="hasAnyAuthority('USER')">
+                            <li role="presentation">
+                                <button id="review-tab"  data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">
+                                    <i class="fas fa-comment-dots"></i>
+                                    <span>리뷰 관리</span>
+                                </button>
+                            </li>
+                        </th:block>
                         <li role="presentation">
                             <button id="board-tab" data-bs-toggle="tab" data-bs-target="#board" type="button" role="tab" aria-controls="board" aria-selected="false">
                                 <i class="fas fa-file-alt"></i>
                                 <span>게시판 관리</span>
                             </button>
                         </li>
-                        <li role="presentation">
-                            <button id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">
-                                <i class="fas fa-bookmark"></i>
-                                <span>즐겨찾기 관리</span>
-                            </button>
-                        </li>
+                        <th:block sec:authorize="hasAnyAuthority('USER')">
+                            <li role="presentation">
+                                <button id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span>즐겨찾기 관리</span>
+                                </button>
+                            </li>
+                        </th:block>
                     </ul>
 
                     <a href="/auth/logout" class="btn-logout">
@@ -51,20 +55,23 @@
                 </aside>
 
                 <div class="tab-content">
-                    <th:block th:replace="~{/mypage/profile-tab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/review-tab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/board-tab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/favorite-tab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/profileTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/reviewTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/boardTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/favoriteTab :: tabContFragment}"></th:block>
                 </div>
             </div>
         </div>
-        <th:block th:replace="~{/mypage/user-modal :: modalFragment}"></th:block>
+        <th:block th:replace="~{/mypage/modal/userModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{/mypage/modal/businessModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{/mypage/modal/noticeModal :: modalFragment}"></th:block>
     </th:block>
 
 
     <th:block layout:fragment="javascript">
         <script th:src="@{/js/page/auth.js}"></script>
         <script th:src="@{/js/page/mypage.js}"></script>
+        <script th:src="@{/js/page/userModal.js}"></script>
         <script th:inline="javascript">
             const message = [[${message}]];
             if(message){

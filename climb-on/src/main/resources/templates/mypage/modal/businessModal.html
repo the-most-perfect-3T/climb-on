@@ -1,0 +1,42 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <th:block th:fragment="modalFragment">
+        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="userApplyModalChoice" aria-labelledby="userApplyModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content shadow">
+                    <form action="/mypage/applyBusiness" method="post" id="fileAttach" enctype="multipart/form-data" onsubmit="return onSubmitHandlerApply(event)">
+                        <div class="modal-body">
+                            <h5 class="section-title text-center" id="userApplyModalLabel">비즈니스 계정 전환 신청</h5>
+
+                            <div class="input-wrap d-flex position-relative justify-content-between align-items-center" id="searchFacilities">
+                                <label for="facilityName">업체명</label>
+                                <input type="search" name="facilityName" id="facilityName" placeholder="업체명을 검색하세요" autocomplete="off" oninput="showSuggestions2()"/>
+                                <div class="suggestions"></div>
+                                <button class="btn-search position-absolute" type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+
+                            <div class="input-wrap d-flex justify-content-between align-items-center flex-wrap">
+                                <div>
+                                    <label for="businessFile">사업자등록증</label>
+                                    <small>※ 지원하는 이미지 파일 형식 : ( jpeg, jpg, gif, png )</small>
+                                </div>
+                                <input type="file" name="businessFile" id="businessFile"/>
+                                <button class="btn-fileupload border" type="button"><i class="fa-solid fa-plus"></i><span>파일첨부</span></button>
+                                <div class="attachFile align-items-center"><p class="fileName">파일이름.jpg(예시)</p><button type="button"><i class="fa-solid fa-xmark"></i></button></div>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer flex-nowrap p-0">
+                            <button type="button" class="btn col-6 py-3 m-0 " data-bs-dismiss="modal">취소</button>
+                            <button type="submit" class="btn col-6 py-3 m-0">신청</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</html>

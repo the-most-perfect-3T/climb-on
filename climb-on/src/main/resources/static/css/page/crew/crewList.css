@@ -1,0 +1,92 @@
+/* Button Colors */
+.btn-orange {
+    background-color: var(--point);
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn-orange:hover {
+    background-color: #e65c00;
+}
+
+/* Register Section Button */
+.register .btn {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.register .btn .rounded-circle {
+    background-color: var(--point);
+    font-size: 1.5rem;
+}
+
+.selected-filter {
+    background-color: #ffe6cc;
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.selected-filter .remove-filter {
+    cursor: pointer;
+    color: #ff9900;
+    font-weight: bold;
+}
+
+/* Crew List */
+.table td {
+    vertical-align: middle;
+}
+
+.table img {
+    border: 1px solid #ddd;
+    object-fit: cover;
+}
+
+.table .badge {
+    font-size: 0.9rem;
+}
+
+/* Filter Section */
+.filter button {
+    border: 1px solid #ddd;
+}
+
+.filter button:hover {
+    background-color: #f2f2f2;
+}
+
+/* Add padding around elements for mobile-friendly design */
+.container-forall {
+    margin-top: var(--headerHeight);
+}
+
+
+/* Category and Area Tag Buttons */
+#selectedCategories .btn,
+#selectedAreas .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+/* Modal Center Alignment */
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+.img-wrap {
+    width: 112px;
+    height: 112px;
+    border-radius: 100%;
+    overflow: hidden;
+    margin-right: 40px;
+    border: 1px solid var(--borderColor);
+    flex-shrink: 0;
+}

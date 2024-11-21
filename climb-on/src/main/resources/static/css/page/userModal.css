@@ -1,14 +1,29 @@
 @charset "utf-8";
 
-#userModalChoice .modal-dialog {
+/*마이페이지 모달 공통*/
+.modal-user .modal-dialog {
+    max-width: unset;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) !important;
 }
-#userModalChoice .modal-content {
+.modal-user .modal-content {
     overflow: hidden;
 }
-#userModalChoice .modal-body {
+.modal-user .modal-body {
     padding: 30px 30px 40px;
+}
+.modal-user .modal-footer button {
+    font-weight: 600;
+    border-radius: 0;
+}
+.modal-user .modal-footer button:first-of-type {
+    background: var(--borderColor);
+}
+
+/* 회원 탈퇴 모달 */
+#userModalChoice .modal-dialog{
+    width: 480px;
+
 }
 #userModalChoice .modal-body .logo {
     margin-bottom: 25px;
@@ -17,8 +32,6 @@
     width: 103px;
 }
 #userModalChoice .modal-body h5 {
-    font-weight: 700;
-    font-size: 24px;
     margin-bottom: 20px;
 }
 #userModalChoice .modal-body p {
@@ -32,14 +45,169 @@
     font-weight: 600;
     text-decoration: underline;
 }
-#userModalChoice .modal-footer button {
-    font-weight: 600;
-    border-radius: 0;
-}
-#userModalChoice .modal-footer button:first-of-type {
-    background: var(--borderColor);
-}
 #userModalChoice .modal-footer button:last-of-type {
     color: #fff;
     background: var(--bs-danger);
+}
+
+
+/* 비즈니스 계정 전환 신청 */
+#userApplyModalChoice .modal-dialog{
+    width: 528px;
+}
+#userApplyModalChoice .modal-body h5 {
+    margin-bottom: 30px;
+}
+#userApplyModalChoice .modal-body .input-wrap label {
+    margin-bottom: 0;
+}
+#userApplyModalChoice .modal-body .input-wrap input[type="search"]{
+    width: 370px;
+    outline: none;
+}
+#userApplyModalChoice .modal-body .input-wrap.active input[type="search"]{
+    border: none;
+    font-weight: 500;
+}
+#userApplyModalChoice .modal-body .input-wrap input[type="search" i]::-webkit-search-cancel-button {
+    cursor: pointer;
+    position: absolute;
+    right: 50px;
+}
+#userApplyModalChoice .modal-body .input-wrap.active input[type="search" i]::-webkit-search-cancel-button {
+    position: static;
+}
+#userApplyModalChoice .modal-body .input-wrap .suggestions {
+    display: none;
+    border: 1px solid var(--borderColor);
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    background: white;
+    z-index: 1056;
+    right: 0;
+    width: 370px;
+    top: 45px;
+}
+#userApplyModalChoice .modal-body .input-wrap .suggestions .suggestion-item {
+    padding: 0 12px;
+    height: 45px;
+    line-height: 45px;
+    cursor: pointer;
+}
+#userApplyModalChoice .modal-body .input-wrap .suggestions .suggestion-item:hover {
+    background: var(--beige);
+    cursor:pointer;
+    font-weight: 500;
+}
+#userApplyModalChoice .modal-body .input-wrap .suggestions .no-result {
+    text-align: center;
+    height: 45px;
+    line-height: 45px;
+}
+#userApplyModalChoice .modal-body .input-wrap .btn-search {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: var(--placeholder);
+}
+#userApplyModalChoice .modal-body .input-wrap:last-of-type {
+    margin-top: 30px;
+}
+
+#userApplyModalChoice .modal-body .input-wrap input[type="file"]{
+    display: none;
+}
+#userApplyModalChoice .modal-body .input-wrap .btn-fileupload {
+    border-radius: 6px;
+    height: 45px;
+    width: 120px;
+}
+#userApplyModalChoice .modal-body .input-wrap .btn-fileupload i {
+    font-size: 18px;
+    margin-right: 7px;
+}
+#userApplyModalChoice .modal-body .input-wrap .attachFile {
+    display: none;
+    flex-shrink: 0;
+    margin-top: 10px;
+}
+#userApplyModalChoice .modal-body .input-wrap .attachFile.active {
+    display: flex;
+}
+#userApplyModalChoice .modal-body .input-wrap .fileName {
+
+    font-weight: 600;
+    text-decoration: underline;
+}
+#userApplyModalChoice .modal-footer button:last-of-type {
+    color: #fff;
+    background: var(--point);
+}
+
+
+/* 알림 모달 */
+#noticeModal .modal-dialog {
+    width: 650px;
+}
+#noticeModal .modal-body {
+    padding: 0;
+}
+#noticeModal .modal-body .top {
+
+    padding: 15px 30px;
+}
+
+
+#noticeModal .modal-body .top button {
+    font-size: 24px;
+}
+#noticeModal .modal-body ul li {
+    padding: 25px 0 20px;
+    margin: 0 30px;
+    flex-wrap: wrap;
+}
+
+#noticeModal .modal-body ul li .left {
+    text-align: left;
+    width: 76%;
+}
+#noticeModal .modal-body ul li .left p {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+#noticeModal .modal-body ul li .left dl {
+    color: var(--darkGray);
+    font-size: 14px;
+}
+#noticeModal .modal-body ul li .left dl dt {
+    font-weight: 400;
+    flex-shrink: 0;
+
+}
+#noticeModal .modal-body ul li .left dl dd {
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+#noticeModal .modal-body ul li .left dl dd a {
+    font-weight: 600;
+    text-decoration: underline;
+    word-break: break-all;
+}
+#noticeModal .modal-body ul li .right {
+    flex-shrink: 0;
+    width: 22%;
+}
+#noticeModal .modal-body ul li .right button {
+    font-size: 14px;
+    padding: 5px 15px;
+    border-radius: 999px;
+}
+#noticeModal .modal-body ul li .right .btn-approval {
+    margin-right: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--point);
+    border-color: var(--point) !important;
 }

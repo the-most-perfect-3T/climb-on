@@ -2,8 +2,8 @@ package com.ohgiraffers.climbon.auth.Enum;
 
 public enum UserRole {
     USER("USER"),
-    ADMIN("ADMIN");
-    // 크루 추가해야함 (크루리더,크루원)
+    ADMIN("ADMIN"),
+    BUSINESS("BUSINESS");
 
     private String role;
 
