@@ -14,21 +14,22 @@
                                 <img th:src="${user.profilePic != null ? user.profilePic : ''}" alt="프로필 이미지" class="w-100">
                             </div>
                             <div class="info-wrap">
+                                <div th:if="${#authorization.expression('hasAnyAuthority(''ADMIN'', ''BUSINESS'')')}"
+                                     th:text="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? '관리자' : '비즈니스'}"
+                                     th:class="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? 'badge admin' : 'badge business'}">
+                                </div>
                                 <p class="nickname" th:text="${user.nickname != null ? user.nickname : ''}"></p>
-                                <th:block th:if="${user.oneLiner != null}">
-                                    <p class="one-liner" th:text="${user.oneLiner}"></p>
-                                </th:block>
-                                <th:block th:if="${user.oneLiner == null}">
-                                    <p class="one-liner">한 줄 소개를 입력해주세요.</p>
-                                </th:block>
+                                <p class="one-liner" sec:authorize="hasAnyAuthority('USER')" th:text="${user.oneLiner != null ? user.oneLiner : '한 줄 소개를 입력해주세요.'}"></p>
+                                <p class="facility-name" sec:authorize="hasAnyAuthority('BUSINESS')" th:text="${facilityName != null ? facilityName : ''}"></p>
                             </div>
                         </div>
 
                         <div class="btn-wrap d-flex align-items-center">
-                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#noticeModal">
+                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center" data-bs-toggle="modal"
+                                    th:attr="data-bs-target=${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? '#adminNoticeModal' : (#authorization.expression('hasAnyAuthority(''BUSINESS'')') ? '#businessNoticeModal' : '#userNoticeModal')}">
                                 <div class="position-relative">
                                     <i class="fa-solid fa-bell"></i>
-                                    <th:block th:if="${noticeCount != null}">
+                                    <th:block th:unless="${noticeMapList == null or #lists.isEmpty(noticeMapList)}">
                                         <span th:text="${noticeCount}" class="notice-count position-absolute">1</span>
                                     </th:block>
                                 </div>
@@ -46,35 +47,19 @@
 
                 <th:block sec:authorize="hasAnyAuthority('USER')">
                     <section class="section section01 border-bottom d-flex">
-                        <th:block th:if="${crewName != null}">
-                            <!--해당 크루 페이지로 이동 ! - 링크 추가 해야함 -->
-                            <a href="#" class="move-wrap">
-                                <div>
-                                    <span class="title">크루</span>
-                                    <span class="name" th:text="${crewName}"></span>
-                                </div>
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </a>
-                        </th:block>
-                        <th:block th:if="${crewName == null}">
-                            <a href="/crew/home" class="move-wrap">
-                                <div>
-                                    <span class="title">크루</span>
-                                    <span class="name">가입된 크루가 없습니다.</span>
-                                </div>
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </a>
-                        </th:block>
-                        <button type="button" class="move-wrap">
+                        <!--해당 크루 페이지로 이동 ! - 링크 바꿔야함 -->
+                        <a th:href="${crewName != null ? '#' : '/crew/home'}" class="move-wrap">
                             <div>
-                                <span class="title">홈짐</span>
-                                <th:block th:if="${homeName != null}">
-                                    <span class="name" th:text="${homeName}"></span>
-                                </th:block>
-                                <th:block th:if="${homeName == null}">
-                                    <span class="name">홈짐을 설정해주세요.</span>
-                                </th:block>
+                                <span class="title">크루</span>
+                                <span class="name" th:text="${crewName != null ? crewName : '가입된 크루가 없습니다.'}"></span>
                             </div>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                        <button type="button" class="move-wrap" data-bs-target="#facilityModal" data-bs-toggle="modal">
+                            <span>
+                                <span class="title">홈짐</span>
+                                <span class="name" th:text="${homeName != null ? homeName: '홈짐을 설정해주세요.'}"></span>
+                            </span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
                     </section>
@@ -113,7 +98,7 @@
                                     <input type="password" name="passwordCheck" id="passwordCheck" placeholder="비밀번호 확인" onkeyup="passwordCompareCheck(event)" required/>
                                     <p class="error-message"></p>
                                 </div>
-                                <div class="input-wrap">
+                                <div class="input-wrap" sec:authorize="hasAnyAuthority('USER')">
                                     <label for="oneLiner">소개</label>
                                     <textarea id="oneLiner" name="oneLiner" placeholder="소개 문구를 입력해 주세요 (최대 120자)" maxlength="120" th:text="${user.oneLiner != null ? user.oneLiner : ''}"></textarea>
                                 </div>
