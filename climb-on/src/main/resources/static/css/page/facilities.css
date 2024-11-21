@@ -158,9 +158,18 @@ div#facilityDetailsContainer {
     width: 300px;
     height: 100%;
     background-color: #fff;
+    overflow-y: auto;       /* 세로 스크롤을 자동으로 표시 */
+    border: 1px solid #ccc; /* 옵션: 스크롤을 보이기 위한 테두리 */
     z-index: 1;
     display: none; /* 처음에는 숨겨져 있습니다 */
     box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
+}
+div#facilityDetailsContainer::-webkit-scrollbar {
+    width: 0px; /* 스크롤바를 안 보이게 함 */
+    background: transparent; /* 배경을 투명으로 설정 */
+}
+div#facilityDetailsContainer::-webkit-scrollbar-thumb {
+    background: transparent; /* 스크롤바 자체도 투명하게 설정 */
 }
 
 .facility-details {

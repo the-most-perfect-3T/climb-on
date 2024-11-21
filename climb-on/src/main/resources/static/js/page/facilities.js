@@ -160,6 +160,14 @@ function loadKakaoMap(facilities) {
 
 
         });
+        kakao.maps.event.addListener(map, 'click', function () {
+
+            facilityDetailsContainer.style.display = 'none';
+
+
+
+
+        });
     });
 
 /*    // 초기 마커 설정
@@ -335,8 +343,8 @@ async function showFacilityDetails(facility) {
             .then(async data => {
                 if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
 
-                    detailsContainer.innerHTML += `<p>리뷰 : ${data.length}</p>
-                                                    <p>평점 : ${data[0].averageRating}</p>`;
+                    detailsContainer.innerHTML += `<p className="review-sum">리뷰 : ${data.length}</p>
+                                                    <p className="review-avg">평점 : ${data[0].averageRating}/5</p>`;
 
 //<p>평점 : ${data.averageRating}</p>
                     for (const Reviews of data) {
@@ -348,7 +356,7 @@ async function showFacilityDetails(facility) {
                         item.className = 'Review-item';
                         // Using innerHTML to insert the review comment
                         item.innerHTML = `
-                              
+                              <div class="review-detail">
                               <p>${Reviews.userNickname}</p>
                               <span>${timeText}</span>
                               <p>${Reviews.rating}</p>
@@ -357,6 +365,7 @@ async function showFacilityDetails(facility) {
                               <button className ="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
                                 ${isFavorite ?? false ? '싫어요누르면 삭제됨' : '좋아요'}
                                   </button>
+                                  </div>
                               `;
 
                         // facilityDetailsHTML.appendChild(item);
