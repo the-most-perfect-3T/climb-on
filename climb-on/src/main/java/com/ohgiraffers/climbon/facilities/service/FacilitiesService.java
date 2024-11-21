@@ -46,6 +46,7 @@ public class FacilitiesService {
         return facilitiesDAO.getFacility(facilityId);
     }
 
+
     public int addFavorite(Integer userId, Integer facilityId) {
         Map<String, Integer> params = new HashMap<>();
         params.put("userId", userId);
@@ -56,8 +57,14 @@ public class FacilitiesService {
         return result;
     }
 
-    public void removeFavorite(Integer key, Integer facilityId) {
+    public int removeFavorite(Integer userId, Integer facilityId) {
+        Map<String, Integer> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("facilityId", facilityId);
 
+        int result = facilityFavoriteDAO.removeFavorite(params);
+        System.out.println("result = " + result);
+        return result;
     }
 
     public int getIsFavorite(int id, Integer userId) {
@@ -68,4 +75,7 @@ public class FacilitiesService {
      public int getFacilityIdByName(String facilityName) {
         return facilitiesDAO.getFacilityIdByName(facilityName);
      }
+    public String getFacilityNameById(int id) {
+        return facilitiesDAO.getFacilityNameById(id);
+    }
 }
