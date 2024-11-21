@@ -93,6 +93,14 @@
     color: #343A40;
 }
 
+.crew-limit-access{
+    width: 870px;
+    height: 46px;
+    background-color: #FAEFDD;
+    padding: 12px 23px;
+    margin: 10px 0 10px 0;
+}
+
 /* 크루 활동 이벤트 */
 .crew-activity-event-item {
     display: flex;
@@ -158,4 +166,10 @@
 .crew-activity-event-item .participate-btn span{
     font-size: 14px;
     font-weight: bold;
+}
+
+/* 캘린더 간격 수정 */
+.tab-pane .calendar-section{
+    margin-top: 25px;
+    margin-bottom: 25px;
 }

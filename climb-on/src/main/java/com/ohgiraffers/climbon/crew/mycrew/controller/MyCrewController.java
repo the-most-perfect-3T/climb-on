@@ -1,7 +1,6 @@
 package com.ohgiraffers.climbon.crew.mycrew.controller;
 
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
-import com.ohgiraffers.climbon.crew.service.CrewBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
