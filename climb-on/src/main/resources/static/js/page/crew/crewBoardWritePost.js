@@ -67,7 +67,6 @@ document.getElementById('writePostForm').onsubmit = async function (event) {
         appendAlert("본문에 내용이 있어야 등록 가능합니다!", 'success');
         return false;
     } else{
-
         const contentHTML = quill.root.innerHTML;
         const parser = new DOMParser();
         const doc = parser.parseFromString(contentHTML, 'text/html');
@@ -98,12 +97,9 @@ document.getElementById('writePostForm').onsubmit = async function (event) {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 console.log('File uploaded successfully:', data);
-
                 hiddenImgUrlInput.value = data;
-
                 imgTags.forEach((img, index) => {
                     img.src = data[index];
                 });
