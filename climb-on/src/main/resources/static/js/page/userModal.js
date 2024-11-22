@@ -162,17 +162,20 @@ const inputSearch2 = facilityModal.querySelector("#facilityHomeName");
 inputSearch2.addEventListener("input", function(){
     const wrapName = facilityModal.querySelector("#searchHomeFacilities");
     showList(wrapName);
+
 });
 
 // 모달 열렸을 때 전체 리스트 보여지기
-facilityModal.addEventListener("show.bs.modal", addList);
+facilityModal.addEventListener("show.bs.modal", function(){
+    addList();
+    btnMore.style.display = "none";
+});
 
 function addList(){
 
-    console.log("addList 실행됨?");
 
-    // 전체목록 불러오는 api 작성필요
-    /*fetch("/facilities/select")
+    // 전체목록 불러오는 api
+    fetch("/facilities/selectList")
     .then(response => {
         if (!response.ok) {
             throw new Error('서버 오류: ' + response.status);
@@ -185,10 +188,8 @@ function addList(){
         if (data && data.length > 0) {
             data.forEach(facilities => {
 
-                data.forEach(item => {
-                    const listItem = createListItem(item);
-                    list.appendChild(listItem);
-                });
+                const listItem = createListItem(facilities);
+                list.appendChild(listItem);
 
             });
 
@@ -199,13 +200,13 @@ function addList(){
     })
     .catch(error => {
         console.error('AJAX 오류:', error);
-    });*/
+    });
 }
 
 // 모달 닫혔을 때 input value  없애기
 facilityModal.addEventListener("hidden.bs.modal", deleteInput);
+
 function deleteInput(){
-    console.log("delete 실행?");
     const wrapName = facilityModal.querySelector("#searchHomeFacilities");
     const input = wrapName.querySelector('input[type="search"]');
     input.value = "";
@@ -213,13 +214,15 @@ function deleteInput(){
     const noResultLi = list.querySelector("li.no-result");
     if(noResultLi){
         noResultLi.remove();
+    }else {
+        list.textContent = "";
     }
 }
+
 
 function showList(wrapName){
     const input = wrapName.querySelector('input[type="search"]');
     const inputValue = input.value;
-    /*const suggestionsDiv = wrapName.querySelector('.suggestions');*/
 
     const btnSearch = wrapName.querySelector(".btn-search");
     btnSearch.style.display = 'block';
@@ -263,29 +266,23 @@ function showList(wrapName){
                             const listItem = createListItem(allData[displayedItems + i]); // 보여진거 다음꺼부터 추가
                             list.appendChild(listItem);
                         }
+                        // 보여진 개수 업데이트
                         displayedItems += itemsToAdd;
 
-                        console.log("itemsToAdd" + itemsToAdd);
-                         // 보여진 개수 업데이트
-                        console.log("보여지는 항목2 : " + displayedItems);
-                        console.log("remainingItems : " + remainingItems);
-                        console.log(displayedItems, allData.length);
 
                         if(displayedItems >= allData.length){
                             this.style.display = "none";
                         }
 
-                        console.log(list.scrollHeight);
+                        // 스크롤 이동
                         list.scrollTop = list.scrollHeight;
-                    })
-/*                    list.style.display = 'block'; // 추천 결과 표시*/
+                    });
+                    
+                    // 리스트를 선택하도록
+                    selectHomeName();
+
                 } else {
-                    /*suggestionsDiv.style.display = 'none'; // 추천 결과 숨김*/
-                   /* const item = document.createElement('div');
-                    item.className = 'no-result';
-                    item.textContent = "검색 결과가 없습니다.";
-                    suggestionsDiv.appendChild(item);*/
-                    console.log('검색 결과가 없습니다.');
+
                     // '검색 결과 없습니다.' 보여주기
                     noResultListItem();
 
@@ -299,15 +296,20 @@ function showList(wrapName){
                 //list.style.display = 'none'; // 오류 발생 시 숨김
             });
     } else {
-        console.log("입력이 없음 !!");
 
-        // 전체 다시 불러오기 실행
+        const noResultLi = list.querySelector("li.no-result");
+        if(noResultLi){
+            noResultLi.remove();
+        }else {
+            list.textContent = "";
+            btnMore.style.display = "none";
+        }
+        addList();
 
-        /*list.textContent = '';*/
-        /*list.style.display = 'none'; // 입력이 없을 경우 숨김*/
     }
 }
 
+// 검색결과가 없습니다 생성함수
 function noResultListItem(){
     const listItem = document.createElement('li');
     listItem.classList.add("no-result");
@@ -346,3 +348,53 @@ function createListItem(data) {
     return li;
 }
 
+facilityModal.addEventListener("shown.bs.modal", function(){
+    selectHomeName();
+
+});
+
+function selectHomeName(){
+    const listItems = list.querySelectorAll("li:not(.no-result)");
+
+    listItems.forEach(function(el, i){
+
+        el.addEventListener("click", function handleClick(){
+            console.log("click 요청날림");
+            const p = el.querySelector(".name");
+
+            // 홈짐에 등록하는 요청 날리기
+            fetch("/user/registFacility", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({facilityName: p.textContent})
+
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('서버 오류: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+
+                    const homeName = document.getElementById("homeName");
+                    homeName.textContent = p.textContent;
+
+                    alert(data.message);
+
+                    const modalInstance = bootstrap.Modal.getInstance(facilityModal) || new bootstrap.Modal(facilityModal);
+                    modalInstance.hide();
+
+                })
+                .catch(error => {
+                    console.error('AJAX 오류:', error);
+                });
+            el.removeEventListener("click", handleClick);
+        }, {once : true});
+
+
+    });
+}
