@@ -49,4 +49,11 @@
         DELETE FROM calendar_events
         WHERE event_id = #{id};
     </delete>
+
+    <select id="getEventsByType" parameterType="String" resultMap="eventResult">
+        SELECT *
+        FROM calendar_events AS c
+        JOIN users AS u ON c.user_code = u.id
+        WHERE u.user_role = #{value};
+    </select>
 </mapper>

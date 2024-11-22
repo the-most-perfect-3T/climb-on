@@ -25,13 +25,20 @@
 
 /* 이벤트(리스트, 캘린더) */
 
+
+.main-content .main-event-title{
+    width: 1106px;
+    margin: 0 auto;
+    padding-bottom: 27px;
+}
+
 .main-content h4{
     color: #343A40;
     font-size: 24px;
     font-weight: 700;
 }
 
-.event-container{
+.main-event-container{
     display: flex;
     width: 1106px;
     height: 700px;
@@ -40,29 +47,34 @@
     margin: 0 auto;
 }
 
-.event-container .events-section{
+.main-event-container .main-events-section{
     margin: 10px;
     width: 25%;
     height: 100%;
 }
 
-.event-container .event-list {
+.main-event-container .main-event-list {
     background-color: #fff;
+    height: 700px;
     padding: 32px;
     border: 1px solid #ddd;
     border-radius: 8px;
 }
 
-.event-container .event-list h5{
+.main-event-container .main-event-list h5{
     color: #222222;
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
 }
 
-.event-container .calendar-section {
+.main-event-container .calendar-section {
     width: 769px;
-    height: 662px;
+    height: 100%;
+}
+
+.main-event-container .calendar-section #calendar{
+    height: 100%;
 }
 
 /* 오늘의 암장 */

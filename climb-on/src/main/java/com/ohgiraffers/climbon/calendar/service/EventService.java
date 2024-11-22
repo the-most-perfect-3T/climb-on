@@ -48,4 +48,10 @@ public class EventService
         System.out.println("+++ modifyEvent called +++");
         eventMapper.modifyEvent(event);
     }
+
+    public List<EventDTO> getEventsByType(String type)
+    {
+        System.out.println("getEventsByType called ");
+        return eventMapper.getEventsByType(type);
+    }
 }

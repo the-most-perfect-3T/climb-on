@@ -7,7 +7,6 @@ package com.ohgiraffers.climbon.calendar.controller;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
-import jdk.jfr.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,15 +22,37 @@ public class EventController
     @Autowired
     private EventService eventService;
 
+
     @GetMapping
+    public List<EventDTO> getEventsByType(@RequestParam("type") String type) {
+        return eventService.getEventsByType(type);
+    }
+
+    @GetMapping("/main")
     public List<EventDTO> getAllEvents(@AuthenticationPrincipal AuthDetail userDetails)
+    {
+        //admin은 유저코드 말고 유저롤을 매개변수로 받아서
+        return eventService.getAllEvents(userCode);
+    }
+
+    @GetMapping("/crew")
+    public List<EventDTO> getCrewEvents()
+    {
+        //크루 코드 어떻게 불러와
+        return eventService.getCrewEvents();
+    }
+
+    // 마이페이지 캘린더
+    @GetMapping("/mypage")
+    public List<EventDTO> getPrivateEvents(@AuthenticationPrincipal AuthDetail userDetails)
     {
         if(userDetails == null || userDetails.getLoginUserDTO() == null)
         {
-            // 로그인 하지 않은 유저들에게도 다 보여주는 정보
             System.out.println("No login user");
+            return null;
         }
-        userCode = userDetails.getLoginUserDTO().getId();
+
+        userCode = userDetails.getLoginUserDTO().getId(); // user mypage에서 보여줄 내용
         return eventService.getAllEvents(userCode);
     }
 
