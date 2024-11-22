@@ -11,6 +11,7 @@
 }
 .modal-user .modal-body {
     padding: 30px 30px 40px;
+    width: 100%;
 }
 .modal-user .modal-footer button {
     font-weight: 600;
