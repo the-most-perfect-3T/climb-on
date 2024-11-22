@@ -24,7 +24,7 @@
         <div class="info">
             <ul class="d-flex align-items-center">
                 <li><a th:href="@{/search}"><i class="fa-solid fa-magnifying-glass"></i></a></li>
-                <li><button type="button" onclick="darkMode()" id="btnToggle"><i class="fa-solid fa-circle-half-stroke"></i></button></li>
+                <li><button type="button"  id="btnToggle"><i class="fa-solid fa-circle-half-stroke"></i></button></li>
                 <li>
                     <!--로그인된 사용자에게만 보임 -->
                     <a th:href="@{/mypage/home}" sec:authorize="isAuthenticated()"><i class="fa-solid fa-user"></i></a>

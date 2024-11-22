@@ -126,7 +126,6 @@
     color: var(--darkGray);
     width: 180px;
     height: 45px;
-    border: 1px solid var(--borderColor);
     border-radius: 6px;
     transition: 0.3s;
     flex-shrink: 0;
