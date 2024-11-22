@@ -390,6 +390,16 @@
                     cardView.style.display = 'none';
                 }
             }
+
+            // 버튼 활성화 상태 설정 함수
+            function setActiveCategory(button){
+                // 모든 버튼의 active 클래스 제거
+                const buttons = document.querySelectorAll('.category-buttons button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+
+                // 클릭된 버튼에 active 클래스 추가
+                button.classList.add('active');
+            }
         </script>
     </th:block>
 
