@@ -2,7 +2,9 @@ package com.ohgiraffers.climbon.facilities.service;
 
 import com.ohgiraffers.climbon.facilities.dao.FacilitiesDAO;
 import com.ohgiraffers.climbon.facilities.dao.FacilityFavoriteDAO;
+import com.ohgiraffers.climbon.facilities.dao.FacilityImgDAO;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
+import com.ohgiraffers.climbon.facilities.dto.FacilityImgDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class FacilitiesService {
     private FacilitiesDAO facilitiesDAO;
     @Autowired
     private FacilityFavoriteDAO facilityFavoriteDAO;
+
+    @Autowired
+    private FacilityImgDAO facilityImgDAO;
 
     public List<FacilitiesDTO> facilitiesList() {
 
@@ -77,5 +82,11 @@ public class FacilitiesService {
      }
     public String getFacilityNameById(int id) {
         return facilitiesDAO.getFacilityNameById(id);
+    }
+
+    public List<FacilityImgDTO> getImageById(int facilityId) {
+
+        return facilityImgDAO.getImageById(facilityId);
+
     }
 }
