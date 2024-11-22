@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
+
 });
 
 
@@ -288,12 +289,13 @@ async function showFacilityDetails(facility) {
     }
   const isFavorite = await checkFavorite(facility.id);
 
-   // await loadImage(facility.id);
+
 
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
-            <div class="facility-banner-content" id="facilityImg" src="" alt="이미지가 없습니다"></div></br>
+            <img id="facilityImg" class="facility-banner-content" src=""/></br>
+            
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
@@ -315,6 +317,9 @@ async function showFacilityDetails(facility) {
 
         await loadReviews(facility.id);
     }
+
+
+    await loadImage(facility.id);
 
     currentfacility = facility;
     // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
@@ -343,14 +348,11 @@ function renderStars(averageRating) {
 
     function loadReviews(facilityId) {
 
-        fetch('/Review/Reviews', {
-            method: 'POST',
+        fetch(`/Review/Reviews?code=${facilityId}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                code: facilityId  // POST 요청 본문에 데이터를 포함
-            })
+            }
         })
             .then(response => {
                 if (!response.ok) {
@@ -633,10 +635,104 @@ async function loadImage(facilityId){
 
     });
 
-    const imagePath = await response.text();  // 서버에서 경로를 텍스트로 받음
+    const imagePath = await response.json();// 서버에서 경로를 텍스트로 받음
 
     // 이미지 경로를 사용해 이미지를 HTML에 표시
     const imgElement = document.getElementById('facilityImg');
-    imgElement.src = imagePath;
 
+if(Array.isArray(imagePath) && imagePath.length) {
+    console.log("imagePath" + imagePath[1].filePath);
+    imgElement.src = imagePath[1].filePath;
 }
+
+else
+    imgElement.src = "/images/default.jpg";
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const stars = document.querySelectorAll(".rating .star"); // 별 요소들
+    const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
+
+
+    let rating =0;
+    // 별 클릭 시 평점 설정
+    stars.forEach(star => {
+        star.addEventListener("click", function() {
+            rating = parseInt(this.getAttribute("data-value"));
+            updateStars(rating);
+        });
+
+        // 마우스 오버 시 동적 별 채우기
+        star.addEventListener("mouseover", function() {
+            const value = parseInt(this.getAttribute("data-value"));
+            updateStars(value);
+        });
+
+        // 마우스 아웃 시 현재 평점 상태 유지
+        star.addEventListener("mouseout", function() {
+            updateStars(rating);
+        });
+    });
+
+    // 닫기 버튼 클릭 시 별 초기화
+    resetBtn.addEventListener("click", function() {
+        resetStars();
+    });
+
+    // 별 초기화 함수
+    function resetStars() {
+        stars.forEach(star => {
+            star.querySelector("i").classList.remove("fa-star");
+            star.querySelector("i").classList.add("fa-star-o");
+            star.querySelector("i").style.color = "gray"; // 기본 회색으로 되돌리기
+        });
+        rating = 0; // 초기 평점으로 리셋
+    }
+
+    // 별 상태 업데이트 함수
+    function updateStars(rating) {
+        stars.forEach(star => {
+            const value = parseInt(star.getAttribute("data-value"));
+            if (value <= rating) {
+                star.querySelector("i").classList.remove("fa-star-o");
+                star.querySelector("i").classList.add("fa-star");
+                star.querySelector("i").style.color = "gold"; // 채워진 별은 금색으로
+            } else {
+                star.querySelector("i").classList.remove("fa-star");
+                star.querySelector("i").classList.add("fa-star-o");
+                star.querySelector("i").style.color = "gray"; // 빈 별은 회색
+            }
+        });
+    }
+
+    const reviewForm = document.getElementById("reviewinsertForm");
+
+
+
+    reviewForm.addEventListener("submit", function(event) {
+        // 평점이 선택되지 않았으면 경고
+        document.getElementById("ratingValue").value = rating;
+        if (ratingValue === 0) {
+            alert("평점을 선택해 주세요!");
+            event.preventDefault();  // 폼 제출을 막음
+            return;
+        }
+
+        // 리뷰 내용이 비어있으면 경고
+        const comment = document.getElementById("comment").value;
+        if (comment.trim() === "") {
+            alert("리뷰 내용을 작성해 주세요!");
+            event.preventDefault();  // 폼 제출을 막음
+            return;
+        }
+
+        // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
+        document.getElementById('facilityId').value =currentfacility.id;
+
+        // 폼 제출이 문제없이 진행됨
+        console.log("리뷰 데이터:", {
+            rating: rating,
+            comment: comment,
+            facilityId : currentfacility.id
+        });
+    });
+});
