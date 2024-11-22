@@ -2,6 +2,7 @@ package com.ohgiraffers.climbon.crew.crewHome.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewBoardService;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import java.util.Map;
 
 @Controller
@@ -38,6 +38,7 @@ public class CrewController {
 
     @PostMapping("/writepost")
     public String registPost(CrewBoardDTO crewBoardDTO, @AuthenticationPrincipal AuthDetail userDetails) {
+        System.out.println(userDetails);
         int id = userDetails.getLoginUserDTO().getId();
         Integer crew_code = crewBoardService.getCrewCode(id);
 
@@ -98,11 +99,24 @@ public class CrewController {
     @GetMapping("/checkCrewName")
     public ResponseEntity<String> checkCrewName(@RequestParam Map<String, Object> parameters){
         String crewName = (String)parameters.get("crewName");
-        System.out.println(crewName);
         if(crewService.isCrewNameExists(crewName)){
             return ResponseEntity.ok("중복된 크루 이름 입니다. \n다시 입력해주세요.");
         }
         return ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
+
+    @PostMapping("/registerCrew")
+    public ModelAndView registerCrew(CrewDTO crewDTO, ModelAndView mv) {
+        System.out.println(crewDTO.getPermissionToJoin());
+        System.out.println(crewDTO.getRecruitingStatus());
+        int result = crewService.registerCrew(crewDTO);
+        if(result == 0){
+            mv.addObject("message", "크루 등록중에 문제가 발생했습니다.");
+            mv.setViewName("/");
+        }else{
+            mv.setViewName("redirect:/crew/crewlist");
+        }
+        return mv;
     }
 
 
