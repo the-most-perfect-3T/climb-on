@@ -51,6 +51,11 @@ public class FacilitiesController {
         mv.setViewName("facilities/facilities");
         return mv;
     }
+    @GetMapping("/selectList")
+    public ResponseEntity<List<FacilitiesDTO>> categoryList() {
+        List<FacilitiesDTO> facilitiesList = facilitiesService.facilitiesList();
+        return ResponseEntity.ok(facilitiesList);
+    }
 
 
     //검색기능
