@@ -1,0 +1,164 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="crewRegisterModalFragment">
+    <div class="modal fade" id="creWRegisterModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="creWRegisterModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-width">
+            <div class="modal-content p-4">
+                <!-- Modal Header -->
+                <div class="modal-header border-0">
+                    <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <h1 class="w-100 text-center fw-bold mb-1">함께 성장하는 크루 커뮤니티</h1>
+                    <p class="w-100 text-center text-muted mb-4">cl'mon에서 함께할 크루를 만들어주세요!</p>
+
+                    <!-- 크루 이미지 Upload -->
+                    <form action="/crew/registerCrew" method="post" id="registerCrewForm" enctype="multipart/form-data">
+                        <div class="text-center mb-4">
+                            <div class="position-relative mx-auto" style="width: 120px; height: 120px;">
+                                <div class="img-wrap d-flex align-items-center">
+                                    <img src="/images/logo.svg" alt="프로필 이미지" class="w-100" id="crewPic">
+                                </div>
+                                <input type="file" name="crewPic" id="crewPicInput" style="display: none;"/>
+                                <button type="button" class="btn btn-light" id="imgInsert">
+                                    사진 수정
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <p class="fw-bold"><span class="text-danger">*</span> 는 필수 입력 사항입니다.</p>
+                        </div>
+
+                        <!-- 크루이름 Input -->
+                        <div class="mb-3">
+                            <label for="crewName" class="form-label fw-bold">
+                                <span class="text-danger">*</span>크루 이름
+                            </label>
+                            <div class="d-flex align-items-center gap-2">
+                                <input type="text" id="crewName" name="crewName" class="form-control" placeholder="크루명을 입력해주세요" required>
+                                <button type="button" class="btn" id="crewNameBtn">중복확인</button>
+                            </div>
+                                <p class="error-message" id="crewName-error"></p>
+                                <p class="success-message" id="crewName-success"></p>
+                        </div>
+
+                        <!-- 크루 소개글 Input -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">
+                                <span class="text-danger">*</span>크루 소개글
+                            </label>
+                            <textarea id="description" name="description" class="form-control" rows="3" placeholder="소개글을 입력해주세요 (최대 160자)" maxlength="160" required></textarea>
+                            <small class="form-text text-muted"> <small id="crewIntroCount"></small> /160</small>
+                        </div>
+
+                        <!-- 크루 인스타 Input -->
+                        <div class="mb-3">
+                            <label for="instagramProfile" class="form-label fw-bold">
+                                인스타그램 프로필 연동
+                                <p class="fw-light">크루 인스타가 있다면 입력해주세요</p>
+                            </label>
+                            <input type="text" id="instagramProfile" name="crewSns" class="form-control" placeholder="닉네임을 입력해주세요   ex) climon_2024">
+                        </div>
+
+                        <!-- 카테고리 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>클라이밍 카테고리
+                            </label>
+                            <div class="dropdown custom-dropdown" id="climbingDropdown">
+                                <div
+                                        class="dropdown-toggle form-control d-flex justify-content-between align-items-center"
+                                        id="dropdownTrigger"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                >
+                                    <span id="placeholder">활동 카테고리를 모두 선택해주세요.(다중 선택 가능)</span>
+                                    <div id="selectedCategories" class="mt-2 d-flex flex-wrap">
+                                        <!-- 선택된 가테고리가 들어올곳 -->
+                                    </div>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <ul class="dropdown-menu w-100" aria-labelledby="dropdownTrigger" id="categoryDropdown">
+                                    <li><a class="dropdown-item" data-value="볼더링">볼더링</a></li>
+                                    <li><a class="dropdown-item" data-value="리드">리드</a></li>
+                                    <li><a class="dropdown-item" data-value="자연암벽">자연암벽</a></li>
+                                </ul>
+                            </div>
+
+                            <input type="hidden" id="climbingCategory" name="climbingCategory">
+                        </div>
+
+                        <!-- 회원 모집 여부 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>회원 모집 여부
+                            </label>
+                            <div class="d-flex gap-3 radio-btn">
+                                <input type="radio" id="recruitingYes" name="recruitingStatus" class="btn-check" value="true" autocomplete="off" checked required>
+                                <label for="recruitingYes" class="btn btn-recruitTrue rounded-pill px-4">신규 회원 모집</label>
+                                <input type="radio" id="recruitingNo" name="recruitingStatus" class="btn-check" value="false" autocomplete="off">
+                                <label for="recruitingNo" class="btn btn-recruitFalse rounded-pill px-4">회원 모집 중지</label>
+                            </div>
+                        </div>
+
+                        <!-- 가입 방식 선택 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>가입방식 선택
+                            </label>
+                            <div class="d-flex gap-3 radio-btn">
+                                <input type="radio" id="permissionToJoinNo" name="isPermission" class="btn-check" value="false" autocomplete="off" checked required>
+                                <label for="permissionToJoinNo" class="btn btn-recruitTrue rounded-pill px-4">신청시 바로 가입</label>
+                                <input type="radio" id="permissionToJoinYes" name="isPermission" class="btn-check" value="true" autocomplete="off">
+                                <label for="permissionToJoinYes" class="btn btn-recruitFalse rounded-pill px-4">가입 승인시 가입</label>
+                            </div>
+                        </div>
+
+                        <!-- 활동지역 선택 -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <span class="text-danger">*</span>활동 지역
+                            </label>
+                            <div class="dropdown custom-dropdown" id="selectAreas">
+                                <div class="dropdown-toggle form-control d-flex justify-content-between align-items-center">
+                                    <span id="areaPlaceholder">활동 지역을 선택해주세요</span>
+                                    <div id="selectedAreasContainer" class="mt-2 d-flex flex-wrap">
+                                        <!-- 선택된 가테고리가 들어올곳 -->
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center">
+                                    <button type="button" class="btn btnArea text-start d-flex align-items-center gap-3" id="openAreaSelectModal">
+                                        <div class="btnDiv rounded-circle text-white d-flex">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </div>
+                                        <span class="fw-bold insertArea">추가하기</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" id="activeArea" name="activeArea">
+                        </div>
+
+                        <div class="modal-footer justify-content-center border-0">
+                            <button type="submit" class="btn btn-orange px-5 py-2" id="formSubmit">등록하기</button>
+                        </div>
+                        <button type="reset" id="resetBtn" style="display: none"></button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{crew/crewHome/areaSelectModal :: areaSelectModalFragment}"></th:block>
+
+</th:block>
+
+</html>

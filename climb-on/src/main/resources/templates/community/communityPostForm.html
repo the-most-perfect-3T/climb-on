@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}">
+
 <head>
   <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/page/communityPostForm.css}">
@@ -54,7 +55,10 @@
     <!-- 익명 여부 선택 -->
     <div class="form-group">
       <label for="isAnonymous">익명으로 작성</label>
-      <input type="checkbox" id="isAnonymous" name="isAnonymous">
+      <input type="hidden" id="isAnonymousHidden" name="isAnonymous" th:value="${post.isAnonymous ? 'true' : 'false'}"> <!-- 수정시에는 isAnonymous DTO 값을 초기화 시켜줘야함 -->
+      <input type="checkbox" id="isAnonymous" name="isAnonymous" value="true"
+             th:checked="${post.isAnonymous}"
+             onclick="document.getElementById('isAnonymousHidden').value = this.checked ? 'true' : 'false'">
     </div>
 
     <!-- 작성 버튼 -->

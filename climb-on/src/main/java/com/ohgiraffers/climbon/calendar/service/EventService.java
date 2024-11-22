@@ -15,12 +15,14 @@ public class EventService
     @Autowired
     private EventMapper eventMapper;
 
-    public List<EventDTO> getAllEvents()
+    public List<EventDTO> getAllEvents(int userCode)
     {
-        List<EventDTO> allEvents = eventMapper.getAllEvents();
-        //allEvents.addAll(eventMapper.getAllEventsFromCrew());
+        return eventMapper.getAllEvents(userCode);
+    }
 
-        return allEvents;
+    public List<EventDTO> getCrewEvents()
+    {
+        return eventMapper.getAllEventsFromCrew();
     }
 
     public void addEvent(EventDTO event)
@@ -28,9 +30,9 @@ public class EventService
         eventMapper.insertEvent(event);
     }
 
-    public boolean checkDuplicate(String title, String start, String end)
+    public boolean checkDuplicate(String title, String start, String end, int userCode)
     {
-        int result = eventMapper.checkDuplicate(title, start, end);
+        int result = eventMapper.checkDuplicate(title, start, end, userCode);
         System.out.println(result + " <= 이것은 result 값");
         return result > 0 ? true : false;
     }

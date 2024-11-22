@@ -53,12 +53,23 @@ function selectSuggestion(facilities) {
 }
 
 // DOM이 로드된 후에 이벤트 리스너를 등록
+
 document.addEventListener("DOMContentLoaded", function() {
     // 'searchForm'에 submit 이벤트 리스너 추가
     const searchForm = document.getElementById('searchForm');
     searchForm.addEventListener('submit', handleSubmit);
+    const favoriteButton = document.getElementById('favorite-btn-${facility.id}');
+    favoriteButton.addEventListener('click', function(event) {
+        // isFavorite 값을 서버나 초기 데이터에서 받아옵니다.
+        const isFavorite =
+            toggleFavorite(event, facility.id, isFavorite);
+    });
+
+
+
 
 });
+
 
 // 폼 제출 처리
 function handleSubmit(event) {
@@ -146,7 +157,15 @@ function loadKakaoMap(facilities) {
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
             showFacility(facility);
-            showFacilityDetails(facility);
+
+
+        });
+        kakao.maps.event.addListener(map, 'click', function () {
+
+            facilityDetailsContainer.style.display = 'none';
+
+
+
 
         });
     });
@@ -177,7 +196,7 @@ function showFacility(facility) {
 
     var moveLatLon = new kakao.maps.LatLng(facility.latitude,facility.longitude);
     map.panTo(moveLatLon);  // 지도 중심 이동
-    console.log("왜안돼썅")
+
     // 로컬 서버의 이미지를 마커로 설정
     var markerImage = new kakao.maps.MarkerImage(
         '/images/logo.svg', // 상대 경로로 로컬 이미지 지정
@@ -235,8 +254,6 @@ window.onload = function () {
 
 };
 
-
-
 //초기화 버튼
 function resetForm() {
     // 검색 입력 필드를 0으로 설정
@@ -249,27 +266,377 @@ function resetForm() {
     document.getElementById('searchForm').submit();
 }
 let currentfacility = null;
-function showFacilityDetails(facility){
+
+async function checkFavorite(id) {
+    let isFavorite = await getIsFavorite(id);
+    console.log(isFavorite)// 비동기 함수의 실행 결과를 기다림
+    return isFavorite;
+}
+async function reviewcheckFavorite(id) {
+    let isFavorite = await reviewgetIsFavorite(id);
+    console.log(isFavorite)// 비동기 함수의 실행 결과를 기다림
+    return isFavorite;
+}
+
+
+let reviewLoaded = true; //리뷰 상태저장
+const detailsContainer = document.getElementById('facilityDetailsContainer');
+async function showFacilityDetails(facility) {
     // facility 객체의 값을 조건에 맞게 출력
-    if(facility != null){
+    if (facility != null) {
         facilityDetailsContainer.style.display = 'block';
     }
+  const isFavorite = await checkFavorite(facility.id);
 
-    console.log("클릭두번되나요")
+   // await loadImage(facility.id);
 
+   // console.log(isFavorite)
     const facilityDetailsHTML = `
+ <div class="facility-details">
+            <div class="facility-banner-content" id="facilityImg" src="" alt="이미지가 없습니다"></div></br>
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
         <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
-        <p><strong>위도:</strong> ${facility.latitude ? facility.latitude : '정보 없음'}</p>
-        <p><strong>경도:</strong> ${facility.longitude ? facility.longitude : '정보 없음'}</p>
-        
+        <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
+        ${isFavorite ?? false ? '즐겨찾기 취소' : '즐겨찾기 추가'}
+          </button>
+        </div>
     `;
     // facilityDetailsContainer에 세부 정보를 삽입
-    const detailsContainer = document.getElementById('facilityDetailsContainer');
+
+
     detailsContainer.innerHTML = facilityDetailsHTML;
 
+
+    // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
+    if (reviewLoaded) {
+
+        await loadReviews(facility.id);
+    }
+
     currentfacility = facility;
+    // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
+    reviewLoaded = true;
+
+}
+
+function renderStars(averageRating) {
+    let starsHtml = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (averageRating >= i) {
+            starsHtml += '<span class="filled"><i class="fa fa-star" aria-hidden="true"></i></span>';
+        } else if (averageRating >= i - 0.5) {
+            starsHtml += '<span class="half-filled"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
+        } else {
+            starsHtml += ''; // 별을 표시하지 않음
+        }
+    }
+
+    return starsHtml;
+}
+
+
+
+
+    function loadReviews(facilityId) {
+
+        fetch('/Review/Reviews', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                code: facilityId  // POST 요청 본문에 데이터를 포함
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('서버 오류: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(async data => {
+                if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
+
+                    detailsContainer.innerHTML += `<p> <span class="review-sum">리뷰 : ${data.length}</span>
+                                                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span></p>
+                                                     <div id="stars-container"></div>
+                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                     작성
+                                                     </button>
+
+                                                     </br></br></br></br>      
+                                                    </div>
+                                                  `;
+
+
+
+                    document.getElementById('stars-container').innerHTML = renderStars(data[0].averageRating); //별그리기
+
+                    for (const Reviews of data) {
+                        const isFavorite = await reviewcheckFavorite(Reviews.id);
+                        console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
+                        const item = document.createElement('div');
+                        const reviewDate = new Date(Reviews.createdAt);
+                        const timeText = timeAgo(reviewDate);
+                        item.className = 'Review-item';
+                        // Using innerHTML to insert the review comment
+                        item.innerHTML = `
+                              <div class="review-detail">
+                              <p>${Reviews.userNickname}</p>
+                              <span>${timeText}</span>
+                                <div class="review-rating">
+                                    <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                                </div>
+                              <p>${Reviews.likeCount}</p>
+                              <p>${Reviews.comment || '댓글이 없습니다'}</p>
+                              <button className ="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
+                                ${isFavorite ?? false ? '싫어요누르면 삭제됨' : '좋아요'}
+                                  </button>
+                                  </div>
+                              `;
+
+
+
+                        detailsContainer.appendChild(item);
+
+                        const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
+                        starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
+
+
+                    }
+
+
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+}
+
+
+
+// 주어진 날짜(예: 리뷰 작성일)와 현재 시간의 차이를 계산하는 함수
+function timeAgo(date) {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    console.log(now)
+    console.log(date)
+    console.log(diffInSeconds)
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(diffInSeconds / 3600);
+    const days = Math.floor(diffInSeconds / (3600 * 24));
+    const months = Math.floor(diffInSeconds / (3600 * 24 * 30)); // 대략적으로 한 달을 30일로 계산
+    const years = Math.floor(diffInSeconds / (3600 * 24 * 365)); // 대략적으로 1년을 365일로 계산
+
+    if (years > 0) {
+        return `${years}년 전`;
+    } else if (months > 0) {
+        return `${months}개월 전`;
+    } else if (days > 0) {
+        return `${days}일 전`;
+    } else if (hours > 0) {
+        return `${hours}시간 전`;
+    } else if (minutes > 0) {
+        return `${minutes}분 전`;
+    } else {
+        return `방금 전`;
+    }
+}
+
+// 즐겨찾기 추가/삭제 함수
+function insertReview(id){
+
+}
+
+
+async function reviewtoggleFavorite(id,isFavorite) {
+    // 즐겨찾기 목록에서 해당 시설이 이미 존재하는지 확인
+
+    try {
+        const response = await reviewupdateFavoriteOnServer(id, !isFavorite); // 즐겨찾기 상태를 반전시켜서 서버에 보냄
+
+
+        if (response.ok) {
+            console.log('서버에 즐겨찾기 상태가 업데이트되었습니다.');
+            const updatedFavoriteStatus = await reviewcheckFavorite(id);
+            await reviewshowButton(id, updatedFavoriteStatus) // 반전된 값 반환
+
+        } else {
+
+            console.error('서버에 즐겨찾기 상태 업데이트 실패');
+        }
+    } catch (error) {
+        console.error('서버와의 통신 중 오류 발생:', error);
+    }
+
+
+}
+
+
+async function toggleFavorite(id,isFavorite) {
+    // 즐겨찾기 목록에서 해당 시설이 이미 존재하는지 확인
+
+    try {
+        const response = await updateFavoriteOnServer(id, !isFavorite); // 즐겨찾기 상태를 반전시켜서 서버에 보냄
+
+
+        if (response.ok) {
+            console.log('서버에 즐겨찾기 상태가 업데이트되었습니다.');
+            const updatedFavoriteStatus = await checkFavorite(id);
+            await showButton(id, updatedFavoriteStatus) // 반전된 값 반환
+
+        } else {
+
+            console.error('서버에 즐겨찾기 상태 업데이트 실패');
+        }
+    } catch (error) {
+        console.error('서버와의 통신 중 오류 발생:', error);
+    }
+
+
+}
+
+async function showButton(id, isFavorite ) {
+
+    const button = document.getElementById(`favorite-btn-${id}`);
+    if (button) {
+        button.innerHTML = isFavorite ? '즐겨찾기 취소' : '즐겨찾기 추가';
+
+        // 버튼의 클릭 이벤트 업데이트 (옵션)
+        button.setAttribute('onclick', `toggleFavorite(${id}, ${isFavorite})`);
+    }
+
+}
+
+async function reviewshowButton(id, isFavorite ) {
+
+    const button = document.getElementById(`reviewfavorite-btn-${id}`);
+    if (button) {
+        button.innerHTML = isFavorite ? '싫어요' : '좋아요';
+
+        // 버튼의 클릭 이벤트 업데이트 (옵션)
+        button.setAttribute('onclick', `reviewtoggleFavorite(${id}, ${isFavorite})`);
+    }
+
+}
+async function reviewupdateFavoriteOnServer(id, addFavorite) {
+    const url = '/Review/update-favorite';
+    const data = {
+        facilityId: id,
+        isFavorite: addFavorite,  // 즐겨찾기 추가 여부
+    };
+
+    const response = await fetch(url, {
+        method: 'POST',  // POST 메소드로 요청
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+        body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+    });
+
+    return response;
+}
+
+
+
+async function updateFavoriteOnServer(id, addFavorite) {
+    const url = '/facilities/update-favorite';
+    const data = {
+        facilityId: id,
+        isFavorite: addFavorite,  // 즐겨찾기 추가 여부
+    };
+
+    const response = await fetch(url, {
+        method: 'POST',  // POST 메소드로 요청
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+        body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+    });
+
+    return response;
+}
+async function reviewgetIsFavorite(id) {
+    try {
+        const response = await fetch(`/Review/getIsFavorite?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('서버 오류: ' + response.status);
+        }
+
+        const data = await response.json();
+        console.log(data);// JSON 데이터를 파싱
+        if (data !== null && data !== undefined) {
+            return data;  // 데이터를 반환
+        } else {
+            console.log("즐겨찾기 정보가 없습니다.");
+            return null;  // 데이터가 없으면 null 반환
+        }
+    } catch (error) {
+        console.error('오류 발생:', error);
+        return null;  // 오류 발생시 null 반환
+    }
+}
+
+
+
+
+
+async function getIsFavorite(id) {
+    try {
+        const response = await fetch(`/facilities/getIsFavorite?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('서버 오류: ' + response.status);
+        }
+
+        const data = await response.json();
+        console.log(data);// JSON 데이터를 파싱
+        if (data !== null && data !== undefined) {
+            return data;  // 데이터를 반환
+        } else {
+            console.log("즐겨찾기 정보가 없습니다.");
+            return null;  // 데이터가 없으면 null 반환
+        }
+    } catch (error) {
+        console.error('오류 발생:', error);
+        return null;  // 오류 발생시 null 반환
+    }
+}
+
+
+async function loadImage(facilityId){
+    const url = `/facilityImg/getImage?facilityId=${facilityId}`;
+
+
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+
+    });
+
+    const imagePath = await response.text();  // 서버에서 경로를 텍스트로 받음
+
+    // 이미지 경로를 사용해 이미지를 HTML에 표시
+    const imgElement = document.getElementById('facilityImg');
+    imgElement.src = imagePath;
+
 }

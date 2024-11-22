@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ohgiraffers.climbon.facilities.dao.FacilitiesDAO">
+
 <resultMap id="FacilityResultMap" type="com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO">
 
     <id property="id" column="id" />
@@ -13,6 +14,7 @@
     <result property="categoryId" column="category_id" />
     <result property="latitude" column="latitude" />
     <result property="longitude" column="longitude" />
+    <result property="isFavorite" column="isFavorite"/>
     <!-- 시설 타입 (enum일 경우 EnumTypeHandler 사용 필요) -->
     <result property="facilityType" column="facility_type"
             typeHandler="com.ohgiraffers.climbon.facilities.handler.FacilityTypeTypeHandler"/><!--이넘핸들러주소를써야함-->
@@ -48,5 +50,19 @@
         FROM FACILITIES
         WHERE id = #{ id }
     </select>
+    <select id="getFacilityIdByName" parameterType="string" resultType="int">
+        SELECT
+        id
+        FROM FACILITIES
+        WHERE facility_name = #{ facilityName }
+    </select>
+    <select id="getFacilityNameById" parameterType="int" resultType="string">
+        SELECT
+        facility_name
+        FROM FACILITIES
+        WHERE id = #{ id }
+    </select>
+
+
 
 </mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.facilities.dao.ReviewDAO">
+    <resultMap id="ReviewResultMap" type="com.ohgiraffers.climbon.facilities.dto.ReviewDTO">
+
+        <id property="id" column="id" />
+        <result property="FacilityId" column="FACILITY_ID" />
+        <result property="userId" column="USER_ID" />
+        <result property="rating" column="RATING" />
+        <result property="comment" column="COMMENT" />
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="userNickname" column="userNickname"/>
+        <result property="likeCount" column="likeCount"/>
+        <result property="averageRating" column="averageRating"/>
+    </resultMap>
+
+    <select id="getReview" resultMap="ReviewResultMap" >
+        SELECT
+        r.ID AS ID,
+        r.FACILITY_ID,
+        r.USER_ID ,
+        r.RATING ,
+        r.COMMENT ,
+        r.CREATED_AT ,
+        u.nickname AS userNickname,
+        avg_ratings.averageRating
+        FROM
+        REVIEWS r
+        JOIN
+        USERS u ON r.USER_ID = u.ID
+        LEFT JOIN
+        user_review urh ON r.ID = urh.review_code
+        LEFT JOIN (
+        SELECT
+        FACILITY_ID,
+        AVG(RATING) AS averageRating
+        FROM
+        REVIEWS
+        GROUP BY
+        FACILITY_ID
+        ) avg_ratings ON r.FACILITY_ID = avg_ratings.FACILITY_ID
+        WHERE
+        r.FACILITY_ID = #{id}
+        GROUP BY
+        r.ID, r.FACILITY_ID, r.USER_ID, r.RATING, r.COMMENT, r.CREATED_AT, u.nickname, avg_ratings.averageRating
+        ORDER BY
+        r.CREATED_AT DESC;
+    </select>
+    <select id="getIsFavorite" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM user_review
+        WHERE user_code = #{userId} AND review_code = #{id};
+    </select>
+
+
+    <insert id="addFavorite" parameterType="com.ohgiraffers.climbon.facilities.dto.FacilityFavoriteDTO">
+        INSERT INTO user_review (user_code, review_code)
+        VALUES (#{userId}, #{id});
+    </insert>
+    <delete id="removeFavorite" parameterType="com.ohgiraffers.climbon.facilities.dto.FacilityFavoriteDTO">
+        DELETE FROM user_review
+        WHERE user_code = #{userId} AND review_code = #{id};
+    </delete>
+</mapper>
