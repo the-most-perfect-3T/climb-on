@@ -85,6 +85,10 @@ public class PostController {
         post.setUserNickname(userNickname);
 
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
+        for (CommentDTO comment : comments) {
+            comment.setUserNickname(userNickname);
+        }
+
 //        post.setUserNickname(postService.getUserNicknameById(userId));
         // postService의 메소드를 사용하여 이전,다음 게시글 정보 가져온다.
         PostDTO previousPost = postService.getPreviousPost(id); // 이전 게시글

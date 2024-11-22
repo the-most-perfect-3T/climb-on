@@ -25,8 +25,9 @@
                                     <img src="/images/logo.svg" alt="프로필 이미지" class="w-100" id="crewPic">
                                 </div>
                                 <input type="file" name="crewPic" id="crewPicInput" style="display: none;"/>
+                                <input type="hidden" name="imgUrl" id="imgUrl"/>
                                 <button type="button" class="btn btn-light" id="imgInsert">
-                                    사진 수정
+                                    <span class="text-danger">*</span>사진 등록
                                 </button>
                             </div>
                         </div>
@@ -113,9 +114,9 @@
                                 <span class="text-danger">*</span>가입방식 선택
                             </label>
                             <div class="d-flex gap-3 radio-btn">
-                                <input type="radio" id="permissionToJoinNo" name="isPermission" class="btn-check" value="false" autocomplete="off" checked required>
+                                <input type="radio" id="permissionToJoinNo" name="permissionToJoin" class="btn-check" value="false" autocomplete="off" checked required>
                                 <label for="permissionToJoinNo" class="btn btn-recruitTrue rounded-pill px-4">신청시 바로 가입</label>
-                                <input type="radio" id="permissionToJoinYes" name="isPermission" class="btn-check" value="true" autocomplete="off">
+                                <input type="radio" id="permissionToJoinYes" name="permissionToJoin" class="btn-check" value="true" autocomplete="off">
                                 <label for="permissionToJoinYes" class="btn btn-recruitFalse rounded-pill px-4">가입 승인시 가입</label>
                             </div>
                         </div>
@@ -146,7 +147,7 @@
                         </div>
 
                         <div class="modal-footer justify-content-center border-0">
-                            <button type="submit" class="btn btn-orange px-5 py-2" id="formSubmit">등록하기</button>
+                            <button type="submit" class="btn btn-orange px-5 py-2">등록하기</button>
                         </div>
                         <button type="reset" id="resetBtn" style="display: none"></button>
 

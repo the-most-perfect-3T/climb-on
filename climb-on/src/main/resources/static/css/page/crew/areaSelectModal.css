@@ -31,3 +31,12 @@
 .btn-outline-secondary:hover{
     background-color: var(--point);
 }
+
+.btnSelectedArea {
+    background-color: var(--beige);
+    color: var(--black);
+    border: none;
+    margin: 0 0.5rem 0.5rem 0;
+    display: inline-flex;
+    align-items: center;
+}
