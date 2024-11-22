@@ -11,8 +11,12 @@
     <div class="inner">
     <!-- 이벤트 타임라인 --> <!--timeline 섹션에 링크 추가하여 D-Day 상태에 따라 소식 게시글을 필터링-->
 
+     <div class="head-container">
     <!-- 소식 제목 -->
     <h2 class="news-title">소식</h2>
+        <!-- 더보기 버튼-->
+    <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
+     </div>
 
     <section class="timeline-container">
 
@@ -40,8 +44,6 @@
             <a th:href="@{'/community?category=소식&dday=종료됨'}">지난일정</a>
         </div>
         </div>
-        <!-- 더보기 버튼-->
-        <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
     </section>
 
         <!-- 게시글 목록 -->
@@ -51,10 +53,10 @@
        <div class="header-container">
     <!-- 카테고리 버튼 -->
         <div class="category-buttons">
-        <button onclick="window.location.href='/community?category=전체&viewMode=' + viewMode">전체</button>
-        <button onclick="window.location.href='/community?category=공지&viewMode=' + viewMode">공지</button>
-        <button onclick="window.location.href='/community?category=가이드&viewMode=' + viewMode">가이드</button>
-        <button onclick="window.location.href='/community?category=소식&viewMode=' + viewMode">소식</button>
+        <button onclick="setActiveCategory(this, '전체'); window.location.href='/community?category=전체&viewMode=' + viewMode">전체</button>
+        <button onclick="setActiveCategory(this, '공지'); window.location.href='/community?category=공지&viewMode=' + viewMode">공지</button>
+        <button onclick="setActiveCategory(this, '가이드'); window.location.href='/community?category=가이드&viewMode=' + viewMode">가이드</button>
+        <button onclick="setActiveCategory(this, '소식'); window.location.href='/community?category=소식&viewMode=' + viewMode">소식</button>
         </div>
 
     <!-- 검색 입력 필드와 버튼 -->
@@ -221,13 +223,14 @@
                 </tr>
                 </tbody>
             </table>
-            <div th:each="post : ${posts}" class="card">
+            <div th:each="post : ${generalPosts}" class="card">
                 <div class="card-category" th:text="${post.category}">카테고리</div>
                 <div class="card-title">
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">게시글 제목 예시</span>
                     </a>
                 </div>
+                <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
                 <div class="card-meta">
                     <span th:text="${post.displayName}">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
@@ -235,7 +238,6 @@
                     <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
                     <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
                 </div>
-                <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
             </div>
         </div>
     </section>
@@ -301,21 +303,44 @@
             document.addEventListener('DOMContentLoaded', () => {
                 const urlParams = new URLSearchParams(window.location.search);
 
-                // LocalStorage에서 저장된 뷰모드 가져오기
+                // LocalStorage에서 저장된 뷰모드 가져오기 //URL에서 현재 카테고리를 추출
                 const storedViewMode = localStorage.getItem('viewMode');
                 const currentSort = urlParams.get('sort') || 'latest'; // 기본값은 'latest'로 설정
+                const currentCategory = urlParams.get('category') || '전체'; // 기본값은 '전체'
                 // const currentViewMode = urlParams.get('viewMode') ||'list'; // URL, 기본값 'list' 순으로 설정
                 viewMode = storedViewMode || urlParams.get('viewMode') || 'list'; // 저장된 값, URL, 기본값 순으로 설정
 
                 updateSortButtonText(currentSort);
                 setViewMode(viewMode); // 페이지 로드 시 현재 뷰 설정 (초기 뷰설정)
 
+                // 버튼 활성화 처리
+                const buttons = document.querySelectorAll('.category-buttons button');
+                buttons.forEach(button => {
+                    if (button.textContent.trim() === currentCategory) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active'); // 다른 버튼의 active 제거
+                    }
+                });
                 // if (!urlParams.get('category')){
                 //     urlParams.set('category', '전체');
                 //     window.location.search = urlParams.toString();
                 // }  // 바로 커뮤니티 눌렀을 때 http://localhost:8080/community?category=전체&viewMode=list 로 이동 // 했으나 뷰리스트 고정 안되는건 계속되므로 삭제
 
             });
+
+            function setActiveCategory(button, category){
+                const buttons = document.querySelectorAll('.category-buttons button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // URL에 카테고리 반영
+                const urlParams = new URLSearchParams(window.location.search);
+                urlParams.set('category', category);
+
+                // 현재 상태를 유지하며 페이지 리로드
+                window.location.search = urlParams.toString();
+            }
 
             // 정렬 버튼 텍스트를 업데이트하는 함수
             function updateSortButtonText(order) {
@@ -356,6 +381,7 @@
                 window.location.search = urlParams.toString();
             }
 
+
             // 뷰 전환 스크립트 // 뷰 모드를 설정하고 URL 파라미터에 반영하는 함수 (URL 갱신하여 고정)
 
             function setViewMode(mode) {
@@ -391,15 +417,6 @@
                 }
             }
 
-            // 버튼 활성화 상태 설정 함수
-            function setActiveCategory(button){
-                // 모든 버튼의 active 클래스 제거
-                const buttons = document.querySelectorAll('.category-buttons button');
-                buttons.forEach(btn => btn.classList.remove('active'));
-
-                // 클릭된 버튼에 active 클래스 추가
-                button.classList.add('active');
-            }
         </script>
     </th:block>
 
