@@ -245,27 +245,43 @@ public class UserService {
         return noticeDTOList;
     }
 
+    /** 유저 알림 확인 시 테이블에 해당 알림 삭제 */
     @Transactional
     public int deleteUserNotice(int userCode) {
 
         int result = userMapper.deleteUserNotice(userCode);
         return result;
     }
+    /** 비즈니스 알림 확인 시 테이블에 해당 알림 삭제 */
     @Transactional
     public int deleteBusinessNotice(int userCode) {
 
         int result = userMapper.deleteBusinessNotice(userCode);
         return result;
     }
+    /** 어드민 알림 확인 시 테이블에 해당 알림 삭제 */
     @Transactional
     public int deleteAdminNotice(int userCode) {
         int result = userMapper.deleteAdminNotice(userCode);
         return result;
     }
 
+    /** 해당 유저에 관련한 알림만 불러오기 */
     public List<NoticeDTO> selectUserNotice(Integer key) {
         List<NoticeDTO> noticeDTOList = userMapper.selectUserNotice(key);
 
         return noticeDTOList;
+    }
+
+    /** 유저테이블에 홈짐 등록 */
+    @Transactional
+    public int updateFacility(Integer key, int facilityId) {
+
+        UserDTO user = new UserDTO();
+        user.setId(key);
+        user.setFacilityCode(facilityId);
+
+        int result = userMapper.updateFacility(user);
+        return result;
     }
 }

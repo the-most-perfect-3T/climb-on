@@ -58,7 +58,7 @@
                         <button type="button" class="move-wrap" data-bs-target="#facilityModal" data-bs-toggle="modal">
                             <span>
                                 <span class="title">홈짐</span>
-                                <span class="name" th:text="${homeName != null ? homeName: '홈짐을 설정해주세요.'}"></span>
+                                <span id="homeName" class="name" th:text="${homeName != null ? homeName: '홈짐을 설정해주세요.'}"></span>
                             </span>
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
@@ -67,8 +67,8 @@
 
                 <section class="section section02">
                     <h2 class="section-title">일정 관리</h2>
-                    <div class="calender">
-
+                    <div class="calendar-wrap">
+                        <div id="calendar"></div>
                     </div>
                 </section>
             </div>

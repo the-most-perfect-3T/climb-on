@@ -6,6 +6,7 @@
 
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/common/inputCommon.css}">
+        <link rel="stylesheet" th:href="@{/css/page/calendar.css}">
         <link rel="stylesheet" th:href="@{/css/page/mypage.css}">
         <link rel="stylesheet" th:href="@{/css/page/userModal.css}">
     </th:block>
@@ -72,9 +73,17 @@
 
 
     <th:block layout:fragment="javascript">
+        <!--캘린더-->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script th:src="@{/js/plugin/index.global.js}"></script>
+        <script th:src="@{/js/page/calender.js}"></script>
+
+        <!--마이페이지-->
         <script th:src="@{/js/page/auth.js}"></script>
         <script th:src="@{/js/page/mypage.js}"></script>
         <script th:src="@{/js/page/userModal.js}"></script>
+
         <script th:inline="javascript">
             const message = [[${message}]];
             if(message){
