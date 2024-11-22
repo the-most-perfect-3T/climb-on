@@ -56,10 +56,10 @@ public interface PostDAO {
     @Delete("DELETE FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
     void removeLike(int postId, Integer userId);
 
-    @Insert("INSERT INTO user_post_heart (post_code, user_code) VALUES (#{postId}, #{userId})")
+    @Insert("INSERT INTO user_post_heart (post_code, user_code) VALUES (#{postId}, #{userId})")  // 매퍼대신 여기에 쿼리문 작성
     void addLike(int postId, Integer userId);
 
-    @Select("SELECT COUNT(*) > 0 FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
+    @Select("SELECT COUNT(*) > 0 FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}") //매퍼대신 여기에 쿼리문 작성
     boolean isPostLikedByUser(@Param("postId") Integer id, @Param("userId") Integer userId);
 
     void updateComment(CommentDTO comment);
@@ -68,4 +68,7 @@ public interface PostDAO {
 
     // 게시글과 댓글 연동 삭제를 위한 댓글 삭제 메소드 추가
     void deleteCommentsByPostId(Integer postId);
+
+    List<PostDTO> getFixedPostsByCategory(@Param("category") String category, @Param("limit") int limit);
+
 }

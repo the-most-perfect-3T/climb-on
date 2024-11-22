@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}">
+
 <head>
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/page/communityPostDetail.css}">
@@ -21,10 +22,9 @@
             </div>
             <div class="author-info">
                 <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
-                <span th:text="${post.userId}">작성자 ID</span>
-                <span class="author-name" th:text="${post.userNickname}">작성자 닉네임</span>
+                <span class="author-name" th:text="${post.displayName}">작성자 닉네임</span>
                 <span class="post-date" th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
-                <span class="views">조회수 <span th:text="${post.viewCount}">0</span></span>
+                <span class="views">조회수<span th:text="${post.viewCount}">0</span></span>
             </div>
         </div>
         <div class="post-actions" th:if="${post.userId == currentUserId}">  <!-- 수정 , 삭제 버튼을 현재 사용자가 작성자인 경우에만 표시하도록 조건 추가-->
@@ -45,7 +45,7 @@
 
     <!-- 좋아요 및 댓글 수 -->
     <div class="post-interactions">
-        <!-- 좋아요 버튼 -->                            <!-- data-post-id="${post.id}"  게시글 ID를 데이터 속성에 바인딩,  data-liked="${post.isLiked}" 서버에서 현재 사용자가 좋아요 했는지 여부 전달-->
+        <!-- 좋아요 버튼 -->                            <!-- data-post-id="${post.id}"  게시글 ID를 데이터 속성에 바인딩,  data-liked="${post.isLiked}" 서버에서 현재 사용자가 좋아요 했는지 여부 전달 -->
         <button class="heart-button"
                 th:attr="data-post-id=${post.id},
                 data-liked=${post.isLiked}"> <!-- isLiked 값을  data-liked 속성으로 전달하고, 좋아요 여부에 따라 하트 아이콘을 변경-->
