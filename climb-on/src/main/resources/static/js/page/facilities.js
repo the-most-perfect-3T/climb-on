@@ -288,11 +288,12 @@ async function showFacilityDetails(facility) {
     }
   const isFavorite = await checkFavorite(facility.id);
 
+   // await loadImage(facility.id);
 
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
-            <div class="facility-banner-content"></div></br>
+            <div class="facility-banner-content" id="facilityImg" src="" alt="이미지가 없습니다"></div></br>
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
@@ -619,3 +620,23 @@ async function getIsFavorite(id) {
 }
 
 
+async function loadImage(facilityId){
+    const url = `/facilityImg/getImage?facilityId=${facilityId}`;
+
+
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+
+    });
+
+    const imagePath = await response.text();  // 서버에서 경로를 텍스트로 받음
+
+    // 이미지 경로를 사용해 이미지를 HTML에 표시
+    const imgElement = document.getElementById('facilityImg');
+    imgElement.src = imagePath;
+
+}
