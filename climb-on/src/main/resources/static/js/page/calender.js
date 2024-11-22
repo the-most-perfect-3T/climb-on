@@ -82,13 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         headerToolbar: {
-            left: 'prev,next today,myCustomButton',
+            left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: 'myCustomButton' //dayGridMonth 있을 필요 없을 것 같아서
         },
         height: '700px', // calendar 높이 설정
         expandRows: true, // 화면에 맞게 높이 재설정
-        navLinks: true, // can click day/week names to navigate views
+        //navLinks: true, // can click day/week names to navigate views
         selectable: true,
         selectMirror: true,
         select: async function(arg) {
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: arg.backgroundColor
                 })
 
-                // Get all events from the calendar
+                // 캘린 더 내 모든 이벤트 저장
                 let allEvents = calendar.getEvents();
                 let eventsData = allEvents.map(event => ({
                     title: event.title,
@@ -110,10 +110,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: event.backgroundColor
                 }));
 
-                // 모든 이벤트 저장
+                /**
+                 * @todo 저장 로직 수정해야 할 것 같음 중복체크랑 같이 테스트 하면서 손봐야함
+                 */
                 try
                 {
-                    // Save all events to the database in a batch using the fetch API
                     const response = await fetch('/events/batch', {
                         method: 'POST',
                         headers: {

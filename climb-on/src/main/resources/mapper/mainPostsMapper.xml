@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.calendar.dao.MainMapper">
+    <resultMap id="mainResult" type="com.ohgiraffers.climbon.community.dto.PostDTO">
+        <id property="id" column="ID"/>
+        <result property="title" column="TITLE"/>
+        <result property="heartsCount" column="LIKES"/>
+        <result property="createdAt" column="CREATED_AT"/>
+    </resultMap>
+
+    <select id="getRecentPosts" resultMap="mainResult">
+        SELECT *
+        FROM community_posts
+        ORDER BY created_at DESC LIMIT 6;
+    </select>
+
+    <select id="getPopularPosts" resultMap="mainResult">
+        SELECT *
+        FROM community_posts
+        ORDER BY likes DESC LIMIT 10;
+    </select>
+
+    <select id="getCommentsCount" parameterType="int" resultType="Integer">
+        SELECT COUNT(*)
+        FROM community_comments
+        WHERE post_id = #{id};
+    </select>
+</mapper>
