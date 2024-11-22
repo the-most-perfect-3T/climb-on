@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let eventData;
     // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
     const offset = new Date().getTimezoneOffset() * 60000;
-
     // 메인 캘린더
     const mainCalendar = new FullCalendar.Calendar(calendarEl, {
 
@@ -614,5 +613,20 @@ document.addEventListener('DOMContentLoaded', function() {
         events: '/events?type=private'
     });
     privateCalendar.render();
+
+    // privateCalendar.refetchEvents()
+
+    let triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
+    triggerTabList.forEach(function (triggerEl) {
+        let tabTrigger = new bootstrap.Tab(triggerEl)
+        triggerEl.addEventListener('hidden.bs.tab', function (event) {
+
+            mainCalendar.updateSize();
+            crewCalendar.updateSize();
+
+        })
+    })
 });
+
+
 
