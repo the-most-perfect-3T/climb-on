@@ -25,18 +25,26 @@
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
     </div>
         <div class="inner">
+            <div class="role-test-convenient">
+
+            </div>
             <div class="main-content">
 
-                <h4>주목할만한 이벤트</h4>
-                <div class="event-container">
-                    <section class="events-section">
-                        <div class="event-list">
+                <div class="main-event-title">
+                    <h4>주목할만한 이벤트</h4>
+                </div>
+
+                <div class="main-event-container">
+                    <section class="main-events-section">
+                        <div class="main-event-list">
                             <h5>대회 안내</h5>
                             <ul>
                                 <!--추후 처리 post category에서 어떻게 나뉘는지 더 생각해보고 ...-->
                                 <li>2024 여기에 이벤트 뿌려줘야 함</li><hr/>
                                 <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
                                 <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
+                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
+                                <li>2024 스포츠 클라이밍 동호인 대회</li>
                             </ul>
                         </div>
                     </section>
@@ -105,51 +113,53 @@
 
         <!-- 부트스트랩 modal 부분 -->
         <!-- Modal -->
-        <div
-                class="modal fade"
-                id="exampleModal"
-                tabindex="-1"
-                aria-labelledby="exampleModalLabel"
-                aria-hidden="true"
-        >
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">일정 추가하기</h5>
-                        <button
-                                type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                        ></button>
-                    </div>
-                    <div class="modal-body">
-                        일정이름 : <input type="text" id="title" /><br />
-                        시작시간 : <input type="date" id="start" /><br />
-                        종료시간 : <input type="date" id="end"/><br />
-                        배경색상 :
-                        <select id="color">
-                            <option value="red">빨강색</option>
-                            <option value="orange">주황색</option>
-                            <option value="yellow">노랑색</option>
-                            <option value="green">초록색</option>
-                            <option value="blue">파랑색</option>
-                            <option value="indigo">남색</option>
-                            <option value="purple">보라색</option>
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-bs-dismiss="modal"
-                        >
-                            취소
-                        </button>
+        <div class="calendar-modal">
+            <div
+                    class="modal fade"
+                    id="exampleModal"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">일정 추가하기</h5>
+                            <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                            ></button>
+                        </div>
+                        <div class="modal-body">
+                            일정이름 : <input type="text" id="title" /><br />
+                            시작시간 : <input type="date" id="start" /><br />
+                            종료시간 : <input type="date" id="end"/><br />
+                            배경색상 :
+                            <select id="color">
+                                <option value="red">빨강색</option>
+                                <option value="orange">주황색</option>
+                                <option value="yellow">노랑색</option>
+                                <option value="green">초록색</option>
+                                <option value="blue">파랑색</option>
+                                <option value="indigo">남색</option>
+                                <option value="purple">보라색</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                    type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal"
+                            >
+                                취소
+                            </button>
 
-                        <button type="button" id="addButton" class="btn btn-primary" style="display: none;">Add</button>
-                        <button type="button" id="modifyButton" class="btn btn-success" style="display: none;">Modify</button>
-                        <button type="button" id="deleteButton" class="btn btn-danger" style="display: none;">Delete</button>
+                            <button type="button" id="addButton" class="btn btn-primary" style="display: none;">Add</button>
+                            <button type="button" id="modifyButton" class="btn btn-success" style="display: none;">Modify</button>
+                            <button type="button" id="deleteButton" class="btn btn-danger" style="display: none;">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>

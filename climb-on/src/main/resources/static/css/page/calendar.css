@@ -10,19 +10,19 @@
     --subColor2: #343A40;
 }
 
-.modal-header{
+.calendar-modal .modal-header{
     width: 100%;
 }
-.modal-content {
+.calendar-modal .modal-content {
     align-items: center;
     justify-content: center;
 }
 
-.btn-close{
+.calendar-modal .btn-close{
     float: right;
 }
 
-.modal-title {
+.calendar-modal .modal-title {
     font-size: 18px;
     font-weight: 700;
 }
