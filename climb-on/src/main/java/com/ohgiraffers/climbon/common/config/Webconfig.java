@@ -1,4 +1,4 @@
-package com.ohgiraffers.climbon.user.config;
+package com.ohgiraffers.climbon.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -9,10 +9,13 @@ public class Webconfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        String commonPath = "file:///C:/climbon/";
+
         registry.addResourceHandler("/img/profile/**")
-                .addResourceLocations("file:///C:/uploads/profile/");
+                .addResourceLocations(commonPath + "profile/");
 
         registry.addResourceHandler("/img/business/**")
-                .addResourceLocations("file:///C:/uploads/business/");
+                .addResourceLocations(commonPath + "business/");
     }
 }

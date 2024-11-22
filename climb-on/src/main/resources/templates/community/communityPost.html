@@ -3,21 +3,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}">
 
-<head>
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/page/communityPost.css}">
 </th:block>
-</head>
 
-<body>
-    <main class="content" layout:fragment="containerFragment">
-
-
+<th:block layout:fragment="containerFragment">
+    <div class="inner">
     <!-- 이벤트 타임라인 --> <!--timeline 섹션에 링크 추가하여 D-Day 상태에 따라 소식 게시글을 필터링-->
-    <section class="timeline-container">
 
-        <!-- 소식 제목 -->
-        <h2 class="timeline-title">소식</h2>
+    <!-- 소식 제목 -->
+    <h2 class="news-title">소식</h2>
+
+    <section class="timeline-container">
 
         <!-- 타임라인 -->
         <div class="timeline">
@@ -47,58 +44,64 @@
         <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
     </section>
 
-    <!-- 카테고리 버튼 및 검색 바 및 글쓰기 -->
-    <section class="category-buttons">
-<!--        <button onclick="navigateWithSort('/community/new')">글쓰기</button>  &lt;!&ndash; 글쓰기 버튼 경로 컨트롤러에서 지정한대로&ndash;&gt; &lt;!&ndash; 각 카테고리 버튼 클릭 시 현재 선택된 정렬 옵션을 URL에 포함해야 한다. 이를 위해, JavaScript에서 선택된 정렬 순서를 URL에 추가하고, 카테고리 변경 버튼을 누를 때도 해당 정렬 파라미터가 전달되도록 한다. &ndash;&gt; 이 함수 안쓰는게 나아서 다른걸 썼다.-->
+        <!-- 게시글 목록 -->
+   <section class="post-list">
+       <h2>커뮤니티 게시판</h2>
+        <!-- 카테고리 섹션 -->
+       <div class="header-container">
+    <!-- 카테고리 버튼 -->
+        <div class="category-buttons">
         <button onclick="window.location.href='/community?category=전체&viewMode=' + viewMode">전체</button>
         <button onclick="window.location.href='/community?category=공지&viewMode=' + viewMode">공지</button>
         <button onclick="window.location.href='/community?category=가이드&viewMode=' + viewMode">가이드</button>
         <button onclick="window.location.href='/community?category=소식&viewMode=' + viewMode">소식</button>
+        </div>
 
-        <!-- 검색 입력 필드와 버튼 -->
-        <form action="/community" method="get" style="display:inline;">
+    <!-- 검색 입력 필드와 버튼 -->
+    <div class="search-bar">
+        <form action="/community" method="get" style="display:flex; align-items: center;">
         <input type="hidden" name="category" th:value="${category}"/>     <!--category와 searchKeyword를 함께 서버로 전송하여, 해당 카테고리의 검색 결과를 표시할 수 있게 했다-->
         <input type="hidden" name="viewMode" th:value="${viewMode}"/> <!--뷰모드 유지-->
-            <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
-        <button type="submit">검색</button>
+        <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
+    </div>
 
-        <!-- 뷰 전환 버튼-->
-        <div class="view-buttons">
+        <!-- 뷰 전환 및 정렬 버튼-->
+    <div class="view-and-sort">
+            <div class="view-buttons">
             <button onclick="setViewMode('card')" id="cardViewButton">
                 <i class="fa-solid fa-bars-progress"></i>
             </button>
             <button onclick="setViewMode('list')" id="listViewButton">
                 <i class="fa-solid fa-list"></i>
             </button>
-        </div>
-
+            </div>
         <!-- 정렬 버튼과 드롭다운 -->
-        <div class="dropdown">   <!-- 기본값을 최신순으로 설정 -->
-            <button class="sort-button" id="sortButton"><i class="fa-regular fa-arrow-down-short-wide"></i>최신순</button>
-        <div class="dropdown-content">
-            <a href="#" onclick = "sortPosts('latest')">최신순</a>
-            <a href="#" onclick = "sortPosts('comments')">댓글순</a>
-            <a href="#" onclick = "sortPosts('views')">조회순</a>
-            <a href="#" onclick = "sortPosts('hearts')">좋아요순</a>
+        <div class="dropdown">
+            <button class="sort-button" id="sortButton"><i class="fa-solid fa-arrow-down-wide-short"></i>
+            <span class="sort-text">최신순</span>
+            </button>
+            <div class="dropdown-content">
+                <a href="#" onclick = "sortPosts('latest')">최신순</a>
+                <a href="#" onclick = "sortPosts('comments')">댓글순</a>
+                <a href="#" onclick = "sortPosts('views')">조회순</a>
+                <a href="#" onclick = "sortPosts('hearts')">좋아요순</a>
             <!-- 일반 버튼 정렬
             <button onclick="window.location.href='/community?sort=latest'" th:classappend="${sort == 'latest'} ? 'active' : ''">최신순</button>
             <button>댓글순</button>
             <button onclick="window.location.href='/community?sort=views'" th:classappend="${sort == 'views'} ? 'active' : ''">조회순</button>
             <button>좋아요순</button>-->
-            </div>
+             </div>
         </div>
+    </div>
 
         <!-- 글쓰기 버튼 -->
         <div class="create-button-container">
             <button class="create-button" onclick="window.location.href='/community/new'"><i class="fa-solid fa-pencil"></i>글쓰기
             </button>
         </div>
-
-    </section>
-
-    <!-- 게시글 목록 -->
-    <section class="post-list">
+       </div>
         <!-- 리스트 뷰 형식 -->
         <div class="list-view">
         <table style="width: 100%; border-collapse: collapse;">
@@ -228,9 +231,9 @@
                 <div class="card-meta">
                     <span th:text="${post.displayName}">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
-                    <span th:text="${post.viewCount}">0</span>
-                    <span th:text="${post.heartsCount}">0</span>
-                    <span th:text="${post.commentsCount}">0</span>
+                    <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
+                    <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
+                    <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
                 </div>
                 <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
             </div>
@@ -246,7 +249,7 @@
                         + '&category=' + ${#strings.defaultString(category, '전체')}
                         + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
-                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}">이전</a>
+                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"><i class="fa-solid fa-chevron-left"></i></a>
             </li>  <!--currentPage에 따라 이전 페이지링크가 표시--> <!-- 페이지네이션이 되도 링크 생성 할 때 현재 URL에 포함된 category, searchKeyword, sort 등의 파라미터를 함께 전달하여 커뮤니티게시판의 기존 기능 유지-->
             </li>
             <!-- 페이지 번호 링크 -->
@@ -268,11 +271,12 @@
                         + '&category=' + ${#strings.defaultString(category, '전체')}
                         + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
-                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}">다음</a> <!--currentPage에 따라 다음 페이지링크가 표시-->
+                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"><i class="fa-solid fa-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
             </li>
         </ul>
     </section>
-</main>
+    </div>
+</th:block>
 
     <!-- 뷰모드, 정렬 스크립트 -->
     <th:block layout:fragment="javascript">
@@ -315,7 +319,7 @@
 
             // 정렬 버튼 텍스트를 업데이트하는 함수
             function updateSortButtonText(order) {
-                const sortButton = document.getElementById('sortButton');
+                const sortButton = document.querySelector('#sortButton .sort-text');
                 switch (order) {
                     case 'latest':
                         sortButton.textContent = '최신순';
@@ -386,12 +390,17 @@
                     cardView.style.display = 'none';
                 }
             }
+
+            // 버튼 활성화 상태 설정 함수
+            function setActiveCategory(button){
+                // 모든 버튼의 active 클래스 제거
+                const buttons = document.querySelectorAll('.category-buttons button');
+                buttons.forEach(btn => btn.classList.remove('active'));
+
+                // 클릭된 버튼에 active 클래스 추가
+                button.classList.add('active');
+            }
         </script>
     </th:block>
 
-    <footer>
-        <p>&copy; 2024 CL'IMON All Rights Reserved.</p>
-    </footer>
-
-</body>
 </html>

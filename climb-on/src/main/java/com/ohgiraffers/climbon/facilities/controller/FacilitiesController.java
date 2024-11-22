@@ -51,6 +51,11 @@ public class FacilitiesController {
         mv.setViewName("facilities/facilities");
         return mv;
     }
+    @GetMapping("/selectList")
+    public ResponseEntity<List<FacilitiesDTO>> categoryList() {
+        List<FacilitiesDTO> facilitiesList = facilitiesService.facilitiesList();
+        return ResponseEntity.ok(facilitiesList);
+    }
 
 
     //검색기능
@@ -75,6 +80,7 @@ public class FacilitiesController {
 
 
     }
+
     //하나만 가져오기
     @GetMapping("facility/{id}")
     public ResponseEntity<FacilitiesDTO> getFacility(@PathVariable("id") int facilityId) { //이건 그냥 단순값

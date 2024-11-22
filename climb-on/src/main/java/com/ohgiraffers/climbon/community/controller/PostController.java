@@ -80,8 +80,12 @@ public class PostController {
     public String getPostById(@PathVariable("id") Integer id, Model model, Principal principal){// previousPost 와 nextPost 정보를 추가로 조회
         Integer userId = postService.getUserIdByUserName(principal.getName()); // 현재 사용자 ID 가져오기
         PostDTO post = postService.getPostById(id, userId); // 좋아요 여부 포함
+
+        String userNickname =  postService.getUserNicknameById(post.getUserId());
+        post.setUserNickname(userNickname);
+
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
-        post.setUserNickname(postService.getUserNicknameById(userId));
+//        post.setUserNickname(postService.getUserNicknameById(userId));
         // postService의 메소드를 사용하여 이전,다음 게시글 정보 가져온다.
         PostDTO previousPost = postService.getPreviousPost(id); // 이전 게시글
         PostDTO nextPost = postService.getNextPost(id); // 다음 게시글

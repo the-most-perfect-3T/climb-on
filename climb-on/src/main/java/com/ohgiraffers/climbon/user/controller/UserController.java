@@ -232,7 +232,7 @@ public class UserController {
         }
 
 
-        String filePath = "C:/uploads/profile";
+        String filePath = "C:/climbon/profile";
         File fileDir = new File(filePath);
 
         if(!fileDir.exists()){
@@ -386,7 +386,7 @@ public class UserController {
 
 
         // 첨부파일 저장
-        String filePath = "C:/uploads/business";
+        String filePath = "C:/climbon/business";
         File fileDir = new File(filePath);
 
         if(!fileDir.exists()){

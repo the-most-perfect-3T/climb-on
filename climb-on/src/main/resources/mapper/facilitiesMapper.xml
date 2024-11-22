@@ -15,7 +15,8 @@
     <result property="latitude" column="latitude" />
     <result property="longitude" column="longitude" />
     <result property="isFavorite" column="isFavorite"/>
-    <!-- 시설 타입 (enum일 경우 EnumTypeHandler 사용 필요) -->
+
+
     <result property="facilityType" column="facility_type"
             typeHandler="com.ohgiraffers.climbon.facilities.handler.FacilityTypeTypeHandler"/><!--이넘핸들러주소를써야함-->
 </resultMap>
@@ -61,6 +62,15 @@
         facility_name
         FROM FACILITIES
         WHERE id = #{ id }
+    </select>
+    <select id="getFacilitiesByUserFavorite" resultMap="FacilityResultMap">
+        SELECT
+        a.facility_name,
+        a.address
+        FROM facilities a
+        JOIN user_favorite b
+        ON a.id = b.favorite_code
+        where user_code = #{id};
     </select>
 
 </mapper>

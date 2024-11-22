@@ -86,6 +86,28 @@ const showSlides = (n) =>
     setTimeout(showSlides, 5500); // 5.5초마다 바뀜
 }
 
+// 유저 롤 변경
+function updateUserRole(newRole) {
+    fetch('/updateRole', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ role: newRole })
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log(newRole);
+                alert('현재 사용자의 권한을 성공적으로 변경했습니다.');
+            } else {
+                alert('Error updating role');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
 loadRecentPosts();
 loadPopularPosts();
 showSlides(slideIndex);

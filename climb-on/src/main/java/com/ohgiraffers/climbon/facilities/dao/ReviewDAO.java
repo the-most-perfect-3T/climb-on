@@ -15,4 +15,6 @@ public interface ReviewDAO {
     int addFavorite(Map<String, Integer> params);
 
     int removeFavorite(Map<String, Integer> params);
+
+    int reviewInsert(ReviewDTO reviewDTO);
 }

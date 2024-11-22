@@ -53,4 +53,6 @@ public interface UserMapper {
     int deleteAdminNotice(int userCode);
 
     List<NoticeDTO> selectUserNotice(Integer id);
+
+    int updateFacility(UserDTO user);
 }

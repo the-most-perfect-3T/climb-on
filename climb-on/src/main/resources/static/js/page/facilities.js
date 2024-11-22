@@ -68,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
+
 });
 
 
@@ -289,16 +290,17 @@ async function showFacilityDetails(facility) {
   const isFavorite = await checkFavorite(facility.id);
 
 
+
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
+            <img id="facilityImg" class="facility-banner-content" src=""/></br>
+            
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
         <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
-        <p><strong>위도:</strong> ${facility.latitude ? facility.latitude : '정보 없음'}</p>
-        <p><strong>경도:</strong> ${facility.longitude ? facility.longitude : '정보 없음'}</p>
         <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
         ${isFavorite ?? false ? '즐겨찾기 취소' : '즐겨찾기 추가'}
           </button>
@@ -316,23 +318,41 @@ async function showFacilityDetails(facility) {
         await loadReviews(facility.id);
     }
 
+
+    await loadImage(facility.id);
+
     currentfacility = facility;
     // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
     reviewLoaded = true;
 
 }
 
+function renderStars(averageRating) {
+    let starsHtml = '';
+
+    for (let i = 1; i <= 5; i++) {
+        if (averageRating >= i) {
+            starsHtml += '<span class="filled"><i class="fa fa-star" aria-hidden="true"></i></span>';
+        } else if (averageRating >= i - 0.5) {
+            starsHtml += '<span class="half-filled"><i class="fa fa-star-half-o" aria-hidden="true"></i></span>';
+        } else {
+            starsHtml += ''; // 별을 표시하지 않음
+        }
+    }
+
+    return starsHtml;
+}
+
+
+
 
     function loadReviews(facilityId) {
 
-        fetch('/Review/Reviews', {
-            method: 'POST',
+        fetch(`/Review/Reviews?code=${facilityId}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                code: facilityId  // POST 요청 본문에 데이터를 포함
-            })
+            }
         })
             .then(response => {
                 if (!response.ok) {
@@ -343,10 +363,21 @@ async function showFacilityDetails(facility) {
             .then(async data => {
                 if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
 
-                    detailsContainer.innerHTML += `<p className="review-sum">리뷰 : ${data.length}</p>
-                                                    <p className="review-avg">평점 : ${data[0].averageRating}/5</p>`;
+                    detailsContainer.innerHTML += `<p> <span class="review-sum">리뷰 : ${data.length}</span>
+                                                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span></p>
+                                                     <div id="stars-container"></div>
+                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                     작성
+                                                     </button>
 
-//<p>평점 : ${data.averageRating}</p>
+                                                     </br></br></br></br>      
+                                                    </div>
+                                                  `;
+
+
+
+                    document.getElementById('stars-container').innerHTML = renderStars(data[0].averageRating); //별그리기
+
                     for (const Reviews of data) {
                         const isFavorite = await reviewcheckFavorite(Reviews.id);
                         console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
@@ -359,7 +390,9 @@ async function showFacilityDetails(facility) {
                               <div class="review-detail">
                               <p>${Reviews.userNickname}</p>
                               <span>${timeText}</span>
-                              <p>${Reviews.rating}</p>
+                                <div class="review-rating">
+                                    <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                                </div>
                               <p>${Reviews.likeCount}</p>
                               <p>${Reviews.comment || '댓글이 없습니다'}</p>
                               <button className ="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
@@ -368,12 +401,17 @@ async function showFacilityDetails(facility) {
                                   </div>
                               `;
 
-                        // facilityDetailsHTML.appendChild(item);
-                        // const reviewContainer = document.getElementById('reviewContainer');
+
+
                         detailsContainer.appendChild(item);
-                        // reviewContainer.appendChild(item);
+
+                        const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
+                        starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
+
 
                     }
+
+
                 }
             })
             .catch(error => {
@@ -413,6 +451,10 @@ function timeAgo(date) {
 }
 
 // 즐겨찾기 추가/삭제 함수
+function insertReview(id){
+
+}
+
 
 async function reviewtoggleFavorite(id,isFavorite) {
     // 즐겨찾기 목록에서 해당 시설이 이미 존재하는지 확인
@@ -580,3 +622,117 @@ async function getIsFavorite(id) {
 }
 
 
+async function loadImage(facilityId){
+    const url = `/facilityImg/getImage?facilityId=${facilityId}`;
+
+
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+
+    });
+
+    const imagePath = await response.json();// 서버에서 경로를 텍스트로 받음
+
+    // 이미지 경로를 사용해 이미지를 HTML에 표시
+    const imgElement = document.getElementById('facilityImg');
+
+if(Array.isArray(imagePath) && imagePath.length) {
+    console.log("imagePath" + imagePath[1].filePath);
+    imgElement.src = imagePath[1].filePath;
+}
+
+else
+    imgElement.src = "/images/default.jpg";
+}
+document.addEventListener("DOMContentLoaded", function() {
+    const stars = document.querySelectorAll(".rating .star"); // 별 요소들
+    const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
+
+
+    let rating =0;
+    // 별 클릭 시 평점 설정
+    stars.forEach(star => {
+        star.addEventListener("click", function() {
+            rating = parseInt(this.getAttribute("data-value"));
+            updateStars(rating);
+        });
+
+        // 마우스 오버 시 동적 별 채우기
+        star.addEventListener("mouseover", function() {
+            const value = parseInt(this.getAttribute("data-value"));
+            updateStars(value);
+        });
+
+        // 마우스 아웃 시 현재 평점 상태 유지
+        star.addEventListener("mouseout", function() {
+            updateStars(rating);
+        });
+    });
+
+    // 닫기 버튼 클릭 시 별 초기화
+    resetBtn.addEventListener("click", function() {
+        resetStars();
+    });
+
+    // 별 초기화 함수
+    function resetStars() {
+        stars.forEach(star => {
+            star.querySelector("i").classList.remove("fa-star");
+            star.querySelector("i").classList.add("fa-star-o");
+            star.querySelector("i").style.color = "gray"; // 기본 회색으로 되돌리기
+        });
+        rating = 0; // 초기 평점으로 리셋
+    }
+
+    // 별 상태 업데이트 함수
+    function updateStars(rating) {
+        stars.forEach(star => {
+            const value = parseInt(star.getAttribute("data-value"));
+            if (value <= rating) {
+                star.querySelector("i").classList.remove("fa-star-o");
+                star.querySelector("i").classList.add("fa-star");
+                star.querySelector("i").style.color = "gold"; // 채워진 별은 금색으로
+            } else {
+                star.querySelector("i").classList.remove("fa-star");
+                star.querySelector("i").classList.add("fa-star-o");
+                star.querySelector("i").style.color = "gray"; // 빈 별은 회색
+            }
+        });
+    }
+
+    const reviewForm = document.getElementById("reviewinsertForm");
+
+
+
+    reviewForm.addEventListener("submit", function(event) {
+        // 평점이 선택되지 않았으면 경고
+        document.getElementById("ratingValue").value = rating;
+        if (ratingValue === 0) {
+            alert("평점을 선택해 주세요!");
+            event.preventDefault();  // 폼 제출을 막음
+            return;
+        }
+
+        // 리뷰 내용이 비어있으면 경고
+        const comment = document.getElementById("comment").value;
+        if (comment.trim() === "") {
+            alert("리뷰 내용을 작성해 주세요!");
+            event.preventDefault();  // 폼 제출을 막음
+            return;
+        }
+
+        // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
+        document.getElementById('facilityId').value =currentfacility.id;
+
+        // 폼 제출이 문제없이 진행됨
+        console.log("리뷰 데이터:", {
+            rating: rating,
+            comment: comment,
+            facilityId : currentfacility.id
+        });
+    });
+});
