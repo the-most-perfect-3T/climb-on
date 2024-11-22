@@ -24,4 +24,11 @@ public class CrewService {
         }
         return true;
     }
+
+    /**crew 등록
+     *
+    * */
+    public int registerCrew(CrewDTO crewDTO) {
+        return crewDAO.registerCrew(crewDTO);
+    }
 }
