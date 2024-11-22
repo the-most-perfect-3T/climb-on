@@ -5,6 +5,7 @@ import com.ohgiraffers.climbon.auth.model.dao.AuthMapper;
 import com.ohgiraffers.climbon.auth.model.dto.KakaoUserInfo;
 import com.ohgiraffers.climbon.auth.model.dto.LoginUserDTO;
 import com.ohgiraffers.climbon.auth.model.dto.OAuth2UserInfo;
+import com.ohgiraffers.climbon.auth.model.dto.SignupDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -58,6 +59,20 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
                 throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다. 회원가입 후 로그인해주세요.");
             }
 
+            // 프로필사진, 닉네임 db 에 저장
+            String profilePic = oAuth2UserInfo.getPictureUrl();
+            String nickname = oAuth2UserInfo.getName();
+            SignupDTO signupDTO = new SignupDTO();
+            signupDTO.setNickname(nickname);
+            signupDTO.setProfilePic(profilePic);
+            signupDTO.setId(dbUser.getId());
+            int result = authMapper.updateInfo(signupDTO);
+
+            if(result > 0){
+                System.out.println("등록 성공");
+            }
+
+
             return new AuthDetail(dbUser, oAuth2User.getAttributes(), provider, accessToken);
 
 
@@ -65,7 +80,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             throw new UsernameNotFoundException("회원정보가 존재하지 않습니다." + e.getMessage());
         } catch (Exception e) {
             throw new OAuth2AuthenticationException("토큰 처리 중 오류가 발생했습니다." + e.getMessage());
-        }
+        } 
 
     }
 }
