@@ -1,19 +1,19 @@
-// 시설 검색 - 비즈니스 전환신청 모달
-const inputSearch = document.getElementById("facilityName");
+/* 비즈니스 전환신청 모달 */
+// 시설 검색
+const userApplyModalChoice = document.getElementById("userApplyModalChoice");
+const inputSearch = userApplyModalChoice.querySelector("#facilityName");
 inputSearch.addEventListener("input", function(){
-    const wrapName = document.getElementById("searchFacilities");
-    showSuggestions2(wrapName);
+    const wrapName = userApplyModalChoice.querySelector("#searchFacilities");
+    showSuggestionsModal(wrapName);
 });
 
-function showSuggestions2(wrapName){
-    const inputSearch = wrapName.querySelector('input[type="search"]');
-    const inputValue = inputSearch.value;
+function showSuggestionsModal(wrapName){
+    const input = wrapName.querySelector('input[type="search"]');
+    const inputValue = input.value;
     const suggestionsDiv = wrapName.querySelector('.suggestions');
     const btnSearch = wrapName.querySelector(".btn-search");
     btnSearch.style.display = 'block';
     wrapName.classList.remove("active");
-
-    console.log(inputSearch, inputValue, suggestionsDiv, btnSearch);
 
     if (inputValue) {
         fetch(`/facilities/suggestions?code=${encodeURIComponent(inputValue)}`) // 패치요청 responseEntity 로 jason 받음
@@ -57,7 +57,7 @@ function showSuggestions2(wrapName){
 
 // 추천검색어 선택
 function selectSuggestion(facilities, wrapName) {
-    console.log(wrapName);
+
     const inputSearch = wrapName.querySelector('input[type="search"]');
     const btnSearch = wrapName.querySelector(".btn-search");
     const suggestionsDiv = wrapName.querySelector('.suggestions');
@@ -68,27 +68,20 @@ function selectSuggestion(facilities, wrapName) {
     suggestionsDiv.style.display = 'none';
 }
 
-
-const btnSearch = document.getElementById("btnSearch");
-
-// 엔터 누르면 검색버튼 클릭
-/*inputSearch.addEventListener("keyup", function(event){
-    if(event.key === 'Enter'){
-        btnSearch.click();
-    }
-});*/
+const btnSearch = userApplyModalChoice.querySelector("#btnSearch");
 
 btnSearch.addEventListener("click", function(){
-    const wrapName =  document.getElementById("searchFacilities");
+    const wrapName =  userApplyModalChoice.querySelector("#searchFacilities");
     onClickFirstResult(wrapName);
 });
 
 // 검색버튼 클릭 시 첫번째 검색결과 선택 / 입력한게 없으면 알럿창
 function onClickFirstResult(wrapName){
+
     const suggestionsDiv = wrapName.querySelector('.suggestions');
     const suggestionItem = suggestionsDiv.querySelectorAll(".suggestion-item");
     if(suggestionItem.length > 0){
-        selectSuggestion(suggestionItem[0].textContent);
+        selectSuggestion(suggestionItem[0].textContent, wrapName);
     }
 
     if(inputSearch.value === ""){
@@ -97,18 +90,16 @@ function onClickFirstResult(wrapName){
 }
 
 
-
-
 // 파일첨부 버튼 input file 대신 클릭
-const btnFileUpload = document.querySelector("#userApplyModalChoice .btn-fileupload");
-const businessFile = document.getElementById('businessFile');
+const btnFileUpload = userApplyModalChoice.querySelector("#userApplyModalChoice .btn-fileupload");
+const businessFile = userApplyModalChoice.querySelector('#businessFile');
 
 btnFileUpload.addEventListener("click", function(e){
     businessFile.click();
 });
 
 
-const attachFile = document.querySelector(".attachFile");
+const attachFile = userApplyModalChoice.querySelector(".attachFile");
 const btnDelete = attachFile.querySelector("button");
 
 // 사업자등록증 파일 선택 시
@@ -142,11 +133,12 @@ btnDelete.addEventListener("click", function(){
 
 
 
-// form 유효성 검증
+// 비즈니스 전환신청 - form 유효성 검증
 function onSubmitHandlerApply (event){
 
     event.preventDefault();
 
+    const wrapName = userApplyModalChoice.querySelector("#searchFacilities");
     if(wrapName.classList.contains("active") && attachFile.classList.contains("active")){
         // 시설명 입력 & 파일 선택
         console.log("다입력됐음", event.target);
@@ -157,6 +149,200 @@ function onSubmitHandlerApply (event){
     }else if(!attachFile.classList.contains("active")){
         alert("사업자등록증을 첨부해주세요.");
     }
-
-
 }
+
+
+
+/* 홈짐 모달 */
+const facilityModal = document.getElementById("facilityModal");
+const list = facilityModal.querySelector("ul");
+const btnMore = facilityModal.querySelector(".btn-more");
+
+const inputSearch2 = facilityModal.querySelector("#facilityHomeName");
+inputSearch2.addEventListener("input", function(){
+    const wrapName = facilityModal.querySelector("#searchHomeFacilities");
+    showList(wrapName);
+});
+
+// 모달 열렸을 때 전체 리스트 보여지기
+facilityModal.addEventListener("show.bs.modal", addList);
+
+function addList(){
+
+    console.log("addList 실행됨?");
+
+    // 전체목록 불러오는 api 작성필요
+    /*fetch("/facilities/select")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('서버 오류: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+
+        if (data && data.length > 0) {
+            data.forEach(facilities => {
+
+                data.forEach(item => {
+                    const listItem = createListItem(item);
+                    list.appendChild(listItem);
+                });
+
+            });
+
+        } else {
+            console.log('등록된 시설이 없습니다.');
+        }
+
+    })
+    .catch(error => {
+        console.error('AJAX 오류:', error);
+    });*/
+}
+
+// 모달 닫혔을 때 input value  없애기
+facilityModal.addEventListener("hidden.bs.modal", deleteInput);
+function deleteInput(){
+    console.log("delete 실행?");
+    const wrapName = facilityModal.querySelector("#searchHomeFacilities");
+    const input = wrapName.querySelector('input[type="search"]');
+    input.value = "";
+
+    const noResultLi = list.querySelector("li.no-result");
+    if(noResultLi){
+        noResultLi.remove();
+    }
+}
+
+function showList(wrapName){
+    const input = wrapName.querySelector('input[type="search"]');
+    const inputValue = input.value;
+    /*const suggestionsDiv = wrapName.querySelector('.suggestions');*/
+
+    const btnSearch = wrapName.querySelector(".btn-search");
+    btnSearch.style.display = 'block';
+    wrapName.classList.remove("active");
+
+    if (inputValue) {
+        fetch(`/facilities/suggestions?code=${encodeURIComponent(inputValue)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('서버 오류: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                list.textContent = '';
+
+                if (data && data.length > 0) {
+                    const allData = data;
+                    const defaultLength = 4;
+                    let displayedItems = 0;
+
+                    // 맨처음 4개만 출력
+                    for(let i = 0; i < defaultLength; i++){
+                        const listItem = createListItem(allData[i]);
+                        list.appendChild(listItem);
+                        displayedItems++; // 이미 추가한 항목
+                    }
+
+                    // 데이터가 4개 이상 시 &&  모두 표시되지 않았으면
+                    if (allData.length > defaultLength && displayedItems < allData.length) {
+                        btnMore.style.display = "block";
+                    }
+
+
+                    btnMore.addEventListener("click", function(){
+                        const remainingItems = allData.length - displayedItems; // 데이터 중 남은 개수
+                        const itemsToAdd = Math.min(defaultLength, remainingItems); // 추가할 개수 (기본 개수와 남은 개수 비교해서 작은걸로 추가)
+
+                        for(let i = 0; i < itemsToAdd; i++){
+                            const listItem = createListItem(allData[displayedItems + i]); // 보여진거 다음꺼부터 추가
+                            list.appendChild(listItem);
+                        }
+                        displayedItems += itemsToAdd;
+
+                        console.log("itemsToAdd" + itemsToAdd);
+                         // 보여진 개수 업데이트
+                        console.log("보여지는 항목2 : " + displayedItems);
+                        console.log("remainingItems : " + remainingItems);
+                        console.log(displayedItems, allData.length);
+
+                        if(displayedItems >= allData.length){
+                            this.style.display = "none";
+                        }
+
+                        console.log(list.scrollHeight);
+                        list.scrollTop = list.scrollHeight;
+                    })
+/*                    list.style.display = 'block'; // 추천 결과 표시*/
+                } else {
+                    /*suggestionsDiv.style.display = 'none'; // 추천 결과 숨김*/
+                   /* const item = document.createElement('div');
+                    item.className = 'no-result';
+                    item.textContent = "검색 결과가 없습니다.";
+                    suggestionsDiv.appendChild(item);*/
+                    console.log('검색 결과가 없습니다.');
+                    // '검색 결과 없습니다.' 보여주기
+                    noResultListItem();
+
+                    // 더보기 버튼 지우기
+                    btnMore.style.display = "none";
+                }
+
+            })
+            .catch(error => {
+                console.error('AJAX 오류:', error);
+                //list.style.display = 'none'; // 오류 발생 시 숨김
+            });
+    } else {
+        console.log("입력이 없음 !!");
+
+        // 전체 다시 불러오기 실행
+
+        /*list.textContent = '';*/
+        /*list.style.display = 'none'; // 입력이 없을 경우 숨김*/
+    }
+}
+
+function noResultListItem(){
+    const listItem = document.createElement('li');
+    listItem.classList.add("no-result");
+    listItem.textContent = "검색 결과가 없습니다.";
+    list.appendChild(listItem);
+}
+
+// 리스트 아이템 생성 함수
+function createListItem(data) {
+    const li = document.createElement('li');
+    li.classList.add('d-flex', 'align-items-center', 'justify-content-between', 'border-bottom');
+
+    const leftDiv = document.createElement('div');
+    leftDiv.classList.add('left');
+    const nameP = document.createElement('p');
+    nameP.classList.add('name');
+    nameP.textContent = data.facilityName;
+    const addressP = document.createElement('p');
+    addressP.classList.add('address');
+    addressP.textContent = data.address;
+    leftDiv.appendChild(nameP);
+    leftDiv.appendChild(addressP);
+
+    const rightDiv = document.createElement('div');
+    rightDiv.classList.add('right');
+    const imgWrap = document.createElement('div');
+    imgWrap.classList.add('img-wrap');
+    const img = document.createElement('img');
+    /*img.src = data.imgSrc;*/
+    imgWrap.appendChild(img);
+    rightDiv.appendChild(imgWrap);
+
+    li.appendChild(leftDiv);
+    li.appendChild(rightDiv);
+
+    return li;
+}
+

@@ -237,23 +237,23 @@
     font-size: 24px;
     padding: 0;
 }
-#facilityModal .modal-body #searchFacilities input {
+#facilityModal .modal-body #searchHomeFacilities input {
     width: 300px;
     height: 45px;
     border-radius: 999px;
     padding: 0 60px 0 20px;
 
 }
-#facilityModal .modal-body #searchFacilities input[type="search" i]::-webkit-search-cancel-button {
+#facilityModal .modal-body #searchHomeFacilities input[type="search" i]::-webkit-search-cancel-button {
     cursor: pointer;
 }
-#facilityModal .modal-body #searchFacilities .suggestions {
+#facilityModal .modal-body #searchHomeFacilities .suggestions {
     width: 300px;
     position: absolute;
     top: 45px;
     left: 0;
 }
-#facilityModal .modal-body #searchFacilities button {
+#facilityModal .modal-body #searchHomeFacilities button {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
@@ -261,9 +261,12 @@
 }
 #facilityModal .modal-body ul {
     padding: 0 20px;
+    max-height: 381px;
+    overflow-y: auto;
 }
 #facilityModal .modal-body ul li {
     padding: 15px 0;
+    cursor: pointer;
 }
 #facilityModal .modal-body ul li:hover,
 #facilityModal .modal-body ul li:active {
@@ -289,4 +292,15 @@
 }
 #facilityModal .modal-body ul li .img-wrap img {
     width: 100%;
+}
+#facilityModal .modal-body .btn-more {
+    display: none;
+    margin: 25px auto;
+    width: 120px;
+    height: 35px;
+    background: var(--point);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
 }
