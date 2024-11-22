@@ -1,24 +1,22 @@
-/* 기본적인 레이아웃과 스타일 */
-
-/* 컨테이너 */
-.container {
-    width: 100%; /* 전체 화면 너비에 맞춤 */
-    max-width: 1200px; /* 너무 넓어지지 않도록 최대 너비 제한 */
-    margin: 0 auto; /* 중앙 정렬 */
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* h2 스타일 */
+h2 {
+    font-weight: bold; /* 글가 굵기 설정*/
+    color: #333;
+    font-size: 20px;
 }
 
+.news-title {
+    margin-bottom : 20px;
+    margin-left : 15px;
+}
+
+/* 기본적인 레이아웃과 스타일 */
+
 /* 페이지 전체 스타일 */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
-    padding-top: 60px; /* 헤더 높이만큼 패딩 추가 */
+
+.content .inner{
+    padding-top: calc(var(--headerHeight) - 18px); /* 헤더 높이만큼 패딩 추가 */
     padding-bottom: var(--footerHeight); /* 푸터 높이만큼 패딩 추가 */
-    box-sizing: border-box;
 }
 
 /* 게시글 제목 옆 댓글 수 스타일 */
@@ -35,24 +33,13 @@ body {
 /* 타임라인 컨테이너 스타일 */
 .timeline-container {
     display: flex;
-    flex-direction: column; /* 세로 정렬 */
-    justify-content: center; /* 가운데 정렬 */
-    align-items: center;
     margin-bottom: 120px; /* 아래쪽 여백 */
-}
-
-/* 소식 제목 스타일 */
-.timeline-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 20px; /* 제목과 타임라인 사이 간격 */
-    color: #333; /* 제목 색상 */
 }
 
 /* 타임라인 */
 .timeline {
     display: flex; /* 버튼들을 가로로 배치 */
-    gap: 16px; /* 버튼 사이의 간격 */
+    gap: 70px; /* 버튼 사이의 간격 */
 }
 
 /* 타임라인 아이템 */
@@ -60,8 +47,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 80px; /* 버튼 크기 */
-    height: 80px;
+    width: 120px; /* 버튼 크기 */
+    height: 120px;
     background-color: #ddd; /* 배경색 */
     border-radius: 20px; /* 모서리를 둥글게 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
@@ -78,7 +65,7 @@ body {
 
 /* 호버 효과 */
 .timeline-item:hover {
-    background-color: #f5a623; /* 호버 시 배경색 변경 */
+    background-color: var(--point); /* 호버 시 배경색 변경 */
     transform: translateY(-5px); /* 살짝 위로 올라가는 효과 */
     cursor: pointer;
 }
@@ -99,149 +86,200 @@ body {
     background-color: #e1e1e1; /* 호버 시 배경색 */
 }
 
+/* 카테고리 및 정렬 섹션 */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 10px 0;
+    border-bottom: none;
+    width: 100%;
+    box-sizing: border-box; /* 테두리와 내부 여백 포함 */
+}
+
 .category-buttons {
     display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 10px;
-    margin: 20px 0;
 }
 
-.category-buttons button, .category-buttons input {
-    padding: 10px;
+.category-buttons button {
+    padding: 8px 12px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 0.9em;
+    border-radius: 20px;
+    background-color: #ffffff;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 뷰 전환 버튼 스타일 */
-.view-buttons {
+.category-buttons button.active {
+    background-color: var(--point);
+    color: white;
+    border-color: var(--point);
+}
+
+/* 검색창을 중앙 정렬 */
+.search-bar {
+    display: flex; /* 플렉스 박스를 활성화 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    margin: 0 auto; /* 부모 요소 기준 중앙 정렬 */
+    width: 100%; /* 전체 폭 설정 */
+    max-width: 500px; /* 필요하면 최대 폭 설정 */
+}
+
+.search-bar form {
     display: flex;
-    gap: 10px;
+    align-items: center; /* 세로 정렬 */
+    gap: 10px; /* 검색창과 버튼 사이 간격 */
 }
 
-.view-buttons button {
-    background-color: transparent;
+.search-bar input[type="text"] {
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    width: 250px;
+}
+
+.search-bar button {
+    background-color: var(--point);
     border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
     cursor: pointer;
 }
 
-.view-buttons img {
-    width: 24px;
-    height: 24px;
-    opacity: 0.6;
-    transition: opacity 0.2s;
+/* 뷰 전환 및 정렬 */
+.view-and-sort {
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
-.view-buttons button.active img {
-    opacity: 1;
-}
-
-/* 드롭다운 버튼 기본 스타일 */
-.sort-button {
-    display: inline-flex; /* 아이콘과 텍스트를 나란히 배치 */
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
-    padding: 10px 16px; /* 버튼 내부 여백 */
-    background-color: #f2f2f2; /* 배경색 */
-    border: 1px solid #ddd; /* 테두리 */
-    border-radius: 6px; /* 버튼 모서리 둥글게 */
-    font-size: 16px; /* 텍스트 크기 */
-    color: var(--point); /* 텍스트 색상 */
-    cursor: pointer; /* 클릭 가능한 마우스 포인터 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-}
-
-
-.sort-options {
+.view-buttons {
     display: flex;
     gap: 5px;
 }
 
-.sort-options button {
-    width: 20px;
-    height: 20px;
+.view-buttons button {
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* 아이콘을 네모 박스 안에 넣기 */
-.icon-box {
-    display: flex; /* 아이콘 박스 안의 내용 중앙 정렬 */
-    align-items: center; /* 세로 가운데 정렬 */
-    justify-content: center; /* 가로 가운데 정렬 */
-    width: 32px; /* 네모 박스 너비 */
-    height: 32px; /* 네모 박스 높이 */
-    background-color: #f2f2f2; /* 네모 박스 배경 */
-    border: 1px solid #ddd; /* 네모 박스 테두리 */
-    border-radius: 4px; /* 네모 박스 모서리 둥글게 */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    margin-right: 8px; /* 텍스트와의 간격 */
+.view-buttons button.active {
+    background-color: #FF7F00;
+    color: white;
+    border-color: #FF7F00;
 }
 
-.icon-box i {
-    font-size: 16px; /* 아이콘 크기 */
-    color: #333; /* 아이콘 색상 */
-    line-height: 1; /* 아이콘 세로 중앙 정렬 */
-}
-
-/* 드롭다운 메뉴 스타일 */
 .dropdown {
     position: relative;
-    display: inline-block;
 }
 
-.dropdown-content {
+.dropdown .sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.dropdown .dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
-    min-width: 100px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    top: 40px;
+    right: 0;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* 드롭다운 메뉴 위치 조정 */
-.dropdown-content {
-    right: 0;
+.dropdown-content a {
+    padding: 8px 12px;
+    display: block;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s ease;
 }
 
-/* 선택된 뷰 버튼 스타일 (예: 카드 뷰 선택 시 아이콘 강조) */
-#cardViewButton.active img,
-#listViewButton.active img {
-    opacity: 1;
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
 }
 
-/* 카드 뷰 스타일을 리스트 뷰와 유사하게 변경 */
-.card-container {
-    display: none; /* 기본적으로 카드 뷰는 숨김 */
-    flex-direction: column; /* 세로로 정렬 */
-    gap: 0; /* 카드 간격 제거 */
-    margin: 0 auto; /* 리스트 뷰와 일관성을 위해 가운데 정렬 */
-    width: 90%; /* 리스트 뷰와 동일한 폭 */
-}
-
-.card {
-    width: 100%; /* 리스트 뷰와 동일한 폭 */
-    padding: 15px; /* 리스트 뷰와 동일한 padding */
-    border-bottom: 1px solid #ddd; /* 리스트 뷰와 같은 스타일로 경계선 추가 */
-    border-radius: 0; /* 카드 모서리 반경 제거 */
-    box-shadow: none; /* 그림자 제거 */
+/* 글쓰기 버튼 */
+.create-button-container {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.create-button {
+    padding: 10px 15px;
+    background-color: #FF7F00;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 카드 뷰 컨테이너 */
+.card-container {
+    display: flex; /* 플렉스 레이아웃 */
+    flex-direction: column; /* 세로로 정렬 */
+    margin: 0 auto; /* 화면 중앙 정렬 */
+    width: 90%; /* CLI'MON의 C와 맞추기 위해 동일한 폭 설정 */
+    max-width: 1200px; /* 최대 폭 설정 */
+    padding: 0; /* 리스트 뷰와 동일하게 내부 여백 제거 */
+    box-sizing: border-box; /* 패딩 포함한 폭 계산 */
+}
+
+/* 카드 뷰 테이블 스타일 */
+.card-container table {
+    width: 100%; /* 리스트 뷰와 동일한 폭 */
+    border-collapse: collapse; /* 테두리 겹침 제거 */
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.card-container th,
+.card-container td {
+    padding: 12px; /* 리스트 뷰와 동일한 셀 간격 */
+    text-align: left; /* 리스트 뷰와 동일한 정렬 */
+    border-bottom: 1px solid #ddd; /* 셀 구분선 추가 */
+    width: 25%; /* 컬럼 너비를 리스트 뷰와 동일하게 설정 */
+}
+
+
+
+/* 카드 뷰 개별 카드 */
+.card {
+    width: 100%; /* 카드가 컨테이너에 맞도록 설정 */
+    padding: 15px; /* 리스트 뷰와 동일한 내부 여백 */
+    border-bottom: 1px solid #ddd; /* 카드 구분선 */
+    border-radius: 0; /* 모서리 반경 제거 */
+    box-shadow: none; /* 그림자 제거 */
 }
 
 .card-title a {
@@ -274,47 +312,6 @@ body {
     text-align: left;
 }
 
-
-/* 드롭다운 버튼 스타일 */
-.sort-button {
-    display: flex; /* 아이콘과 텍스트를 나란히 배치 */
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 8px; /* 아이콘과 텍스트 사이 간격 */
-    padding: 10px 16px; /* 버튼 내부 여백 */
-    background-color: #f2f2f2; /* 배경색 */
-    border: 1px solid #ddd; /* 테두리 */
-    border-radius: 6px; /* 모서리 둥글게 */
-    font-size: 14px; /* 텍스트 크기 */
-    cursor: pointer;
-}
-
-.sort-button i {
-    font-size: 16px; /* 아이콘 크기 */
-    color: #333; /* 아이콘 색상 */
-    line-height: 1;
-}
-
-/* 글쓰기 버튼 컨테이너 */
-.create-button-container {
-    display: flex;
-    justify-content: flex-end; /* 기본적으로 오른쪽 정렬 */
-    margin-left: 10px; /* 필요 시 여백 추가 */
-}
-
-/* 글쓰기 버튼 스타일 */
-.create-button {
-    padding: 10px 16px;
-    background-color: var(--point);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.2s;
-}
-
 .pinned-post {
     background-color: #f9f9f9; /* 연한 회색 배경 */
     border-left: 4px solid #ff9900; /* 왼쪽 테두리에 오렌지색 강조 */
@@ -327,7 +324,6 @@ body {
 
 .post-list {
     width: 100%;
-    margin: 0 auto;
     max-width: 90%;
 }
 
@@ -338,8 +334,13 @@ body {
 
 .post-list th, .post-list td {
     padding: 15px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #ddd; /* 기본 행 구분선 */
     text-align: left;
+}
+
+/* 게시글 테이블의 맨 위 구분선 */
+.post-list thead tr {
+    border-top: 2px solid #ddd; /* 맨 위 구분선 */
 }
 
 /* 페이지네이션 스타일 */

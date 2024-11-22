@@ -28,6 +28,7 @@
     line-height: var(--headerHeight);
     box-sizing: border-box;
 }
+
 .header .inner > div:first-child .gnb ul li a:hover {
     color: var(--point);
     font-weight: 600;
@@ -40,6 +41,7 @@
     opacity: 0;*/
     display: none;
 }
+
 .header .inner > div:first-child .gnb .depth1 > li .depth2::after {
     content: '';
     position: fixed;
@@ -57,6 +59,7 @@
 .header .inner > div:first-child .gnb .depth1 > li .depth2.active {
     display: flex;
 }
+
 .header .inner > div:first-child .gnb .depth1 > li .depth2.active::after {
     display: block;
 }
@@ -65,15 +68,16 @@
     font-size: 14px;
 }
 
-
 .header .inner .info ul li {
     margin-left: 14px;
 }
+
 .header .inner .info ul li a,
 .header .inner .info ul li button {
     color: var(--gray);
     font-size: 1.125rem;
 }
+
 .header .inner .info ul li a:hover,
 .header .inner .info ul li button:hover {
     color: var(--point);
