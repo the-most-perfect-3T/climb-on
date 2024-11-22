@@ -20,8 +20,10 @@ document.getElementById('openAreaSelectModal').addEventListener('click', functio
     document.getElementById('creWRegisterModal').style.zIndex = '';
 });
 
+const secondModalClose = document.getElementById('closeAreaSelectModal');
+
 // 지역선택 모달 닫아도 크루등록 모달 보여주기
-document.getElementById('closeAreaSelectModal').addEventListener('click', function () {
+secondModalClose.addEventListener('click', function () {
     secondModal.hide();
     document.getElementById('creWRegisterModal').style.zIndex = '1059';
 });
@@ -137,14 +139,70 @@ selectedCategoriesContainer.addEventListener("click", (event) => {
     }
 });
 
+// post 요청 보내기 전에 required 체크
+const formSubmit = document.getElementById('registerCrewForm');
+formSubmit.onsubmit = async (event) => {
+    event.preventDefault();
+    const crewPicInput = document.getElementById("crewPicInput");
 
+    // 모든 필수 입력사항 체크
+    if(crewPicInput.files.length === 0){
+        alert("크루 사진 등록은 필수 입니다.");
+        return false;
+    }
+    if(!successMessage.textContent.includes("사용 가능")){
+        alert("크루 이름 중복확인은 필수 입니다.");
+        return false;
+    }
+    if(selectedCategoriesContainer.children.length === 0){
+        alert("클라이밍 카테고리 선택은 필수 입니다.");
+        return false;
+    }
+    if(selectedAreasContainer.children.length === 0){
+        alert("활동 지역 선택은 필수 입니다.");
+        return false;
+    }
 
-/*
-const formSubmit = document.getElementById('formSubmit');
-formSubmit.addEventListener("submit")*/
-// success message 체크
-// hidden input 추가 후 submit
-//
+    // hidden input 에 추가
+    const children = Array.from(selectedCategoriesContainer.children);
+    const selectedCategories = [];
+    children.forEach((child) => {
+        selectedCategories.push(child.dataset.value);
+    });
+    document.getElementById("climbingCategory").value = selectedCategories;
+
+    const children2 = Array.from(selectedAreasContainer.children);
+    const selectedAreas = [];
+    children2.forEach((child) => {
+        selectedAreas.push(child.dataset.value);
+    });
+    document.getElementById("activeArea").value = selectedAreas;
+
+    const formData = new FormData();
+    formData.append('imageFile', crewPicInput.files[0]);
+
+    try{
+        const response = await fetch('/file/uploadCrewPic', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'text/plain'
+            }
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const img = await response.text();
+        document.getElementById("imgUrl").value = img;
+
+        formSubmit.submit();
+    }  catch(err) {
+        console.error('Upload failed:', err);
+        alert("크루 이미지 업로드 중 문제가 발생했습니다.2222", err);
+        return false;
+    }
+};
+
 
 // x 버튼(모든걸 reset)
 const closeBtn = document.getElementById('closeBtn');
@@ -152,6 +210,8 @@ closeBtn.addEventListener("click", function (event){
     event.preventDefault();
     const resetBtn = document.getElementById('resetBtn');
     resetBtn.click();
+    errorMessage.textContent = "";
+    successMessage.textContent = "";
     crewIntroCount.innerText = crewIntro.value.length;
 
     const img = document.getElementById('crewPic');
@@ -166,11 +226,16 @@ closeBtn.addEventListener("click", function (event){
         dropdownMenu.appendChild(newItem);
     });
     placeholder.style.display = "block";
+
+    const children2 = Array.from(selectedAreasContainer.children);
+    children2.forEach((child) => {
+       selectedAreasContainer.removeChild(child);
+    });
+    areaPlaceholder.style.display = "block";
 });
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 지역선택 모달~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-const areaSelectModal = document.getElementById('areaSelectModal');
 const selectedAreasContainer = document.getElementById('selectedAreasContainer');
 const areaPlaceholder = document.getElementById('areaPlaceholder');
 
@@ -178,46 +243,80 @@ document.querySelectorAll('#areaSelectModal .dropdown-menu').forEach(menu => {
     menu.addEventListener('click', function(event) {
         const item = event.target.closest(".dropdown-item");     // 클릭한게 dropdown-item 이 아니면 return !!정확한 동작을 위함
         if (!item) return;
-        const value = item.getAttribute('data-value');
 
-        // Create button for selected area
+        let value
+        // 지역 전체 선택시 와 일부 구역(시, 구) 선택 구분
+        if(item.parentNode.parentNode.firstElementChild === item.parentNode){
+            value = item.getAttribute('data-value');
+        }else {
+            value = item.parentNode.parentNode.getAttribute('data-value') + " - " + item.getAttribute('data-value');
+        }
+
+        // 선택된 활동 지역을 보여줄 버튼 생성
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = 'btn btn-warning btn-sm rounded-pill me-2';
+        button.className = 'btn btn-sm rounded-pill me-2 gap-2 d-flex align-items-center border-0 btnSelectedArea';
+        button.style.backgroundColor = 'var(--beige)';
+        button.style.color = 'var(--black)';
+        button.style.margin = '0 0.5rem 0.5rem 0';
         button.innerHTML = `${value} <i class="fa-solid fa-xmark ms-1"></i>`;
         button.dataset.value = value;
 
-        // Add close functionality to the button
+        // 버튼 삭제시(활동지역 비선택시) 일어나야할 이벤트
         button.querySelector('.fa-xmark').addEventListener('click', function(event) {
             event.stopPropagation();
             selectedAreasContainer.removeChild(button);
-            // Add back the dropdown item if removed
-            const newItem = document.createElement('li');
-            newItem.innerHTML = `<a class="dropdown-item" data-value="${value}">${value}</a>`;
-            newItem.addEventListener('click', function() {
-                // Call the same event handler logic
-            });
-            this.closest('.dropdown-menu').appendChild(newItem);
 
-            // Show placeholder if no categories selected
+            // 선택된 지역 없을시 다시 placeholder 보여줌
             if (selectedAreasContainer.children.length === 0) {
-                areaPlaceholder.style.display = '';
+                areaPlaceholder.style.display = "block";
             }
         });
 
-        // Add the button to the selected categories container
-        selectedAreasContainer.appendChild(button);
+        // 선택된 지역 버튼 보여줄 때
+        // 지역 전체 선택이면 if 기존 일부구역 버튼 있으면 delete 후 전체 버튼 append
+        // 동일 지역 선택시 append X
+        const children = Array.from(selectedAreasContainer.children);
 
-        // Remove selected option from dropdown
-        this.parentElement.removeChild(this);
+        // 전체 선택인데 구역 있을시
+        if(button.textContent.includes("전체")){
+            const area = button.textContent.trim().substring(0, button.textContent.length -4);
+            children.forEach((child) => {
+                if(child.textContent.includes(area)){
+                    selectedAreasContainer.removeChild(child)
+                }
+            })
+            selectedAreasContainer.appendChild(button);
+            secondModalClose.click();
+            // 구역 선택인데 전체 있을시, 이미 선택한 구역일시, 나머지
+        }else {
+            const area2 = button.textContent.trim().substring(0, button.textContent.indexOf("-")).trim();
+            let isButtonPresent = false;
+            for(let i =0; i<children.length; i++){
+                const child = children[i];
+                if(child.textContent.includes(area2) && child.textContent.includes("전체")){
+                    selectedAreasContainer.removeChild(child);
+                    selectedAreasContainer.appendChild(button);
+                    secondModalClose.click();
+                    return false;
+                }
+                if(child.textContent === button.textContent){
+                    isButtonPresent = true;
+                    secondModalClose.click();
+                    return false;
+                }
+            }
+            if(!isButtonPresent){
+                selectedAreasContainer.appendChild(button);
+            }
+            secondModalClose.click();
+        }
 
-        // Hide placeholder if there's at least one category selected
+        // 선택된 지역 하나라도 있으면 플레이스 홀더 X
         if (selectedAreasContainer.children.length > 0) {
             areaPlaceholder.style.display = 'none';
         }
 
-        // Close modal after selection
-        $(areaSelectModal).modal('hide');
     });
 });
 

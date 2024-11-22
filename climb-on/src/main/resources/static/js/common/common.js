@@ -31,27 +31,22 @@ depth1.forEach(function(el) {
 
 
 // 다크모드
-function darkMode(){
-
+function darkMode() {
 
     const $html = document.querySelector('html');
-    const $btnToggle = document.querySelector("#btnToggle");
-    // 현재 모드를 가져옴
-    let mode = $html.getAttribute('data-bs-theme');
+    let isDarkMode = localStorage.getItem('isDarkMode') === 'true';
 
+    // Bootstrap의 다크 모드 클래스를 추가하거나 제거하는 로직
+    $html.setAttribute('data-bs-theme', isDarkMode ? 'dark' : 'light');
 
-    // 현재 모드와 반대되는 모드로 설정
-    if( mode == 'dark' ){
-        $html.setAttribute("data-bs-theme", "light");
-
-        /*$btnToggle.textContent = "다크모드";*/
-    }else{
-        $html.setAttribute("data-bs-theme", "dark");
-        /*$btnToggle.textContent = "라이트모드";*/
-    }
-
-
+    // 다크 모드 토글 버튼 이벤트 처리
+    const darkModeToggle = document.getElementById('btnToggle');
+    darkModeToggle.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        localStorage.setItem('isDarkMode', isDarkMode);
+        $html.setAttribute('data-bs-theme', isDarkMode ? 'dark' : 'light');
+    });
 }
-
+darkMode();
 
 

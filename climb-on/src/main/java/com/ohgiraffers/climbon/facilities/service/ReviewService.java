@@ -47,4 +47,10 @@ public class ReviewService {
         System.out.println("result = " + result);
         return result;
     }
+
+    public int reviewInsert(ReviewDTO reviewDTO, int id) {
+        reviewDTO.setReviewerId(id);
+        return reviewDAO.reviewInsert(reviewDTO);
+    }
+
 }

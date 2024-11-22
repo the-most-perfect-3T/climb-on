@@ -11,7 +11,7 @@ public class CrewDTO {
     private String crewSns;
     private String climbingCategory;
     private boolean recruitingStatus;
-    private boolean isPermission;
+    private boolean permissionToJoin;
     private String activeArea;
     private boolean status;
     private Date createdAt;
@@ -20,7 +20,7 @@ public class CrewDTO {
     public CrewDTO() {
     }
 
-    public CrewDTO(int id, String crewName, String imgUrl, String description, String crewSns, String climbingCategory, boolean recruitingStatus, boolean isPermission, String activeArea, boolean status, Date createdAt, Date deletedAt) {
+    public CrewDTO(int id, String crewName, String imgUrl, String description, String crewSns, String climbingCategory, boolean recruitingStatus, boolean permissionToJoin, String activeArea, boolean status, Date createdAt, Date deletedAt) {
         this.id = id;
         this.crewName = crewName;
         this.imgUrl = imgUrl;
@@ -28,7 +28,7 @@ public class CrewDTO {
         this.crewSns = crewSns;
         this.climbingCategory = climbingCategory;
         this.recruitingStatus = recruitingStatus;
-        this.isPermission = isPermission;
+        this.permissionToJoin = permissionToJoin;
         this.activeArea = activeArea;
         this.status = status;
         this.createdAt = createdAt;
@@ -83,7 +83,7 @@ public class CrewDTO {
         this.climbingCategory = climbingCategory;
     }
 
-    public boolean isRecruitingStatus() {
+    public boolean getRecruitingStatus() {
         return recruitingStatus;
     }
 
@@ -91,12 +91,12 @@ public class CrewDTO {
         this.recruitingStatus = recruitingStatus;
     }
 
-    public boolean isPermission() {
-        return isPermission;
+    public boolean getPermissionToJoin() {
+        return permissionToJoin;
     }
 
-    public void setPermission(boolean permission) {
-        isPermission = permission;
+    public void setPermissionToJoin(boolean permissionToJoin) {
+        this.permissionToJoin = permissionToJoin;
     }
 
     public String getActiveArea() {
@@ -107,7 +107,7 @@ public class CrewDTO {
         this.activeArea = activeArea;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 
@@ -129,23 +129,5 @@ public class CrewDTO {
 
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "CrewDTO{" +
-                "id=" + id +
-                ", crewName='" + crewName + '\'' +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", description='" + description + '\'' +
-                ", crewSns='" + crewSns + '\'' +
-                ", climbingCategory='" + climbingCategory + '\'' +
-                ", recruitingStatus=" + recruitingStatus +
-                ", isPermission=" + isPermission +
-                ", activeArea='" + activeArea + '\'' +
-                ", status=" + status +
-                ", createdAt=" + createdAt +
-                ", deletedAt=" + deletedAt +
-                '}';
     }
 }

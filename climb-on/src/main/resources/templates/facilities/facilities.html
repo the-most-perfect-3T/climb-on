@@ -2,7 +2,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout/baseLayout}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<body>
+
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/page/facilities.css}">
     </th:block>
@@ -69,16 +69,39 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        모달 내용이 여기에 표시됩니다.
 
+                        <form id="reviewinsertForm" action="/Review/reviewInsert" method="post">
+                            <div>
+                                <label for="rating">평점 (1~5):</label>
+                                    <!-- 평점별 별을 표시하는 요소 -->
 
+                                        <div id="rating" class="rating">
+                                            <span class="star" data-value="5"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                            <span class="star" data-value="4"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                            <span class="star" data-value="3"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                            <span class="star" data-value="2"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                            <span class="star" data-value="1"><i class="fa fa-star" aria-hidden="true"></i></span>
+                                        </div>
 
+                                <input type="hidden" id="ratingValue" name="rating" value="">
+                            </div>
 
-                    </div>
+                            <div>
+                                <label for="comment">리뷰 내용:</label>
+                                <textarea id="comment" name="comment" rows="4" cols="50">
+
+                                </textarea>
+                            </div>
+                            <!-- 시설 아이디를 숨겨진 필드로 추가 -->
+                            <input type="hidden" id="facilityId" name="facilityId" value="">
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                        <button type="button" class="btn btn-primary">저장</button>
+                        <button type="button" id="modal-close" data-bs-dismiss="modal">닫기</button>
+                        <button type="submit" class="review-Insert-btn">리뷰작성</button>
                     </div>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -126,6 +149,6 @@
 
         <script th:src="@{/js/page/facilities.js}"></script>
     </th:block>
-</body>
+
 </html>
 
