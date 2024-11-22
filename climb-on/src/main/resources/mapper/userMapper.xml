@@ -204,4 +204,10 @@
         WHERE b.IS_APPROVAL = -1
           AND a.USER_CODE = #{id}
     </select>
+
+    <update id="updateFacility" parameterType="com.ohgiraffers.climbon.user.dto.UserDTO">
+        UPDATE USERS
+           SET FACILITY_CODE = #{facilityCode}
+         WHERE ID = #{id}
+    </update>
 </mapper>
