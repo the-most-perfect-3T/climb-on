@@ -19,6 +19,14 @@ h2 {
     padding-bottom: var(--footerHeight); /* 푸터 높이만큼 패딩 추가 */
 }
 
+/* 헤드 컨테이너*/
+.head-container {
+    display: flex; /* 가로로 배치 */
+    justify-content: space-between; /* 양쪽 끝으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-bottom: 6px; /* 아래 간격 추가 */
+}
+
 /* 게시글 제목 옆 댓글 수 스타일 */
 .post-list a .comment-count {
     margin-left: 5px; /* 제목과 댓글 수 사이 간격 */
@@ -77,8 +85,6 @@ h2 {
     color: #888;
     cursor: pointer;
     font-size: 0.9em;
-    margin-left: 10px; /* 타임라인과의 간격을 조절 */
-    margin-top: 20px;
 }
 
 .more-button:hover {
@@ -265,22 +271,29 @@ h2 {
     border-radius: 0; /* 모서리 반경 제거 */
     box-shadow: none; /* 그림자 제거 */
 }
+.card-category {
+    margin-bottom: 10px;
+}
 
 .card-title a {
-    font-size: 16px; /* 리스트 뷰와 유사한 크기 */
+    font-size: 22px;
     color: #333;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .card-meta {
     font-size: 12px;
     color: #666;
+    display: flex;
+    gap: 5px; /* 아이템 간의 간격 */
 }
 
 .card-content {
-    font-size: 14px;
+    font-size: 16px;
     color: #555;
     line-height: 1.5;
+    margin-bottom: 20px;
 }
 
 /* 리스트 뷰 스타일 */
