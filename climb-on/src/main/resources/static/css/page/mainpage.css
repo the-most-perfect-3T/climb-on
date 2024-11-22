@@ -7,6 +7,15 @@
     position: relative;
 }
 
+/* 테스트 버튼*/
+.role-test-convenient button{
+    background-color: #1a1d20;
+    color: #fff;
+
+    width: 120px;
+}
+/* --------------------------- */
+
 .main-content{
     flex-direction: column;
     justify-content: center;
