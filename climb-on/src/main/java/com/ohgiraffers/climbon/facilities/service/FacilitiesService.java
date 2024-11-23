@@ -71,6 +71,18 @@ public class FacilitiesService {
         System.out.println("result = " + result);
         return result;
     }
+    public int updateFacility(FacilitiesDTO facilitiesDTO){
+        int result = facilitiesDAO.updateFacility(facilitiesDTO);
+        return result;
+    }
+    public int insertFacility(FacilitiesDTO facilitiesDTO){
+        int result = facilitiesDAO.insertFacility(facilitiesDTO);
+        return result;
+    }
+    public int deleteFacility(int facilityId) {
+        int result = facilitiesDAO.deleteFacility(facilityId);
+        return result;
+    }
 
     public int getIsFavorite(int id, Integer userId) {
         return facilityFavoriteDAO.getIsFavorite(id,userId);
@@ -88,5 +100,10 @@ public class FacilitiesService {
 
         return facilityImgDAO.getImageById(facilityId);
 
+    }
+
+    public List<FacilitiesDTO> getFacilitiesByUserFavorite(int id) {
+        List<FacilitiesDTO> facilities = facilitiesDAO.getFacilitiesByUserFavorite(id);
+        return facilities;
     }
 }

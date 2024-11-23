@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="btn-wrap d-flex align-items-center">
-                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center" data-bs-toggle="modal"
+                            <button type="button" id="btn-notice" class="d-flex align-items-center justify-content-center border" data-bs-toggle="modal"
                                     th:attr="data-bs-target=${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? '#adminNoticeModal' : (#authorization.expression('hasAnyAuthority(''BUSINESS'')') ? '#businessNoticeModal' : '#userNoticeModal')}">
                                 <div class="position-relative">
                                     <i class="fa-solid fa-bell"></i>
@@ -35,7 +35,7 @@
                                 </div>
                                 <span>알림</span>
                             </button>
-                            <button type="button" id="btn-modify" class="d-flex align-items-center justify-content-center">
+                            <button type="button" id="btn-modify" class="d-flex align-items-center justify-content-center border">
                                 <i class="fa-solid fa-gear"></i>
                                 <span>프로필 수정</span>
                             </button>

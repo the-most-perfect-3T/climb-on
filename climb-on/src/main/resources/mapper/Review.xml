@@ -63,4 +63,10 @@
         DELETE FROM user_review
         WHERE user_code = #{userId} AND review_code = #{id};
     </delete>
+
+    <insert id="reviewInsert" parameterType="com.ohgiraffers.climbon.facilities.dao.ReviewDAO">
+        INSERT INTO REVIEWS (USER_ID,FACILITY_ID,COMMENT,RATING)
+        VALUES (#{userId},#{facilityId},#{comment},#{rating})
+
+    </insert>
 </mapper>

@@ -22,7 +22,8 @@ public class FacilityImgController {
     public ResponseEntity<List<FacilityImgDTO>> getImageById(@RequestParam int facilityId) {
 
         List<FacilityImgDTO> result = facilitiesService.getImageById(facilityId);
-        System.out.println("여기맞지? = " + result);
+        System.out.println("123여기맞지? = " + result.get(0).getFilePath());
+
         return ResponseEntity.ok(result);
     }
 }

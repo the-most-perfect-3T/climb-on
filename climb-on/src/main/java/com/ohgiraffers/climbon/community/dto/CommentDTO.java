@@ -81,7 +81,7 @@ public class CommentDTO {
         } else if (daysAgo == 1){
             return "하루전";
         } else if (daysAgo == 2){
-            return "이틀전";
+            return "2일전";
         } else if (daysAgo == 3){
             return "3일전";
         } else {

@@ -54,6 +54,12 @@
     </select>
 
 
-
+    <update id="updateInfo" parameterType="com.ohgiraffers.climbon.auth.model.dto.SignupDTO">
+        UPDATE USERS
+           SET
+            PROFILE_PIC = #{profilePic},
+            NICKNAME = #{nickname}
+         WHERE ID = #{id}
+    </update>
 
 </mapper>

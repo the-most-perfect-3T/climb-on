@@ -60,8 +60,18 @@ public class UserController {
         // 유저 pk
         Integer key = userDetails.getLoginUserDTO().getId();
 
+        // 유저 pk 로 정보 전체 가져오기
+        UserDTO user = userService.findByKey(key);
+
+        if (user == null) {
+            mv.addObject("message", "사용자 정보를 찾을 수 없습니다.");
+            mv.setViewName("/auth/login");
+            return mv;
+        }
+
         // 유저 role
-        String role = userDetails.getLoginUserDTO().getUserRole().getRole();
+        //String role = userDetails.getLoginUserDTO().getUserRole().getRole(); // 이전
+        String role = user.getUserRole().getRole(); // 수정
         System.out.println("role = " + role);
 
 
@@ -159,14 +169,7 @@ public class UserController {
         }
 
 
-        // 유저 pk 로 정보 전체 가져오기
-        UserDTO user = userService.findByKey(key);
 
-        if (user == null) {
-            mv.addObject("message", "사용자 정보를 찾을 수 없습니다.");
-            mv.setViewName("/auth/login");
-            return mv;
-        }
 
         populateUserData(mv, key);
         mv.setViewName("mypage/mypage");

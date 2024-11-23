@@ -80,6 +80,7 @@ public class FacilitiesController {
 
 
     }
+
     //하나만 가져오기
     @GetMapping("facility/{id}")
     public ResponseEntity<FacilitiesDTO> getFacility(@PathVariable("id") int facilityId) { //이건 그냥 단순값
