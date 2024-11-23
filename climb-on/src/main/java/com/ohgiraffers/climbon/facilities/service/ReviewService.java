@@ -53,4 +53,8 @@ public class ReviewService {
         return reviewDAO.reviewInsert(reviewDTO);
     }
 
+    public int reviewUpdate(ReviewDTO reviewDTO, int id) {
+        reviewDTO.setReviewerId(id);
+        return reviewDAO.reviewUpdate(reviewDTO);
+    }
 }
