@@ -80,7 +80,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             throw new UsernameNotFoundException("회원정보가 존재하지 않습니다." + e.getMessage());
         } catch (Exception e) {
             throw new OAuth2AuthenticationException("토큰 처리 중 오류가 발생했습니다." + e.getMessage());
-        } 
+        }
 
     }
 }
