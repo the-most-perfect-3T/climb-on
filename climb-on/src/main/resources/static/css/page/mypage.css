@@ -304,3 +304,64 @@
     background: var(--bs-danger);
     color: #fff;
 }
+
+
+/*즐겨찾기 탭*/
+.section-mypage #favorite .section00 {
+    padding: 55px 0 55px 80px;
+}
+.section-mypage #favorite .section00 .section-title{
+    margin-bottom: 50px;
+}
+.section-mypage #favorite .section00 ul li:not(.no-result) {
+    width: 49%;
+    margin-right: 2%;
+    margin-top: 20px;
+    padding: 25px 30px;
+    position: relative;
+    border-radius: 10px;
+    height: 230px;
+}
+.section-mypage #favorite .section00 ul li:not(.no-result):hover {
+    border-color: var(--point) !important;
+    border-width: 2px !important;
+}
+.section-mypage #favorite .section00 ul li:nth-child(2n) {
+    margin-right: 0;
+}
+.section-mypage #favorite .section00 ul li:nth-child(-n+2) {
+    margin-top: 0;
+}
+.section-mypage #favorite .section00 ul li .img-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+.section-mypage #favorite .section00 ul li .img-wrap img {
+    width: 100%;
+}
+.section-mypage #favorite .section00 ul li .name {
+    font-size: 20px;
+    font-weight: 600;
+
+}
+.section-mypage #favorite .section00 ul li .address {
+    margin-top: 10px;
+    font-size: 14px;
+}
+.section-mypage #favorite .section00 ul li.no-result {
+    padding: 40px 0;
+    width: 100%;
+}
+.section-mypage #favorite .section00 ul li button {
+    position: absolute;
+    right: 30px;
+    top: 25px;
+    color: var(--point);
+    font-size: 24px;
+}

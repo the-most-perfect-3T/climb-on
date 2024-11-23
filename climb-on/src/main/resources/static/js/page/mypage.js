@@ -148,6 +148,157 @@ if(inputDeleteAgree !== null){
 }
 
 
+/* 즐겨찾기 */
+async function checkFavorite(id) {
+    let isFavorite = await getIsFavorite(id);
+    return isFavorite;
+}
+async function toggleFavorite(id,isFavorite) {
+    // 즐겨찾기 목록에서 해당 시설이 이미 존재하는지 확인
+
+    try {
+        const response = await updateFavoriteOnServer(id, !isFavorite); // 즐겨찾기 상태를 반전시켜서 서버에 보냄
+
+        if (response.ok) {
+            console.log('서버에 즐겨찾기 상태가 업데이트되었습니다.');
+            const updatedFavoriteStatus = await checkFavorite(id);
+
+
+        } else {
+
+            console.error('서버에 즐겨찾기 상태 업데이트 실패');
+        }
+    } catch (error) {
+        console.error('서버와의 통신 중 오류 발생:', error);
+    }
+}
+
+
+async function updateFavoriteOnServer(id, addFavorite) {
+    const url = '/facilities/update-favorite';
+    const data = {
+        facilityId: id,
+        isFavorite: addFavorite,  // 즐겨찾기 추가 여부
+    };
+
+    const response = await fetch(url, {
+        method: 'POST',  // POST 메소드로 요청
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+        body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+    });
+
+    return response;
+}
+
+async function getIsFavorite(id) {
+    try {
+        const response = await fetch(`/facilities/getIsFavorite?id=${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('서버 오류: ' + response.status);
+        }
+
+        const data = await response.json();
+        console.log(data);// JSON 데이터를 파싱
+        if (data !== null && data !== undefined) {
+            return data;  // 데이터를 반환
+        } else {
+            console.log("즐겨찾기 정보가 없습니다.");
+            return null;  // 데이터가 없으면 null 반환
+        }
+    } catch (error) {
+        console.error('오류 발생:', error);
+        return null;  // 오류 발생시 null 반환
+    }
+}
+
+const favoriteTab = document.getElementById("favorite-tab");
+
+favoriteTab.addEventListener("click", async function () {
+    console.log("즐겨찾기 탭 클릭됨");
+
+    try {
+        const response = await fetch("/user/favorite");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("받은 데이터:", data);
+
+        const favoriteList = document.getElementById("favorite").querySelector("ul");
+        favoriteList.textContent = "";
+
+        if (data.message === '저장된 즐겨찾기가 없습니다.') {
+            const liItem = document.createElement("li");
+            liItem.classList.add('no-result', 'border-top');
+            liItem.textContent = "저장된 즐겨찾기가 없습니다.";
+            favoriteList.appendChild(liItem);
+        } else {
+            for (const item of data) {
+
+                const isFavorite = await getIsFavorite(item.id);
+
+                const liItem = document.createElement("li");
+                liItem.classList.add("border");
+                liItem.innerHTML = `
+                    <!--<a href="/facilities/select">-->
+                        <div class="img-wrap border">
+                            <img src="" alt="">
+                        </div>
+                        <a href="/facilities/select" class="name">${item.facilityName}</a>
+                        <p class="address">${item.address}</p>
+                        <button type="button" class="favorite-btn ${isFavorite == 1 ? "active" : ""}" data-id="${item.id}" data-favorite="${isFavorite}">
+                            <i class="fa-bookmark fa-solid"></i> 
+                        </button>
+                    <!--</a>-->
+                `;
+                favoriteList.appendChild(liItem);
+            }
+        }
+
+        // 즐겨찾기 버튼 클릭 이벤트 설정
+        favoriteList.addEventListener("click", async (event) => {
+            const button = event.target.closest(".favorite-btn");
+            if (button) {
+                const facilityId = parseInt(button.getAttribute("data-id"));
+                const currentFavoriteStatus = parseInt(button.getAttribute("data-favorite"));
+
+                // 즐겨찾기 상태 토글
+                await toggleFavorite(facilityId, currentFavoriteStatus);
+
+                // UI 업데이트
+                const updatedFavoriteStatus = await checkFavorite(facilityId);
+
+                button.setAttribute("data-favorite", updatedFavoriteStatus);
+
+                // i 태그 클래스 토글
+                const icon = button.querySelector("i");
+                if (icon) {
+                    icon.classList.toggle("fa-solid", updatedFavoriteStatus === 1);
+                    icon.classList.toggle("fa-regular", updatedFavoriteStatus === 0);
+                }
+
+                if(updatedFavoriteStatus === 0){
+                    event.target.closest("li").remove();
+                }
+
+            }
+
+
+
+        });
+    } catch (error) {
+        console.error("AJAX 오류:", error);
+    }
+});
 
 
 
