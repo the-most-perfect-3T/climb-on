@@ -87,25 +87,26 @@ const showSlides = (n) =>
 }
 
 // 유저 롤 변경
-function updateUserRole(newRole) {
-    fetch('/updateRole', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ role: newRole })
-    })
-        .then(response => {
-            if (response.ok) {
-                console.log(newRole);
-                alert('현재 사용자의 권한을 성공적으로 변경했습니다.');
-            } else {
-                alert('Error updating role');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+async function updateUserRole(newRole) {
+    try {
+        const response = await fetch('/updateUserRole', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: "", role: newRole })
         });
+        if (response.ok) {
+            alert('업데이트 됏긔');
+        } else {
+            const errorText = await response.text();  // Get server error response
+            alert('Error: ' + errorText);
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+
+
 }
 
 loadRecentPosts();

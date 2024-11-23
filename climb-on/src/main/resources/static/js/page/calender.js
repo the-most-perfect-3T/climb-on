@@ -50,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             // 모든 이벤트 저장
                             try
                             {
-                                // Save all events to the database in a batch using the fetch API
                                 const response = await fetch('/events/batch', {
                                     method: 'POST',
                                     headers: {
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     body: JSON.stringify(eventsData)
                                 });
-                                // Check if the response was successful
                                 if (response.ok) {
                                     //await calendar.refetchEvents(); // Refresh events from the server
                                     //등록 완

@@ -9,8 +9,8 @@ public class TestUserRoleService
     @Autowired
     private TestUserRoleMapper testUserRoleMapper;
 
-    public void updateUserRole(int id, String role)
+    public void updateUserRole(RoleUpdateRequest roleUpdateRequest)
     {
-        testUserRoleMapper.updateUserRole(id, role);
+        testUserRoleMapper.updateUserRole(roleUpdateRequest);
     }
 }
