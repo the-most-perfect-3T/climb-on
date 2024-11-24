@@ -411,6 +411,10 @@ function loadReviews(facilityId) {
                     item.innerHTML = `
                     <div class="review-detail">
                         <p>${Reviews.userNickname}</p>
+                          <div class="review-actions">
+                            <button class="edit-btn">수정</button>
+                            <button class="delete-btn">삭제</button>
+                        </div>
                         <span>${timeText}</span>
                         <div class="review-rating">
                             <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
@@ -697,7 +701,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetStars() {
         stars.forEach(star => {
             star.querySelector("i").classList.remove("fa-star");
-            star.querySelector("i").classList.add("fa-star-o");
+            star.querySelector("i").classList.add("fa-star");
             star.querySelector("i").style.color = "gray"; // 기본 회색으로 되돌리기
         });
         rating = 0; // 초기 평점으로 리셋
