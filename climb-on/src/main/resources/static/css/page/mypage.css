@@ -405,3 +405,74 @@
 .pagination li.prev {
     margin-right: 15px;
 }
+
+/*리뷰*/
+.section-mypage #review {
+    padding: 55px 0 55px 80px;
+}
+.section-mypage #review .section-title {
+    margin-bottom: 50px;
+}
+
+.section-mypage #review .section00 .review-list li:not(.no-result) {
+    width: 49%;
+    margin-right: 2%;
+    margin-top: 20px;
+    padding: 25px 30px;
+    position: relative;
+    border-radius: 10px;
+    height: 230px;
+}
+.section-mypage #review .section00 .review-list li:not(.no-result):hover {
+    border-color: var(--point) !important;
+    border-width: 2px !important;
+}
+.section-mypage #review .section00 .review-list li.no-result {
+    padding: 40px 0;
+    width: 100%;
+}
+.section-mypage #review .section00 .review-list li:nth-child(2n) {
+    margin-right: 0;
+}
+.section-mypage #review .section00 .review-list li:nth-child(-n+2) {
+    margin-top: 0;
+}
+
+.section-mypage #review .section00 .review-list li .img-wrap {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-right: 20px;
+}
+.section-mypage #review .section00 .review-list li .img-wrap img {
+    width: 100%;
+}
+.section-mypage #review .section00 .review-list li .name {
+    font-size: 20px;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+.section-mypage #review .section00 .review-list li .review-rating span.filled {
+    color: var(--point);
+}
+.section-mypage #review .section00 .review-list li .right button {
+    font-weight: 600;
+    font-size: 18px;
+    /*font-size: 14px;
+    text-decoration: underline;*/
+}
+.section-mypage #review .section00 .review-list li .right .btn-delete {
+    color: var(--gray);
+    /*margin-left: 10px;*/
+}
+.section-mypage #review .section00 .review-list li .contents {
+    overflow-y: auto;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 30px;
+    max-height: 90px;
+}
