@@ -55,7 +55,7 @@ public class ReviewsController {
 
     @PostMapping("/reviewInsert")
     public ResponseEntity<Integer> reviewInsert(@AuthenticationPrincipal AuthDetail userDetails,
-                                     @ModelAttribute ReviewDTO reviewDTO) {
+                                                @RequestBody ReviewDTO reviewDTO) {
 
         Integer userId = userDetails.getLoginUserDTO().getId();
         // 리뷰를 DB에 저장하는 서비스 호출
@@ -63,6 +63,20 @@ public class ReviewsController {
 
         // 리뷰 저장 후, 리뷰 목록 페이지로 리다이렉트
         return ResponseEntity.ok(result);
+
+    }
+
+    @PostMapping("/reviewUpdate")
+    public ResponseEntity<Integer> reviewUpdate(@AuthenticationPrincipal AuthDetail userDetails,
+                                                @RequestBody ReviewDTO reviewDTO) {
+
+        Integer userId = userDetails.getLoginUserDTO().getId();
+        // 리뷰를 DB에 저장하는 서비스 호출
+        int result =  reviewService.reviewUpdate(reviewDTO,userId);
+
+        // 리뷰 저장 후, 리뷰 목록 페이지로 리다이렉트
+        return ResponseEntity.ok(result);
+
 
     }
 }
