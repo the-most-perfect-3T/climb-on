@@ -65,6 +65,7 @@
     </select>
     <select id="getFacilitiesByUserFavorite" resultMap="FacilityResultMap">
         SELECT
+        a.id,
         a.facility_name,
         a.address
         FROM facilities a
