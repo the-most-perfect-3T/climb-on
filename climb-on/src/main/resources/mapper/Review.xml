@@ -52,11 +52,14 @@
 
     <select id="getReviewByUserId" resultMap="ReviewResultMap">
         SELECT
-        *
-        FROM REVIEWS
-        WHERE USER_ID = #{userId}
-
-
+            a.USER_ID,
+            a.RATING,
+            a.COMMENT,
+            b.NICKNAME userNickname
+        FROM REVIEWS a
+        JOIN USERS b
+          ON a.USER_ID = b.ID
+        WHERE a.USER_ID = #{userId}
     </select>
     <select id="getIsFavorite" parameterType="map" resultType="int">
         SELECT COUNT(*)
