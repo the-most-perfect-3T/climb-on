@@ -313,7 +313,7 @@
 .section-mypage #favorite .section00 .section-title{
     margin-bottom: 50px;
 }
-.section-mypage #favorite .section00 ul li:not(.no-result) {
+.section-mypage #favorite .section00 .list li:not(.no-result) {
     width: 49%;
     margin-right: 2%;
     margin-top: 20px;
@@ -322,17 +322,17 @@
     border-radius: 10px;
     height: 230px;
 }
-.section-mypage #favorite .section00 ul li:not(.no-result):hover {
+.section-mypage #favorite .section00 .list li:not(.no-result):hover {
     border-color: var(--point) !important;
     border-width: 2px !important;
 }
-.section-mypage #favorite .section00 ul li:nth-child(2n) {
+.section-mypage #favorite .section00 .list li:nth-child(2n) {
     margin-right: 0;
 }
-.section-mypage #favorite .section00 ul li:nth-child(-n+2) {
+.section-mypage #favorite .section00 .list li:nth-child(-n+2) {
     margin-top: 0;
 }
-.section-mypage #favorite .section00 ul li .img-wrap {
+.section-mypage #favorite .section00 .list li .img-wrap {
     width: 80px;
     height: 80px;
     border-radius: 100%;
@@ -342,26 +342,66 @@
     justify-content: center;
     margin-bottom: 40px;
 }
-.section-mypage #favorite .section00 ul li .img-wrap img {
+.section-mypage #favorite .section00 .list li .img-wrap img {
     width: 100%;
 }
-.section-mypage #favorite .section00 ul li .name {
+.section-mypage #favorite .section00 .list li .name {
     font-size: 20px;
     font-weight: 600;
 
 }
-.section-mypage #favorite .section00 ul li .address {
+.section-mypage #favorite .section00 .list li .address {
     margin-top: 10px;
     font-size: 14px;
 }
-.section-mypage #favorite .section00 ul li.no-result {
+.section-mypage #favorite .section00 .list li.no-result {
     padding: 40px 0;
     width: 100%;
 }
-.section-mypage #favorite .section00 ul li button {
+.section-mypage #favorite .section00 .list li button {
     position: absolute;
     right: 30px;
     top: 25px;
     color: var(--point);
     font-size: 24px;
+}
+/*페이지네이션*/
+.pagination {
+    /*display: none;*/
+    margin: 60px auto 0;
+    align-items: center;
+    justify-content: center;
+}
+.pagination.show {
+    display: flex;
+}
+.pagination li {
+    width: 24px;
+    height: 24px;
+    color: var(--darkGray);
+    text-align: center;
+    line-height: 24px;
+}
+.pagination li a {
+    font-size: 16px;
+}
+.pagination li a i {
+    font-size: 24px;
+}
+.pagination li.disabled a {
+    color: var(--borderColor);
+    cursor: default;
+    pointer-events: none;
+}
+.pagination li.current a {
+    font-weight: 700;
+}
+.pagination li.num {
+    margin-right: 10px;
+}
+.pagination li.num:last-of-type {
+    margin-right: 15px;
+}
+.pagination li.prev {
+    margin-right: 15px;
 }

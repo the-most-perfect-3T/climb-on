@@ -221,7 +221,7 @@ async function getIsFavorite(id) {
 
 const favoriteTab = document.getElementById("favorite-tab");
 
-favoriteTab.addEventListener("click", async function () {
+/*favoriteTab.addEventListener("click", async function () {
     console.log("즐겨찾기 탭 클릭됨");
 
     try {
@@ -233,7 +233,7 @@ favoriteTab.addEventListener("click", async function () {
         const data = await response.json();
         console.log("받은 데이터:", data);
 
-        const favoriteList = document.getElementById("favorite").querySelector("ul");
+        const favoriteList = document.getElementById("favorite").querySelector("ul.list");
         favoriteList.textContent = "";
 
         if (data.message === '저장된 즐겨찾기가 없습니다.') {
@@ -241,28 +241,32 @@ favoriteTab.addEventListener("click", async function () {
             liItem.classList.add('no-result', 'border-top');
             liItem.textContent = "저장된 즐겨찾기가 없습니다.";
             favoriteList.appendChild(liItem);
-        } else {
-            for (const item of data) {
-
-                const isFavorite = await getIsFavorite(item.id);
-
-                const liItem = document.createElement("li");
-                liItem.classList.add("border");
-                liItem.innerHTML = `
-                    <!--<a href="/facilities/select">-->
-                        <div class="img-wrap border">
-                            <img src="" alt="">
-                        </div>
-                        <a href="/facilities/select" class="name">${item.facilityName}</a>
-                        <p class="address">${item.address}</p>
-                        <button type="button" class="favorite-btn ${isFavorite == 1 ? "active" : ""}" data-id="${item.id}" data-favorite="${isFavorite}">
-                            <i class="fa-bookmark fa-solid"></i> 
-                        </button>
-                    <!--</a>-->
-                `;
-                favoriteList.appendChild(liItem);
-            }
         }
+
+        const itemsPerPage = 4;
+        let currentPage = 1;
+
+
+        for (const item of data) {
+            const isFavorite = await getIsFavorite(item.id);
+
+            const liItem = document.createElement("li");
+            liItem.classList.add("border");
+            liItem.innerHTML = `
+                <!--<a href="/facilities/select">-->
+                    <div class="img-wrap border">
+                        <img src="" alt="">
+                    </div>
+                    <a href="/facilities/select" class="name">${item.facilityName}</a>
+                    <p class="address">${item.address}</p>
+                    <button type="button" class="favorite-btn data-id="${item.id}" data-favorite="${isFavorite}">
+                        <i class="fa-bookmark fa-solid"></i> 
+                    </button>
+                <!--</a>-->
+            `;
+            favoriteList.appendChild(liItem);
+        }
+
 
         // 즐겨찾기 버튼 클릭 이벤트 설정
         favoriteList.addEventListener("click", async (event) => {
@@ -298,7 +302,144 @@ favoriteTab.addEventListener("click", async function () {
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
+});*/
+
+
+favoriteTab.addEventListener("click", async function () {
+    console.log("즐겨찾기 탭 클릭됨");
+
+    try {
+        const response = await fetch("/user/favorite");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("받은 데이터:", data);
+
+
+
+        if (data.message === '저장된 즐겨찾기가 없습니다.') {
+            const favoriteList = document.getElementById("favorite").querySelector("ul.list");
+            const liItem = document.createElement("li");
+            liItem.classList.add('no-result', 'border-top');
+            liItem.textContent = "저장된 즐겨찾기가 없습니다.";
+            favoriteList.appendChild(liItem);
+        }
+
+        const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
+        let currentPage = 1;
+
+        // 데이터 렌더링 함수
+        const renderData = (page) => {
+            const favoriteList = document.getElementById("favorite").querySelector("ul.list");
+            favoriteList.textContent = ""; // 기존 리스트 초기화
+
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const itemsToShow = data.slice(startIndex, endIndex);
+
+            itemsToShow.forEach((item) => {
+                const liItem = document.createElement("li");
+                liItem.classList.add("border");
+                liItem.innerHTML = `
+                    <div class="img-wrap border">
+                        <img src="" alt="">
+                    </div>
+                    <a href="/facilities/select" class="name">${item.facilityName}</a>
+                    <p class="address">${item.address}</p>
+                    <button type="button" class="favorite-btn" data-id="${item.id}">
+                        <i class="fa-bookmark fa-solid"></i>
+                    </button>
+                `;
+                favoriteList.appendChild(liItem);
+            });
+        };
+
+        // 페이지네이션 버튼 렌더링
+        const renderPagination = () => {
+            const pagination = document.querySelector(".pagination");
+            pagination.textContent = "";
+
+            const totalPages = Math.ceil(data.length / itemsPerPage);
+
+            // 이전 버튼
+            const prevButton = document.createElement("li");
+            prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+            prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+            prevButton.querySelector("a").addEventListener("click", (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderData(currentPage);
+                    renderPagination();
+                }
+            });
+            pagination.appendChild(prevButton);
+
+            // 페이지 번호 버튼
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement("li");
+                pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+                pageButton.innerHTML = `<a href="#">${i}</a>`;
+                pageButton.querySelector("a").addEventListener("click", (e) => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderData(currentPage);
+                    renderPagination();
+                });
+                pagination.appendChild(pageButton);
+            }
+
+            // 다음 버튼
+            const nextButton = document.createElement("li");
+            nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+            nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+            nextButton.querySelector("a").addEventListener("click", (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderData(currentPage);
+                    renderPagination();
+                }
+            });
+            pagination.appendChild(nextButton);
+        };
+
+        // 첫 페이지 렌더링
+        if (Array.isArray(data)) renderData(currentPage);
+        if(data.length > itemsPerPage) renderPagination();
+
+        // 즐겨찾기 버튼 클릭 이벤트 설정
+        const favoriteList = document.getElementById("favorite").querySelector("ul.list");
+        favoriteList.addEventListener("click", async (event) => {
+            const button = event.target.closest(".favorite-btn");
+            if (button) {
+                const facilityId = parseInt(button.getAttribute("data-id"));
+                const currentFavoriteStatus = parseInt(button.getAttribute("data-favorite"));
+
+                // 즐겨찾기 상태 토글
+                await toggleFavorite(facilityId, currentFavoriteStatus);
+
+                // UI 업데이트
+                const updatedFavoriteStatus = await checkFavorite(facilityId);
+
+                button.setAttribute("data-favorite", updatedFavoriteStatus);
+
+                // i 태그 클래스 토글
+               /* const icon = button.querySelector("i");
+                if (icon) {
+                    icon.classList.toggle("fa-solid", updatedFavoriteStatus === 1);
+                    icon.classList.toggle("fa-regular", updatedFavoriteStatus === 0);
+                }*/
+
+                if(updatedFavoriteStatus === 0){
+                    event.target.closest("li").remove();
+                }
+
+            }
+        });
+    } catch (error) {
+        console.error("AJAX 오류:", error);
+    }
 });
-
-
-

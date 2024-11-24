@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.user.service;
 
 import com.ohgiraffers.climbon.auth.Enum.UserRole;
+import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.user.dao.UserMapper;
 import com.ohgiraffers.climbon.user.dto.BusinessDTO;
@@ -285,6 +286,7 @@ public class UserService {
         int result = userMapper.updateFacility(user);
         return result;
     }
+
 
 
 }

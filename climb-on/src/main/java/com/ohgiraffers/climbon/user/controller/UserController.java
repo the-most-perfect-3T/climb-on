@@ -6,11 +6,14 @@ package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.Enum.UserRole;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.community.service.PostService;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
 import com.ohgiraffers.climbon.user.dto.BusinessDTO;
 import com.ohgiraffers.climbon.user.dto.NoticeDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import com.ohgiraffers.climbon.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -36,6 +39,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private FacilitiesService facilitiesService;
+    @Autowired
+    private PostService postService;
 
     private void populateUserData(ModelAndView mv, Integer userId) {
         UserDTO user = userService.findByKey(userId);
@@ -529,4 +534,24 @@ public class UserController {
 
         return mv;
     }
+
+
+/*    @GetMapping("board")
+    public ModelAndView selectBoardList(ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
+        // 로그인 정보 없으면
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            mv.addObject("message", "로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
+            mv.setViewName("/auth/login");
+            return mv;
+        }
+
+        // 유저 pk
+        Integer key = userDetails.getLoginUserDTO().getId();
+
+        List<PostDTO> boardList = userService.selectBoardList(key);
+        mv.addObject("generalPosts", boardList);
+        mv.addObject("board", "board request");
+        mv.setViewName("mypage/home");
+        return mv;
+    }*/
 }

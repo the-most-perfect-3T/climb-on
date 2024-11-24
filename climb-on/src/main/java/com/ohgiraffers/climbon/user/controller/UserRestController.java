@@ -6,6 +6,7 @@
 package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.community.service.PostService;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
 import com.ohgiraffers.climbon.user.service.UserService;
@@ -26,6 +27,9 @@ public class UserRestController {
     private UserService userService;
     @Autowired
     private FacilitiesService facilitiesService;
+    @Autowired
+    private PostService postService;
+
 
     @PostMapping("/registFacility")
     public ResponseEntity<Object> registFacility(@AuthenticationPrincipal AuthDetail userDetails,
