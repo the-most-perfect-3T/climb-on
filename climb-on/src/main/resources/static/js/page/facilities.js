@@ -412,7 +412,7 @@ function loadReviews(facilityId) {
                     <div class="review-detail">
                         <p>${Reviews.userNickname}</p>
                           <div class="review-actions">
-                            <button class="edit-btn">수정</button>
+                            <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>
                             <button class="delete-btn">삭제</button>
                         </div>
                         <span>${timeText}</span>
@@ -692,9 +692,17 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 닫기 버튼 클릭 시 별 초기화
-    resetBtn.addEventListener("click", function() {
+    const modalElement = document.getElementById("exampleModal");
+
+// 모달 닫힘 이벤트에 리스너 추가
+    modalElement.addEventListener("hidden.bs.modal", function () {
+        // 입력 필드 초기화
+        document.getElementById("comment").value = "";
+        document.getElementById("ratingValue").value = "";
+        document.getElementById("facilityId").value = "";
+
         resetStars();
+        console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
     });
 
     // 별 초기화 함수
@@ -714,7 +722,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (value <= rating) {
                 star.querySelector("i").classList.remove("fa-star");
                 star.querySelector("i").classList.add("fa-star");
-                star.querySelector("i").style.color = "#f79256"; // 채워진 별은 금색으로
+                star.querySelector("i").style.color = "#f79256";
             } else {
                 star.querySelector("i").classList.remove("fa-star");
                 star.querySelector("i").classList.add("fa-star");
@@ -729,6 +737,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     reviewForm.addEventListener("submit", async function (event) {
         // 평점이 선택되지 않았으면 경고
+
         event.preventDefault();
 
         document.getElementById("ratingValue").value = rating;
@@ -779,3 +788,39 @@ document.addEventListener("DOMContentLoaded", function() {
 
     });
 });
+
+async function editReview(id){
+    // fetch로 데이터를 불러옵니다.
+    try {
+        const response = await fetch(`/Review/getReview?id=${id}`);
+        const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+        console.log(review);
+       loadReviewData(review);  // 리뷰 데이터를 모달에 로드
+        const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        exampleModal.show();
+    } catch (error) {
+        console.error('리뷰 데이터를 불러오는 데 실패했습니다:', error);
+        alert('리뷰 데이터를 불러오는 데 실패했습니다.');
+    }
+}
+
+// 리뷰 데이터를 모달에 로드하는 함수
+function loadReviewData(review) {
+
+    console.log(review);
+    // review.rating 값을 숨겨진 input에 설정
+    document.getElementById('ratingValue').setAttribute('value', review.rating);
+
+// review.comment 값을 textarea에 설정
+    document.getElementById('comment').value = review.comment;
+
+// 평점에 맞는 별 표시
+    document.querySelectorAll('#rating .star').forEach(star => {
+        const starValue = star.getAttribute('data-value'); // 각 별의 data-value 속성 값 가져오기
+        if (starValue <= review.rating) {
+            star.classList.add('fa-star'); // 조건에 맞으면 'selected' 클래스 추가
+        } else {
+            star.classList.remove('fa-star'); // 조건에 맞지 않으면 'selected' 클래스 제거
+        }
+    });
+}

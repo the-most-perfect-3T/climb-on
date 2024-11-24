@@ -27,6 +27,13 @@ public class ReviewsController {
         return ResponseEntity.ok(reviewList);
     }
 
+    @GetMapping("/getReview")
+    public ResponseEntity<ReviewDTO> getReviewById(@RequestParam Integer id) {
+        ReviewDTO review = reviewService.getReviewById(id);
+
+        return  ResponseEntity.ok(review);
+    }
+
     @PostMapping("/getIsFavorite")
     public ResponseEntity<Integer> getIsFavorite(@RequestParam int id, @AuthenticationPrincipal AuthDetail userDetails) {
         Integer userId = userDetails.getLoginUserDTO().getId();

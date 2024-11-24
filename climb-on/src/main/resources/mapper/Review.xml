@@ -79,4 +79,11 @@
         VALUES (#{userId},#{facilityId},#{comment},#{rating})
 
     </insert>
+
+    <select id="getReviewById" parameterType="int" resultMap="ReviewResultMap">
+        SELECT
+        *
+        FROM REVIEWS
+        WHERE id = #{id}
+    </select>
 </mapper>

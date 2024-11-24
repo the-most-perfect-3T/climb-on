@@ -21,4 +21,6 @@ public interface ReviewDAO {
     int reviewUpdate(ReviewDTO reviewDTO);
 
     List<ReviewDTO> getReviewByUserId(int userId);
+
+    ReviewDTO getReviewById(Integer id);
 }
