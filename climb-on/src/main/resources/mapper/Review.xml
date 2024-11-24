@@ -49,6 +49,15 @@
         ORDER BY
         r.CREATED_AT DESC;
     </select>
+
+    <select id="getReviewByUserId" resultMap="ReviewResultMap">
+        SELECT
+        *
+        FROM REVIEWS
+        WHERE USER_ID = #{userId}
+
+
+    </select>
     <select id="getIsFavorite" parameterType="map" resultType="int">
         SELECT COUNT(*)
         FROM user_review

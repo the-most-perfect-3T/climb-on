@@ -23,6 +23,12 @@ public class ReviewService {
         System.out.println("ReviewList = " + ReviewList);
         return ReviewList;
     }
+    public List<ReviewDTO> getReviewByUserId(int userId) {
+        List<ReviewDTO> ReviewList =reviewDAO.getReviewByUserId(userId);
+        System.out.println("ReviewList = " + ReviewList);
+        return ReviewList;
+
+    }
 
     public Integer getIsFavorite(int id, Integer userId) {
         return reviewDAO.getIsFavorite(id,userId);
