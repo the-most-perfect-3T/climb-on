@@ -1,3 +1,4 @@
+/*
 package com.ohgiraffers.climbon.crew.crewHome.controller;
 
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/img/multi/**")
                 .addResourceLocations("file:///C:/uploads/single/");
-        registry.addResourceHandler("/img/crewPic/**")
+        registry.addResourceHandler("/images/crewPic/**")
                 .addResourceLocations("file:///C:/climbon/crew/profile/");
     }
 }
+*/

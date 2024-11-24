@@ -18,7 +18,6 @@ const quill = new Quill('#editor', {
 });
 
 // file upload 시에 필요한 객체 미리 생성
-
 const imageFileMap = new Map();
 const hiddenImgUrlInput = document.getElementById("hidden_imgURL_input");
 
@@ -32,6 +31,7 @@ quill.on('text-change', function (){
     console.log(quill.root.innerHTML);
 });
 
+// 익명 토글
 document.getElementById('anonymous').addEventListener('change', function () {
     document.getElementById('isAnonymous').value = this.checked ? 'true' : 'false';
 });
@@ -55,7 +55,6 @@ const appendAlert = (message, type) => {
 };
 
 // 본문 내용검사후 통과 못하면 alert 적용
-//
 document.getElementById('writePostForm').onsubmit = async function (event) {
     event.preventDefault();
 
@@ -119,6 +118,8 @@ document.getElementById('writePostForm').onsubmit = async function (event) {
 };
 
 
+
+// 이미지 업로드시 text Editor 에 띄워주고 form submit시 업로드 준비
 quill.getModule('toolbar').addHandler('image', function (){
     selectLocalImage();
 });
@@ -136,7 +137,6 @@ function selectLocalImage() {
                 appendAlert("jpg, jpeg, png, bmp, gif 파일만 업로드 가능합니다.", 'success');
                 return;
             }
-
             // var fileSize = this.files[0].size;
             // var maxSize = 20 * 1024 * 1024;
             // if (fileSize > maxSize) {
