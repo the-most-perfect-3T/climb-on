@@ -230,17 +230,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             end: $("#end").val(),
                             color: $("#color").val()
                         };
-                        // Check for empty values
+
                         if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
                             alert("입력하지 않은 값이 있습니다.");
                         } else if (eventData.start > eventData.end) {
-                            // Validate start and end dates
                             alert("시간을 잘못입력 하셨습니다.");
                         } else {
                             // 캘린더 뷰에 데이터 저장
                             crewCalendar.addEvent(eventData);
 
-                            // Get all events from the calendar
                             let allEvents = crewCalendar.getEvents();
                             let eventsData = allEvents.map(event => ({
                                 title: event.title,
@@ -252,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             // 모든 이벤트 저장
                             try
                             {
-                                // Save all events to the database in a batch using the fetch API
                                 const response = await fetch('/events/crew', {
                                     method: 'POST',
                                     headers: {

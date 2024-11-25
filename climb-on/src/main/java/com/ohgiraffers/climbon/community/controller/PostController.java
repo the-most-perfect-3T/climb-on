@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,6 @@ public class PostController {
         // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
 
-
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -63,7 +61,7 @@ public class PostController {
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
-        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("category", category != null ? category : "전체");
@@ -84,6 +82,7 @@ public class PostController {
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
 
+
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
             comment.setUserNickname(userNickname);
@@ -97,7 +96,7 @@ public class PostController {
         model.addAttribute("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("comments", comments);
-        model.addAttribute("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로드인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
+        model.addAttribute("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로그인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
         return "community/communityPostDetail"; // 상세보기용 communityPostDetail.html 템플릿 반환
     }
 
@@ -121,7 +120,7 @@ public class PostController {
 
     // 게시글 작성 처리
     @PostMapping("/new")
-    public String createpost(@ModelAttribute PostDTO post, @RequestParam("image") MultipartFile imageFile, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal) throws IOException {
+    public String createpost(@ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal) throws IOException {
         // principal.getName()이 이메일일 경우, 이를 기반으로 userId 조회
         String email = principal.getName(); //principal을 통해 로그인한 사용자 ID (로그인한 user_id가 이메일이라서 email변수를 씀) 가져오기  //principal : Spring security에서 현재 인증된 사용자의 정보를 담고 있는 객체, 이 객체를 사용하여 로그인한 사용자의 ID나 이름 같은 정보를 갖고 올 수 있다.
 

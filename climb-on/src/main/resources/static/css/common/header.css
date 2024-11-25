@@ -33,7 +33,11 @@
     color: var(--point);
     font-weight: 600;
 }
-
+.header .inner > div:first-child .gnb .depth1 > li.active > a,
+.header .inner > div:first-child .gnb .depth2 > li.active a {
+    font-weight: 600;
+    color: var(--point);
+}
 .header .inner > div:first-child .gnb .depth1 > li .depth2 {
     top: var(--headerHeight);
     height: var(--headerHeight);

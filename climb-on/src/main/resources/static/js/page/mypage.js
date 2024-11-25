@@ -206,7 +206,7 @@ async function getIsFavorite(id) {
         }
 
         const data = await response.json();
-        console.log(data);// JSON 데이터를 파싱
+
         if (data !== null && data !== undefined) {
             return data;  // 데이터를 반환
         } else {
@@ -345,6 +345,7 @@ favoriteTab.addEventListener("click", async function () {
                     liItem.classList.add('no-result', 'border-top');
                     liItem.textContent = "저장된 즐겨찾기가 없습니다.";
                     favoriteList.appendChild(liItem);
+                    document.querySelector("#favorite .pagination").textContent = "";
                     return; // 데이터가 없으면 이후 렌더링 중단
                 }
 
@@ -354,7 +355,7 @@ favoriteTab.addEventListener("click", async function () {
                     liItem.classList.add("border");
                     liItem.innerHTML = `
                     <div class="img-wrap border">
-                        <img src="" alt="">
+                        <img src="${item.imageUrl != null ? item.imageUrl : " "}" alt="시설 이미지">
                     </div>
                     <a href="/facilities/select" class="name">${item.facilityName}</a>
                     <p class="address">${item.address}</p>
@@ -368,10 +369,12 @@ favoriteTab.addEventListener("click", async function () {
 
             // 페이지네이션 버튼 렌더링
             const renderPagination = () => {
-                const pagination = document.querySelector(".pagination");
+                console.log('페이지네이션 렌더링');
+                const pagination = document.querySelector("#favorite .pagination");
                 pagination.textContent = "";
 
                 const totalPages = Math.ceil(data.length / itemsPerPage);
+
 
                 // 이전 버튼
                 const prevButton = document.createElement("li");
@@ -386,6 +389,7 @@ favoriteTab.addEventListener("click", async function () {
                     }
                 });
                 pagination.appendChild(prevButton);
+                console.log(prevButton);
 
                 // 페이지 번호 버튼
                 for (let i = 1; i <= totalPages; i++) {
@@ -400,6 +404,7 @@ favoriteTab.addEventListener("click", async function () {
                     });
                     pagination.appendChild(pageButton);
                 }
+
 
                 // 다음 버튼
                 const nextButton = document.createElement("li");
@@ -457,7 +462,7 @@ favoriteTab.addEventListener("click", async function () {
                                 data.splice(indexToRemove, 1); // 배열에서 해당 아이템 삭제
                             }
 
-                            console.log("data.length" + data.length);
+
                             // 데이터가 없으면 '저장된 즐겨찾기가 없습니다.' 메시지 표시
                             if (data.length === 0) {
                                 const noResultItem = document.createElement("li");
@@ -474,7 +479,7 @@ favoriteTab.addEventListener("click", async function () {
 
                             // 삭제 후 다시 렌더링
                             await renderData(currentPage);
-                            if (data.length > itemsPerPage) {
+                            if (data.length >= itemsPerPage) {
                                 renderPagination();
                             } else {
                                 document.querySelector(".pagination").textContent = "";
@@ -550,7 +555,7 @@ reviewTab.addEventListener("click", async function(){
                     <div class="d-flex justify-content-between">
                         <div class="left d-flex align-items-center">
                             <div class="img-wrap border">
-                                <img src="" alt="">
+                                <img src="${item.profilePic}" alt="프로밀 이미지">
                             </div>
                             <div>
                                 <p class="name">${item.userNickname}</p>
@@ -561,8 +566,8 @@ reviewTab.addEventListener("click", async function(){
                         </div>
                         <div class="right">
                             <!--할것인지 확인-->
-                            <button type="button" class="btn-modify"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button type="button" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
+                            <button type="button" class="btn-modify" onclick="editReview(${item.id})"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button type="button" class="btn-delete" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                     <p class="contents">${item.comment}</p>
@@ -573,7 +578,8 @@ reviewTab.addEventListener("click", async function(){
 
             // 페이지네이션 버튼 렌더링
             const renderPagination = () => {
-                const pagination = document.querySelector(".pagination");
+                const pagination = document.querySelector("#review .pagination");
+                console.log("pagination: " + pagination);
                 pagination.textContent = "";
 
                 const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -626,6 +632,61 @@ reviewTab.addEventListener("click", async function(){
             if(data.length > itemsPerPage) renderPagination();
 
 
+            // 리뷰 삭제
+            const reviewList = document.getElementById("review").querySelector("ul.review-list");
+            reviewList.addEventListener("click", async function(event){
+                const button = event.target.closest(".btn-delete");
+                if (button) {
+                    button.disabled = true;
+                    try {
+                        const facilityId = parseInt(button.getAttribute("data-id"));
+
+                        // 삭제 결과
+                        const result = await deleteReview(facilityId);
+                        console.log("result : " + result);
+
+                        if(result > 0){
+                            const liItem = event.target.closest("li"); // 버튼이 속한 li를 찾음
+                            if (liItem) {
+                                liItem.remove(); // li 삭제
+                            }
+                            const indexToRemove = data.findIndex(item => item.id === facilityId);
+                            if (indexToRemove > -1) {
+                                data.splice(indexToRemove, 1); // 배열에서 해당 아이템 삭제
+                            }
+
+                            if (data.length === 0) {
+                                const liItem = document.createElement("li");
+                                liItem.classList.add('no-result', 'border-top');
+                                liItem.textContent = "작성한 리뷰가 없습니다.";
+                                reviewList.appendChild(liItem);
+                            }
+
+                            // 현재 페이지가 데이터 크기를 초과하면 이전 페이지로 이동
+                            const totalPages = Math.ceil(data.length / itemsPerPage);
+                            if (currentPage > totalPages) {
+                                currentPage = totalPages;
+                            }
+
+                            // 삭제 후 다시 렌더링
+                            await renderData(currentPage);
+                            if (data.length >= itemsPerPage) {
+                                renderPagination();
+                            } else {
+                                document.querySelector(".pagination").textContent = "";
+                            }
+                        }
+
+
+                    }catch(e){
+                        console.log("삭제 실패!");
+                    } finally {
+                        button.disabled = false;
+                    }
+
+                }
+            });
+
         }
 
 
@@ -651,5 +712,207 @@ function renderStars(averageRating) {
 }
 
 
+async function deleteReview(id){
+    const url = '/Review/reviewDelete';
+    const data = {
+        id : id
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('서버 오류: ' + response.status);
+        }
+
+        const result = await response.json(); // 응답 데이터를 JSON으로 변환
+        console.log("data : ", result);
+        return result; // 결과 반환
+    } catch (error) {
+        console.error('AJAX 오류:', error);
+        throw error; // 에러를 호출한 곳으로 전달
+    }
+}
 
 
+async function editReview(id){
+    // fetch로 데이터를 불러옵니다.
+    try {
+        let review = await getReview(id);
+
+        loadReviewData(review);  // 리뷰 데이터를 모달에 로드
+        const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        exampleModal.show();
+    } catch (error) {
+        console.error('리뷰 데이터를 불러오는 데 실패했습니다:', error);
+        alert('리뷰 데이터를 불러오는 데 실패했습니다.');
+    }
+}
+
+async function getReview(id) {
+    const response = await fetch(`/Review/getReview?id=${id}`);
+    const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+
+    return review;
+}
+
+// 리뷰 데이터를 모달에 로드하는 함수
+function loadReviewData(review) {
+
+    // review.rating 값을 숨겨진 input에 설정
+    document.getElementById('ratingValue').setAttribute('value', review.rating);
+    console.log("보자보자"+ review.rating)
+
+// review.comment 값을 textarea에 설정
+    document.getElementById('comment').value = review.comment;
+
+    document.getElementById("reviewId").value = review.id;
+
+// 평점에 맞는 별 표시
+    document.querySelectorAll('#rating .star').forEach(star => {
+        const starValue = star.getAttribute('data-value'); // 각 별의 data-value 속성 값 가져오기
+        const icon = star.querySelector("i"); // <i> 태그 찾기
+
+        if (icon) { // <i> 태그가 존재하는지 확인
+            if (starValue <= review.rating) { // 별의 값이 리뷰 평점보다 작거나 같으면
+                icon.classList.remove("fa-star"); // 빈 별을 제거
+                icon.classList.add("fa-star"); // 채워진 별 추가
+                icon.style.color = "#f79256"; // 채워진 별은 색상 변경
+            } else { // 별의 값이 리뷰 평점보다 크면
+                icon.classList.remove("fa-star"); // 채워진 별을 제거
+                icon.classList.add("fa-star"); // 빈 별 추가
+                icon.style.color = "gray"; // 빈 별은 회색
+            }
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const stars = document.querySelectorAll(".rating .star"); // 별 요소들
+    const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
+
+
+    let rating =0;
+    // 별 클릭 시 평점 설정
+    stars.forEach(star => {
+        star.addEventListener("click", function() {
+            rating = parseInt(this.getAttribute("data-value"));
+            updateStars(rating);
+        });
+
+        // 마우스 오버 시 동적 별 채우기
+        star.addEventListener("mouseover", function() {
+            const value = parseInt(this.getAttribute("data-value"));
+            updateStars(value);
+        });
+
+        // 마우스 아웃 시 현재 평점 상태 유지
+        star.addEventListener("mouseout", function() {
+            updateStars(rating);
+        });
+    });
+
+    const modalElement = document.getElementById("exampleModal");
+
+// 모달 닫힘 이벤트에 리스너 추가
+    modalElement.addEventListener("hidden.bs.modal", function () {
+        // 입력 필드 초기화
+        document.getElementById("comment").value = "";
+        document.getElementById("ratingValue").value = "";
+        document.getElementById("facilityId").value = "";
+
+        resetStars();
+        console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
+    });
+
+    // 별 초기화 함수
+    function resetStars() {
+        stars.forEach(star => {
+            star.querySelector("i").classList.remove("fa-star");
+            star.querySelector("i").classList.add("fa-star");
+            star.querySelector("i").style.color = "gray"; // 기본 회색으로 되돌리기
+        });
+        rating = 0; // 초기 평점으로 리셋
+    }
+
+    // 별 상태 업데이트 함수
+    function updateStars(rating) {
+        stars.forEach(star => {
+            const value = parseInt(star.getAttribute("data-value"));
+            if (value <= rating) {
+                star.querySelector("i").classList.remove("fa-star");
+                star.querySelector("i").classList.add("fa-star");
+                star.querySelector("i").style.color = "#f79256";
+            } else {
+                star.querySelector("i").classList.remove("fa-star");
+                star.querySelector("i").classList.add("fa-star");
+                star.querySelector("i").style.color = "gray"; // 빈 별은 회색
+            }
+        });
+    }
+
+    const reviewForm = document.getElementById("reviewinsertForm");
+
+    reviewForm.addEventListener("submit", async function (event) {
+        // 평점이 선택되지 않았으면 경고
+
+        event.preventDefault();
+        console.log("dsds"+rating);
+        if(rating === 0){
+            rating = document.getElementById("ratingValue").value;
+            console.log("입력했을때안했을때"+ rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ rating)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
+
+
+        }else {
+            document.getElementById("ratingValue").value = rating;
+            console.log("입력했을때" + rating)
+        }
+
+
+        // 리뷰 내용이 비어있으면 경고
+        const comment = document.getElementById("comment").value;
+        if (comment.trim() === "") {
+            alert("리뷰 내용을 작성해 주세요!");
+            event.preventDefault();  // 폼 제출을 막음
+            return;
+        }
+        // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
+        let id = document.getElementById('reviewId').value;
+        document.getElementById('facilityId').value = currentfacility.id;
+
+        // 폼 제출이 문제없이 진행됨
+
+        const url = '/Review/reviewInsert';
+        const data = {
+            rating: rating,
+            comment: comment,
+            facilityId: currentfacility.id,
+            id : id
+
+        };
+
+
+        await fetch(url, {
+            method: 'POST',  // POST 메소드로 요청
+            headers: {
+                'Content-Type': 'application/json',  // JSON 형식으로 전송
+            },
+            body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+        });
+
+
+        await loadReviews(currentfacility.id);
+
+    });
+});

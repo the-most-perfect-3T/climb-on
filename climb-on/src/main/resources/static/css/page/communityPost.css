@@ -15,7 +15,7 @@ h2 {
 /* 페이지 전체 스타일 */
 
 .content .inner{
-    padding-top: calc(var(--headerHeight) - 18px); /* 헤더 높이만큼 패딩 추가 */
+    padding-top: calc(var(--headerHeight) - 45px); /* 헤더 높이만큼 패딩 추가 */
     padding-bottom: var(--footerHeight); /* 푸터 높이만큼 패딩 추가 */
 }
 
@@ -24,7 +24,7 @@ h2 {
     display: flex; /* 가로로 배치 */
     justify-content: space-between; /* 양쪽 끝으로 정렬 */
     align-items: center; /* 세로 중앙 정렬 */
-    margin-bottom: 6px; /* 아래 간격 추가 */
+    margin-bottom: 25px; /* 아래 간격 추가 */
 }
 
 /* 게시글 제목 옆 댓글 수 스타일 */
@@ -34,20 +34,18 @@ h2 {
     font-size: 0.9em; /* 댓글 수를 작게 표시 */
 }
 
-.main-container {
-    padding-top: 100px; /* 상단 패딩 추가 */
-}
-
 /* 타임라인 컨테이너 스타일 */
 .timeline-container {
+    justify-content: space-between;
     display: flex;
+    width: 100%;
     margin-bottom: 120px; /* 아래쪽 여백 */
 }
 
 /* 타임라인 */
 .timeline {
-    display: flex; /* 버튼들을 가로로 배치 */
-    gap: 70px; /* 버튼 사이의 간격 */
+    gap: 95px; /* 버튼 사이의 간격 */
+    display: flex;
 }
 
 /* 타임라인 아이템 */
@@ -103,6 +101,7 @@ h2 {
     width: 100%;
     box-sizing: border-box; /* 테두리와 내부 여백 포함 */
 }
+
 
 .category-buttons {
     display: flex;
@@ -236,7 +235,7 @@ h2 {
 /* 글쓰기 버튼 */
 .create-button-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-left: auto;
 }
 
@@ -321,7 +320,7 @@ h2 {
 
 .post-list {
     width: 100%;
-    max-width: 90%;
+    max-width: 100%;
 }
 
 .post-list table {

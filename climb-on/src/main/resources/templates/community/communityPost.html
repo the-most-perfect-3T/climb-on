@@ -18,7 +18,7 @@
     <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
      </div>
 
-    <section class="timeline-container">
+    <div class="timeline-container">
 
         <!-- 타임라인 -->
         <div class="timeline">
@@ -44,10 +44,10 @@
             <a th:href="@{'/community?category=소식&dday=종료됨'}">지난일정</a>
         </div>
         </div>
-    </section>
+    </div>
 
         <!-- 게시글 목록 -->
-   <section class="post-list">
+   <div class="post-list">
        <h2>커뮤니티 게시판</h2>
         <!-- 카테고리 섹션 -->
        <div class="header-container">
@@ -230,7 +230,10 @@
                         <span th:text="${post.title}">게시글 제목 예시</span>
                     </a>
                 </div>
-                <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
+                <div class="card-content" th:utext="${post.content}">게시글 내용 요약</div>
+                <div class="post-image" th:if="${post.imageUrl != null}">
+                    <p th:text="${post.imageUrl != null ? post.imageUrl : '/images/default-image.png'}" alt="게시글 이미지"></p>
+                </div>
                 <div class="card-meta">
                     <span th:text="${post.displayName}">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
@@ -240,7 +243,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- 페이지네이션 -->
     <section class="pagination">
@@ -253,7 +256,6 @@
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
                         + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"><i class="fa-solid fa-chevron-left"></i></a>
             </li>  <!--currentPage에 따라 이전 페이지링크가 표시--> <!-- 페이지네이션이 되도 링크 생성 할 때 현재 URL에 포함된 category, searchKeyword, sort 등의 파라미터를 함께 전달하여 커뮤니티게시판의 기존 기능 유지-->
-            </li>
             <!-- 페이지 번호 링크 -->
             <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조--> <!--첫번째 인자가 null인 경우 두번째 인수 반환-->
                 <a th:href="@{'/community?page=' + ${pageNum}
