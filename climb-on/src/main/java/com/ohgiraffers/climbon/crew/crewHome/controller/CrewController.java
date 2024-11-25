@@ -36,6 +36,8 @@ public class CrewController {
                               @RequestParam(required = false) String searchKeyword, @RequestParam(defaultValue = "latest") String sort,
                               /*@RequestParam(required = false) String dday,*/ @RequestParam(defaultValue = "list") String viewMode,
                               @Param("status") Boolean status, ModelAndView mv){
+        List<CrewDTO> crewList = crewService.getRecruitingCrews();
+
         // page 파라미터와 pageSize를 사용해 해당 페이지에 맞는 게시글 목록을 조회
         // & category 파라미터를 받아 해당 카테고리의 게시글만 조회하도록 설정하고, 카테고리 파라미터가 없으면 모든 게시글 조회
         // searchKeyword 파라미터를 추가해서 검색어가 있을 때만 검색 결과를 반환하도록 함.
@@ -50,11 +52,11 @@ public class CrewController {
         // 전체 페이지 수 계산  // ceil 함수는 올림을 해줌
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
 
-        for (CrewPostDTO post : posts) {
-            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
-            String userNickname =  crewBoardService.getUserNicknameById(post.getUserId());
-            post.setUserNickname(userNickname);
-        }
+//        for (CrewPostDTO post : posts) {
+//            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+//            String userNickname =  crewBoardService.getUserNicknameById(post.getUserId());
+//            post.setUserNickname(userNickname);
+//        }
 
         // '전체' 카테고리를 처리
         if ("전체".equals(category)) {
@@ -64,11 +66,12 @@ public class CrewController {
         Map<String, List<CrewPostDTO>> postsWithPinned = crewBoardService.getPostsWithPinned(
                 page, pageSize, category, searchKeyword, sort, /*dday,*/ status);
 
+        mv.addObject("crews", crewList);
         mv.addObject("pinnedNoticePosts", postsWithPinned.get("pinnedNoticePosts"));
 //        mv.addObject("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         mv.addObject("generalPosts", postsWithPinned.get("generalPosts"));
 
-        mv.addObject("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//        mv.addObject("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         mv.addObject("currentPage", page);
         mv.addObject("totalPages", totalPages);
         mv.addObject("category", category != null ? category : "전체");
@@ -105,7 +108,7 @@ public class CrewController {
             String message = "등록 실패";
         }
 
-        return "redirect:/crew/crewBoardList";
+        return "redirect:/crew/home";
     }
 
     @GetMapping("/crewBoardList")
@@ -170,12 +173,12 @@ public class CrewController {
 
         List<CrewDTO> crews = crewService.selectFiveCrews(offset, sort, areas);
 
-        if (crews == null || crews.isEmpty()) {
+        /*if (crews == null || crews.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("더이상 조회할 크루가 없습니다.");
-        } else {
+        } else {*/
             CrewListWithCount crewListWithCount = new CrewListWithCount(count, crews);
             return ResponseEntity.ok(crewListWithCount);
-        }
+//        }
     }
 
     @GetMapping("/checkCrewName")

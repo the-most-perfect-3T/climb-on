@@ -28,7 +28,6 @@ const hiddenImgUrlInput = document.getElementById("hidden_imgURL_input");
 const hiddenContentInput = document.getElementById("hidden_content_input");
 quill.on('text-change', function (){
     hiddenContentInput.value = quill.root.innerHTML;
-    console.log(quill.root.innerHTML);
 });
 
 // 익명 토글
