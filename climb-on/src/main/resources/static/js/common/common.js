@@ -21,13 +21,6 @@ depth1.forEach(function(el) {
     });
 });
 
-// Header Nav active
-/*depth1.forEach(function(el) {
-    el.addEventListener("click", function(){
-       depth1.forEach(item=>item.classList.remove('active'));
-       this.classList.add("active");
-    });
-});*/
 
 
 // 다크모드
@@ -49,4 +42,34 @@ function darkMode() {
 }
 darkMode();
 
+
+// Header Nav active
+const currentUrl = window.location.href;
+const $header = document.querySelector("header");
+const depth1Li = $header.querySelectorAll(".depth1 > li");
+const depth2Li = $header.querySelectorAll(".depth2 > li");
+
+function removeActive(el){
+    el.forEach(function(el){
+        el.classList.remove("active");
+    });
+}
+
+if(currentUrl.includes("facilities")){
+    removeActive(depth1Li);
+    depth1Li[0].classList.add("active");
+}else if(currentUrl.includes("community")){
+    removeActive(depth1Li);
+    depth1Li[1].classList.add("active");
+}else if(currentUrl.includes("crew")){
+    removeActive(depth1Li);
+    depth1Li[2].classList.add("active");
+    if(currentUrl.includes("home")){
+        removeActive(depth2Li);
+        depth2Li[0].classList.add("active");
+    }else {
+        removeActive(depth2Li);
+        depth2Li[1].classList.add("active");
+    }
+}
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - Page Not Found</title>
+    <head th:replace="~{/common/head :: headFragment}"></head>
+    <style>
+
+        .error-wrap {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        .error-wrap img {
+            width: fit-content;
+        }
+        .error-wrap h2 {
+            margin-top: 40px;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .error-wrap p {
+            margin-bottom: 60px;
+        }
+        .error-wrap a {
+            color: var(--point);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-wrap">
+        <img src="/images/404error.png" alt="404 error">
+        <h2>This page does not exists.</h2>
+        <p>죄송합니다. 찾으시려는 페이지는 존재하지 않습니다.</p>
+
+        <a href="/">홈으로</a>
+    </div>
+</body>
+</html>
