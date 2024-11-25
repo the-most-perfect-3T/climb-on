@@ -125,6 +125,24 @@ button:disabled {
     .input-wrap-btn button {
         color: var(--black);
     }
+    .section-mypage .aside::after {
+        background: var(--darkBorderColor);
+    }
+    .section-mypage #profile .profile-cont .section00 .btn-wrap button {
+        color: #fff;
+    }
+    .section-mypage .aside ul li button {
+        color: #fff;
+    }
+    .section-mypage #profile .modify-cont .section00 .btn-wrap .btn {
+        color: var(--darkGray);
+    }
+    .modal-user .modal-footer button:first-of-type {
+        color: var(--darkGray);
+    }
+    #facilityModal .modal-body ul li .address {
+        color: #fff;
+    }
 }
 
 
