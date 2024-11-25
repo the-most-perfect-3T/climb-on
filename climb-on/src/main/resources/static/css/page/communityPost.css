@@ -296,6 +296,10 @@ h2 {
     margin-bottom: 20px;
 }
 
+.thumbnail-wrapper {
+    flex: 0 0 150px;
+}
+
 /* 리스트 뷰 스타일 */
 .list-view {
     width: 100%;

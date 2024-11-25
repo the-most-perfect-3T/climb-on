@@ -1,0 +1,59 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block layout:fragment="css">
+
+</th:block>
+
+
+
+<th:block layout:fragment="containerFragment">
+    <div class="inner">
+        <h2>통합검색</h2>
+
+        <!-- 검색어 입력 폼 -->
+        <form action="/search" method="get" style="margin-bottom: 20px;">
+            <input type="text" name="keyword" placeholder="검색어를 입력하세요" minlength="2" required
+                   th:value="${keyword}">
+            <button type="submit">검색</button>
+        </form>
+
+        <!-- 검색 결과 영역 -->
+        <div>
+        <!-- 크루 결과 -->
+        <section>
+            <h2>크루</h2>
+            <p th:if="${crewNames.size()} == 0">결과가 없습니다.</p>
+            <div th:each="crew : ${crewNames}">
+                <p th:text="${crew.crewName}"></p>
+            </div>
+        </section>
+
+        <!-- 시설 결과 -->
+        <section>
+            <h2>운동시설</h2>
+            <p th:if="${facilities.size()} == 0">결과가 없습니다.</p>
+            <div th:each="facility : ${facilities}">
+                <p th:text="${facility.facilityName} + ' - ' + ${facility.address}"></p>
+            </div>
+        </section>
+
+        <!-- 게시글 결과 -->
+        <section>
+            <h2>게시글</h2>
+            <p th:if="${communityPosts.size()} == 0">결과가 없습니다.</p>
+            <div th:each="post : ${communityPosts}">
+                <p th:utext="${post.title}"></p>
+                <p th:utext="${post.content}"></p>
+            </div>
+        </section>
+    </div>
+    </div>
+</th:block>
+
+
+<th:block layout:fragment="javascript">
+
+</th:block>
