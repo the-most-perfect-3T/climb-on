@@ -17,5 +17,11 @@ public class Webconfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/img/business/**")
                 .addResourceLocations(commonPath + "business/");
+
+        registry.addResourceHandler("/images/crewPic/**")
+                .addResourceLocations(commonPath + "crew/profile/");
+
+        registry.addResourceHandler("/images/crewPost/**")
+                .addResourceLocations(commonPath + "crew/posts/");
     }
 }

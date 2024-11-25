@@ -22,24 +22,39 @@
     font-size: 1.5rem;
 }
 
-.selected-filter {
-    background-color: #ffe6cc;
-    padding: 5px 10px;
-    border-radius: 12px;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.selected-filter .remove-filter {
-    cursor: pointer;
-    color: #ff9900;
-    font-weight: bold;
+.selected-filters {
+    padding-left: 40px;
 }
 
+
 /* Crew List */
+.circleRgstr {
+    margin-left: 30px;
+}
+
+.filter-text {
+    margin-left: 30px;
+}
+
+.container-list {
+    margin-right: 20px;
+}
+
+.filter .ms-auto {
+    margin-left: auto !important;
+    margin-right: 20px;
+}
+
 .table td {
     vertical-align: middle;
+}
+
+/* Align crew image and badge to the left */
+.container-list td:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-left: 40px;
 }
 
 .table img {
@@ -49,6 +64,7 @@
 
 .table .badge {
     font-size: 0.9rem;
+    background-color: var(--point);
 }
 
 /* Filter Section */
@@ -67,9 +83,10 @@
 
 /* Category and Area Tag Buttons */
 #selectedCategories .btn,
-#selectedAreas .btn {
+#selectedAreas .btn,
+#selected-filters .btn {
     display: inline-flex;
-    align-items: center;
+    align-items: center !important;
     gap: 0.2rem;
 }
 
@@ -95,6 +112,14 @@
     margin-bottom: 6px;
     background-color: var(--beige);
     flex-shrink: 0;
+}
+
+.btnImgInsert {
+    background-color: #dfdfdf;
+}
+
+.btnImgInsert:hover {
+    background-color: var(--beige);
 }
 
 /*크루이름*/
@@ -198,4 +223,6 @@
 #areaSelectModal {
     z-index: 1060 !important; /* Must be above the first modal */
 }
+
+
 

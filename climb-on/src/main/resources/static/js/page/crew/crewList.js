@@ -1,3 +1,128 @@
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 크루 리스트~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+const crewListContainer = document.getElementById("crewList");
+const showMoreBtn = document.getElementById("showMoreBtn");
+const sortByBtn = document.getElementById("sortBy");
+const areasFilterBtn = document.getElementById("areasFilter");
+const triggers = document.querySelectorAll('[data-bs-target="#areaModal"]');
+let sortOrder = "latest";
+let currentPage = 1;
+const filterAreas = [];
+let currentContext;
+
+// 지역 필터 버튼 클릭시(모달에서의 이벤트는 맨밑에서 관리, 등록,리스트 어디서 눌렀는지에 따라 이벤트 분리)
+areasFilterBtn.addEventListener('click', function () {
+    secondModal.show();
+    // 두 모달과 뒤의 backdrop(어두운 배경) z-index 조정
+    document.getElementById('areaSelectModal').style.zIndex = '1060';
+    secondModal.backdrop = true;
+});
+
+// 어디서 모달을 불러왔는지 저장
+triggers.forEach(trigger => {
+    trigger.addEventListener('click', () => {
+        currentContext = trigger.dataset.context;
+    });
+});
+
+// 최신순/회원수 버튼 클릭시 리스트를 새로 채워준다
+sortByBtn.addEventListener('click', () => {
+    sortByBtn.innerHTML = (sortByBtn.innerText.includes("최신순")) ? "<i class=\"fa-solid fa-arrow-down-short-wide\"></i>회원수" : "<i class=\"fa-solid fa-arrow-down-short-wide\"></i>최신순";
+    sortOrder = (sortOrder === "latest") ? "mostMembers" : "latest";
+    crewListContainer.innerHTML = '';
+    currentPage = 0;
+    loadCrews(currentPage);
+});
+
+// 더보기 버튼 클릭시
+showMoreBtn.addEventListener('click', () => {
+    loadCrews(currentPage);
+});
+
+async function loadCrews(page) {
+    try {
+        const response = await fetch(`/crew/crewlistMore?page=${page}&sort=${sortOrder}&areas=${filterAreas}`);
+        if(!response.ok){
+            throw new Error("크루 더보기 조회 실패");
+        }
+        const data = await response.json();
+        const count = data.count;
+        const crewList = data.crews;
+        if(count !== null){
+            document.querySelector('.count-number').textContent = `${count} 개`;
+        }
+
+        currentPage++;
+
+        crewList.forEach((crew) => {
+            const tr = document.createElement('tr');
+            tr.classList.add('border-bottom');
+
+            const tdImage = document.createElement('td');
+            tdImage.style.width = '15%';
+            tdImage.classList.add('d-flex', 'flex-column', 'gap-2');
+
+            const imgWrapper = document.createElement('div');
+            imgWrapper.classList.add('position-relative', 'align-items-center');
+            imgWrapper.style.width = '60px';
+            imgWrapper.style.height = '60px';
+
+            const imgWrap = document.createElement('div');
+            imgWrap.classList.add('img-wrap', 'd-flex', 'align-items-center', 'justify-content-center');
+            imgWrap.style.width = '100%';
+            imgWrap.style.height = '100%';
+
+            const img = document.createElement('img');
+            img.src = crew.imgUrl || '/images/logo.svg';
+            img.classList.add('w-100');
+            imgWrap.appendChild(img);
+            imgWrapper.appendChild(imgWrap);
+            tdImage.appendChild(imgWrapper);
+
+            if (crew.recruitingStatus) {
+                const badge = document.createElement('span');
+                badge.classList.add('badge', 'rounded-pill');
+                badge.textContent = '모집중';
+                tdImage.appendChild(badge);
+            }
+            tr.appendChild(tdImage);
+
+            const tdCrewInfo = document.createElement('td');
+            tdCrewInfo.style.width = '20%';
+
+            const crewName = document.createElement('p');
+            crewName.classList.add('mb-1', 'fw-bold');
+            crewName.textContent = crew.crewName;
+
+            const crewArea = document.createElement('small');
+            crewArea.classList.add('text-muted');
+            crewArea.textContent = crew.activeArea;
+
+            tdCrewInfo.appendChild(crewName);
+            tdCrewInfo.appendChild(crewArea);
+            tr.appendChild(tdCrewInfo);
+
+            const tdDescription = document.createElement('td');
+            tdDescription.style.width = '65%';
+            tdDescription.textContent = crew.description;
+
+            tr.appendChild(tdDescription);
+
+            crewListContainer.appendChild(tr);
+        });
+        if(crewList.length < 5) {
+            showMoreBtn.style.display = 'none';
+            alert("모든 크루 리스트 입니다.");
+        }else {
+            showMoreBtn.style.display = '';
+        }
+
+    } catch (error){
+        console.error(error);
+        alert("크루 리스트를 불러오는중 문제가 발생했습니다.")
+    }
+}
+
+
 
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 크루등록 모달~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -6,7 +131,6 @@ const firstModal = new bootstrap.Modal(document.getElementById('creWRegisterModa
     keyboard: false
 });
 const secondModal = new bootstrap.Modal(document.getElementById('areaSelectModal'), {
-    backdrop: false, // We will keep the first modal's backdrop visible
     keyboard: false
 });
 
@@ -60,11 +184,11 @@ crewNameBtn.disabled = true;
 
 crewNameInput.addEventListener('keyup', function (event){
     let value = crewNameInput.value;
-    if(value.length >=1 && value.length <= 10){
+    if(value.length >=1 && value.length <= 15){
         errorMessage.textContent = "";
         crewNameBtn.disabled = false;
     }else{
-        errorMessage.textContent = "1~10자 이내"
+        errorMessage.textContent = "1~15자 이내"
         crewNameBtn.disabled = true;
     }
     successMessage.textContent = "";
@@ -238,13 +362,14 @@ closeBtn.addEventListener("click", function (event){
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 지역선택 모달~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 const selectedAreasContainer = document.getElementById('selectedAreasContainer');
 const areaPlaceholder = document.getElementById('areaPlaceholder');
+const selectedFilterAreasContainer = document.getElementById('selected-filters');
 
 document.querySelectorAll('#areaSelectModal .dropdown-menu').forEach(menu => {
     menu.addEventListener('click', function(event) {
         const item = event.target.closest(".dropdown-item");     // 클릭한게 dropdown-item 이 아니면 return !!정확한 동작을 위함
         if (!item) return;
 
-        let value
+        let value;
         // 지역 전체 선택시 와 일부 구역(시, 구) 선택 구분
         if(item.parentNode.parentNode.firstElementChild === item.parentNode){
             value = item.getAttribute('data-value');
@@ -265,56 +390,128 @@ document.querySelectorAll('#areaSelectModal .dropdown-menu').forEach(menu => {
         // 버튼 삭제시(활동지역 비선택시) 일어나야할 이벤트
         button.querySelector('.fa-xmark').addEventListener('click', function(event) {
             event.stopPropagation();
-            selectedAreasContainer.removeChild(button);
+            if(currentContext === "registerCrew"){
+                selectedAreasContainer.removeChild(button);
+                // 선택된 지역 없을시 다시 placeholder 보여줌
+                if (selectedAreasContainer.children.length === 0) {
+                    areaPlaceholder.style.display = "block";
+                }
 
-            // 선택된 지역 없을시 다시 placeholder 보여줌
-            if (selectedAreasContainer.children.length === 0) {
-                areaPlaceholder.style.display = "block";
+            }else if(currentContext === "filterCrewList"){
+                selectedFilterAreasContainer.removeChild(button);
+                if(selectedFilterAreasContainer.children.length === 0){
+                    selectedFilterAreasContainer.style.display = "none";
+                }
+
+                const areas = Array.from(selectedFilterAreasContainer.children);
+                filterAreas.length = 0;
+                areas.forEach(area => {
+                    filterAreas.push(area.dataset.value);
+                });
+                crewListContainer.innerHTML = '';
+                currentPage = 0;
+                loadCrews(currentPage);
             }
         });
 
-        // 선택된 지역 버튼 보여줄 때
-        // 지역 전체 선택이면 if 기존 일부구역 버튼 있으면 delete 후 전체 버튼 append
-        // 동일 지역 선택시 append X
-        const children = Array.from(selectedAreasContainer.children);
+        if(currentContext === "registerCrew"){
+            // 선택된 지역 버튼 보여줄 때
+            // 지역 전체 선택이면 if 기존 일부구역 버튼 있으면 delete 후 전체 버튼 append
+            // 동일 지역 선택시 append X
+            const children = Array.from(selectedAreasContainer.children);
 
-        // 전체 선택인데 구역 있을시
-        if(button.textContent.includes("전체")){
-            const area = button.textContent.trim().substring(0, button.textContent.length -4);
-            children.forEach((child) => {
-                if(child.textContent.includes(area)){
-                    selectedAreasContainer.removeChild(child)
-                }
-            })
-            selectedAreasContainer.appendChild(button);
-            secondModalClose.click();
-            // 구역 선택인데 전체 있을시, 이미 선택한 구역일시, 나머지
-        }else {
-            const area2 = button.textContent.trim().substring(0, button.textContent.indexOf("-")).trim();
-            let isButtonPresent = false;
-            for(let i =0; i<children.length; i++){
-                const child = children[i];
-                if(child.textContent.includes(area2) && child.textContent.includes("전체")){
-                    selectedAreasContainer.removeChild(child);
-                    selectedAreasContainer.appendChild(button);
-                    secondModalClose.click();
-                    return false;
-                }
-                if(child.textContent === button.textContent){
-                    isButtonPresent = true;
-                    secondModalClose.click();
-                    return false;
-                }
-            }
-            if(!isButtonPresent){
+            // 전체 선택인데 구역 있을시
+            if(button.textContent.includes("전체")){
+                const area = button.textContent.trim().substring(0, button.textContent.length -4);
+                children.forEach((child) => {
+                    if(child.textContent.includes(area)){
+                        selectedAreasContainer.removeChild(child)
+                    }
+                })
                 selectedAreasContainer.appendChild(button);
+                secondModalClose.click();
+                // 구역 선택인데 전체 있을시, 이미 선택한 구역일시, 나머지
+            }else {
+                const area2 = button.textContent.trim().substring(0, button.textContent.indexOf("-")).trim();
+                let isButtonPresent = false;
+                for(let i =0; i<children.length; i++){
+                    const child = children[i];
+                    if(child.textContent.includes(area2) && child.textContent.includes("전체")){
+                        selectedAreasContainer.removeChild(child);
+                        selectedAreasContainer.appendChild(button);
+                        secondModalClose.click();
+                        return false;
+                    }
+                    if(child.textContent === button.textContent){
+                        isButtonPresent = true;
+                        secondModalClose.click();
+                        return false;
+                    }
+                }
+                if(!isButtonPresent){
+                    selectedAreasContainer.appendChild(button);
+                }
+                secondModalClose.click();
             }
-            secondModalClose.click();
+
+            // 선택된 지역 하나라도 있으면 플레이스 홀더 X
+            if (selectedAreasContainer.children.length > 0) {
+                areaPlaceholder.style.display = 'none';
+            }
         }
 
-        // 선택된 지역 하나라도 있으면 플레이스 홀더 X
-        if (selectedAreasContainer.children.length > 0) {
-            areaPlaceholder.style.display = 'none';
+        else if(currentContext === "filterCrewList"){
+            // 선택된 지역 버튼 보여줄 때
+            // 지역 전체 선택이면 if 기존 일부구역 버튼 있으면 delete 후 전체 버튼 append
+            // 동일 지역 선택시 append X
+            const children = Array.from(selectedFilterAreasContainer.children);
+
+            // 전체 선택인데 구역 있을시
+            if(button.textContent.includes("전체")){
+                const area = button.textContent.trim().substring(0, button.textContent.length -4);
+                children.forEach((child) => {
+                    if(child.textContent.includes(area)){
+                        selectedFilterAreasContainer.removeChild(child)
+                    }
+                })
+                selectedFilterAreasContainer.appendChild(button);
+                secondModalClose.click();
+                // 구역 선택인데 전체 있을시, 이미 선택한 구역일시, 나머지
+            }else {
+                const area2= button.textContent.trim().substring(0, button.textContent.indexOf("-")).trim();
+                let isButtonPresent = false;
+                for(let i =0; i<children.length; i++){
+                    const child = children[i];
+                    if(child.textContent.includes(area2) && child.textContent.includes("전체")){
+                        selectedFilterAreasContainer.removeChild(child);
+                        selectedFilterAreasContainer.appendChild(button);
+                        secondModalClose.click();
+                        break;
+                    }
+                    if(child.textContent === button.textContent){
+                        isButtonPresent = true;
+                        secondModalClose.click();
+                        break;
+                    }
+                }
+                if(!isButtonPresent){
+                    selectedFilterAreasContainer.appendChild(button);
+                }
+                secondModalClose.click();
+            }
+            // 선택된 지역 하나라도 있으면 플레이스 홀더 X
+            if (selectedFilterAreasContainer.children.length > 0) {
+                selectedFilterAreasContainer.style.display = 'block';
+            }
+
+            const areas = Array.from(selectedFilterAreasContainer.children);
+            filterAreas.length = 0;
+            areas.forEach(area => {
+                filterAreas.push(area.dataset.value);
+            });
+            crewListContainer.innerHTML = '';
+            currentPage = 0;
+            loadCrews(currentPage);
         }
 
     });
