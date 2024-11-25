@@ -46,6 +46,7 @@
 .section-mypage .aside ul li button.active {
     background: var(--beige);
     border-radius: 6px;
+    color: var(--darkGray);
 }
 .section-mypage .aside ul li button.active span {
     font-weight: 600;
@@ -172,9 +173,7 @@
     align-items: center;
     justify-content: space-between;
 }
-.section-mypage #profile .profile-cont .section01 a.move-wrap {
-    border-right: 1px solid var(--borderColor);
-}
+
 
 .section-mypage #profile .profile-cont .section01 .move-wrap .title {
     font-size: 20px;
@@ -472,7 +471,7 @@
 .section-mypage #review .section00 .review-list li .contents {
     overflow-y: auto;
     font-size: 20px;
-    font-weight: 600;
+    /*font-weight: 600;*/
     margin-top: 30px;
     max-height: 90px;
 }
