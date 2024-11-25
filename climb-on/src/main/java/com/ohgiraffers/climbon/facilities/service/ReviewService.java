@@ -23,6 +23,12 @@ public class ReviewService {
         System.out.println("ReviewList = " + ReviewList);
         return ReviewList;
     }
+    public List<ReviewDTO> getReviewByUserId(int userId) {
+        List<ReviewDTO> ReviewList =reviewDAO.getReviewByUserId(userId);
+        System.out.println("ReviewList = " + ReviewList);
+        return ReviewList;
+
+    }
 
     public Integer getIsFavorite(int id, Integer userId) {
         return reviewDAO.getIsFavorite(id,userId);
@@ -53,4 +59,13 @@ public class ReviewService {
         return reviewDAO.reviewInsert(reviewDTO);
     }
 
+    public int reviewUpdate(ReviewDTO reviewDTO, int id) {
+        reviewDTO.setReviewerId(id);
+        return reviewDAO.reviewUpdate(reviewDTO);
+    }
+
+    public ReviewDTO getReviewById(Integer id) {
+        ReviewDTO reviewDTO = reviewDAO.getReviewById(id);
+        return reviewDTO;
+    }
 }

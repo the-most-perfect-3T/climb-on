@@ -17,4 +17,10 @@ public interface ReviewDAO {
     int removeFavorite(Map<String, Integer> params);
 
     int reviewInsert(ReviewDTO reviewDTO);
+
+    int reviewUpdate(ReviewDTO reviewDTO);
+
+    List<ReviewDTO> getReviewByUserId(int userId);
+
+    ReviewDTO getReviewById(Integer id);
 }

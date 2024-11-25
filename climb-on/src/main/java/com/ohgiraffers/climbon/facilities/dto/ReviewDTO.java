@@ -11,12 +11,50 @@ public class ReviewDTO {
    private Integer userId;
     private int rating;
     private String comment;
-
     private LocalDateTime createdAt;
 
     private String userNickname;
     private int likeCount;
     private float averageRating;
+
+    @Override
+    public String toString() {
+        return "ReviewDTO{" +
+                "Id=" + Id +
+                ", FacilityId=" + FacilityId +
+                ", userId=" + userId +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                ", createdAt=" + createdAt +
+                ", userNickname='" + userNickname + '\'' +
+                ", likeCount=" + likeCount +
+                ", averageRating=" + averageRating +
+                ", profilePic='" + profilePic + '\'' +
+                '}';
+    }
+
+    public ReviewDTO(Integer id, Integer facilityId, Integer userId, int rating, String comment, LocalDateTime createdAt, String userNickname, int likeCount, float averageRating, String profilePic) {
+        Id = id;
+        FacilityId = facilityId;
+        this.userId = userId;
+        this.rating = rating;
+        this.comment = comment;
+        this.createdAt = createdAt;
+        this.userNickname = userNickname;
+        this.likeCount = likeCount;
+        this.averageRating = averageRating;
+        this.profilePic = profilePic;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    private String profilePic;                  // 사용자 프로필 사진 URL
 
     public ReviewDTO(Integer id, Integer facilityId, Integer reviewerId, int rating, String comment, LocalDateTime createdAt, String userNickname, int likeCount, float averageRating) {
         Id = id;
@@ -28,21 +66,6 @@ public class ReviewDTO {
         this.userNickname = userNickname;
         this.likeCount = likeCount;
         this.averageRating = averageRating;
-    }
-
-    @Override
-    public String toString() {
-        return "ReviewDTO{" +
-                "Id=" + Id +
-                ", FacilityId=" + FacilityId +
-                ", ReviewerId=" + userId +
-                ", rating=" + rating +
-                ", comment='" + comment + '\'' +
-                ", createdAt=" + createdAt +
-                ", userNickname='" + userNickname + '\'' +
-                ", likeCount=" + likeCount +
-                ", averageRating=" + averageRating +
-                '}';
     }
 
     public float getAverageRating() {

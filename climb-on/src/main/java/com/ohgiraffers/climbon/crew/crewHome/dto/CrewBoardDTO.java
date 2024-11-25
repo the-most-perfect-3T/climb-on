@@ -7,7 +7,7 @@ public class CrewBoardDTO {
     private int id;
     private int crewCode;
     private int userId;
-    private int categoryCode;
+    private String category;
     private String title;
     private String content;
     private String imgUrl;
@@ -21,11 +21,11 @@ public class CrewBoardDTO {
     public CrewBoardDTO() {
     }
 
-    public CrewBoardDTO(int id, int crewCode, int userId, int categoryCode, String title, String content, String imgUrl, Date createdAt, Date updatedAt, int viewCount, int likeCount, boolean isAnonymous, int status) {
+    public CrewBoardDTO(int id, int crewCode, int userId, String category, String title, String content, String imgUrl, Date createdAt, Date updatedAt, int viewCount, int likeCount, boolean isAnonymous, int status) {
         this.id = id;
         this.crewCode = crewCode;
         this.userId = userId;
-        this.categoryCode = categoryCode;
+        this.category = category;
         this.title = title;
         this.content = content;
         this.imgUrl = imgUrl;
@@ -78,12 +78,12 @@ public class CrewBoardDTO {
         this.userId = userId;
     }
 
-    public int getCategoryCode() {
-        return categoryCode;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoryCode(int categoryCode) {
-        this.categoryCode = categoryCode;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getTitle() {
@@ -149,7 +149,7 @@ public class CrewBoardDTO {
                 "id=" + id +
                 ", crewCode=" + crewCode +
                 ", userId=" + userId +
-                ", categoryCode=" + categoryCode +
+                ", category=" + category +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +

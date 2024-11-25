@@ -6,13 +6,18 @@
 package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.community.service.PostService;
+import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
+import com.ohgiraffers.climbon.facilities.dto.ReviewDTO;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
+import com.ohgiraffers.climbon.facilities.service.ReviewService;
 import com.ohgiraffers.climbon.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,6 +29,11 @@ public class UserRestController {
     private UserService userService;
     @Autowired
     private FacilitiesService facilitiesService;
+    @Autowired
+    private PostService postService;
+    @Autowired
+    private ReviewService reviewService;
+
 
     @PostMapping("/registFacility")
     public ResponseEntity<Object> registFacility(@AuthenticationPrincipal AuthDetail userDetails,
@@ -51,5 +61,48 @@ public class UserRestController {
             return ResponseEntity.status(500).body(Map.of("message", "홈짐 등록에 실패했습니다."));
         }
 
+    }
+
+
+    @GetMapping("/favorite")
+    public ResponseEntity<Object> selectFavorite(@AuthenticationPrincipal AuthDetail userDetails){
+        System.out.println("즐겨찾기 요청");
+
+        // 로그인 정보 없으면
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인 정보가 없습니다."));
+        }
+
+        // 유저 pk
+        Integer key = userDetails.getLoginUserDTO().getId();
+        List<FacilitiesDTO>  facilities = facilitiesService.getFacilitiesByUserFavorite(key);
+
+        if (facilities == null || facilities.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "저장된 즐겨찾기가 없습니다."));
+        }
+
+
+        return ResponseEntity.ok(facilities);
+    }
+
+
+    @GetMapping("/review")
+    public ResponseEntity<Object> selectReview(@AuthenticationPrincipal AuthDetail userDetails){
+        System.out.println("리뷰 요청");
+
+        // 로그인 정보 없으면
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인 정보가 없습니다."));
+        }
+
+        // 유저 pk
+        Integer key = userDetails.getLoginUserDTO().getId();
+        List<ReviewDTO> reviewList = reviewService.getReviewByUserId(key);
+
+        if (reviewList == null || reviewList.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "작성한 리뷰가 없습니다."));
+        }
+
+        return ResponseEntity.ok(reviewList);
     }
 }

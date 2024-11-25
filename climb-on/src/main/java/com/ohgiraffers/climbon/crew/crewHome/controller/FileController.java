@@ -27,7 +27,7 @@ public class FileController {
      */
     @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> upload(MultipartFile[] uploadFile) {
-        String savePath = "C:/uploads/single";
+        String savePath = "C:/climbon/crew/posts";
         List<String> savedNames = new ArrayList<>();
         File uploadPath = new File(savePath);
 
@@ -38,10 +38,11 @@ public class FileController {
 
         for (MultipartFile multipartFile : uploadFile) {
             String uploadFileName = multipartFile.getOriginalFilename();
+            String ext = uploadFileName.substring(uploadFileName.lastIndexOf("."));
             String uuid = UUID.randomUUID().toString().replace("-","");
             // 파일명 저장
-            String savedName = uuid + "_" + uploadFileName;
-            String img = "/img/multi/" + savedName;
+            String savedName = uuid + ext;
+            String img = "/images/crewPost/" + savedName;
             savedNames.add(img);
 
             File saveFile = new File(uploadPath, savedName);
@@ -67,7 +68,8 @@ public class FileController {
         String originalFileName = imageFile.getOriginalFilename();
         String ext = originalFileName.substring(originalFileName.lastIndexOf("."));
         String savedName = UUID.randomUUID().toString().replace("-", "") + ext;
-        String img = "/img/crewPic/" + savedName;
+        String img = "/images/crewPic/" + savedName;
+//        String img = filePath + "/" + savedName;
 
         try {
             imageFile.transferTo(new File(filePath + "/" + savedName));

@@ -37,6 +37,65 @@
         NULL
         )
     </insert>
+    
+    <select id="countAllCrews" resultType="int">
+        SELECT COUNT(id)
+        FROM crews
+        WHERE status=1;
+    </select>
+
+    <select id="selectCrews" resultMap="crew">
+        SELECT *
+        FROM crews
+        WHERE status=1
+        LIMIT 5;
+    </select>
+
+    <select id="selectFiveCrews" parameterType="hashmap" resultMap="crew">
+        SELECT
+            a.crew_name,
+            a.img_url,
+            a.description,
+            a.recruiting_status,
+            a.active_area
+        <if test="sort == 'latest'">
+        FROM crews a
+        WHERE a.status =1
+            <if test="areas != null and areas.size != 0">
+                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT ">
+                    ('%' , #{area}, '%')
+                </foreach>
+            </if>
+        ORDER BY a.created_at DESC
+        </if>
+        <if test="sort == 'mostMembers'">
+            ,COUNT(b.user_code) AS member_count
+        FROM crews a
+        JOIN user_crew b
+        on a.id = b.crew_code
+        WHERE a.status =1
+            <if test="areas != null and areas.size != 0">
+                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT ">
+                    ('%' , #{area}, '%')
+                </foreach>
+            </if>
+        GROUP BY a.id
+        ORDER BY member_count DESC
+        </if>
+        LIMIT #{page},5;
+    </select>
+
+    <select id="countCrewsFilteredByAreas" parameterType="list" resultType="int">
+        SELECT
+            COUNT(id)
+        FROM crews
+        WHERE status =1
+        <if test="areas != null and areas.size != 0">
+            <foreach collection="areas" item="area" open=" AND active_area LIKE CONCAT ">
+                ('%' , #{area}, '%')
+            </foreach>
+        </if>
+    </select>
 
 
 

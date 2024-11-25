@@ -279,3 +279,22 @@ p {
 }
 
 /* 반별을 위한 스타일 */
+.review-actions {
+    display: block; /* 기본적으로 숨김 */
+    margin-left: 10px;
+}
+
+.review-item:hover .review-actions {
+    display: inline-block; /* 마우스를 올리면 표시 */
+}
+
+.review-actions span {
+    color: #007bff;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.review-actions span:hover {
+    text-decoration: underline;
+}

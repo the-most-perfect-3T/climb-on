@@ -279,7 +279,7 @@ async function reviewcheckFavorite(id) {
     return isFavorite;
 }
 
-
+let globalDettails;
 let reviewLoaded = true; //리뷰 상태저장
 const detailsContainer = document.getElementById('facilityDetailsContainer');
 async function showFacilityDetails(facility) {
@@ -308,7 +308,7 @@ async function showFacilityDetails(facility) {
     `;
     // facilityDetailsContainer에 세부 정보를 삽입
 
-
+     globalDettails = facilityDetailsHTML;
     detailsContainer.innerHTML = facilityDetailsHTML;
 
 
@@ -346,78 +346,97 @@ function renderStars(averageRating) {
 
 
 
-    function loadReviews(facilityId) {
+function loadReviews(facilityId) {
+    // detailsContainer의 기존 HTML을 지우지 않고, 새로운 데이터를 추가하는 방식으로 수정
 
-        fetch(`/Review/Reviews?code=${facilityId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
+
+    // 1. 기존 리뷰 아이템 삭제
+    const existingReviews = detailsContainer.querySelectorAll('.Review-item');
+    existingReviews.forEach(review => {
+        review.remove();  // 각 리뷰 아이템 삭제
+    });
+
+    const reviewSummary = detailsContainer.querySelector('.item2');
+    if (reviewSummary) {
+        reviewSummary.remove();  // reviewSummary 삭제
+    }
+
+    fetch(`/Review/Reviews?code=${facilityId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('서버 오류: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(async data => {
+            // 데이터를 받아와서 리뷰가 존재하는 경우에만 처리
+            if (data && data.length > 0) {
+                // 기존 내용 갱신 (기존 html이 있으면 그 내용 추가)
+                const reviewSummary = `
+                <div class="item2">
+                <p> 
+                    <span class="review-sum">리뷰 : ${data.length}</span>
+                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span>
+                </p>
+                <div id="stars-container"></div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">작성</button>
+                <br><br><br><br>
+                </div>
+            `;
+
+                const item2 = document.createElement('div');
+                item2.innerHTML = reviewSummary;
+                // 2. 새로운 내용 추가
+                detailsContainer.appendChild(item2);
+
+
+
+                // 별점 렌더링
+                document.getElementById('stars-container').innerHTML = renderStars(data[0].averageRating);
+
+                // 각 리뷰 내용 동적으로 생성하여 추가
+                for (const Reviews of data) {
+                    const isFavorite = await reviewcheckFavorite(Reviews.id);
+                    console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
+                    const item = document.createElement('div');
+                    const reviewDate = new Date(Reviews.createdAt);
+                    const timeText = timeAgo(reviewDate);
+                    item.className = 'Review-item';
+                    // 리뷰 내용 구성
+                    item.innerHTML = `
+                    <div class="review-detail">
+                        <p>${Reviews.userNickname}</p>
+                          <div class="review-actions">
+                            <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>
+                            <button class="delete-btn">삭제</button>
+                        </div>
+                        <span>${timeText}</span>
+                        <div class="review-rating">
+                            <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                        </div>
+                        <p>${Reviews.likeCount}</p>
+                        <p>${Reviews.comment || '댓글이 없습니다'}</p>
+                        <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
+                            ${isFavorite ?? false ? '싫어요누르면 삭제됨' : '좋아요'}
+                        </button>
+                    </div>
+                `;
+                    detailsContainer.appendChild(item); // 새로 추가된 리뷰 항목을 detailsContainer에 추가
+
+                    const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
+                    starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
+                }
             }
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('서버 오류: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(async data => {
-                if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
-
-                    detailsContainer.innerHTML += `<p> <span class="review-sum">리뷰 : ${data.length}</span>
-                                                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span></p>
-                                                     <div id="stars-container"></div>
-                                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                     작성
-                                                     </button>
-
-                                                     </br></br></br></br>      
-                                                    </div>
-                                                  `;
-
-
-
-                    document.getElementById('stars-container').innerHTML = renderStars(data[0].averageRating); //별그리기
-
-                    for (const Reviews of data) {
-                        const isFavorite = await reviewcheckFavorite(Reviews.id);
-                        console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
-                        const item = document.createElement('div');
-                        const reviewDate = new Date(Reviews.createdAt);
-                        const timeText = timeAgo(reviewDate);
-                        item.className = 'Review-item';
-                        // Using innerHTML to insert the review comment
-                        item.innerHTML = `
-                              <div class="review-detail">
-                              <p>${Reviews.userNickname}</p>
-                              <span>${timeText}</span>
-                                <div class="review-rating">
-                                    <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
-                                </div>
-                              <p>${Reviews.likeCount}</p>
-                              <p>${Reviews.comment || '댓글이 없습니다'}</p>
-                              <button className ="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
-                                ${isFavorite ?? false ? '싫어요누르면 삭제됨' : '좋아요'}
-                                  </button>
-                                  </div>
-                              `;
-
-
-
-                        detailsContainer.appendChild(item);
-
-                        const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
-                        starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
-
-
-                    }
-
-
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    reviewLoaded = true;
 }
 
 
@@ -673,16 +692,24 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 닫기 버튼 클릭 시 별 초기화
-    resetBtn.addEventListener("click", function() {
+    const modalElement = document.getElementById("exampleModal");
+
+// 모달 닫힘 이벤트에 리스너 추가
+    modalElement.addEventListener("hidden.bs.modal", function () {
+        // 입력 필드 초기화
+        document.getElementById("comment").value = "";
+        document.getElementById("ratingValue").value = "";
+        document.getElementById("facilityId").value = "";
+
         resetStars();
+        console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
     });
 
     // 별 초기화 함수
     function resetStars() {
         stars.forEach(star => {
             star.querySelector("i").classList.remove("fa-star");
-            star.querySelector("i").classList.add("fa-star-o");
+            star.querySelector("i").classList.add("fa-star");
             star.querySelector("i").style.color = "gray"; // 기본 회색으로 되돌리기
         });
         rating = 0; // 초기 평점으로 리셋
@@ -693,12 +720,12 @@ document.addEventListener("DOMContentLoaded", function() {
         stars.forEach(star => {
             const value = parseInt(star.getAttribute("data-value"));
             if (value <= rating) {
-                star.querySelector("i").classList.remove("fa-star-o");
+                star.querySelector("i").classList.remove("fa-star");
                 star.querySelector("i").classList.add("fa-star");
-                star.querySelector("i").style.color = "gold"; // 채워진 별은 금색으로
+                star.querySelector("i").style.color = "#f79256";
             } else {
                 star.querySelector("i").classList.remove("fa-star");
-                star.querySelector("i").classList.add("fa-star-o");
+                star.querySelector("i").classList.add("fa-star");
                 star.querySelector("i").style.color = "gray"; // 빈 별은 회색
             }
         });
@@ -708,8 +735,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-    reviewForm.addEventListener("submit", function(event) {
+    reviewForm.addEventListener("submit", async function (event) {
         // 평점이 선택되지 않았으면 경고
+
+        event.preventDefault();
+
         document.getElementById("ratingValue").value = rating;
         if (ratingValue === 0) {
             alert("평점을 선택해 주세요!");
@@ -726,13 +756,71 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
-        document.getElementById('facilityId').value =currentfacility.id;
+        document.getElementById('facilityId').value = currentfacility.id;
 
         // 폼 제출이 문제없이 진행됨
         console.log("리뷰 데이터:", {
             rating: rating,
             comment: comment,
-            facilityId : currentfacility.id
+            facilityId: currentfacility.id
+
+
         });
+        const url = '/Review/reviewInsert';
+        const data = {
+            rating: rating,
+            comment: comment,
+            facilityId: currentfacility.id
+        };
+        await fetch(url, {
+            method: 'POST',  // POST 메소드로 요청
+            headers: {
+                'Content-Type': 'application/json',  // JSON 형식으로 전송
+            },
+            body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+        });
+
+
+        await loadReviews(currentfacility.id);
+
+
+
+
     });
 });
+
+async function editReview(id){
+    // fetch로 데이터를 불러옵니다.
+    try {
+        const response = await fetch(`/Review/getReview?id=${id}`);
+        const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+        console.log(review);
+       loadReviewData(review);  // 리뷰 데이터를 모달에 로드
+        const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        exampleModal.show();
+    } catch (error) {
+        console.error('리뷰 데이터를 불러오는 데 실패했습니다:', error);
+        alert('리뷰 데이터를 불러오는 데 실패했습니다.');
+    }
+}
+
+// 리뷰 데이터를 모달에 로드하는 함수
+function loadReviewData(review) {
+
+    console.log(review);
+    // review.rating 값을 숨겨진 input에 설정
+    document.getElementById('ratingValue').setAttribute('value', review.rating);
+
+// review.comment 값을 textarea에 설정
+    document.getElementById('comment').value = review.comment;
+
+// 평점에 맞는 별 표시
+    document.querySelectorAll('#rating .star').forEach(star => {
+        const starValue = star.getAttribute('data-value'); // 각 별의 data-value 속성 값 가져오기
+        if (starValue <= review.rating) {
+            star.classList.add('fa-star'); // 조건에 맞으면 'selected' 클래스 추가
+        } else {
+            star.classList.remove('fa-star'); // 조건에 맞지 않으면 'selected' 클래스 제거
+        }
+    });
+}

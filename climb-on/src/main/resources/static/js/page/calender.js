@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let eventData;
     // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
     const offset = new Date().getTimezoneOffset() * 60000;
-
     // 메인 캘린더
     const mainCalendar = new FullCalendar.Calendar(calendarEl, {
 
@@ -51,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             // 모든 이벤트 저장
                             try
                             {
-                                // Save all events to the database in a batch using the fetch API
                                 const response = await fetch('/events/batch', {
                                     method: 'POST',
                                     headers: {
@@ -59,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                     },
                                     body: JSON.stringify(eventsData)
                                 });
-                                // Check if the response was successful
                                 if (response.ok) {
                                     //await calendar.refetchEvents(); // Refresh events from the server
                                     //등록 완
@@ -233,17 +230,15 @@ document.addEventListener('DOMContentLoaded', function() {
                             end: $("#end").val(),
                             color: $("#color").val()
                         };
-                        // Check for empty values
+
                         if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
                             alert("입력하지 않은 값이 있습니다.");
                         } else if (eventData.start > eventData.end) {
-                            // Validate start and end dates
                             alert("시간을 잘못입력 하셨습니다.");
                         } else {
                             // 캘린더 뷰에 데이터 저장
                             crewCalendar.addEvent(eventData);
 
-                            // Get all events from the calendar
                             let allEvents = crewCalendar.getEvents();
                             let eventsData = allEvents.map(event => ({
                                 title: event.title,
@@ -255,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             // 모든 이벤트 저장
                             try
                             {
-                                // Save all events to the database in a batch using the fetch API
                                 const response = await fetch('/events/crew', {
                                     method: 'POST',
                                     headers: {
@@ -614,5 +608,38 @@ document.addEventListener('DOMContentLoaded', function() {
         events: '/events?type=private'
     });
     privateCalendar.render();
+
+    // privateCalendar.refetchEvents()
+
+    // 탭 초기화 테스트
+    let triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
+    triggerTabList.forEach(function (triggerEl) {
+        let tabTrigger = new bootstrap.Tab(triggerEl)
+        triggerEl.addEventListener('hidden.bs.tab', function (event) {
+
+            mainCalendar.updateSize();
+            crewCalendar.updateSize();
+
+        })
+    })
+
+    // function initCalendar()
+    // {
+    //     mainCalendar.updateSize();
+    //     crewCalendar.updateSize();
+    // }
+    //
+    // $(function() {
+    //     let calendarInit = false;
+    //     $('#activity-tab').on('shown.bs.tab', function (e) {
+    //         if (!calendarInit) {
+    //             initCalendar();
+    //             //initCalendarDragNDrop();
+    //             calendarInit = true;
+    //         }
+    //     });
+    // });
 });
+
+
 

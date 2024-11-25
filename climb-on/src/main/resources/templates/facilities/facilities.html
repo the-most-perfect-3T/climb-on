@@ -70,9 +70,9 @@
                     </div>
                     <div class="modal-body">
 
-                        <form id="reviewinsertForm" action="/Review/reviewInsert" method="post">
+                        <form id="reviewinsertForm">
                             <div>
-                                <label for="rating">평점 (1~5):</label>
+                                <label for="ratingValue">평점 (1~5):</label>
                                     <!-- 평점별 별을 표시하는 요소 -->
 
                                         <div id="rating" class="rating">
@@ -89,7 +89,6 @@
                             <div>
                                 <label for="comment">리뷰 내용:</label>
                                 <textarea id="comment" name="comment" rows="4" cols="50">
-
                                 </textarea>
                             </div>
                             <!-- 시설 아이디를 숨겨진 필드로 추가 -->
@@ -97,7 +96,7 @@
 
                     <div class="modal-footer">
                         <button type="button" id="modal-close" data-bs-dismiss="modal">닫기</button>
-                        <button type="submit" class="review-Insert-btn">리뷰작성</button>
+                        <button type="submit" class="review-Insert-btn" data-bs-dismiss="modal">리뷰작성</button>
                     </div>
                         </form>
                     </div>
