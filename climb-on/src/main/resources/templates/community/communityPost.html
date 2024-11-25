@@ -18,7 +18,7 @@
     <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
      </div>
 
-    <section class="timeline-container">
+    <div class="timeline-container">
 
         <!-- 타임라인 -->
         <div class="timeline">
@@ -44,10 +44,10 @@
             <a th:href="@{'/community?category=소식&dday=종료됨'}">지난일정</a>
         </div>
         </div>
-    </section>
+    </div>
 
         <!-- 게시글 목록 -->
-   <section class="post-list">
+   <div class="post-list">
        <h2>커뮤니티 게시판</h2>
         <!-- 카테고리 섹션 -->
        <div class="header-container">
@@ -230,7 +230,10 @@
                         <span th:text="${post.title}">게시글 제목 예시</span>
                     </a>
                 </div>
-                <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
+                <div class="card-content" th:utext="${post.content}">게시글 내용 요약</div>
+                <div class="post-image" th:if="${post.imageUrl != null}">
+                    <p th:text="${post.imageUrl != null ? post.imageUrl : '/images/default-image.png'}" alt="게시글 이미지"></p>
+                </div>
                 <div class="card-meta">
                     <span th:text="${post.displayName}">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
@@ -240,7 +243,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- 페이지네이션 -->
     <section class="pagination">
