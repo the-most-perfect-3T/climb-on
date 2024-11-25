@@ -19,4 +19,18 @@ public interface FacilitiesDAO {
 
 
     FacilitiesDTO getFacility(int facilityId);
+
+
+    int getFacilityIdByName(String facilityName);
+
+
+    String getFacilityNameById(int id);
+
+    int updateFacility(FacilitiesDTO facilityId);
+
+    int deleteFacility(int facilityId);
+
+    int insertFacility(FacilitiesDTO facilitiesDTO);
+
+    List<FacilitiesDTO> getFacilitiesByUserFavorite(int id);
 }

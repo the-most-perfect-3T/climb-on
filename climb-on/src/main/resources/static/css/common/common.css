@@ -11,6 +11,7 @@
     --gray: #6C757D;
     --darkBorderColor: #495057;
     --darkBgBlack: #212529;
+    --placeholder: #cdcdcd;
     /*header*/
     --headerHeight: 4rem;
     /*footer*/
@@ -74,6 +75,9 @@ button {
     outline: none;
     font-family: inherit;
     font-weight: inherit;
+}
+button:disabled {
+    cursor: default;
 }
 
 

@@ -1,0 +1,33 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <th:block th:fragment="modalFragment">
+        <div class="modal modal-user fade p-4 py-md-5" tabindex="-1" role="dialog" id="userModalChoice" aria-labelledby="userModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content shadow">
+                    <div class="modal-body text-center">
+                        <h3 class="logo"><img th:src="@{/images/logo.svg}" alt="CLLI'MON 로고"></h3>
+                        <h5 class="section-title" id="userModalLabel">회원 탈퇴 시 아래와 같이 처리됩니다.</h5>
+                        <p class="">회원 탈퇴일로부터 계정과 닉네임을 포함한 계정 정보
+                            (아이디/이메일/닉네임)는 <a href="javascript:void(0)">개인정보 보호정책</a>에 따라
+                            60일간 보관(잠김)되며, 60일 경과된 후에는 모든 개인
+                            정보는 완전히 삭제되며 더 이상 복구할 수 없게 됩니다.
+                            <br/><br/>
+                            작성된 게시물은 삭제되지 않으며,
+                            익명처리 후 CLI’MON으로 소유권이 귀속됩니다.
+                            게시물 삭제가 필요한 경우에는
+                            <a href="javascript:void(0)">관리자 메일</a>로 문의해 주시기 바랍니다.</p>
+                    </div>
+                    <form action="/mypage/updateStatus" method="post">
+                        <div class="modal-footer flex-nowrap p-0">
+                            <button type="button" class="btn col-6 py-3 m-0 " data-bs-dismiss="modal">취소</button>
+                            <button type="submit" class="btn col-6 py-3 m-0">예, 탈퇴하겠습니다.</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</html>

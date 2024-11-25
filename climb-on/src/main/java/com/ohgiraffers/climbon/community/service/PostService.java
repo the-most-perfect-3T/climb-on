@@ -5,24 +5,38 @@ import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import javax.xml.stream.events.Comment;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@Transactional
 public class PostService {
 
     @Autowired
     private PostDAO postDAO;
 
     // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다.
-    public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday) {
+    public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
+
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
 
 
-        List<PostDTO> posts = postDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, dday);    // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
+        // 1. 공지 게시글 (2개 고정)
+        List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
+
+        // 2. 가이드 게시글 (1개 고정)
+        List<PostDTO> guidePosts = postDAO.getFixedPostsByCategory("가이드", 1);
+
+        // 3. 일반 게시글 (페이징 적용)
+        List<PostDTO> posts = postDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, dday, status);    // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
 
         // 소식 카테고리의 게시글에 대해 D-Day 계산
         for (PostDTO post : posts){
@@ -30,9 +44,54 @@ public class PostService {
                 post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
             }
         }
+        //4. 게시글 합치기
+        List<PostDTO> allPosts = new ArrayList<>();
+        allPosts.addAll(noticePosts);
+        allPosts.addAll(guidePosts);
+        allPosts.addAll(posts);
 
 //        System.out.println(dday); dday 들어오는지 확인용 출력
-        return posts;
+        return allPosts;
+    }
+
+    public Map<String, List<PostDTO>> getPostsWithPinned(
+            int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
+        int offset = (page - 1) * pageSize;
+
+        Map<String, List<PostDTO>> result = new HashMap<>();
+
+        // 1. 공지 2개 고정
+        List<PostDTO> pinnedNoticePosts = postDAO.getFixedPostsByCategory("공지", 2);
+        result.put("pinnedNoticePosts", pinnedNoticePosts);
+
+        for (PostDTO post : pinnedNoticePosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  postDAO.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+        // 2. 가이드 1개 고정
+        List<PostDTO> pinnedGuidePosts = postDAO.getFixedPostsByCategory("가이드", 1);
+        result.put("pinnedGuidePosts", pinnedGuidePosts);
+
+        for (PostDTO post : pinnedGuidePosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  postDAO.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+        // 3. 일반 게시글
+        List<PostDTO> generalPosts = postDAO.getPostsByPageAndCategoryAndSearch(
+                offset, pageSize, category, searchKeyword, sort, dday, status);
+        result.put("generalPosts", generalPosts);
+
+        for (PostDTO post : generalPosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  postDAO.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+        return result;
     }
 
     // D-Day 계산 메소드
@@ -66,9 +125,15 @@ public class PostService {
         return postDAO.getTotalPostCount(category, searchKeyword); // 전체 게시글 수를 가져오는 메소드
     }
 
-    public PostDTO getPostById(Integer id) {
+    public PostDTO getPostById(Integer id, Integer userId) {
         postDAO.incrementViewCount(id); // 조회시 조회수 증가
-        return postDAO.getPostById(id); // 게시글 자겨오기
+        PostDTO post = postDAO.getPostById(id); // 게시글 가져오기
+
+        // 현재 사용자의 좋아요 여부 설정
+        boolean isLiked = postDAO.isPostLikedByUser(id, userId);
+        post.setLiked(isLiked);
+
+        return post;
     }
 
     public void insertPost(PostDTO post) {
@@ -76,11 +141,20 @@ public class PostService {
     }
 
     public void updatePost(PostDTO post) {
+        // 수정 시 이미지 URL이 존재하지 않을 경우 기존 값을 유지
+        PostDTO existingPost = postDAO.getPostById(post.getId());
+        if (post.getImageUrl() == null || post.getImageUrl().isEmpty()){
+            post.setImageUrl(existingPost.getImageUrl());
+        }
+
         postDAO.updatePost(post);
     }
 
-    public void deletePost(Integer id) {
-        postDAO.deletePost(id);
+    public void deletePost(Integer postId) { //트랜잭션 처리
+        postDAO.deletePost(postId);
+
+        // 해당 게시글의 모든 댓글 status = 0 으로 업데이트
+        postDAO.deleteCommentsByPostId(postId);
     }
 
     public PostDTO getPreviousPost(Integer id) {
@@ -91,10 +165,6 @@ public class PostService {
         return postDAO.getNextPost(id);
     }
 
-    public void incrementViewCount(Integer postId) {
-        postDAO.incrementViewCount(postId); // postId에 해당하는 게시글의 조회수를 증가시킴
-    }
-
     // 댓글 조회, 추가 메소드
     public List<CommentDTO> getCommentsByPostId(Integer postId) {
         return postDAO.getCommentsByPostId(postId);
@@ -103,4 +173,47 @@ public class PostService {
     public void insertComment(CommentDTO comment){
         postDAO.insertComment(comment);
     }
+
+    public Integer getUserIdByUserName(String userId) {
+        return postDAO.getUserIdByUserName(userId);
+    }
+
+    public String getUserNicknameById(Integer userId) {
+        return postDAO.getUserNicknameById(userId);
+    }
+
+    public Integer findUserIdByEmail(String email) {
+        return postDAO.getUserIdByEmail(email);
+    }
+
+    public void incrementHearts(int postId) {
+        postDAO.incrementHearts(postId);
+    }
+
+    public void decrementHearts(int postId) {
+        postDAO.decrementHearts(postId);
+    }
+
+    public boolean hasUserLikedPost(int postId, int userId) {
+        return postDAO.hasUserLikedPost(postId, userId);
+    }
+
+    public void toggleLike(int postId, Integer userId) {
+        if (hasUserLikedPost(postId, userId)) {
+            postDAO.removeLike(postId, userId); // 좋아요 취소
+            decrementHearts(postId); // 좋아요 수 감소
+        } else {
+            postDAO.addLike(postId, userId); // 좋아요 추가
+            incrementHearts(postId); // 좋아요 수 증가
+        }
+    }
+
+    public void updateComment(CommentDTO comment) {
+        postDAO.updateComment(comment);
+    }
+
+    public void deleteComment(CommentDTO comment) {
+        postDAO.deleteComment(comment);
+    }
+
 }

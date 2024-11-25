@@ -1,0 +1,418 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/crew/areaSelectModal.css}">
+</th:block>
+
+<th:block th:fragment="areaSelectModalFragment">
+    <div class="modal fade" id="areaSelectModal" tabindex="-1" aria-labelledby="areaSelectModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-4">
+                <!-- Modal Header -->
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">지역 선택</h5>
+                    <button type="button" id="closeAreaSelectModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- First Column -->
+                            <div class="col-md-6">
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionSeoul" data-bs-toggle="dropdown" aria-expanded="false">
+                                        서울
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="서울" aria-labelledby="regionSeoul">
+                                        <li><a class="dropdown-item" data-value="서울 전체">서울 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="강남구">강남구</a></li>
+                                        <li><a class="dropdown-item" data-value="강북구">강북구</a></li>
+                                        <li><a class="dropdown-item" data-value="관악구">관악구</a></li>
+                                        <li><a class="dropdown-item" data-value="광진구">광진구</a></li>
+                                        <li><a class="dropdown-item" data-value="구로구">구로구</a></li>
+                                        <li><a class="dropdown-item" data-value="노원구">노원구</a></li>
+                                        <li><a class="dropdown-item" data-value="도봉구">도봉구</a></li>
+                                        <li><a class="dropdown-item" data-value="동대문구">동대문구</a></li>
+                                        <li><a class="dropdown-item" data-value="동작구">동작구</a></li>
+                                        <li><a class="dropdown-item" data-value="마포구">마포구</a></li>
+                                        <li><a class="dropdown-item" data-value="서대문구">서대문구</a></li>
+                                        <li><a class="dropdown-item" data-value="서초구">서초구</a></li>
+                                        <li><a class="dropdown-item" data-value="성동구">성동구</a></li>
+                                        <li><a class="dropdown-item" data-value="성북구">성북구</a></li>
+                                        <li><a class="dropdown-item" data-value="송파구">송파구</a></li>
+                                        <li><a class="dropdown-item" data-value="양천구">양천구</a></li>
+                                        <li><a class="dropdown-item" data-value="영등포구">영등포구</a></li>
+                                        <li><a class="dropdown-item" data-value="용산구">용산구</a></li>
+                                        <li><a class="dropdown-item" data-value="은평구">은평구</a></li>
+                                        <li><a class="dropdown-item" data-value="종로구">종로구</a></li>
+                                        <li><a class="dropdown-item" data-value="중구">중구</a></li>
+                                        <li><a class="dropdown-item" data-value="중랑구">중랑구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionDaegu" data-bs-toggle="dropdown" aria-expanded="false">
+                                        대구
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="대구" aria-labelledby="regionDaegu">
+                                        <li><a class="dropdown-item" data-value="대구 전체">대구 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="남구">남구</a></li>
+                                        <li><a class="dropdown-item" data-value="달서구">달서구</a></li>
+                                        <li><a class="dropdown-item" data-value="달성군">달성군</a></li>
+                                        <li><a class="dropdown-item" data-value="동구">동구</a></li>
+                                        <li><a class="dropdown-item" data-value="북구">북구</a></li>
+                                        <li><a class="dropdown-item" data-value="서구">서구</a></li>
+                                        <li><a class="dropdown-item" data-value="수성구">수성구</a></li>
+                                        <li><a class="dropdown-item" data-value="중구">중구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionGwangju" data-bs-toggle="dropdown" aria-expanded="false">
+                                        광주
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="광주" aria-labelledby="regionGwangju">
+                                        <li><a class="dropdown-item" data-value="광주 전체">광주 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="광산구">광산구</a></li>
+                                        <li><a class="dropdown-item" data-value="남구">남구</a></li>
+                                        <li><a class="dropdown-item" data-value="동구">동구</a></li>
+                                        <li><a class="dropdown-item" data-value="북구">북구</a></li>
+                                        <li><a class="dropdown-item" data-value="서구">서구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionUlsan" data-bs-toggle="dropdown" aria-expanded="false">
+                                        울산
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="울산" aria-labelledby="regionUlsan">
+                                        <li><a class="dropdown-item" data-value="울산 전체">울산 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="남구">남구</a></li>
+                                        <li><a class="dropdown-item" data-value="동구">동구</a></li>
+                                        <li><a class="dropdown-item" data-value="북구">북구</a></li>
+                                        <li><a class="dropdown-item" data-value="울주군">울주군</a></li>
+                                        <li><a class="dropdown-item" data-value="중구">중구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionGangwon" data-bs-toggle="dropdown" aria-expanded="false">
+                                        강원
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="강원" aria-labelledby="regionGangwon">
+                                        <li><a class="dropdown-item" data-value="강원 전체">강원 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="춘천시">춘천시</a></li>
+                                        <li><a class="dropdown-item" data-value="원주시">원주시</a></li>
+                                        <li><a class="dropdown-item" data-value="강릉시">강릉시</a></li>
+                                        <li><a class="dropdown-item" data-value="동해시">동해시</a></li>
+                                        <li><a class="dropdown-item" data-value="태백시">태백시</a></li>
+                                        <li><a class="dropdown-item" data-value="속초시">속초시</a></li>
+                                        <li><a class="dropdown-item" data-value="삼척시">삼척시</a></li>
+                                        <li><a class="dropdown-item" data-value="홍천군">홍천군</a></li>
+                                        <li><a class="dropdown-item" data-value="횡성군">횡성군</a></li>
+                                        <li><a class="dropdown-item" data-value="영월군">영월군</a></li>
+                                        <li><a class="dropdown-item" data-value="평창군">평창군</a></li>
+                                        <li><a class="dropdown-item" data-value="정선군">정선군</a></li>
+                                        <li><a class="dropdown-item" data-value="철원군">철원군</a></li>
+                                        <li><a class="dropdown-item" data-value="화천군">화천군</a></li>
+                                        <li><a class="dropdown-item" data-value="양구군">양구군</a></li>
+                                        <li><a class="dropdown-item" data-value="인제군">인제군</a></li>
+                                        <li><a class="dropdown-item" data-value="고성군">고성군</a></li>
+                                        <li><a class="dropdown-item" data-value="양양군">양양군</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Second Column -->
+                            <div class="col-md-6">
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionBusan" data-bs-toggle="dropdown" aria-expanded="false">
+                                        부산
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="부산" aria-labelledby="regionBusan">
+                                        <li><a class="dropdown-item" data-value="부산 전체">부산 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="강서구">강서구</a></li>
+                                        <li><a class="dropdown-item" data-value="금정구">금정구</a></li>
+                                        <li><a class="dropdown-item" data-value="기장군">기장군</a></li>
+                                        <li><a class="dropdown-item" data-value="남구">남구</a></li>
+                                        <li><a class="dropdown-item" data-value="동구">동구</a></li>
+                                        <li><a class="dropdown-item" data-value="동래구">동래구</a></li>
+                                        <li><a class="dropdown-item" data-value="부산진구">부산진구</a></li>
+                                        <li><a class="dropdown-item" data-value="북구">북구</a></li>
+                                        <li><a class="dropdown-item" data-value="사상구">사상구</a></li>
+                                        <li><a class="dropdown-item" data-value="사하구">사하구</a></li>
+                                        <li><a class="dropdown-item" data-value="서구">서구</a></li>
+                                        <li><a class="dropdown-item" data-value="수영구">수영구</a></li>
+                                        <li><a class="dropdown-item" data-value="연제구">연제구</a></li>
+                                        <li><a class="dropdown-item" data-value="영도구">영도구</a></li>
+                                        <li><a class="dropdown-item" data-value="중구">중구</a></li>
+                                        <li><a class="dropdown-item" data-value="해운대구">해운대구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionIncheon" data-bs-toggle="dropdown" aria-expanded="false">
+                                        인천
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="인천" aria-labelledby="regionIncheon">
+                                        <li><a class="dropdown-item" data-value="인천 전체">인천 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="강화군">강화군</a></li>
+                                        <li><a class="dropdown-item" data-value="계양구">계양구</a></li>
+                                        <li><a class="dropdown-item" data-value="미추홀구">미추홀구</a></li>
+                                        <li><a class="dropdown-item" data-value="남동구">남동구</a></li>
+                                        <li><a class="dropdown-item" data-value="동구">동구</a></li>
+                                        <li><a class="dropdown-item" data-value="부평구">부평구</a></li>
+                                        <li><a class="dropdown-item" data-value="서구">서구</a></li>
+                                        <li><a class="dropdown-item" data-value="연수구">연수구</a></li>
+                                        <li><a class="dropdown-item" data-value="옹진군">옹진군</a></li>
+                                        <li><a class="dropdown-item" data-value="중구">중구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionDaejeon" data-bs-toggle="dropdown" aria-expanded="false">
+                                        대전
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="대전" aria-labelledby="regionDaejeon">
+                                        <li><a class="dropdown-item" data-value="대전 전체">대전 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="대덕구">대덕구</a></li>
+                                        <li><a class="dropdown-item" data-value="동구">동구</a></li>
+                                        <li><a class="dropdown-item" data-value="서구">서구</a></li>
+                                        <li><a class="dropdown-item" data-value="유성구">유성구</a></li>
+                                        <li><a class="dropdown-item" data-value="중구">중구</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionSejong" data-bs-toggle="dropdown" aria-expanded="false">
+                                        세종
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="세종" aria-labelledby="regionSejong">
+                                        <li><a class="dropdown-item" data-value="세종시 전체">세종시 전체</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionGyeonggi" data-bs-toggle="dropdown" aria-expanded="false">
+                                        경기
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="경기" aria-labelledby="regionGyeonggi">
+                                        <li><a class="dropdown-item" data-value="경기 전체">경기 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="수원시">수원시</a></li>
+                                        <li><a class="dropdown-item" data-value="성남시">성남시</a></li>
+                                        <li><a class="dropdown-item" data-value="고양시">고양시</a></li>
+                                        <li><a class="dropdown-item" data-value="용인시">용인시</a></li>
+                                        <li><a class="dropdown-item" data-value="부천시">부천시</a></li>
+                                        <li><a class="dropdown-item" data-value="안산시">안산시</a></li>
+                                        <li><a class="dropdown-item" data-value="남양주시">남양주시</a></li>
+                                        <li><a class="dropdown-item" data-value="화성시">화성시</a></li>
+                                        <li><a class="dropdown-item" data-value="평택시">평택시</a></li>
+                                        <li><a class="dropdown-item" data-value="의정부시">의정부시</a></li>
+                                        <li><a class="dropdown-item" data-value="파주시">파주시</a></li>
+                                        <li><a class="dropdown-item" data-value="시흥시">시흥시</a></li>
+                                        <li><a class="dropdown-item" data-value="김포시">김포시</a></li>
+                                        <li><a class="dropdown-item" data-value="광주시">광주시</a></li>
+                                        <li><a class="dropdown-item" data-value="군포시">군포시</a></li>
+                                        <li><a class="dropdown-item" data-value="하남시">하남시</a></li>
+                                        <li><a class="dropdown-item" data-value="오산시">오산시</a></li>
+                                        <li><a class="dropdown-item" data-value="이천시">이천시</a></li>
+                                        <li><a class="dropdown-item" data-value="안성시">안성시</a></li>
+                                        <li><a class="dropdown-item" data-value="의왕시">의왕시</a></li>
+                                        <li><a class="dropdown-item" data-value="양주시">양주시</a></li>
+                                        <li><a class="dropdown-item" data-value="구리시">구리시</a></li>
+                                        <li><a class="dropdown-item" data-value="포천시">포천시</a></li>
+                                        <li><a class="dropdown-item" data-value="여주시">여주시</a></li>
+                                        <li><a class="dropdown-item" data-value="양평군">양평군</a></li>
+                                        <li><a class="dropdown-item" data-value="동두천시">동두천시</a></li>
+                                        <li><a class="dropdown-item" data-value="가평군">가평군</a></li>
+                                        <li><a class="dropdown-item" data-value="연천군">연천군</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionChungbuk" data-bs-toggle="dropdown" aria-expanded="false">
+                                        충북
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="충북" aria-labelledby="regionChungbuk">
+                                        <li><a class="dropdown-item" data-value="충북 전체">충북 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="청주시">청주시</a></li>
+                                        <li><a class="dropdown-item" data-value="충주시">충주시</a></li>
+                                        <li><a class="dropdown-item" data-value="제천시">제천시</a></li>
+                                        <li><a class="dropdown-item" data-value="보은군">보은군</a></li>
+                                        <li><a class="dropdown-item" data-value="옥천군">옥천군</a></li>
+                                        <li><a class="dropdown-item" data-value="영동군">영동군</a></li>
+                                        <li><a class="dropdown-item" data-value="증평군">증평군</a></li>
+                                        <li><a class="dropdown-item" data-value="진천군">진천군</a></li>
+                                        <li><a class="dropdown-item" data-value="괴산군">괴산군</a></li>
+                                        <li><a class="dropdown-item" data-value="음성군">음성군</a></li>
+                                        <li><a class="dropdown-item" data-value="단양군">단양군</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionChungnam" data-bs-toggle="dropdown" aria-expanded="false">
+                                        충남
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="충남" aria-labelledby="regionChungnam">
+                                        <li><a class="dropdown-item" data-value="충남 전체">충남 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="천안시">천안시</a></li>
+                                        <li><a class="dropdown-item" data-value="공주시">공주시</a></li>
+                                        <li><a class="dropdown-item" data-value="보령시">보령시</a></li>
+                                        <li><a class="dropdown-item" data-value="아산시">아산시</a></li>
+                                        <li><a class="dropdown-item" data-value="서산시">서산시</a></li>
+                                        <li><a class="dropdown-item" data-value="논산시">논산시</a></li>
+                                        <li><a class="dropdown-item" data-value="계룡시">계룡시</a></li>
+                                        <li><a class="dropdown-item" data-value="당진시">당진시</a></li>
+                                        <li><a class="dropdown-item" data-value="금산군">금산군</a></li>
+                                        <li><a class="dropdown-item" data-value="부여군">부여군</a></li>
+                                        <li><a class="dropdown-item" data-value="서천군">서천군</a></li>
+                                        <li><a class="dropdown-item" data-value="청양군">청양군</a></li>
+                                        <li><a class="dropdown-item" data-value="홍성군">홍성군</a></li>
+                                        <li><a class="dropdown-item" data-value="예산군">예산군</a></li>
+                                        <li><a class="dropdown-item" data-value="태안군">태안군</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionJeonbuk" data-bs-toggle="dropdown" aria-expanded="false">
+                                        전북
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="전북" aria-labelledby="regionJeonbuk">
+                                        <li><a class="dropdown-item" data-value="전북 전체">전북 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="전주시">전주시</a></li>
+                                        <li><a class="dropdown-item" data-value="군산시">군산시</a></li>
+                                        <li><a class="dropdown-item" data-value="익산시">익산시</a></li>
+                                        <li><a class="dropdown-item" data-value="정읍시">정읍시</a></li>
+                                        <li><a class="dropdown-item" data-value="남원시">남원시</a></li>
+                                        <li><a class="dropdown-item" data-value="김제시">김제시</a></li>
+                                        <li><a class="dropdown-item" data-value="완주군">완주군</a></li>
+                                        <li><a class="dropdown-item" data-value="진안군">진안군</a></li>
+                                        <li><a class="dropdown-item" data-value="무주군">무주군</a></li>
+                                        <li><a class="dropdown-item" data-value="장수군">장수군</a></li>
+                                        <li><a class="dropdown-item" data-value="임실군">임실군</a></li>
+                                        <li><a class="dropdown-item" data-value="순창군">순창군</a></li>
+                                        <li><a class="dropdown-item" data-value="고창군">고창군</a></li>
+                                        <li><a class="dropdown-item" data-value="부안군">부안군</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionJeonnam" data-bs-toggle="dropdown" aria-expanded="false">
+                                        전남
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="전남" aria-labelledby="regionJeonnam">
+                                        <li><a class="dropdown-item" data-value="전남 전체">전남 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="목포시">목포시</a></li>
+                                        <li><a class="dropdown-item" data-value="여수시">여수시</a></li>
+                                        <li><a class="dropdown-item" data-value="순천시">순천시</a></li>
+                                        <li><a class="dropdown-item" data-value="나주시">나주시</a></li>
+                                        <li><a class="dropdown-item" data-value="광양시">광양시</a></li>
+                                        <li><a class="dropdown-item" data-value="담양군">담양군</a></li>
+                                        <li><a class="dropdown-item" data-value="곡성군">곡성군</a></li>
+                                        <li><a class="dropdown-item" data-value="구례군">구례군</a></li>
+                                        <li><a class="dropdown-item" data-value="고흥군">고흥군</a></li>
+                                        <li><a class="dropdown-item" data-value="보성군">보성군</a></li>
+                                        <li><a class="dropdown-item" data-value="화순군">화순군</a></li>
+                                        <li><a class="dropdown-item" data-value="장흥군">장흥군</a></li>
+                                        <li><a class="dropdown-item" data-value="강진군">강진군</a></li>
+                                        <li><a class="dropdown-item" data-value="해남군">해남군</a></li>
+                                        <li><a class="dropdown-item" data-value="영암군">영암군</a></li>
+                                        <li><a class="dropdown-item" data-value="무안군">무안군</a></li>
+                                        <li><a class="dropdown-item" data-value="함평군">함평군</a></li>
+                                        <li><a class="dropdown-item" data-value="영광군">영광군</a></li>
+                                        <li><a class="dropdown-item" data-value="장성군">장성군</a></li>
+                                        <li><a class="dropdown-item" data-value="완도군">완도군</a></li>
+                                        <li><a class="dropdown-item" data-value="진도군">진도군</a></li>
+                                        <li><a class="dropdown-item" data-value="신안군">신안군</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionGyeongnam" data-bs-toggle="dropdown" aria-expanded="false">
+                                        경남
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="경남" aria-labelledby="regionGyeongnam">
+                                        <li><a class="dropdown-item" data-value="경남 전체">경남 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="창원시">창원시</a></li>
+                                        <li><a class="dropdown-item" data-value="진주시">진주시</a></li>
+                                        <li><a class="dropdown-item" data-value="통영시">통영시</a></li>
+                                        <li><a class="dropdown-item" data-value="사천시">사천시</a></li>
+                                        <li><a class="dropdown-item" data-value="김해시">김해시</a></li>
+                                        <li><a class="dropdown-item" data-value="밀양시">밀양시</a></li>
+                                        <li><a class="dropdown-item" data-value="거제시">거제시</a></li>
+                                        <li><a class="dropdown-item" data-value="양산시">양산시</a></li>
+                                        <li><a class="dropdown-item" data-value="의령군">의령군</a></li>
+                                        <li><a class="dropdown-item" data-value="함안군">함안군</a></li>
+                                        <li><a class="dropdown-item" data-value="창녕군">창녕군</a></li>
+                                        <li><a class="dropdown-item" data-value="고성군">고성군</a></li>
+                                        <li><a class="dropdown-item" data-value="남해군">남해군</a></li>
+                                        <li><a class="dropdown-item" data-value="하동군">하동군</a></li>
+                                        <li><a class="dropdown-item" data-value="산청군">산청군</a></li>
+                                        <li><a class="dropdown-item" data-value="함양군">함양군</a></li>
+                                        <li><a class="dropdown-item" data-value="거창군">거창군</a></li>
+                                        <li><a class="dropdown-item" data-value="합천군">합천군</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionGyeongbuk" data-bs-toggle="dropdown" aria-expanded="false">
+                                        경북
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="경북" aria-labelledby="regionGyeongbuk">
+                                        <li><a class="dropdown-item" data-value="경북 전체">경북 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="포항시">포항시</a></li>
+                                        <li><a class="dropdown-item" data-value="경주시">경주시</a></li>
+                                        <li><a class="dropdown-item" data-value="김천시">김천시</a></li>
+                                        <li><a class="dropdown-item" data-value="안동시">안동시</a></li>
+                                        <li><a class="dropdown-item" data-value="구미시">구미시</a></li>
+                                        <li><a class="dropdown-item" data-value="영주시">영주시</a></li>
+                                        <li><a class="dropdown-item" data-value="영천시">영천시</a></li>
+                                        <li><a class="dropdown-item" data-value="상주시">상주시</a></li>
+                                        <li><a class="dropdown-item" data-value="문경시">문경시</a></li>
+                                        <li><a class="dropdown-item" data-value="경산시">경산시</a></li>
+                                        <li><a class="dropdown-item" data-value="군위군">군위군</a></li>
+                                        <li><a class="dropdown-item" data-value="의성군">의성군</a></li>
+                                        <li><a class="dropdown-item" data-value="청송군">청송군</a></li>
+                                        <li><a class="dropdown-item" data-value="영양군">영양군</a></li>
+                                        <li><a class="dropdown-item" data-value="영덕군">영덕군</a></li>
+                                        <li><a class="dropdown-item" data-value="청도군">청도군</a></li>
+                                        <li><a class="dropdown-item" data-value="고령군">고령군</a></li>
+                                        <li><a class="dropdown-item" data-value="성주군">성주군</a></li>
+                                        <li><a class="dropdown-item" data-value="칠곡군">칠곡군</a></li>
+                                        <li><a class="dropdown-item" data-value="예천군">예천군</a></li>
+                                        <li><a class="dropdown-item" data-value="봉화군">봉화군</a></li>
+                                        <li><a class="dropdown-item" data-value="울진군">울진군</a></li>
+                                        <li><a class="dropdown-item" data-value="울릉군">울릉군</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown custom-dropdown mb-3">
+                                    <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" id="regionJeju" data-bs-toggle="dropdown" aria-expanded="false">
+                                        제주
+                                    </button>
+                                    <ul class="dropdown-menu w-100" data-value="제주" aria-labelledby="regionJeju">
+                                        <li><a class="dropdown-item" data-value="제주 전체">제주 전체</a></li>
+                                        <li><a class="dropdown-item" data-value="제주시">제주시</a></li>
+                                        <li><a class="dropdown-item" data-value="서귀포시">서귀포시</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>

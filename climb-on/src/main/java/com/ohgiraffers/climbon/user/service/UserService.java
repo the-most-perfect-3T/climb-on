@@ -1,6 +1,11 @@
 package com.ohgiraffers.climbon.user.service;
 
+import com.ohgiraffers.climbon.auth.Enum.UserRole;
+import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.user.dao.UserMapper;
+import com.ohgiraffers.climbon.user.dto.BusinessDTO;
+import com.ohgiraffers.climbon.user.dto.NoticeDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -22,9 +28,7 @@ public class UserService {
     private PasswordEncoder encoder;
 
     /**
-     * user의 pk로 user정보 불러오기
-     * @Param Integer key
-     * @return UserDTO
+     * user 의 pk로 user 전체 정보 불러오기
      * */
     public UserDTO findByKey(Integer key) {
         if(key == null){
@@ -36,9 +40,7 @@ public class UserService {
     }
 
     /**
-     * user의 pk로 크루이름 찾기
-     * @Param Integer key
-     * @return String
+     * user 의 pk로 크루이름 찾기
      * */
     public String findCrewName(Integer key) {
         if(key == null){
@@ -50,9 +52,7 @@ public class UserService {
     }
 
     /**
-     * user의 pk로 홈짐 찾기
-     * @Param Integer key
-     * @return String
+     * user 의 pk로 홈짐 찾기
      * */
     public String findHomeName(Integer key) {
         if(key == null){
@@ -64,9 +64,7 @@ public class UserService {
     }
 
     /**
-     * user 정보 업데이트 (닉네임, 비밀번호, 한줄소개)
-     * @Param UserDTO user, Integer key
-     * @return int
+     * user 정보수정 (닉네임, 비밀번호, 한줄소개)
      * */
     @Transactional
     public int updateUser(UserDTO user, Integer key) {
@@ -74,13 +72,13 @@ public class UserService {
             return 0;
         }
         user.setId(key);
+        // 비밀번호 암호화
+        user.setPassword(encoder.encode(user.getPassword()));
         return userMapper.updateUser(user);
     }
 
     /**
      * user 프로필 업데이트
-     * @Param String profilePic, Integer key
-     * @return int
      * */
     @Transactional
     public int updateProfile(String profilePic, Integer key) {
@@ -100,8 +98,6 @@ public class UserService {
 
     /**
      * user 상태 업데이트(비활성)
-     * @Param Integer key
-     * @return int
      * */
     @Transactional
     public int updateStatus(Integer key) {
@@ -117,4 +113,180 @@ public class UserService {
 
         return result;
     }
+
+    /**
+     * 비즈니스계정 전환 신청
+     * */
+    @Transactional
+    public int registBusiness(String newFileName, Integer key, int id) {
+
+        if(newFileName == null || key == null){
+            return 0;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", key);
+        map.put("attachFile", newFileName);
+        map.put("facilityId", id);
+
+
+        int result = userMapper.saveApply(map);
+
+        return result;
+    }
+
+    /**
+     * 유저코드로 닉네임 찾기
+     * */
+    public String findById(Integer userCode) {
+
+        if(userCode == null){
+            return null;
+        }
+
+        String nickname = userMapper.findById(userCode);
+        return nickname;
+    }
+
+    /**
+     * 관리자 알림 에 추가
+     * */
+    @Transactional
+    public int registAdminNotice(Integer key) {
+
+        if(key == null){
+            return 0;
+        }
+        NoticeDTO noticeDTO = new NoticeDTO();
+        noticeDTO.setUserCode(key);
+        noticeDTO.setCategory(1);
+        int result = userMapper.saveAdminNotice(noticeDTO);
+        return result;
+    }
+
+    /**
+     * 관리자 알림 (승인대기상태인 것만 찾기)
+     * */
+    public List<NoticeDTO> selectAdminNotice() {
+        List<NoticeDTO> notice = userMapper.selectAdminNotice();
+        return notice;
+    }
+
+    /**
+     * 비즈니스 전환 신청 상태 변경
+     * */
+    @Transactional
+    public int updateNotice(NoticeDTO notice) {
+
+        if(notice == null){
+            return 0;
+        }
+        int result = userMapper.updateNotice(notice);
+
+        return result;
+    }
+
+    /**
+     * 비즈니스 알림 추가
+     * */
+    @Transactional
+    public int registBusinessNotice(int userCode) {
+
+        NoticeDTO noticeDTO = new NoticeDTO();
+        noticeDTO.setUserCode(userCode);
+        noticeDTO.setCategory(1);
+        int result = userMapper.saveBusinessNotice(noticeDTO);
+        return result;
+    }
+
+    /**
+     * 유저 알림 추가
+     * */
+    @Transactional
+    public int registUserNotice(int userCode) {
+
+        NoticeDTO noticeDTO = new NoticeDTO();
+        noticeDTO.setUserCode(userCode);
+        noticeDTO.setCategory(1);
+        int result = userMapper.saveUserNotice(noticeDTO);
+        return result;
+    }
+
+    /**
+     * 비즈니스 전환 승인 상태 확인
+     * */
+    public Integer findByIdIsApproval(Integer key) {
+        if(key == null){
+            return 0;
+        }
+
+        Integer result = userMapper.findByIdIsApproval(key);
+        return result;
+    }
+
+    /**
+     * userRole BUSINESS 로 변경
+     * */
+    @Transactional
+    public int updateRole(UserDTO userDTO, int userCode) {
+
+        userDTO.setId(userCode);
+        userDTO.setUserRole(UserRole.BUSINESS);
+
+        int result = userMapper.updateRole(userDTO);
+        return result;
+    }
+
+    /**
+     * 비즈니스 알림 (승인대기상태인 것만 찾기)
+     * */
+    public List<NoticeDTO> selectBusinessNotice(Integer key) {
+
+        List<NoticeDTO> noticeDTOList = userMapper.selectBusinessNotice(key);
+
+        return noticeDTOList;
+    }
+
+    /** 유저 알림 확인 시 테이블에 해당 알림 삭제 */
+    @Transactional
+    public int deleteUserNotice(int userCode) {
+
+        int result = userMapper.deleteUserNotice(userCode);
+        return result;
+    }
+    /** 비즈니스 알림 확인 시 테이블에 해당 알림 삭제 */
+    @Transactional
+    public int deleteBusinessNotice(int userCode) {
+
+        int result = userMapper.deleteBusinessNotice(userCode);
+        return result;
+    }
+    /** 어드민 알림 확인 시 테이블에 해당 알림 삭제 */
+    @Transactional
+    public int deleteAdminNotice(int userCode) {
+        int result = userMapper.deleteAdminNotice(userCode);
+        return result;
+    }
+
+    /** 해당 유저에 관련한 알림만 불러오기 */
+    public List<NoticeDTO> selectUserNotice(Integer key) {
+        List<NoticeDTO> noticeDTOList = userMapper.selectUserNotice(key);
+
+        return noticeDTOList;
+    }
+
+    /** 유저테이블에 홈짐 등록 */
+    @Transactional
+    public int updateFacility(Integer key, int facilityId) {
+
+        UserDTO user = new UserDTO();
+        user.setId(key);
+        user.setFacilityCode(facilityId);
+
+        int result = userMapper.updateFacility(user);
+        return result;
+    }
+
+
+
 }

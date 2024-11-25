@@ -1,0 +1,89 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/crew/crewList.css}">
+
+</th:block>
+
+
+<th:block layout:fragment="containerFragment">
+
+    <div class="inner">
+        <div class="container-forall">
+
+            <div class="register border-bottom">
+                <button type="button" class="btn btn-light btn-lg w-100 text-start d-flex align-items-center gap-3 btn-primary" data-bs-toggle="modal" data-bs-target="#creWRegisterModal"
+                    style="height: 100px;">
+                    <div class="circleRgstr rounded-circle text-white d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <span class="fs-4 fw-bold">크루 등록하기</span>
+                </button>
+            </div>
+
+            <div class="filter border-bottom py-3 d-flex align-items-center justify-content-between px-3">
+                <div class="filter-text d-flex align-items-center">
+                    <span class="text-muted me-2">총</span>
+                    <span class="count-number fs-5 fw-bold" th:text="|${totalCount} 개|"></span>
+                </div>
+                <div class="d-flex gap-2 ms-auto">
+                    <button type="button" class="btn btn-light d-flex align-items-center gap-1" id="sortBy">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i>
+                        최신순
+                    </button>
+                    <button type="button" class="btn btn-light d-flex align-items-center gap-1" id="areasFilter" data-bs-target="#areaModal" data-context="filterCrewList">
+                        <i class="fa-solid fa-filter"></i>
+                        지역
+                    </button>
+                </div>
+            </div>
+            <div class="selected-filters border-bottom d-flex align-items-center gap-2 flex-wrap" id="selected-filters">
+                <!-- 선택된 지역 카테고리가 들어올곳 -->
+            </div>
+
+            <div class="container-list py-4">
+                <table class="table align-middle">
+                    <thead class="d-none">
+                        <th>크루 이미지, 모집여부</th>
+                        <th>크루명, 활동지역</th>
+                        <th>크루 소개글</th>
+                    </thead>
+                    <tbody id="crewList">
+                        <tr class="border-bottom" th:each="crew : ${crews}">
+                            <td class="d-flex flex-column gap-2" style="width: 15%">
+                                <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
+                                    <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                                        <img th:src="${crew.imgUrl}" alt="/images/logo.svg" class="w-100">
+                                    </div>
+                                </div>
+                                <span class="badge rounded-pill" th:if="${crew.recruitingStatus == true}">모집중</span>
+                            </td>
+                            <td style="width: 20%">
+                                <p class="mb-1 fw-bold" th:text="${crew.crewName}"></p>
+                                <small class="text-muted" th:text="${crew.activeArea}"></small>
+                            </td>
+                            <td class="description" style="width: 65%" th:text="${crew.description}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-center">
+                <button type="button" class="btn btn-orange px-5 py-2 fw-bold" id="showMoreBtn">더보기</button>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{crew/crewHome/crewRegisterModal :: crewRegisterModalFragment}"></th:block>
+
+</th:block>
+
+<th:block layout:fragment="javascript">
+    <script type="module"  th:src="@{/js/page/crew/crewList.js}"></script>
+
+</th:block>
+
+</html>

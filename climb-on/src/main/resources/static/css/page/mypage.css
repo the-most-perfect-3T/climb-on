@@ -86,7 +86,7 @@
     display: block;
 }
 .section-mypage #profile .profile-cont .section00 {
-    padding: 75px 90px 40px 80px;
+    padding: 75px 0 40px 80px;
 }
 .section-mypage #profile .profile-cont .section00 .img-wrap {
     width: 112px;
@@ -97,37 +97,72 @@
     border: 1px solid var(--borderColor);
     flex-shrink: 0;
 }
+.section-mypage #profile .profile-cont .section00 .info-wrap .badge {
+    margin-bottom: 8px;
+    border-radius: 999px;
+    background: var(--point);
+}
+.section-mypage #profile .profile-cont .section00 .info-wrap .badge.business {
+    background: var(--darkGray);
+}
 
 .section-mypage #profile .profile-cont .section00 .info-wrap .nickname {
     font-size: 18px;
     font-weight: 600;
-    margin-bottom: 7px;
+
 }
 .section-mypage #profile .profile-cont .section00 .info-wrap .one-liner {
+    margin-top: 7px;
     font-size: 14px;
     word-break: keep-all;
+    margin-right: 10px;
+}
+.section-mypage #profile .profile-cont .section00 .info-wrap .facility-name {
+    margin-top: 5px;
 }
 
-.section-mypage #profile .profile-cont .section00 #btn-modify {
+.section-mypage #profile .profile-cont .section00 .btn-wrap button {
     font-size: 14px;
     color: var(--darkGray);
     width: 180px;
     height: 45px;
-    border: 1px solid var(--borderColor);
     border-radius: 6px;
-    transition: 0.5s;
+    transition: 0.3s;
     flex-shrink: 0;
 }
 
-.section-mypage #profile .profile-cont .section00 #btn-modify i {
+.section-mypage #profile .profile-cont .section00 .btn-wrap button i {
     font-size: 22px;
     margin-right: 12px;
 }
 
-.section-mypage #profile .profile-cont .section00 #btn-modify:hover {
+.section-mypage #profile .profile-cont .section00 .btn-wrap button:hover {
     background: var(--point);
     color: #fff;
+    border-color: var(--point);
 }
+.section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice {
+    width: 134px;
+    margin-right: 20px;
+}
+.section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice .notice-count{
+    top: 0;
+    right: 10px;
+    font-size: 8px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    background: var(--point);
+    line-height: 12px;
+}
+.section-mypage #profile .profile-cont .section00 .btn-wrap #btn-notice:hover .notice-count{
+    background: #fff;
+    color: var(--point);
+}
+
 
 .section-mypage #profile .profile-cont .section01 .move-wrap {
     width: 50%;
@@ -160,7 +195,7 @@
     padding: 50px 0 50px 80px;
 }
 .section-mypage #profile .profile-cont .section02 .section-title {
-    margin-bottom: 25px;
+    margin-bottom: 35px;
 }
 
 /* profile-tab : 회원 정보 수정 */
@@ -185,7 +220,7 @@
     color: #fff;
     font-weight: 600;
     width: 140px;
-    height: 50px;
+    height: 45px;
     border-radius: 6px;
     margin-top: 30px;
 }
@@ -219,37 +254,225 @@
     background: #fff;
 }
 
-/*profile-tab 계정 삭제*/
+/*profile-tab 비즈니스계정, 계정 삭제*/
 .section-mypage #profile .modify-cont .section01 {
+    padding: 50px 0 50px 50px;
+}
+.section-mypage #profile .modify-cont .section02 {
     padding: 50px 0 80px 50px;
 }
-.section-mypage #profile .modify-cont .section01 .info-wrap {
+
+.section-mypage #profile .modify-cont .section01 .info-wrap,
+.section-mypage #profile .modify-cont .section02 .info-wrap {
     border-radius: 6px;
     padding: 20px;
     margin-top: 20px;
 }
-.section-mypage #profile .modify-cont .section01 .info-wrap p {
+.section-mypage #profile .modify-cont .section01 .info-wrap ol {
+    padding-left: 1rem;
+}
+.section-mypage #profile .modify-cont .section01 .info-wrap ol li,
+.section-mypage #profile .modify-cont .section02 .info-wrap p {
     font-size: 14px;
     line-height: 22px;
+    list-style: auto;
 }
-.section-mypage #profile .modify-cont .section01 .info-wrap p a {
+.section-mypage #profile .modify-cont .section02 .info-wrap p a {
     font-weight: 700;
     border-bottom: 1px solid var(--black);
 }
 
-.section-mypage #profile .modify-cont .section01 .agree-wrap input {
+.section-mypage #profile .modify-cont .section01 .agree-wrap input,
+.section-mypage #profile .modify-cont .section02 .agree-wrap input {
     width: 16px;
     height: 16px;
 }
-.section-mypage #profile .modify-cont .section01 .agree-wrap label {
+.section-mypage #profile .modify-cont .section01 .agree-wrap label,
+.section-mypage #profile .modify-cont .section02 .agree-wrap label {
     font-size: 14px;
     margin-left: 10px;
 }
-.section-mypage #profile .modify-cont .section01 .btn-withdrawal {
+.section-mypage #profile .modify-cont .section01 button,
+.section-mypage #profile .modify-cont .section02 button {
     width: 150px;
     height: 40px;
-    background: var(--bs-danger);
-    color: #fff;
     font-size: 14px;
     border-radius: 6px;
+}
+
+.section-mypage #profile .modify-cont .section02 .btn-withdrawal {
+    background: var(--bs-danger);
+    color: #fff;
+}
+
+
+/*즐겨찾기 탭*/
+.section-mypage #favorite .section00 {
+    padding: 55px 0 55px 80px;
+}
+.section-mypage #favorite .section00 .section-title{
+    margin-bottom: 50px;
+}
+.section-mypage #favorite .section00 .list li:not(.no-result) {
+    width: 49%;
+    margin-right: 2%;
+    margin-top: 20px;
+    padding: 25px 30px;
+    position: relative;
+    border-radius: 10px;
+    height: 230px;
+}
+.section-mypage #favorite .section00 .list li:not(.no-result):hover {
+    border-color: var(--point) !important;
+    border-width: 2px !important;
+}
+.section-mypage #favorite .section00 .list li:nth-child(2n) {
+    margin-right: 0;
+}
+.section-mypage #favorite .section00 .list li:nth-child(-n+2) {
+    margin-top: 0;
+}
+.section-mypage #favorite .section00 .list li .img-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+.section-mypage #favorite .section00 .list li .img-wrap img {
+    width: 100%;
+}
+.section-mypage #favorite .section00 .list li .name {
+    font-size: 20px;
+    font-weight: 600;
+
+}
+.section-mypage #favorite .section00 .list li .address {
+    margin-top: 10px;
+    font-size: 14px;
+}
+.section-mypage #favorite .section00 .list li.no-result {
+    padding: 40px 0;
+    width: 100%;
+}
+.section-mypage #favorite .section00 .list li button {
+    position: absolute;
+    right: 30px;
+    top: 25px;
+    color: var(--point);
+    font-size: 24px;
+}
+/*페이지네이션*/
+.pagination {
+    /*display: none;*/
+    margin: 60px auto 0;
+    align-items: center;
+    justify-content: center;
+}
+.pagination.show {
+    display: flex;
+}
+.pagination li {
+    width: 24px;
+    height: 24px;
+    color: var(--darkGray);
+    text-align: center;
+    line-height: 24px;
+}
+.pagination li a {
+    font-size: 16px;
+}
+.pagination li a i {
+    font-size: 24px;
+}
+.pagination li.disabled a {
+    color: var(--borderColor);
+    cursor: default;
+    pointer-events: none;
+}
+.pagination li.current a {
+    font-weight: 700;
+}
+.pagination li.num {
+    margin-right: 10px;
+}
+.pagination li.num:last-of-type {
+    margin-right: 15px;
+}
+.pagination li.prev {
+    margin-right: 15px;
+}
+
+/*리뷰*/
+.section-mypage #review {
+    padding: 55px 0 55px 80px;
+}
+.section-mypage #review .section-title {
+    margin-bottom: 50px;
+}
+
+.section-mypage #review .section00 .review-list li:not(.no-result) {
+    width: 49%;
+    margin-right: 2%;
+    margin-top: 20px;
+    padding: 25px 30px;
+    position: relative;
+    border-radius: 10px;
+    height: 230px;
+}
+.section-mypage #review .section00 .review-list li:not(.no-result):hover {
+    border-color: var(--point) !important;
+    border-width: 2px !important;
+}
+.section-mypage #review .section00 .review-list li.no-result {
+    padding: 40px 0;
+    width: 100%;
+}
+.section-mypage #review .section00 .review-list li:nth-child(2n) {
+    margin-right: 0;
+}
+.section-mypage #review .section00 .review-list li:nth-child(-n+2) {
+    margin-top: 0;
+}
+
+.section-mypage #review .section00 .review-list li .img-wrap {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-right: 20px;
+}
+.section-mypage #review .section00 .review-list li .img-wrap img {
+    width: 100%;
+}
+.section-mypage #review .section00 .review-list li .name {
+    font-size: 20px;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+.section-mypage #review .section00 .review-list li .review-rating span.filled {
+    color: var(--point);
+}
+.section-mypage #review .section00 .review-list li .right button {
+    font-weight: 600;
+    font-size: 18px;
+    /*font-size: 14px;
+    text-decoration: underline;*/
+}
+.section-mypage #review .section00 .review-list li .right .btn-delete {
+    color: var(--gray);
+    /*margin-left: 10px;*/
+}
+.section-mypage #review .section00 .review-list li .contents {
+    overflow-y: auto;
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 30px;
+    max-height: 90px;
 }

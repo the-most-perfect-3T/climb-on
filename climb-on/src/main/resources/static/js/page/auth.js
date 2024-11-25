@@ -10,11 +10,19 @@ const emailValidCheck = event => {
         errorMessage.textContent = "이메일 형식이 아닙니다.";
     }
 
-
     // 지울 때  - 성공메시지 지움
-    if(event.key === 'Backspace' || event.key === 'Delete' ){
-        let successMessage = userId.nextElementSibling.nextElementSibling.nextElementSibling;
-        successMessage.textContent = "";
+    /*const eventKey = ["Backspace", "Delete", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+    const userIdError = document.getElementById("userId-error");
+    if (eventKey.includes(event.key) || userIdError.textContent !== "") {
+        let targetElement = document.getElementById("userId-success") !== null ? document.getElementById("userId-success") : null;
+        if (targetElement) {
+            targetElement.textContent = ''; // textContent를 비움
+        }
+        console.log(event.key, targetElement?.textContent);
+    }*/
+    let targetElement = document.getElementById("userId-success") !== null ? document.getElementById("userId-success") : null;
+    if (targetElement) {
+        targetElement.textContent = ''; // textContent를 비움
     }
 }
 
@@ -86,9 +94,9 @@ const nicknameValidCheck = event => {
     }
 
     // 지울 때  - 성공메시지 지움
-    if(event.key === 'Backspace' || event.key === 'Delete' ){
-        let successMessage = nicknameInput.nextElementSibling.nextElementSibling.nextElementSibling;
-        successMessage.textContent = "";
+    let targetElement = document.getElementById("nickname-success") !== null ? document.getElementById("nickname-success") : null;
+    if (targetElement) {
+        targetElement.textContent = '';
     }
 }
 
@@ -194,10 +202,5 @@ const checkName = () => {
             })
             .catch(error => console.error("Error:", error));
     }
-
-
-    console.log(nicknameExisting);
-
-
 
 }

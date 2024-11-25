@@ -1,0 +1,82 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="tabContFragment">
+    <div class="tab-pane fade" id="board" role="tabpanel" aria-labelledby="board-tab">
+        <h2 class="section-title">게시판 관리</h2>
+
+        <ul role="tablist">
+            <li role="presentation">
+                <button class="active" id="post-tab" data-bs-toggle="tab" data-bs-target="#post" type="button" role="tab" aria-controls="post" aria-selected="true">게시글</button>
+            </li>
+            <li role="presentation">
+                <button id="comment-tab" data-bs-toggle="tab" data-bs-target="#comment" type="button" role="tab" aria-controls="comment" aria-selected="false">댓글</button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="post" role="tabpanel" aria-labelledby="post-tab">
+                <div class="card-container">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th>카테고리</th>
+                            <th>제목</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- 공지 핀포스트 -->
+                        <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
+                            <td th:text="${post.category}">공지</td>
+                            <td>
+                                <a th:href="@{'/community/' + ${post.id}}">
+                                    <span th:text="${post.title}">공지 게시글 제목</span>
+                                    <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
+                                </a>
+                            </td>
+                            <td th:text="${post.displayName}">작성자</td>
+                            <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
+                        </tr>
+                        <!-- 가이드 핀포스트 -->
+                        <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
+                            <td th:text="${post.category}">가이드</td>
+                            <td>
+                                <a th:href="@{'/community/' + ${post.id}}">
+                                    <span th:text="${post.title}">가이드 게시글 제목</span>
+                                    <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
+                                </a>
+                            </td>
+                            <td th:text="${post.displayName}">작성자</td>
+                            <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:each="post : ${generalPosts}" class="card">
+                        <div class="card-category" th:text="${post.category}">카테고리</div>
+                        <div class="card-title">
+                            <a th:href="@{'/community/' + ${post.id}}">
+                                <span th:text="${post.title}">게시글 제목 예시</span>
+                            </a>
+                        </div>
+                        <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
+                        <div class="card-meta">
+                            <span th:text="${post.displayName}">작성자</span>
+                            <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
+                            <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
+                            <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
+                            <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="comment" role="tabpanel" aria-labelledby="comment-tab">
+                댓글
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

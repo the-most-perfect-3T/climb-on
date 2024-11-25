@@ -10,27 +10,27 @@
     --subColor2: #343A40;
 }
 
-.modal-header{
+.calendar-modal .modal-header{
     width: 100%;
 }
-.modal-content {
+.calendar-modal .modal-content {
     align-items: center;
     justify-content: center;
 }
 
-.btn-close{
+.calendar-modal .btn-close{
     float: right;
 }
 
-.modal-title {
+.calendar-modal .modal-title {
     font-size: 18px;
     font-weight: 700;
 }
 
 /* 캘린더 */
 .fc {
-    width: 769px;
-    height: 100%
+    width: 100%;
+    height: 100%;
 
 }
 .fc .fc-col-header-cell-cushion {

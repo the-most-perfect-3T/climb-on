@@ -48,7 +48,7 @@ public class KakaoUserInfo implements OAuth2UserInfo {
         Object properties = attributes.get("properties");
         if (properties instanceof Map) {
             Map<String, Object> propertiesMap = (Map<String, Object>) properties;
-            return (String) propertiesMap.get("image");
+            return (String) propertiesMap.get("profile_image");
         }
         return null;
     }

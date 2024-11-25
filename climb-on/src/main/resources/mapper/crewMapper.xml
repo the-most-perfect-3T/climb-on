@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.crew.crewHome.dao.CrewDAO">
+    <resultMap id="crew" type="com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO">
+        <id property="id" column="id"/>
+        <result property="crewName" column="crew_name"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="description" column="description"/>
+        <result property="crewSns" column="crew_sns"/>
+        <result property="climbingCategory" column="climbing_category"/>
+        <result property="recruitingStatus" column="recruiting_status"/>
+        <result property="permissionToJoin" column="is_permission"/>
+        <result property="activeArea" column="active_area"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="deletedAt" column="deleted_at"/>
+    </resultMap>
+
+    <select id="isCrewNameExists" parameterType="String" resultMap="crew">
+        SELECT * FROM crews
+        WHERE crew_name = #{crewName}
+    </select>
+
+    <insert id="registerCrew" parameterType="com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO">
+        INSERT INTO crews (crew_name, img_url, description, crew_sns, climbing_category, recruiting_status, is_permission, active_area, deleted_at)
+        VALUES(
+        #{crewName},
+        #{imgUrl},
+        #{description},
+        #{crewSns},
+        #{climbingCategory},
+        #{recruitingStatus},
+        #{permissionToJoin},
+        #{activeArea},
+        NULL
+        )
+    </insert>
+    
+    <select id="countAllCrews" resultType="int">
+        SELECT COUNT(id)
+        FROM crews
+        WHERE status=1;
+    </select>
+
+    <select id="selectCrews" resultMap="crew">
+        SELECT *
+        FROM crews
+        WHERE status=1
+        LIMIT 5;
+    </select>
+
+    <select id="selectFiveCrews" parameterType="hashmap" resultMap="crew">
+        SELECT
+            a.crew_name,
+            a.img_url,
+            a.description,
+            a.recruiting_status,
+            a.active_area
+        <if test="sort == 'latest'">
+        FROM crews a
+        WHERE a.status =1
+            <if test="areas != null and areas.size != 0">
+                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT ">
+                    ('%' , #{area}, '%')
+                </foreach>
+            </if>
+        ORDER BY a.created_at DESC
+        </if>
+        <if test="sort == 'mostMembers'">
+            ,COUNT(b.user_code) AS member_count
+        FROM crews a
+        JOIN user_crew b
+        on a.id = b.crew_code
+        WHERE a.status =1
+            <if test="areas != null and areas.size != 0">
+                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT ">
+                    ('%' , #{area}, '%')
+                </foreach>
+            </if>
+        GROUP BY a.id
+        ORDER BY member_count DESC
+        </if>
+        LIMIT #{page},5;
+    </select>
+
+    <select id="countCrewsFilteredByAreas" parameterType="list" resultType="int">
+        SELECT
+            COUNT(id)
+        FROM crews
+        WHERE status =1
+        <if test="areas != null and areas.size != 0">
+            <foreach collection="areas" item="area" open=" AND active_area LIKE CONCAT ">
+                ('%' , #{area}, '%')
+            </foreach>
+        </if>
+    </select>
+
+
+
+</mapper>

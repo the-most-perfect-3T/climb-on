@@ -1,0 +1,42 @@
+.custom-dropdown .dropdown-toggle {
+    height: 100%;
+    font-weight: bold;
+    text-align: left;
+}
+
+.custom-dropdown .dropdown-menu {
+    max-height: 200px; /* Limit height if you have many items */
+    overflow-y: auto;  /* Add scrollbar if necessary */
+    width: 100%;
+}
+
+.dropdown-item {
+    width: 100%;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 10px;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.btn-outline-secondary {
+    color: #333;
+    border-color: #ccc;
+}
+
+.btn-outline-secondary:hover{
+    background-color: var(--point);
+}
+
+.btnSelectedArea {
+    background-color: var(--beige);
+    color: var(--black);
+    border: none;
+    margin: 0 0.5rem 0.5rem 0;
+    display: inline-flex;
+    align-items: center;
+}
