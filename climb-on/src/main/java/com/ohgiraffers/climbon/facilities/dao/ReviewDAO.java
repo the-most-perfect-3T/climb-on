@@ -23,4 +23,6 @@ public interface ReviewDAO {
     List<ReviewDTO> getReviewByUserId(int userId);
 
     ReviewDTO getReviewById(Integer id);
+
+    int reviewDelete(ReviewDTO reviewDTO);
 }
