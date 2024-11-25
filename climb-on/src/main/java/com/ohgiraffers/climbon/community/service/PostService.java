@@ -216,4 +216,7 @@ public class PostService {
         postDAO.deleteComment(comment);
     }
 
+    public String getUserRoleById(Integer userId) {
+        return postDAO.getUserRoleById(userId);
+    }
 }

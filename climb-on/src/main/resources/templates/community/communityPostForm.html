@@ -100,6 +100,16 @@
   <script src="https://unpkg.com/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
   <!-- JS: 카테고리 선택에 따른 이벤트 필드 토글-->  <!--toggleEventFields 함수는 카테고리 값이 "소식"일 때만 eventFields를 보이게하고, 그외엔 숨김-->
   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const role = '[[${role}]]'; /* 서버에서 현재 사용자의 역할을 전달 */
+          const categorySelect = document.querySelector('select[name="category"]');
+          if (role !== 'ADMIN') {
+              categorySelect.querySelectorAll('option[value="공지"], option[value="가이드"]').forEach(option => {
+                  option.disabled = true;
+              });
+          }
+      });
+
     function toggleEventFields(category){
       const eventFields = document.getElementById('eventFields');
       if (category === '소식'){

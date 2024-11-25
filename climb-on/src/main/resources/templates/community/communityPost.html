@@ -224,7 +224,6 @@
                 </tbody>
             </table>
             <div th:each="post : ${generalPosts}" class="card">
-                <div class="card-category" th:text="${post.category}">카테고리</div>
                 <div class="card-title">
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">게시글 제목 예시</span>
