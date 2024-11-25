@@ -16,8 +16,6 @@
     <result property="longitude" column="longitude" />
     <result property="isFavorite" column="isFavorite"/>
     <result property="imageUrl" column="image_url"/>
-
-
     <result property="facilityType" column="facility_type"
             typeHandler="com.ohgiraffers.climbon.facilities.handler.FacilityTypeTypeHandler"/><!--이넘핸들러주소를써야함-->
 </resultMap>
@@ -68,7 +66,8 @@
         SELECT
         a.id,
         a.facility_name,
-        a.address
+        a.address,
+        a.image_url
         FROM facilities a
         JOIN user_favorite b
         ON a.id = b.favorite_code
