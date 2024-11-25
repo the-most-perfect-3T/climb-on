@@ -43,7 +43,9 @@
     border-bottom-right-radius: 5px;
     padding: 1rem;
     font-size: 1rem;
-    height: 400px;
+    min-height: 450px;
+    max-height: 800px;
+    overflow-y: auto;
 }
 
 /* Anonymous toggle switch */

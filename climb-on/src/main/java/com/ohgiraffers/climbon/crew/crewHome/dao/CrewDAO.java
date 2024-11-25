@@ -21,4 +21,6 @@ public interface CrewDAO {
     List<CrewDTO> selectCrews();
 
     int countCrewsFilteredByAreas(List<String> areas);
+
+    List<CrewDTO> getRecruitingCrews();
 }
