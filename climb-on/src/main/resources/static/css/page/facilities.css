@@ -222,6 +222,12 @@ p {
     background-color: #f79256; /* Orange background */
     position: relative;
 }
+.facility-details-content{
+    width: 50px;
+    height: 50px;
+    background-color: #f79256; /* Orange background */
+    position: relative;
+}
 
 /* 평점 별 기본 스타일 */
 .rating {
@@ -297,4 +303,7 @@ p {
 
 .review-actions span:hover {
     text-decoration: underline;
+}
+textarea#comment {
+    width: 100%;
 }
