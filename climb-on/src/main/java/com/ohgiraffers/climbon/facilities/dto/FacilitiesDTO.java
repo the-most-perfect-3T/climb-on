@@ -15,6 +15,7 @@ public class FacilitiesDTO {
     private BigDecimal longitude;       //경도
     private FacilityType facilityType;   // 시설 타입
     private boolean isFavorite;
+    private String imageUrl;
 
     @Override
     public String toString() {
@@ -29,7 +30,30 @@ public class FacilitiesDTO {
                 ", longitude=" + longitude +
                 ", facilityType=" + facilityType +
                 ", isFavorite=" + isFavorite +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
+    }
+
+    public FacilitiesDTO(int id, String facilityName, String address, String contact, String openingTime, int categoryId, BigDecimal latitude, BigDecimal longitude, FacilityType facilityType, boolean isFavorite, String imageUrl) {
+        this.id = id;
+        this.facilityName = facilityName;
+        this.address = address;
+        this.contact = contact;
+        this.openingTime = openingTime;
+        this.categoryId = categoryId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.facilityType = facilityType;
+        this.isFavorite = isFavorite;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public FacilitiesDTO(int id, String facilityName, String address, String contact, String openingTime, int categoryId, BigDecimal latitude, BigDecimal longitude, FacilityType facilityType, boolean isFavorite) {

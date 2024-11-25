@@ -638,6 +638,9 @@ async function getIsFavorite(id) {
 }
 
 
+
+
+
 async function loadImage(facilityId){
     const url = `/facilityImg/getImage?facilityId=${facilityId}`;
 
@@ -664,6 +667,13 @@ if(Array.isArray(imagePath) && imagePath.length) {
 else
     imgElement.src = "/images/default.jpg";
 }
+
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const stars = document.querySelectorAll(".rating .star"); // 별 요소들
     const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
