@@ -53,6 +53,7 @@
 
     <select id="getReviewByUserId" resultMap="ReviewResultMap">
         SELECT
+            a.ID,
             a.USER_ID,
             a.RATING,
             a.COMMENT,
