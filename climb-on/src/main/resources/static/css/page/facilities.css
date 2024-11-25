@@ -307,3 +307,27 @@ p {
 textarea#comment {
     width: 100%;
 }
+
+/*
+.review-actions {
+    margin-left: auto;
+    margin-bottom: 10px;
+}
+
+.review-actions button {
+    margin-left: 5px;
+    padding: 8px 20px;
+    font-size: 12px;
+    border: 1px solid var(--borderColor);
+    background-color: #ffffff;
+    color: #333;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.review-actions button:hover {
+    background-color: var(--point); !* 주황색 배경 *!
+    color: #ffffff; !* 글자색 흰색 *!
+}
+*/
