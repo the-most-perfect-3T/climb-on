@@ -372,9 +372,9 @@
     align-items: center;
     justify-content: center;
 }
-.pagination.show {
+/*.pagination.show {
     display: flex;
-}
+}*/
 .pagination li {
     width: 24px;
     height: 24px;

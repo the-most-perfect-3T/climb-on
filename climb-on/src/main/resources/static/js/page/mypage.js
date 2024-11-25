@@ -206,7 +206,7 @@ async function getIsFavorite(id) {
         }
 
         const data = await response.json();
-        console.log(data);// JSON 데이터를 파싱
+
         if (data !== null && data !== undefined) {
             return data;  // 데이터를 반환
         } else {
@@ -368,10 +368,12 @@ favoriteTab.addEventListener("click", async function () {
 
             // 페이지네이션 버튼 렌더링
             const renderPagination = () => {
-                const pagination = document.querySelector(".pagination");
+                console.log('페이지네이션 렌더링');
+                const pagination = document.querySelector("#favorite .pagination");
                 pagination.textContent = "";
 
                 const totalPages = Math.ceil(data.length / itemsPerPage);
+
 
                 // 이전 버튼
                 const prevButton = document.createElement("li");
@@ -386,6 +388,7 @@ favoriteTab.addEventListener("click", async function () {
                     }
                 });
                 pagination.appendChild(prevButton);
+                console.log(prevButton);
 
                 // 페이지 번호 버튼
                 for (let i = 1; i <= totalPages; i++) {
@@ -400,6 +403,7 @@ favoriteTab.addEventListener("click", async function () {
                     });
                     pagination.appendChild(pageButton);
                 }
+
 
                 // 다음 버튼
                 const nextButton = document.createElement("li");
@@ -457,7 +461,7 @@ favoriteTab.addEventListener("click", async function () {
                                 data.splice(indexToRemove, 1); // 배열에서 해당 아이템 삭제
                             }
 
-                            console.log("data.length" + data.length);
+
                             // 데이터가 없으면 '저장된 즐겨찾기가 없습니다.' 메시지 표시
                             if (data.length === 0) {
                                 const noResultItem = document.createElement("li");
@@ -474,7 +478,7 @@ favoriteTab.addEventListener("click", async function () {
 
                             // 삭제 후 다시 렌더링
                             await renderData(currentPage);
-                            if (data.length > itemsPerPage) {
+                            if (data.length >= itemsPerPage) {
                                 renderPagination();
                             } else {
                                 document.querySelector(".pagination").textContent = "";
@@ -573,7 +577,8 @@ reviewTab.addEventListener("click", async function(){
 
             // 페이지네이션 버튼 렌더링
             const renderPagination = () => {
-                const pagination = document.querySelector(".pagination");
+                const pagination = document.querySelector("#review .pagination");
+                console.log("pagination: " + pagination);
                 pagination.textContent = "";
 
                 const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -624,7 +629,6 @@ reviewTab.addEventListener("click", async function(){
             // 첫 페이지 렌더링
             if (Array.isArray(data)) await renderData(currentPage);
             if(data.length > itemsPerPage) renderPagination();
-
 
         }
 
