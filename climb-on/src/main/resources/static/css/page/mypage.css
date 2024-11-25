@@ -406,10 +406,10 @@
 }
 
 /*리뷰*/
-.section-mypage #review {
+.section-mypage #review .section00{
     padding: 55px 0 55px 80px;
 }
-.section-mypage #review .section-title {
+.section-mypage #review .section00 .section-title {
     margin-bottom: 50px;
 }
 
@@ -474,4 +474,27 @@
     /*font-weight: 600;*/
     margin-top: 30px;
     max-height: 90px;
+}
+
+/*게시판 */
+.section-mypage #board .section00 {
+    padding: 55px 0 55px 80px;
+}
+.section-mypage #board .section00 .section-title {
+    margin-bottom: 50px;
+}
+.section-mypage #board .section00 ul {
+    margin-bottom: 30px;
+}
+.section-mypage #board .section00 ul li button {
+    width: 80px;
+    height: 40px;
+    border-radius: 999px;
+    margin-right: 10px;
+}
+.section-mypage #board .section00 ul li button.active {
+    background: var(--point);
+    border-color: var(--point) !important;
+    color: #fff;
+    font-weight: 600;
 }

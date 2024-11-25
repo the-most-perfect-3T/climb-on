@@ -345,6 +345,7 @@ favoriteTab.addEventListener("click", async function () {
                     liItem.classList.add('no-result', 'border-top');
                     liItem.textContent = "저장된 즐겨찾기가 없습니다.";
                     favoriteList.appendChild(liItem);
+                    document.querySelector("#favorite .pagination").textContent = "";
                     return; // 데이터가 없으면 이후 렌더링 중단
                 }
 
