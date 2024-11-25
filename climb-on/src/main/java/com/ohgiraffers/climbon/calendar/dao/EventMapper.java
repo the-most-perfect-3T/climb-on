@@ -20,4 +20,6 @@ public interface EventMapper
     void modifyEvent(EventDTO event);
 
     List<EventDTO> getEventsByType(String type);
+
+    List<EventDTO> getMainEvents(boolean admin);
 }

@@ -54,4 +54,10 @@ public class EventService
         System.out.println("getEventsByType called ");
         return eventMapper.getEventsByType(type);
     }
+
+    public List<EventDTO> getMainEvents(boolean role)
+    {
+        System.out.println("getMainEvents called ");
+        return eventMapper.getMainEvents(role);
+    }
 }

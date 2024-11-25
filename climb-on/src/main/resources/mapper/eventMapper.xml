@@ -12,6 +12,7 @@
         <result property="description" column="DESCRIPTION"/>
         <result property="backgroundColor" column="COLOR"/>
         <result property="userCode" column="USER_CODE"/>
+        <result property="role" column="IS_ADMIN"/>
     </resultMap>
 
 
@@ -27,6 +28,12 @@
 <!--        *-->
 <!--        FROM tbl_crewevents_test;-->
 <!--    </select>-->
+
+    <select id="getMainEvents" parameterType="boolean" resultMap="eventResult">
+        SELECT *
+        FROM calendar_events
+        WHERE is_admin = #{role};
+    </select>
 
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         INSERT INTO calendar_events (title, user_code, start_datetime, end_datetime, description, color)

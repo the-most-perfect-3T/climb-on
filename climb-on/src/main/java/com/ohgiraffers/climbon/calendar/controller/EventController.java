@@ -4,15 +4,19 @@
 * */
 package com.ohgiraffers.climbon.calendar.controller;
 
+import com.ohgiraffers.climbon.auth.Enum.UserRole;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
+import com.ohgiraffers.climbon.common.forconvenienttest.RoleUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/events")
@@ -23,20 +27,26 @@ public class EventController
     private EventService eventService;
 
 
-    @GetMapping
-    public List<EventDTO> getEventsByType(@RequestParam("type") String type) {
-        return eventService.getEventsByType(type);
-    }
+//    @GetMapping
+//    public List<EventDTO> getEventsByType(@RequestParam("type") String type) {
+//        return eventService.getEventsByType(type);
+//    }
 
-    @GetMapping("/main")
-    public List<EventDTO> getAllEvents(@AuthenticationPrincipal AuthDetail userDetails)
+    @GetMapping
+    public String getPublicEvents(Model model, @AuthenticationPrincipal AuthDetail userDetails)
     {
-        //admin은 유저코드 말고 유저롤을 매개변수로 받아서
-        return eventService.getAllEvents(userCode);
+        if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
+            System.out.println("EventController.getPublicEvents.   ::   you are admin");
+        }
+
+        System.out.println("main calendar will show you the schedules");
+        List<EventDTO> mainEvents = eventService.getMainEvents(true);
+        model.addAttribute("mainEvents", mainEvents);
+        return "";
     }
 
     @GetMapping("/crew")
-    public List<EventDTO> getCrewEvents()
+    public List<EventDTO> getCrewEvents() //RequestParam으로 뭔가 해결해보자
     {
         //크루 코드 어떻게 불러와
         return eventService.getCrewEvents();

@@ -1,10 +1,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<meta charset="UTF-8">
-<title>Title</title>
-
-    <th:block layout:fragment = "containerFragment">
+    <th:block layout:fragment = "modalFragment">
     <!-- 각각의 페이지에서 구현하고자 하는 컨텐츠를 작성 -->
     <div id = "calendar"></div>
 
