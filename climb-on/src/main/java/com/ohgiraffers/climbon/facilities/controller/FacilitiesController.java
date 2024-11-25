@@ -53,7 +53,11 @@ public class FacilitiesController {
 
         // 시설 목록 조회 (서비스 계층에서 처리)
          List<FacilitiesDTO> facilitiesList = facilitiesService.categorySelect(categoryId,facilityName);
-
+        for (FacilitiesDTO facilitiesDTO : facilitiesList) {
+            if(facilitiesDTO.getImageUrl() == null){
+                facilitiesDTO.setImageUrl("/images/default.jpg");
+            }
+        }
         mv.addObject("facilitiesList", facilitiesList);
         mv.setViewName("facilities/facilities");
         return mv;
@@ -72,6 +76,11 @@ public class FacilitiesController {
         List<FacilitiesDTO> facilitiesList = facilitiesService.searchOneFacility(code);
         if (Objects.isNull(facilitiesList)) {
             throw new NullPointerException();
+        }
+        for (FacilitiesDTO facilitiesDTO : facilitiesList) {
+            if(facilitiesDTO.getImageUrl() == null){
+                facilitiesDTO.setImageUrl("/images/default.jpg");
+            }
         }
         mv.addObject("facilitiesList", facilitiesList);
         mv.setViewName("facilities/facilities");
