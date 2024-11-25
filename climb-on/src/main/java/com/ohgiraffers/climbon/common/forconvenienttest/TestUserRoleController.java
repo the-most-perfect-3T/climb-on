@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ public class TestUserRoleController
         System.out.println("현재 유저 권한: " + request.getSession().getAttribute("userRole"));
         System.out.println("바꾸려는 유저 권한: " + requestRole.getRole());
         System.out.println("현재 유저 코드: " + userDetails.getLoginUserDTO().getId());
+
         try {
             testUserService.updateUserRole(new RoleUpdateRequest(userDetails.getLoginUserDTO().getId(), requestRole.getRole()));
             request.getSession().setAttribute("userRole", requestRole.getRole());

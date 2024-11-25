@@ -5,6 +5,9 @@ import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -30,5 +33,26 @@ public class CrewService {
     * */
     public int registerCrew(CrewDTO crewDTO) {
         return crewDAO.registerCrew(crewDTO);
+    }
+
+
+    public List<CrewDTO> selectFiveCrews(int page, String sort, List<String> areas) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("page", page);
+        map.put("sort", sort);
+        map.put("areas", areas);
+        return crewDAO.selectFiveCrews(map);
+    }
+
+    public int countAllCrews() {
+        return crewDAO.countAllCrews();
+    }
+
+    public List<CrewDTO> selectCrews() {
+        return crewDAO.selectCrews();
+    }
+
+    public int countCrewsFilteredByAreas(List<String> areas) {
+        return crewDAO.countCrewsFilteredByAreas(areas);
     }
 }

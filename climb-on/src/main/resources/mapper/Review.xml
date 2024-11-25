@@ -14,6 +14,7 @@
         <result property="userNickname" column="userNickname"/>
         <result property="likeCount" column="likeCount"/>
         <result property="averageRating" column="averageRating"/>
+        <result property="profilePic" column="PROFILE_PIC"/>
     </resultMap>
 
     <select id="getReview" resultMap="ReviewResultMap">
@@ -52,11 +53,15 @@
 
     <select id="getReviewByUserId" resultMap="ReviewResultMap">
         SELECT
-        *
-        FROM REVIEWS
-        WHERE USER_ID = #{userId}
-
-
+            a.USER_ID,
+            a.RATING,
+            a.COMMENT,
+            b.NICKNAME userNickname,
+            b.PROFILE_PIC
+        FROM REVIEWS a
+        JOIN USERS b
+          ON a.USER_ID = b.ID
+        WHERE a.USER_ID = #{userId}
     </select>
     <select id="getIsFavorite" parameterType="map" resultType="int">
         SELECT COUNT(*)

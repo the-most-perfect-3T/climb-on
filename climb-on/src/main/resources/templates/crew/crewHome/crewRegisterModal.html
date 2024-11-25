@@ -20,16 +20,16 @@
                     <!-- 크루 이미지 Upload -->
                     <form action="/crew/registerCrew" method="post" id="registerCrewForm" enctype="multipart/form-data">
                         <div class="text-center mb-4">
-                            <div class="position-relative mx-auto" style="width: 120px; height: 120px;">
-                                <div class="img-wrap d-flex align-items-center">
+                            <div class="position-relative mx-auto" style="width: 150px; height: 150px;">
+                                <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
                                     <img src="/images/logo.svg" alt="프로필 이미지" class="w-100" id="crewPic">
                                 </div>
                                 <input type="file" name="crewPic" id="crewPicInput" style="display: none;"/>
                                 <input type="hidden" name="imgUrl" id="imgUrl"/>
-                                <button type="button" class="btn btn-light" id="imgInsert">
-                                    <span class="text-danger">*</span>사진 등록
-                                </button>
                             </div>
+                            <button type="button" class="btn btnImgInsert mt-2" id="imgInsert">
+                                <span class="text-danger">*</span>사진 등록
+                            </button>
                         </div>
 
                         <div class="mb-4">
@@ -130,12 +130,12 @@
                                 <div class="dropdown-toggle form-control d-flex justify-content-between align-items-center">
                                     <span id="areaPlaceholder">활동 지역을 선택해주세요</span>
                                     <div id="selectedAreasContainer" class="mt-2 d-flex flex-wrap">
-                                        <!-- 선택된 가테고리가 들어올곳 -->
+                                        <!-- 선택된 지역 카테고리가 들어올곳 -->
                                     </div>
                                 </div>
 
                                 <div class="d-flex align-items-center">
-                                    <button type="button" class="btn btnArea text-start d-flex align-items-center gap-3" id="openAreaSelectModal">
+                                    <button type="button" class="btn btnArea text-start d-flex align-items-center gap-3" data-bs-target="#areaModal" id="openAreaSelectModal" data-context="registerCrew">
                                         <div class="btnDiv rounded-circle text-white d-flex">
                                             <i class="fa-solid fa-plus"></i>
                                         </div>
