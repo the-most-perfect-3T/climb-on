@@ -17,6 +17,8 @@ public class ReviewDTO {
     private int likeCount;
     private float averageRating;
 
+    private boolean isUser;
+
     @Override
     public String toString() {
         return "ReviewDTO{" +
@@ -29,8 +31,31 @@ public class ReviewDTO {
                 ", userNickname='" + userNickname + '\'' +
                 ", likeCount=" + likeCount +
                 ", averageRating=" + averageRating +
+                ", isUser=" + isUser +
                 ", profilePic='" + profilePic + '\'' +
                 '}';
+    }
+
+    public boolean isUser() {
+        return isUser;
+    }
+
+    public void setUser(boolean user) {
+        isUser = user;
+    }
+
+    public ReviewDTO(Integer id, Integer facilityId, Integer userId, int rating, String comment, LocalDateTime createdAt, String userNickname, int likeCount, float averageRating, boolean isUser, String profilePic) {
+        Id = id;
+        FacilityId = facilityId;
+        this.userId = userId;
+        this.rating = rating;
+        this.comment = comment;
+        this.createdAt = createdAt;
+        this.userNickname = userNickname;
+        this.likeCount = likeCount;
+        this.averageRating = averageRating;
+        this.isUser = isUser;
+        this.profilePic = profilePic;
     }
 
     public ReviewDTO(Integer id, Integer facilityId, Integer userId, int rating, String comment, LocalDateTime createdAt, String userNickname, int likeCount, float averageRating, String profilePic) {
