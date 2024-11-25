@@ -39,6 +39,7 @@
                             <tr th:each="facility : ${facilitiesList}"th:onclick="'showFacilityId(' + ${facility.id} + ')'">
                                 <td>
                                 <div class="facility-info">
+                                    <img id="facilitymainImg" class="facility-banner-content" th:src="@{${facility.imageUrl}}" alt="시설 이미지"></br>
                                     <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
                                     <div class="facility-address" th:text="${facility.address}">주소</div>
                                 </div>

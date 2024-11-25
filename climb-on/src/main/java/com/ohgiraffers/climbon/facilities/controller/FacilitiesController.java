@@ -31,9 +31,16 @@ public class FacilitiesController {
         // 시설 리스트 가져오기
         List<FacilitiesDTO> facilitiesList = facilitiesService.facilitiesList();
         System.out.println(facilitiesList);
+
+        for (FacilitiesDTO facilitiesDTO : facilitiesList) {
+            if(facilitiesDTO.getImageUrl() == null){
+                facilitiesDTO.setImageUrl("/images/default.jpg");
+            }
+        }
         // ModelAndView 생성 (뷰 이름: select, 모델에 시설 목록 추가)
         mv.setViewName("facilities/facilities") ; // 'select'는 view 이름
         mv.addObject("facilitiesList", facilitiesList); // 모델에 데이터 추가
+
 
 
         return mv; // ModelAndView 반환
