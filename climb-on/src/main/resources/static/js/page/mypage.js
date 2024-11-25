@@ -355,7 +355,7 @@ favoriteTab.addEventListener("click", async function () {
                     liItem.classList.add("border");
                     liItem.innerHTML = `
                     <div class="img-wrap border">
-                        <img src="" alt="">
+                        <img src="${item.imageUrl != null ? item.imageUrl : " "}" alt="시설 이미지">
                     </div>
                     <a href="/facilities/select" class="name">${item.facilityName}</a>
                     <p class="address">${item.address}</p>
@@ -555,7 +555,7 @@ reviewTab.addEventListener("click", async function(){
                     <div class="d-flex justify-content-between">
                         <div class="left d-flex align-items-center">
                             <div class="img-wrap border">
-                                <img src="" alt="">
+                                <img src="${item.profilePic}" alt="프로밀 이미지">
                             </div>
                             <div>
                                 <p class="name">${item.userNickname}</p>
@@ -567,7 +567,7 @@ reviewTab.addEventListener("click", async function(){
                         <div class="right">
                             <!--할것인지 확인-->
                             <button type="button" class="btn-modify"><i class="fa-solid fa-pen-to-square"></i></button>
-                            <button type="button" class="btn-delete"><i class="fa-solid fa-trash-can"></i></button>
+                            <button type="button" class="btn-delete" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                     <p class="contents">${item.comment}</p>
@@ -631,6 +631,62 @@ reviewTab.addEventListener("click", async function(){
             if (Array.isArray(data)) await renderData(currentPage);
             if(data.length > itemsPerPage) renderPagination();
 
+
+            // 리뷰 삭제
+            const reviewList = document.getElementById("review").querySelector("ul.review-list");
+            reviewList.addEventListener("click", async function(event){
+                const button = event.target.closest(".btn-delete");
+                if (button) {
+                    button.disabled = true;
+                    try {
+                        const facilityId = parseInt(button.getAttribute("data-id"));
+
+                        // 삭제 결과
+                        const result = await deleteReview(facilityId);
+                        console.log("result : " + result);
+
+                        if(result > 0){
+                            const liItem = event.target.closest("li"); // 버튼이 속한 li를 찾음
+                            if (liItem) {
+                                liItem.remove(); // li 삭제
+                            }
+                            const indexToRemove = data.findIndex(item => item.id === facilityId);
+                            if (indexToRemove > -1) {
+                                data.splice(indexToRemove, 1); // 배열에서 해당 아이템 삭제
+                            }
+
+                            if (data.length === 0) {
+                                const liItem = document.createElement("li");
+                                liItem.classList.add('no-result', 'border-top');
+                                liItem.textContent = "작성한 리뷰가 없습니다.";
+                                reviewList.appendChild(liItem);
+                            }
+
+                            // 현재 페이지가 데이터 크기를 초과하면 이전 페이지로 이동
+                            const totalPages = Math.ceil(data.length / itemsPerPage);
+                            if (currentPage > totalPages) {
+                                currentPage = totalPages;
+                            }
+
+                            // 삭제 후 다시 렌더링
+                            await renderData(currentPage);
+                            if (data.length >= itemsPerPage) {
+                                renderPagination();
+                            } else {
+                                document.querySelector(".pagination").textContent = "";
+                            }
+                        }
+
+
+                    }catch(e){
+                        console.log("삭제 실패!");
+                    } finally {
+                        button.disabled = false;
+                    }
+
+                }
+            });
+
         }
 
 
@@ -656,5 +712,32 @@ function renderStars(averageRating) {
 }
 
 
+async function deleteReview(id){
+    const url = '/Review/reviewDelete';
+    const data = {
+        id : id
+    };
 
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error('서버 오류: ' + response.status);
+        }
+
+        const result = await response.json(); // 응답 데이터를 JSON으로 변환
+        console.log("data : ", result);
+        return result; // 결과 반환
+    } catch (error) {
+        console.error('AJAX 오류:', error);
+        throw error; // 에러를 호출한 곳으로 전달
+    }
+
+}
 
