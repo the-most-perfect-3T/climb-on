@@ -152,9 +152,9 @@ function selectLocalImage() {
             };
             reader.readAsDataURL(file);
 
-            console.log(file);
+            // console.log(file);
             // formData.append('uploadFile', file);
-            console.log(formData);
+            // console.log(formData);
         }
     });
 }

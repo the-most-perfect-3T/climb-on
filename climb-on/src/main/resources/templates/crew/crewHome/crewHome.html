@@ -54,7 +54,7 @@
                     <form action="/community" method="get" style="display:flex; align-items: center;">
                         <input type="hidden" name="category" th:value="${category}"/>     <!--category와 searchKeyword를 함께 서버로 전송하여, 해당 카테고리의 검색 결과를 표시할 수 있게 했다-->
                         <input type="hidden" name="viewMode" th:value="${viewMode}"/> <!--뷰모드 유지-->
-                        <input type="text" name="searchKeyword" placeholder="크루 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
+                        <input type="text" name="searchKeyword" placeholder="크루게시판 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
                         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
@@ -66,7 +66,7 @@
                             <i class="fa-solid fa-bars-progress"></i>
                         </button>
                         <button onclick="setViewMode('list')" id="listViewButton">
-                            <i class="fa-solid fa-list"></i>
+                            <i class="fa-solid fa-rectangle-list"></i>
                         </button>
                     </div>
                     <!-- 정렬 버튼과 드롭다운 -->
@@ -81,13 +81,13 @@
                             <a href="#" onclick = "sortPosts('hearts')">좋아요순</a>
                         </div>
                     </div>
+                    <!-- 글쓰기 버튼 -->
+                    <div class="create-button-container">
+                        <button class="create-button" onclick="window.location.href='/crew/writepost'"><i class="fa-solid fa-pen"></i>글쓰기
+                        </button>
+                    </div>
                 </div>
 
-                <!-- 글쓰기 버튼 -->
-                <div class="create-button-container">
-                    <button class="create-button" onclick="window.location.href='/crew/writepost'"><i class="fa-solid fa-pencil"></i>글쓰기
-                    </button>
-                </div>
             </div>
             <!-- 리스트 뷰 형식 -->
             <div class="list-view">
@@ -104,7 +104,7 @@
                     <tbody>
                     <!-- 공지 핀포스트 -->
                     <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                        <td th:text="${post.category}">공지</td>
+                        <td th:text="${post.category}"><div class="pinned-postCategory">공지</div></td>
                         <td>
                             <a th:href="@{'/crew/post/' + ${post.id}}">
                                 <span th:text="${post.title}">공지 게시글 제목</span>
@@ -116,7 +116,7 @@
                     </tr>
 
                     <!-- 일반 게시글 출력 -->
-                    <tr th:each="post : ${generalPosts}">
+                    <tr id="generalPosts" th:each="post : ${generalPosts}" >
                         <td th:text="${post.category}">카테고리</td>
                         <td>
                             <a th:href="@{'/crew/post/' + ${post.id}}">
