@@ -451,7 +451,8 @@
     width: 100%;
 }
 .section-mypage #review .section00 .review-list li .name {
-    font-size: 20px;
+    /*font-size: 20px;*/
+    font-size: 18px;
     margin-bottom: 5px;
     font-weight: 700;
 }
@@ -470,7 +471,7 @@
 }
 .section-mypage #review .section00 .review-list li .contents {
     overflow-y: auto;
-    font-size: 20px;
+    /*font-size: 20px;*/
     /*font-weight: 600;*/
     margin-top: 30px;
     max-height: 90px;
@@ -497,4 +498,34 @@
     border-color: var(--point) !important;
     color: #fff;
     font-weight: 600;
+}
+
+/* 평점 별 기본 스타일 */
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    font-size: 2rem; /* 별의 크기 */
+}
+
+.rating > span {
+    display: inline-block;
+    position: relative;
+    width: 1.1em;
+}
+
+.rating > span i {
+    color: gray;
+    cursor: pointer;
+}
+
+/* 마우스 오버 및 이전 별에 대해 별 채우기 */
+.rating > span:hover i,
+.rating > span:hover ~ span i {
+    color: #f79256; /* 선택된 별을 금색으로 표시 */
+}
+
+/* 선택된 평점에 대한 별 */
+.rating > span.selected i {
+    color: #f79256;
+
 }
