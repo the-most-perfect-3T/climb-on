@@ -17,7 +17,7 @@
 }
 /* 테이블 스타일 */
 .content #facilitiestb {
-    width: 400px;
+    width: 100%;
     border-collapse: collapse; /* 셀 간 경계선 겹침 방지 */
 }
 
@@ -223,12 +223,19 @@ p {
     position: relative;
 }
 .facility-details-content{
-    width: 50px;
-    height: 50px;
+    width: 100%;
     background-color: #f79256; /* Orange background */
     position: relative;
 }
-
+.img-wrap {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 /* 평점 별 기본 스타일 */
 .rating {
     unicode-bidi: bidi-override;
