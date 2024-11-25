@@ -97,6 +97,13 @@
         </if>
     </select>
 
+    <select id="getRecruitingCrews" resultMap="crew">
+        SELECT *
+        FROM crews
+        WHERE status=1 AND recruiting_status = TRUE
+        LIMIT 8;
+    </select>
+
 
 
 </mapper>

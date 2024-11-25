@@ -55,4 +55,8 @@ public class CrewService {
     public int countCrewsFilteredByAreas(List<String> areas) {
         return crewDAO.countCrewsFilteredByAreas(areas);
     }
+
+    public List<CrewDTO> getRecruitingCrews() {
+        return crewDAO.getRecruitingCrews();
+    }
 }

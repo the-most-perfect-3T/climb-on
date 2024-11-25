@@ -7,7 +7,6 @@ h2 {
 
 .news-title {
     margin-bottom : 20px;
-    margin-left : 15px;
 }
 
 /* 기본적인 레이아웃과 스타일 */
@@ -39,44 +38,40 @@ h2 {
 }
 
 /* 타임라인 컨테이너 스타일 */
-.timeline-container {
+.crewlist-container {
     display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 120px; /* 아래쪽 여백 */
 }
 
-/* 타임라인 */
-.timeline {
-    display: flex; /* 버튼들을 가로로 배치 */
-    gap: 70px; /* 버튼 사이의 간격 */
-}
-
-/* 타임라인 아이템 */
-.timeline-item {
+.crew-item {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    width: 120px; /* 버튼 크기 */
-    height: 120px;
-    background-color: #ddd; /* 배경색 */
-    border-radius: 20px; /* 모서리를 둥글게 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    gap: 0.5rem;
 }
 
-.timeline-item a {
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
+.img-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    /*margin-right: 40px;
+    margin-bottom: 6px;*/
+    background-color: var(--beige);
+    flex-shrink: 0;
+}
+
+.crewlist-container img {
+    object-fit: cover;
+}
+
+.crew-name {
+    font-size: 0.9rem;
     font-weight: bold;
-    text-align: center;
 }
 
-/* 호버 효과 */
-.timeline-item:hover {
-    background-color: var(--point); /* 호버 시 배경색 변경 */
-    transform: translateY(-5px); /* 살짝 위로 올라가는 효과 */
-    cursor: pointer;
-}
 
 /* 더보기 버튼 스타일 */
 .more-button {
@@ -109,13 +104,28 @@ h2 {
     gap: 10px;
 }
 
-.category-buttons button {
+.category-buttons button:not(:nth-child(3)) {
     padding: 8px 12px;
-    border: 1px solid #ddd;
+    width: 80px;
+    height: 40px;
+    border: 1px solid var(--borderColor);
     border-radius: 20px;
     background-color: #ffffff;
     color: #333;
-    font-size: 14px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.category-buttons button:last-child {
+    padding: 8px 12px;
+    width: 100px;
+    height: 40px;
+    border: 1px solid var(--borderColor);
+    border-radius: 20px;
+    background-color: #ffffff;
+    color: #333;
+    font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -266,17 +276,35 @@ h2 {
 /* 카드 뷰 개별 카드 */
 .card {
     width: 100%; /* 카드가 컨테이너에 맞도록 설정 */
-    padding: 15px; /* 리스트 뷰와 동일한 내부 여백 */
+    /*padding: 15px; !* 리스트 뷰와 동일한 내부 여백 *!*/
     border-bottom: 1px solid #ddd; /* 카드 구분선 */
     border-radius: 0; /* 모서리 반경 제거 */
     box-shadow: none; /* 그림자 제거 */
+    --bs-card-border-color: none;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 .card-category {
     margin-bottom: 10px;
 }
 
+.thumbnail-wrapper {
+    flex: 0 0 150px;
+}
+
+.thumbnail {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-body {
+    flex: 1;
+}
+
 .card-title a {
-    font-size: 22px;
+    font-size: 20px;
     color: #333;
     text-decoration: none;
     font-weight: bold;
@@ -291,9 +319,17 @@ h2 {
 
 .card-content {
     font-size: 16px;
-    color: #555;
+    color: var(--black);
     line-height: 1.5;
     margin-bottom: 20px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2; /* For browsers that support it */
+    height: 3rem;
+    text-overflow: ellipsis;
+    white-space: normal;
 }
 
 /* 리스트 뷰 스타일 */
@@ -321,7 +357,7 @@ h2 {
 
 .post-list {
     width: 100%;
-    max-width: 90%;
+
 }
 
 .post-list table {
