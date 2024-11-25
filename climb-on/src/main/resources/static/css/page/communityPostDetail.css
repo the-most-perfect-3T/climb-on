@@ -11,9 +11,9 @@
 .post-header {
     display: flex;
     flex-direction: column; /* 제목과 나머지 정보를 세로로 배치 */
-    border-bottom: 1px solid #eee;
+    border-bottom: 2px solid var(--borderColor);
     padding-bottom: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .post-title {
@@ -74,7 +74,7 @@
     margin-left: 5px;
     padding: 8px 20px;
     font-size: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borderColor);
     background-color: #ffffff;
     color: #333;
     border-radius: 20px;
@@ -87,18 +87,31 @@
     color: #ffffff; /* 글자색 흰색 */
 }
 
+.event-period {
+    font-size: 12px;
+    color: #666;
+    padding-bottom : 10px;
+    border-bottom: 1px solid var(--borderColor);
+}
+
+.event-period hr {
+    border: 0;
+    height: 1px;
+    background-color: #eee;
+}
+
 /* 게시글 내용 */
 .post-content {
-    margin-top: 20px;
+    margin-top: 30px;
     line-height: 1.6;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 20px;
+    border-bottom: 1px solid var(--borderColor);
+    padding-bottom: 30px;
 }
 
 .post-content .post-image img {
     width: 100%;
     max-height: 400px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borderColor);
     border-radius: 8px;
     margin-bottom: 20px;
 }
@@ -110,7 +123,7 @@
 
 .post-interactions {
     display: flex;
-    justify-content: flex-start; /* 왼쪽 정렬 */
+    justify-content: space-between; /* 왼쪽 정렬 */
     align-items: center;
     gap: 15px; /* 아이템 간 간격 */
     padding-top: 10px;
@@ -160,6 +173,28 @@
     color: var(--darkGray);
 }
 
+/*공유하기*/
+.share-button-container {
+    margin-left: auto; /* 오른쪽 끝으로 밀기 */
+}
+
+.share-button i {
+    margin-right: 5px; /* 아이콘과 텍스트 간격 */
+}
+
+.share-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--point);
+    display: flex;
+    align-items: center;
+}
+.share {
+    color: var(--darkGray);
+}
+
+
 /* 댓글 작성 */
 .comment-section {
     margin-top: 20px;
@@ -181,7 +216,7 @@
     width: 100%; /* textarea가 전체 폭을 차지 */
     height: 100px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borderColor);
     border-radius: 5px;
     resize: none;
     box-sizing: border-box;
@@ -205,7 +240,7 @@
 /* 댓글 목록 전체 스타일 */
 .comment-list {
     margin-top: 20px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--borderColor);
     padding-top: 15px;
 }
 
@@ -215,7 +250,7 @@
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--borderColor);
     padding-bottom: 15px;
     position: relative; /* 햄버거 메뉴 위치를 위한 설정 */
 }
@@ -262,6 +297,9 @@
 /* 수정/삭제 메뉴 */
 .comment-actions-menu {
     position: absolute;
+
+
+
     top: 0;
     right: 0; /* 오른쪽 끝 정렬 */
 }
@@ -280,11 +318,20 @@
     top: 25px;
     right: 0;
     background: white;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borderColor);
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 10;
-    padding: 5px;
+    padding: 3px 8px; /* 내부 여백을 줄여 크기를 축소 */
+    gap: 10px;
+    font-size: 14px; /* 글자 크기 조정 */
+}
+
+.dropdown-menu button,
+.dropdown-menu form button {
+    font-size: 13px; /* 버튼 텍스트 크기 줄임 */
+    padding: 5px 10px; /* 버튼 내부 여백 조정 */
+    margin: 2px 0; /* 항목 간 간격 최소화 */
 }
 
 .comment-actions-menu:hover .dropdown-menu {
@@ -296,7 +343,7 @@
     margin-top: 10px;
     background-color: #ffffff;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--borderColor);
     border-radius: 5px;
     display: none;
 }
@@ -305,7 +352,7 @@
     width: 100%;
     height: 50px;
     padding: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--borderColor);
     border-radius: 4px;
     resize: none;
 }
@@ -325,15 +372,16 @@
 }
 
 .comment-edit-form .cancel-edit-button {
-    background-color: #dc3545;
+    background-color: var(--darkGray);
     color: white;
     margin-left: 5px;
 }
 
 /* 목록으로 돌아가기 버튼 */
 .back-button {
-    margin-top: 10px;
+    margin-top: 25px; /* 이전글/다음글과의 간격 줄이기 */
     text-align: center;
+    padding: 10px 0; /* 내부 간격 최소화 */
 }
 
 .back-button button {
@@ -349,8 +397,8 @@
 /* 이전글/다음글 컨테이너 스타일 */
 .prev-next-container {
     width: 100%;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid var(--borderColor);
+    border-bottom: 1px solid var(--borderColor);
 }
 
 .prev-next-item {
@@ -359,7 +407,7 @@
     font-size: 14px;
     color: #333;
     padding: 10px 0; /* 위아래 여백 */
-    border-bottom: 1px solid #ddd; /* 항목 간 구분선 */
+    border-bottom: 1px solid var(--borderColor); /* 항목 간 구분선 */
 }
 
 .prev-next-item:last-child {

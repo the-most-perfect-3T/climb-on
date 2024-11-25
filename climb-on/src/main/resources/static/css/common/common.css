@@ -20,11 +20,13 @@
 *{
     box-sizing: border-box;
 }
+
 html {
     font-size: 16px;
     box-sizing: border-box;
     scroll-behavior: smooth;
 }
+
 body {
     color: var(--black);
     font-family: "Noto Sans KR", sans-serif;
