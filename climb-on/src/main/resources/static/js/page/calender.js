@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // let isAdmin = fetch('api/user/permissions')
     //     .then(res => res.json())
     //     .then(data => {
-    //         console.log(isAdmin + " tlqkfdk");
     //         return data.isAdmin;
     //     });
     let eventData;
@@ -17,8 +16,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 메인 캘린더
     if(calendarMainE1){
+        $.ajax(
+            {
+                url: "/api/user/permissions",
+                type: "GET",
+                success: function(response) {
+                    console.log("reponse Admin: " + response.isAdmin);
+                    if(response.isAdmin)
+                    {
+                        // 관리자 검사 후 캘린더에 옵션 넣어서 렌더링
 
-        const mainCalendar = new FullCalendar.Calendar(calendarMainE1, {
+                        mainCalendar.batchRendering(function(){
+                            mainCalendar.setOption('headerToolbar', {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'myCustomButton'
+                            });
+                            mainCalendar.setOption('selectable', true);
+                            mainCalendar.setOption('editable', true);
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.log("you got error: " + error);
+                }
+            }
+        )
+
+        let mainCalendar = new FullCalendar.Calendar(calendarMainE1, {
 
         customButtons: {
             myCustomButton: {
@@ -42,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             end: $("#end").val(),
                             color: $("#color").val()
                         };
-                        // Check for empty values
                         if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
                             alert("입력하지 않은 값이 있습니다.");
                         } else if (eventData.start > eventData.end) {
@@ -96,8 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, // 얘도 관리자 권한
         headerToolbar: {
             left: 'prev,next today',
-            center: 'title',
-            right: 'myCustomButton' //dayGridMonth 있을 필요 없을 것 같아서
+            center: 'title',//dayGridMonth 있을 필요 없을 것 같아서
+            right: ''
         },
         height: '700px', // calendar 높이 설정
         expandRows: true, // 화면에 맞게 높이 재설정
@@ -217,26 +241,48 @@ document.addEventListener('DOMContentLoaded', function() {
         dayMaxEvents: true, // allow "more" link when too many events
         events: '/events?type=main'
     });
-        if(!isAdmin){
-            mainCalendar.setOption('headerToolbar', {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek'
-            });
-            mainCalendar.setOption('select', null);
-            mainCalendar.setOption('eventClick', null);
-        } else {
-            mainCalendar.setOption('headerToolbar', {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek'  // No 'addEventButton' for non-admins
-            });
-        }
         mainCalendar.render();
     }
 
     // 크루 캘린더
+    /*
+    *
+    *     fetch(`events/crew`)
+        .then(res => {
+            if(res.status === 403)
+            {
+                // error page
+            }
+            return res.json();
+        })
+        .then(events => {
+            const crewCode = data.crewCode;
+            calendar.addEventSource(events);
+        })
+        .catch(error => console.error('Error:', error));
+    * */
+
     if(calendarCrewE1){
+        $.ajax(
+            {
+                url: "/api/user/crewcode",
+                type: "GET",
+                success: function(response) {
+                    const crewCode = response.crewCode;
+                    console.log("your crew code: " + crewCode);
+                    if (crewCode) {
+                        const crewPage = document.getElementById('crewPage');
+                        crewPage.href = `/myCrew?crewcode=${crewCode}`;
+                        crewPage.textContent = `Access Your Team (${crewCode})`;
+                    } else {
+                        console.log("크루코드가 없는 유저 ... 크루에 가입하시길 바랍니다");
+                    }
+                },
+                error: function(error) {
+                    console.log("you got error: " + error);
+                }
+            }
+        )
         console.log("you get crew calendar");
         const crewCalendar  = new FullCalendar.Calendar(calendarCrewE1, {
 
@@ -646,7 +692,6 @@ document.addEventListener('DOMContentLoaded', function() {
         privateCalendar.render();
     }
 
-    // privateCalendar.refetchEvents()
 
     // 탭 초기화 테스트
     let triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))

@@ -15,6 +15,11 @@
         <result property="role" column="IS_ADMIN"/>
     </resultMap>
 
+    <resultMap id="crewEventResult" type="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
+        <id property="userCode" column="USER_CODE"/>
+        <result property="crewCode" column="CREW_CODE"/>
+    </resultMap>
+
 
     <select id="getAllEvents" parameterType="int" resultMap="eventResult">
         SELECT
@@ -62,5 +67,11 @@
         FROM calendar_events AS c
         JOIN users AS u ON c.user_code = u.id
         WHERE u.user_role = #{value};
+    </select>
+
+    <select id="isUserInTeam" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO" resultMap="crewEventResult">
+        SELECT COUNT(*)
+        FROM user_crew
+        WHERE user_code = #{userCode} AND crew_code = #{crewCode};
     </select>
 </mapper>

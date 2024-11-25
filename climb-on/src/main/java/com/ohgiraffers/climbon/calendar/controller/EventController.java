@@ -6,10 +6,12 @@ package com.ohgiraffers.climbon.calendar.controller;
 
 import com.ohgiraffers.climbon.auth.Enum.UserRole;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.calendar.dto.CrewEventDTO;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
 import com.ohgiraffers.climbon.common.forconvenienttest.RoleUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
@@ -33,23 +35,29 @@ public class EventController
 //    }
 
     @GetMapping
-    public String getPublicEvents(Model model, @AuthenticationPrincipal AuthDetail userDetails)
+    public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
     {
-        if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
-            System.out.println("EventController.getPublicEvents.   ::   you are admin");
+        if(userDetails != null)
+        {
+            if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
+                System.out.println("EventController.getPublicEvents.   ::   you are admin");
+            }
         }
-
         System.out.println("main calendar will show you the schedules");
-        List<EventDTO> mainEvents = eventService.getMainEvents(true);
-        model.addAttribute("mainEvents", mainEvents);
-        return "";
+        return eventService.getMainEvents(true);
     }
 
     @GetMapping("/crew")
-    public List<EventDTO> getCrewEvents() //RequestParam으로 뭔가 해결해보자
+    public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
     {
         //크루 코드 어떻게 불러와
-        return eventService.getCrewEvents();
+
+        int userCode = userDetails.getLoginUserDTO().getId();
+        if(!eventService.isUserInTeam(new CrewEventDTO(userCode, crewCode))){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님"); // 크루에 가입하세요? 정도의 메세지
+        }
+        List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);
+        return ResponseEntity.ok(crewEvents);
     }
 
     // 마이페이지 캘린더

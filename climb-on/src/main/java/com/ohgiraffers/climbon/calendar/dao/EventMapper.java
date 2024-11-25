@@ -1,5 +1,6 @@
 package com.ohgiraffers.climbon.calendar.dao;
 
+import com.ohgiraffers.climbon.calendar.dto.CrewEventDTO;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,4 +23,6 @@ public interface EventMapper
     List<EventDTO> getEventsByType(String type);
 
     List<EventDTO> getMainEvents(boolean admin);
+
+    Integer isUserInCrew(CrewEventDTO crewEventDTO);
 }

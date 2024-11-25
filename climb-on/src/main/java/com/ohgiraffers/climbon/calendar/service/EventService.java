@@ -1,12 +1,11 @@
 package com.ohgiraffers.climbon.calendar.service;
 
 import com.ohgiraffers.climbon.calendar.dao.EventMapper;
+import com.ohgiraffers.climbon.calendar.dto.CrewEventDTO;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
-import jdk.jfr.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -20,9 +19,16 @@ public class EventService
         return eventMapper.getAllEvents(userCode);
     }
 
-    public List<EventDTO> getCrewEvents()
+    public List<EventDTO> getCrewEvents(int crewCode)
     {
         return eventMapper.getAllEventsFromCrew();
+    }
+
+    public boolean isUserInTeam(CrewEventDTO crewEventDTO) throws Exception
+    {
+        int result = eventMapper.isUserInCrew(crewEventDTO);
+        System.out.println("EventService isUserInTeam? : " + result);
+        return result > 0 ? true : false;
     }
 
     public void addEvent(EventDTO event)
@@ -33,7 +39,6 @@ public class EventService
     public boolean checkDuplicate(String title, String start, String end, int userCode)
     {
         int result = eventMapper.checkDuplicate(title, start, end, userCode);
-        System.out.println(result + " <= 이것은 result 값");
         return result > 0 ? true : false;
     }
 
@@ -60,4 +65,5 @@ public class EventService
         System.out.println("getMainEvents called ");
         return eventMapper.getMainEvents(role);
     }
+
 }
