@@ -20,8 +20,8 @@
         <result property="isAnonymous" column="is_anonymous"/>
         <result property="heartsCount" column="like_count"/>
         <result property="status" column="status"/>
-        <result property="eventStartDate" column="event_start_date"/>
-        <result property="eventEndDate" column="event_end_date"/>
+        <result property="eventStartDate" column="event_start_date" javaType="String" jdbcType="DATE"/>
+        <result property="eventEndDate" column="event_end_date" javaType="String" jdbcType="DATE"/>
         <result property="commentsCount" column="comments_count"/>
     </resultMap>
 
@@ -115,10 +115,7 @@
     <select id="getPostById" resultMap="postResultMap">
         SELECT p.id, p.user_id, u.nickname AS userNickname , p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.like_count, p.img_url, p.category, p.status
         , (SELECT COUNT(*) FROM community_comments WHERE post_id = p.id AND status = 1) AS comments_count  <!--댓글 수 계산하는 서브쿼리-->
-
-        <if test="category.equals('소식')"> <!--==는 숫자만 받으므로 equals를 써야한다!-->
             , p.event_start_date, p.event_end_date
-        </if>
         FROM community_posts p
         LEFT JOIN users u ON p.user_id = u.id
         WHERE p.id = #{id} AND p.status = 1
@@ -183,7 +180,6 @@
         INSERT INTO community_comments (post_id, user_id, content, created_at, status)
         VALUES (#{postId}, #{userId}, #{content}, NOW(), #{status})
     </insert>
-
 
 
     <!-- 게시글 수정 -->

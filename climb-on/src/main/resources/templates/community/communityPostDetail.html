@@ -33,6 +33,13 @@
         </div>
     </div>
     </div>
+
+    <div class="event-period" th:if="${post.category == '소식'}">
+        <div class="event-dates">
+            행사기간 : <span th:text="${post.eventStartDate}">YYYY.MM.DD</span> ~ <span th:text="${post.eventEndDate}">YYYY.MM.DD</span>
+        </div>
+    </div>
+
     <!-- 게시글 내용 -->
     <div class="post-content">
         <div class="post-image" th:if="${post.imageUrl != null}">
@@ -56,7 +63,10 @@
         <i class="fa-regular fa-comment-dots"></i><span class="comments-count">댓글 <span th:text="${post.commentsCount}">0</span></span>
         </div>
         </div>
+        <div class="share-button-container">
+            <button class="share-button" onclick="copyPostUrl()"><i class="fa-solid fa-share-nodes"></i><span class="share">공유하기</span></button>
         </div>
+    </div>
 
     <!-- 댓글 작성 -->
     <div class="comment-section">
@@ -86,7 +96,6 @@
                 </div>
             </div>
 
-
                 <!-- 댓글 수정/삭제 메뉴 버튼 -->
                 <div class="comment-actions-menu" th:if="${comment.userId == currentUserId}">
                     <button class="menu-button"><i class="fa-solid fa-bars"></i></button>
@@ -97,6 +106,7 @@
                         </form>
                     </div>
                 </div>
+
             </div>
             <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
                 <!-- 수정 폼 (기본적으로 숨김)-->
@@ -129,13 +139,13 @@
             </span>
             </div>
         </div>
+        <!-- 목록으로 돌아가기 버튼 -->
+        <div class="back-button">
+            <button onclick="window.location.href='/community'">목록</button>
+        </div>
     </div>
     </div>
 
-    <!-- 목록으로 돌아가기 버튼 -->
-    <div class="back-button">
-        <button onclick="window.location.href='/community'">목록</button>
-    </div>
 </th:block>
 
 
@@ -179,6 +189,7 @@
                                 heartIcon.classList.add('fa-regular');
                             }
                         }
+
                     } catch (error) {
                         console.error('네트워크 오류:', error); // 네트워크 오류 처리
                         // 네트워크 오류 시 UI 를 백
@@ -192,6 +203,17 @@
                         }
                     }
                 }
+
+                // 공유하기 기능 (Url복사)
+
+               function copyPostUrl(){
+                   const postUrl = window.location.href;
+                   navigator.clipboard.writeText(postUrl).then(() => {
+                       alert('URL이 복사되었습니다!');
+                   }).catch((error) => {
+                       console.error('URL 복사 실패:' ,error);
+                   });
+               }
 
                 // 드롭다운 메뉴 토글 처리
                function setupDropdownMenus() {
