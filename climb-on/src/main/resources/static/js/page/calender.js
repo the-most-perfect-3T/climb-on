@@ -614,6 +614,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // privateCalendar.refetchEvents()
 
+    // 탭 초기화 테스트
     let triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
     triggerTabList.forEach(function (triggerEl) {
         let tabTrigger = new bootstrap.Tab(triggerEl)
@@ -624,6 +625,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         })
     })
+
+    // function initCalendar()
+    // {
+    //     mainCalendar.updateSize();
+    //     crewCalendar.updateSize();
+    // }
+    //
+    // $(function() {
+    //     let calendarInit = false;
+    //     $('#activity-tab').on('shown.bs.tab', function (e) {
+    //         if (!calendarInit) {
+    //             initCalendar();
+    //             //initCalendarDragNDrop();
+    //             calendarInit = true;
+    //         }
+    //     });
+    // });
 });
 
 
