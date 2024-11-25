@@ -40,7 +40,6 @@ public class PostController {
         // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
 
-
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -62,7 +61,7 @@ public class PostController {
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
-        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("category", category != null ? category : "전체");
@@ -83,8 +82,6 @@ public class PostController {
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
 
-        System.out.println(post.getEventStartDate());
-        System.out.println(post.getEventEndDate());
 
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
