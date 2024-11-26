@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     $("#modifyButton").hide();
                     $("#deleteButton").hide();
 
-                    $("#exampleModal").modal("show");
+                    $("#calendarModal").modal("show");
                     $("#title").val("");
                     $("#start").val(new Date(Date.now()-offset).toISOString().substring(0,10));
                     $("#end").val(new Date(Date.now()-offset).toISOString().substring(0,10));
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
 
                             // 모달 창 초기화
-                            $("#exampleModal").modal("hide");
+                            $("#calendarModal").modal("hide");
                             $("#title").val("");
                             $("#start").val(new Date(Date.now()-offset).toISOString().substring(0,10));
                             $("#end").val(new Date(Date.now()-offset).toISOString().substring(0,10));
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $("#deleteButton").show();
 
             // 모달 창에 argument value 넣어줌
-            $("#exampleModal").modal("show");
+            $("#calendarModal").modal("show");
             $("#title").val(arg.event.title);
             $("#start").val(arg.event.start.toISOString().substring(0,10));
             $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0,10) : "");
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(error.message);
                 }
 
-                $("#exampleModal").modal("hide");
+                $("#calendarModal").modal("hide");
             });
 
             //삭제 버튼 클릭했을 때
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             alert("삭제에 실패했습니다.");
                         }
                     });
-                    $("#exampleModal").modal("hide");
+                    $("#calendarModal").modal("hide");
                 }
             });
         },  // 얘도 관리자 권한
@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         $("#modifyButton").hide();
                         $("#deleteButton").hide();
 
-                        $("#exampleModal").modal("show");
+                        $("#calendarModal").modal("show");
                         $("#title").val("");
                         $("#start").val(new Date(Date.now()-offset).toISOString().substring(0,10));
                         $("#end").val(new Date(Date.now()-offset).toISOString().substring(0,10));
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
 
                                 // 모달 창 초기화
-                                $("#exampleModal").modal("hide");
+                                $("#calendarModal").modal("hide");
                                 $("#title").val("");
                                 $("#start").val(new Date(Date.now()-offset).toISOString().substring(0,10));
                                 $("#end").val(new Date(Date.now()-offset).toISOString().substring(0,10));
@@ -429,7 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $("#deleteButton").show();
 
                 // 모달 창에 argument value 넣어줌
-                $("#exampleModal").modal("show");
+                $("#calendarModal").modal("show");
                 $("#title").val(arg.event.title);
                 $("#start").val(arg.event.start.toISOString().substring(0,10));
                 $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0,10) : "");
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert(error.message);
                     }
 
-                    $("#exampleModal").modal("hide");
+                    $("#calendarModal").modal("hide");
                 });
 
                 //삭제 버튼 클릭했을 때
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 alert("삭제에 실패했습니다.");
                             }
                         });
-                        $("#exampleModal").modal("hide");
+                        $("#calendarModal").modal("hide");
                     }
                 });
             },
@@ -494,6 +494,15 @@ document.addEventListener('DOMContentLoaded', function() {
             events: '/events?type=crew'
         });
         crewCalendar.render();
+
+        function CalendarTypeSet(fTip)
+        {
+            let x = document.getElementById('cal_tip');
+            x.value=fTip;
+            //$('#calendar').fullCalendar('rerenderEvents');
+            crewCalendar.rerenderEvents('#crewCalendar');
+        }
+
     }
 
     // 개인 캘린더
@@ -509,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     $("#modifyButton").hide();
                     $("#deleteButton").hide();
 
-                    $("#exampleModal").modal("show");
+                    $("#calendarModal").modal("show");
                     $("#title").val("");
                     $("#start").val(new Date(Date.now()-offset).toISOString().substring(0,10));
                     $("#end").val(new Date(Date.now()-offset).toISOString().substring(0,10));
@@ -567,7 +576,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
 
                             // 모달 창 초기화
-                            $("#exampleModal").modal("hide");
+                            $("#calendarModal").modal("hide");
                             $("#title").val("");
                             $("#start").val(new Date(Date.now()-offset).toISOString().substring(0,10));
                             $("#end").val(new Date(Date.now()-offset).toISOString().substring(0,10));
@@ -636,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $("#deleteButton").show();
 
             // 모달 창에 argument value 넣어줌
-            $("#exampleModal").modal("show");
+            $("#calendarModal").modal("show");
             $("#title").val(arg.event.title);
             $("#start").val(arg.event.start.toISOString().substring(0,10));
             $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0,10) : "");
@@ -676,7 +685,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(error.message);
                 }
 
-                $("#exampleModal").modal("hide");
+                $("#calendarModal").modal("hide");
             });
 
             //삭제 버튼 클릭했을 때
@@ -692,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             alert("삭제에 실패했습니다.");
                         }
                     });
-                    $("#exampleModal").modal("hide");
+                    $("#calendarModal").modal("hide");
                 }
             });
         },
@@ -716,22 +725,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //     })
     // })
 
-    // function initCalendar()
-    // {
-    //     mainCalendar.updateSize();
-    //     crewCalendar.updateSize();
-    // }
-    //
-    // $(function() {
-    //     let calendarInit = false;
-    //     $('#activity-tab').on('shown.bs.tab', function (e) {
-    //         if (!calendarInit) {
-    //             initCalendar();
-    //             //initCalendarDragNDrop();
-    //             calendarInit = true;
-    //         }
-    //     });
-    // });
+
 });
 
 
