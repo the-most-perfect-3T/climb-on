@@ -1,5 +1,6 @@
 package com.ohgiraffers.climbon.calendar.dao;
 
+import com.ohgiraffers.climbon.calendar.dto.CrewEventDTO;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,7 +10,7 @@ import java.util.List;
 public interface EventMapper
 {
     List<EventDTO> getAllEvents(int userCode);
-    List<EventDTO> getAllEventsFromCrew();
+    List<EventDTO> getAllEventsFromCrew(int crewCode);
 
     void insertEvent(EventDTO event);
 
@@ -20,4 +21,8 @@ public interface EventMapper
     void modifyEvent(EventDTO event);
 
     List<EventDTO> getEventsByType(String type);
+
+    List<EventDTO> getMainEvents(boolean admin);
+
+    Integer isUserInCrew(CrewEventDTO crewEventDTO);
 }
