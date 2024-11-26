@@ -30,6 +30,10 @@ public class SearchService {
         // 크루 검색
         List<CrewDTO> crewNames = searchDAO.searchCrewNames(keyword);
 
+        // 크루 제한 설정 (최대 5개만 반환)
+        int crewLimit = Math.min(5, crewNames.size());
+        List<CrewDTO> crewLimited = crewNames.subList(0, crewLimit);
+
         // 시설 제한 설정 (최대 3개만 반환)
         int facilitiesLimit = Math.min(3, facilities.size());
         List<FacilitiesDTO> facilitiesLimited = facilities.subList(0, facilitiesLimit);
@@ -44,8 +48,10 @@ public class SearchService {
         result.put("communityPosts", communityPosts); // 전체 게시글
         result.put("facilities", facilities);
         result.put("crewNames", crewNames);
-        result.put("limitedPosts", limitedPosts);  // 제한된 게시글
-        result.put("facilitiesLimited", facilitiesLimited);
+        // 제한된 게시글
+        result.put("limitedCrewNames", crewLimited);
+        result.put("limitedCommunityPosts", limitedPosts);
+        result.put("limitedfacilities", facilitiesLimited);
 
         return result;
     }

@@ -173,6 +173,7 @@
             </tbody>
         </table>
         </div>
+
         <!-- 카드 뷰 형식 -->
         <div class="card-container" style="display: none;">
             <table style="width: 100%; border-collapse: collapse;">
@@ -186,6 +187,7 @@
                 </tr>
                 </thead>
                 <tbody>
+
                 <!-- 공지 핀포스트 -->
                 <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
                     <td th:text="${post.category}">공지</td>
@@ -372,7 +374,6 @@
                 urlParams.set('viewMode', viewMode);
                 window.location.search = urlParams.toString();
             }
-
 
             // 뷰 전환 스크립트 // 뷰 모드를 설정하고 URL 파라미터에 반영하는 함수 (URL 갱신하여 고정)
 
