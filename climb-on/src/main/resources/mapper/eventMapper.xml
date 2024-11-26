@@ -28,11 +28,12 @@
         WHERE user_code = #{userCode};
     </select>
 
-<!--    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">-->
-<!--        SELECT-->
-<!--        *-->
-<!--        FROM tbl_crewevents_test;-->
-<!--    </select>-->
+    <select id="getAllEventsFromCrew" parameterType="int" resultMap="eventResult">
+        SELECT
+        *
+        FROM calendar_events
+        WHERE crew_code = #{value};
+    </select>
 
     <select id="getMainEvents" parameterType="boolean" resultMap="eventResult">
         SELECT *
@@ -69,7 +70,7 @@
         WHERE u.user_role = #{value};
     </select>
 
-    <select id="isUserInTeam" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO" resultMap="crewEventResult">
+    <select id="isUserInCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO" resultType="Integer">
         SELECT COUNT(*)
         FROM user_crew
         WHERE user_code = #{userCode} AND crew_code = #{crewCode};

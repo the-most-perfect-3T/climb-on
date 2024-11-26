@@ -12,7 +12,9 @@ public class UserPermissionService
 
     public int getCrewCodeByUserCode(int userCode)
     {
-        return userPermissionMapper.getCrewCodeByUserCode(userCode);
+        Object result = userPermissionMapper.getCrewCodeByUserCode(userCode);
+
+        return (result != null) ? (int)result : 0;
     }
 
 

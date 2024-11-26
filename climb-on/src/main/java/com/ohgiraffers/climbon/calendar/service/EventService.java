@@ -21,10 +21,10 @@ public class EventService
 
     public List<EventDTO> getCrewEvents(int crewCode)
     {
-        return eventMapper.getAllEventsFromCrew();
+        return eventMapper.getAllEventsFromCrew(crewCode);
     }
 
-    public boolean isUserInTeam(CrewEventDTO crewEventDTO) throws Exception
+    public boolean isUserInCrew(CrewEventDTO crewEventDTO) throws Exception
     {
         int result = eventMapper.isUserInCrew(crewEventDTO);
         System.out.println("EventService isUserInTeam? : " + result);

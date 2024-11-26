@@ -4,7 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ohgiraffers.climbon.calendar.dao.UserPermissionMapper">
 
-    <select id="getCrewCodeByUserCode" parameterType="Integer" resultType="Integer">
+    <select id="getCrewCodeByUserCode" parameterType="int" resultType="Integer">
         SELECT crew_code
         FROM user_crew
         WHERE user_code = #{value};

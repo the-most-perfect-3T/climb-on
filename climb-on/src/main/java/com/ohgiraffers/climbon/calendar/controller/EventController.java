@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/events")
 public class EventController
 {
     public int userCode =0;
@@ -34,7 +33,7 @@ public class EventController
 //        return eventService.getEventsByType(type);
 //    }
 
-    @GetMapping
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
     {
         if(userDetails != null)
@@ -47,13 +46,14 @@ public class EventController
         return eventService.getMainEvents(true);
     }
 
-    @GetMapping("/crew")
+    @GetMapping("/myCrew")
     public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
     {
         //크루 코드 어떻게 불러와
 
+        System.out.println("Event Controller get Crew Events => 어케 불러 옴");
         int userCode = userDetails.getLoginUserDTO().getId();
-        if(!eventService.isUserInTeam(new CrewEventDTO(userCode, crewCode))){
+        if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님"); // 크루에 가입하세요? 정도의 메세지
         }
         List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);

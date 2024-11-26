@@ -4,11 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let calendarCrewE1 = document.getElementById('crew-calendar');
     let calendarMyE1 = document.getElementById('my-calendar');
 
-    // let isAdmin = fetch('api/user/permissions')
-    //     .then(res => res.json())
-    //     .then(data => {
-    //         return data.isAdmin;
-    //     });
     let eventData;
     let isAdmin = false;
     // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
@@ -245,24 +240,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 크루 캘린더
-    /*
-    *
-    *     fetch(`events/crew`)
-        .then(res => {
-            if(res.status === 403)
-            {
-                // error page
-            }
-            return res.json();
-        })
-        .then(events => {
-            const crewCode = data.crewCode;
-            calendar.addEventSource(events);
-        })
-        .catch(error => console.error('Error:', error));
-    * */
-
     if(calendarCrewE1){
+        let crewEvent;
         $.ajax(
             {
                 url: "/api/user/crewcode",
@@ -271,11 +250,43 @@ document.addEventListener('DOMContentLoaded', function() {
                     const crewCode = response.crewCode;
                     console.log("your crew code: " + crewCode);
                     if (crewCode) {
-                        const crewPage = document.getElementById('crewPage');
-                        crewPage.href = `/myCrew?crewcode=${crewCode}`;
-                        crewPage.textContent = `Access Your Team (${crewCode})`;
+                        fetch(`/myCrew?crewCode=${crewCode}`, {
+                            method: 'GET',
+                        })
+                            .then(response => {
+                                if (!response.ok) throw new Error('크루 이벤트 불러오기에 실패하다 ... ');
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log(data);  // 이벤트 데이터 제발 잘 부러오라고
+                                crewCalendar.addEventSource(data)
+
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                        // 달력에 뿌려줄 데이터 가져와야 대용
+                        // const crewPage = document.getElementById('crewPage');
+                        // crewPage.href = `/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
+                        // crewPage.textContent = `Access Your Team (${crewCode})`;
+
+                        crewCalendar.batchRendering(function(){
+                            crewCalendar.setOption('headerToolbar', {
+                                left: 'prev,next today',
+                                center: 'title',
+                                right: 'myCustomButton'
+                            });
+                            crewCalendar.setOption('selectable', true);
+                            crewCalendar.setOption('editable', true);
+                        });
+                        crewCalendar.refetchEvents();
                     } else {
-                        console.log("크루코드가 없는 유저 ... 크루에 가입하시길 바랍니다");
+                        console.log("크루코드가 없는 유저 ... 크루에 가입하시길 바랍니다"); // 크루홈으로 돌아가기
+                        alert("크루에 가입되어 있지 않습니다! 크루에 가입해보세요");
+                        /**
+                         * TODO: 크루 홈으로 돌아가기 만드세용!
+                         * ㄴ네!!
+                        * */
                     }
                 },
                 error: function(error) {
@@ -362,12 +373,12 @@ document.addEventListener('DOMContentLoaded', function() {
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'myCustomButton' //dayGridMonth 있을 필요 없을 것 같아서
+                right: '' //dayGridMonth 있을 필요 없을 것 같아서
             },
             height: '700px', // calendar 높이 설정
             expandRows: true, // 화면에 맞게 높이 재설정
             //navLinks: true, // can click day/week names to navigate views
-            selectable: true,
+            selectable: false,
             selectMirror: true,
             select: async function(arg) {
                 const title = prompt('이벤트 이름을 등록해주세요!');
@@ -478,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             },
-            editable: true,
+            editable: false,
             dayMaxEvents: true, // allow "more" link when too many events
             events: '/events?type=crew'
         });
@@ -692,18 +703,18 @@ document.addEventListener('DOMContentLoaded', function() {
         privateCalendar.render();
     }
 
-
-    // 탭 초기화 테스트
-    let triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
-    triggerTabList.forEach(function (triggerEl) {
-        let tabTrigger = new bootstrap.Tab(triggerEl)
-        triggerEl.addEventListener('hidden.bs.tab', function (event) {
-
-            mainCalendar.updateSize();
-            crewCalendar.updateSize();
-
-        })
-    })
+    //
+    // // 탭 초기화 테스트
+    // let triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="tab"]'))
+    // triggerTabList.forEach(function (triggerEl) {
+    //     let tabTrigger = new bootstrap.Tab(triggerEl)
+    //     triggerEl.addEventListener('hidden.bs.tab', function (event) {
+    //
+    //         mainCalendar.updateSize();
+    //         crewCalendar.updateSize();
+    //
+    //     })
+    // })
 
     // function initCalendar()
     // {
