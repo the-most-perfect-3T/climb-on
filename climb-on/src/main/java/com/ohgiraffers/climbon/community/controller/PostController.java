@@ -83,10 +83,16 @@ public class PostController {
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
 
+        String userProfilePic = postService.getUserProfilePicById(post.getUserId());
+        post.setUserProfilePic(userProfilePic);
+
+        String commentUserNickname = postService.getUserNicknameById(userId);
+        String commentUserProfilePic = postService.getUserProfilePicById(userId);
 
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
-            comment.setUserNickname(userNickname);
+            comment.setUserNickname(commentUserNickname);
+            comment.setUserProfilePic(commentUserProfilePic);
         }
 
 //        post.setUserNickname(postService.getUserNicknameById(userId));
