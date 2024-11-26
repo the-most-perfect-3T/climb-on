@@ -3,6 +3,7 @@ package com.ohgiraffers.climbon.community.service;
 import com.ohgiraffers.climbon.community.dao.PostDAO;
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +12,7 @@ import javax.xml.stream.events.Comment;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -27,7 +25,6 @@ public class PostService {
     public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
 
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
-
 
         // 1. 공지 게시글 (2개 고정)
         List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
@@ -44,6 +41,7 @@ public class PostService {
                 post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
             }
         }
+
         //4. 게시글 합치기
         List<PostDTO> allPosts = new ArrayList<>();
         allPosts.addAll(noticePosts);
@@ -89,6 +87,18 @@ public class PostService {
             // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
             String userNickname =  postDAO.getUserNicknameById(post.getUserId());
             post.setUserNickname(userNickname);
+            String htmlContent = post.getContent();
+            String plainText = htmlContent.replaceAll("<[^>]*>", "");
+            post.setContent(plainText);
+
+            String images = post.getImageUrl();
+            String firstImage;
+            if(!Objects.isNull(images)){
+                firstImage = images.split(",")[0];
+            }else{
+                firstImage = "";
+            }
+            post.setImageUrl(firstImage);
         }
 
         return result;
@@ -219,4 +229,14 @@ public class PostService {
     public String getUserRoleById(Integer userId) {
         return postDAO.getUserRoleById(userId);
     }
+
+    public String getUserProfilePicById(Integer userId) {
+        return postDAO.getUserProfilePicById(userId);
+    }
+
+    // 진행중 메소드
+    public List<PostDTO> getOngoingPosts() {
+        return postDAO.getPostsByPageAndCategoryAndSearch(0, 10, "소식", null, "latest", "진행중", true);
+    }
+
 }

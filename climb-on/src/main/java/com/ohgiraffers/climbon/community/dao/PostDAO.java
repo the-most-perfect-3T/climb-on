@@ -73,4 +73,8 @@ public interface PostDAO {
 
     @Select("SELECT user_role FROM users WHERE id = #{userId}")
     String getUserRoleById(@Param("userId") Integer userId);
+
+    @Select("SELECT profile_pic FROM users WHERE id = #{userId}")
+    String getUserProfilePicById(Integer userId);
+
 }
