@@ -1,9 +1,8 @@
 
 /*window.onload = function() {
-    const savedCode = sessionStorage.getItem('searchCode');  // sessionStorage에서 'searchCode' 가져오기
-    if (savedCode) {
-        document.getElementById('codeInput').value = savedCode;  // 입력 필드에 값 넣기
-    }
+    const facilityDetailsContainer = document.querySelector('#facilityDetailsContainer');
+    // 'open' 클래스를 추가하여 애니메이션 실행
+    facilityDetailsContainer.classList.add('open');
 }*/
 //검색
 function showSuggestions() {
@@ -294,9 +293,10 @@ async function showFacilityDetails(facility) {
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
-            <img id="facilityImg" class="facility-banner-content" src=""/></br>
-            
+        <div class="facility-details-top">
+        <img id="facilityImg" class="facility-banner-content" src=""/></br>
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
+       </div>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
@@ -401,6 +401,7 @@ function loadReviews(facilityId) {
 
                 // 각 리뷰 내용 동적으로 생성하여 추가
                 for (const Reviews of data) {
+                    let Reviews2 = await getReview(Reviews.id);
                     const isFavorite = await reviewcheckFavorite(Reviews.id);
                     console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
                     const item = document.createElement('div');
@@ -411,9 +412,9 @@ function loadReviews(facilityId) {
                     item.innerHTML = `
                     <div class="review-detail">
                         <p>${Reviews.userNickname}</p>
-                          <div class="review-actions">
+                          <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
                             <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>
-                            <button class="delete-btn">삭제</button>
+                            <button class="delete-btn" onclick="deleteReview(${Reviews.id})">삭제</button>
                         </div>
                         <span>${timeText}</span>
                         <div class="review-rating">
@@ -469,10 +470,6 @@ function timeAgo(date) {
     }
 }
 
-// 즐겨찾기 추가/삭제 함수
-function insertReview(id){
-
-}
 
 
 async function reviewtoggleFavorite(id,isFavorite) {
@@ -641,6 +638,9 @@ async function getIsFavorite(id) {
 }
 
 
+
+
+
 async function loadImage(facilityId){
     const url = `/facilityImg/getImage?facilityId=${facilityId}`;
 
@@ -667,6 +667,13 @@ if(Array.isArray(imagePath) && imagePath.length) {
 else
     imgElement.src = "/images/default.jpg";
 }
+
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", function() {
     const stars = document.querySelectorAll(".rating .star"); // 별 요소들
     const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
@@ -754,24 +761,34 @@ document.addEventListener("DOMContentLoaded", function() {
             event.preventDefault();  // 폼 제출을 막음
             return;
         }
-
         // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
+        let id = document.getElementById('reviewId').value;
         document.getElementById('facilityId').value = currentfacility.id;
 
         // 폼 제출이 문제없이 진행됨
         console.log("리뷰 데이터:", {
             rating: rating,
             comment: comment,
-            facilityId: currentfacility.id
+            facilityId: currentfacility.id,
+            id : id
 
 
         });
+
+
+
+       console.log("되나요ㅕ?"+ id);
+
         const url = '/Review/reviewInsert';
         const data = {
             rating: rating,
             comment: comment,
-            facilityId: currentfacility.id
+            facilityId: currentfacility.id,
+            id : id
+
         };
+
+
         await fetch(url, {
             method: 'POST',  // POST 메소드로 요청
             headers: {
@@ -789,12 +806,62 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+async function getReview(id) {
+    const response = await fetch(`/Review/getReview?id=${id}`);
+    const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+    console.log(review);
+
+/*
+
+    const reviewActions = document.querySelector(`#review-actions-${id}`);
+
+
+
+    if (reviewActions) {
+        const editButton = reviewActions.querySelector('.edit-review-btn');
+        const deleteButton = reviewActions.querySelector('.delete-btn');
+
+
+        console.log("왜보이냐고" + review.user)
+        if (review.user) {
+            // '수정' 버튼과 '삭제' 버튼을 숨깁니다.
+            if (editButton) editButton.style.display = 'none';
+            if (deleteButton) deleteButton.style.display = 'none';
+        } else {
+            // '수정' 버튼과 '삭제' 버튼을 보이게 합니다.
+            if (editButton) editButton.style.display = 'inline-block';
+            if (deleteButton) deleteButton.style.display = 'inline-block';
+        }
+*/
+
+
+    return review;
+}
+async function deleteReview(id){
+    const url = '/Review/reviewDelete';
+    const data = {
+        id : id
+    };
+
+    await fetch(url, {
+        method: 'POST',  // POST 메소드로 요청
+        headers: {
+            'Content-Type': 'application/json',  // JSON 형식으로 전송
+        },
+        body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+    });
+
+
+    await loadReviews(currentfacility.id);
+}
+
 async function editReview(id){
     // fetch로 데이터를 불러옵니다.
     try {
-        const response = await fetch(`/Review/getReview?id=${id}`);
-        const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
-        console.log(review);
+
+        let review = await getReview(id);
+
+
        loadReviewData(review);  // 리뷰 데이터를 모달에 로드
         const exampleModal = new bootstrap.Modal(document.getElementById('exampleModal'));
         exampleModal.show();
@@ -814,13 +881,24 @@ function loadReviewData(review) {
 // review.comment 값을 textarea에 설정
     document.getElementById('comment').value = review.comment;
 
+    document.getElementById("reviewId").value = review.id;
+    console.log(review.id);
+
 // 평점에 맞는 별 표시
     document.querySelectorAll('#rating .star').forEach(star => {
         const starValue = star.getAttribute('data-value'); // 각 별의 data-value 속성 값 가져오기
-        if (starValue <= review.rating) {
-            star.classList.add('fa-star'); // 조건에 맞으면 'selected' 클래스 추가
-        } else {
-            star.classList.remove('fa-star'); // 조건에 맞지 않으면 'selected' 클래스 제거
+        const icon = star.querySelector("i"); // <i> 태그 찾기
+
+        if (icon) { // <i> 태그가 존재하는지 확인
+            if (starValue <= review.rating) { // 별의 값이 리뷰 평점보다 작거나 같으면
+                icon.classList.remove("fa-star"); // 빈 별을 제거
+                icon.classList.add("fa-star"); // 채워진 별 추가
+                icon.style.color = "#f79256"; // 채워진 별은 색상 변경
+            } else { // 별의 값이 리뷰 평점보다 크면
+                icon.classList.remove("fa-star"); // 채워진 별을 제거
+                icon.classList.add("fa-star"); // 빈 별 추가
+                icon.style.color = "gray"; // 빈 별은 회색
+            }
         }
     });
 }

@@ -68,4 +68,9 @@ public class ReviewService {
         ReviewDTO reviewDTO = reviewDAO.getReviewById(id);
         return reviewDTO;
     }
+
+    public int reviewDelete(ReviewDTO reviewDTO) {
+        int result = reviewDAO.reviewDelete(reviewDTO);
+        return result;
+    }
 }

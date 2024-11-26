@@ -36,12 +36,18 @@
                     <div th:if="${facilitiesList != null}">
                         <table id="facilitiestb">
                             <tbody>
-                            <tr th:each="facility : ${facilitiesList}"th:onclick="'showFacilityId(' + ${facility.id} + ')'">
+                            <tr th:each="facility : ${facilitiesList}" th:onclick="'showFacilityId(' + ${facility.id} + ')'">
                                 <td>
                                 <div class="facility-info">
+
+                                    <div>
                                     <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
                                     <div class="facility-address" th:text="${facility.address}">주소</div>
-                                </div>
+                                    </div>
+                                    <div class="img-wrap">
+                                        <img id="facilitymainImg" class="facility-details-content" th:src="@{${facility.imageUrl}}" alt="시설 이미지">
+                                    </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -60,49 +66,15 @@
             <div class="facilityDetails" id="facilityDetailsContainer"></div>
            <!--<div class="facilityDetails" id="reviewContainer"></div>-->
         </div>
-        <!-- 모달 -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">리뷰를 작성해주세요</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                        <form id="reviewinsertForm">
-                            <div>
-                                <label for="ratingValue">평점 (1~5):</label>
-                                    <!-- 평점별 별을 표시하는 요소 -->
-
-                                        <div id="rating" class="rating">
-                                            <span class="star" data-value="5"><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            <span class="star" data-value="4"><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            <span class="star" data-value="3"><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            <span class="star" data-value="2"><i class="fa fa-star" aria-hidden="true"></i></span>
-                                            <span class="star" data-value="1"><i class="fa fa-star" aria-hidden="true"></i></span>
-                                        </div>
-
-                                <input type="hidden" id="ratingValue" name="rating" value="">
-                            </div>
-
-                            <div>
-                                <label for="comment">리뷰 내용:</label>
-                                <textarea id="comment" name="comment" rows="4" cols="50">
-                                </textarea>
-                            </div>
-                            <!-- 시설 아이디를 숨겨진 필드로 추가 -->
-                            <input type="hidden" id="facilityId" name="facilityId" value="">
-
-                    <div class="modal-footer">
-                        <button type="button" id="modal-close" data-bs-dismiss="modal">닫기</button>
-                        <button type="submit" class="review-Insert-btn" data-bs-dismiss="modal">리뷰작성</button>
-                    </div>
-                        </form>
-                    </div>
-
-                </div>
+            <div th:replace="~{/facilities/facilitymodal :: facilityModalFragment}"></div>
+        <div class="input-wrap d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <label for="businessFile">사업자등록증</label>
+                <small>※ 지원하는 이미지 파일 형식 : ( jpeg, jpg, gif, png )</small>
             </div>
+            <input type="file" name="businessFile" id="businessFile"/>
+            <button class="btn-fileupload border" type="button"><i class="fa-solid fa-plus"></i><span>파일첨부</span></button>
+            <div class="attachFile align-items-center"><p class="fileName">파일이름.jpg(예시)</p><button type="button"><i class="fa-solid fa-xmark"></i></button></div>
         </div>
 
     </th:block>
@@ -122,9 +94,9 @@
               loadKakaoMap(facilities);
             }
             //th 쓰는 함수
-            function showFacilityId(id){
+           async function showFacilityId(id){
                // const facility = JSON.parse(facilityJson);
-                fetch(`/facilities/facility/${id}`)
+                await fetch(`/facilities/facility/${id}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error(`네트워크 응답에 문제가 있습니다. 상태 코드: ${response.status}`);
@@ -139,7 +111,7 @@
                     .catch(error => {
                         console.error('시설 정보 로드 실패:', error);
                         // 에러가 발생한 경우, 적절히 사용자에게 알림 처리
-                        alert("시설 정보를 불러오는 데 실패했습니다.");
+                        alert("시설 정보를 불러오는 데 실패했습니다12312312.");
                     });
 
             }

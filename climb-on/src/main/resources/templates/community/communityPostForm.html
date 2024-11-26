@@ -1,75 +1,115 @@
-<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/baseLayout}">
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-  <th:block layout:fragment="css">
-    <link rel="stylesheet" th:href="@{/css/page/communityPostForm.css}">
-  </th:block>
-</head>
 
-<body>
-<main class="content" layout:fragment="containerFragment">
-<div class="container">
-  <h1 th:text="${post.id != null} ? '게시글 수정' : '게시글 작성'">게시글 작성</h1>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/page/crew/crewBoardWritePost.css}">
+  <link rel="stylesheet" th:href="@{/css/page/communityPostForm.css}">
+  <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
+</th:block>
 
-  <!-- 폼의 action을 작성과 수정에 따라 다르게 설정-->
-  <form th:action="${post.id != null} ? '/community/' + ${post.id} + '/edit' : '/community/new'" method="post" enctype="multipart/form-data">   <!-- method="post" 폼 데이터를 전송할 때 HTTP POST 메소드를 사용, ectype = multipart/form-data"는 이미지나 파일과 같은 바이너리 데이터가 포함된 폼을 전송할 때 사용 이 속성이 있어야 파일 업로드가 가능-->
-    <!-- 제목 입력 -->
-    <div class="form-group">
-      <label for="title">제목</label>
-      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+
+<th:block layout:fragment="containerFragment">
+  <section>
+    <div class="inner">
+      <div class="top area">
+        <h2>커뮤니티게시판 글 쓰기</h2>
+      </div>
+      <br/>
+      <form th:action="${post.id != null} ? '/community/' + ${post.id} + '/edit' : '/community/new'" method="post" id="writePostForm">
+        <div class="input-wrap">
+          <h4>카테고리</h4>
+          <select class="form-select" aria-label="Default select example" name="category" onchange="toggleEventFields(this.value)" required>
+            <option value="">카테고리를 선택해주세요.</option>
+            <option value="공지">공지</option>
+            <option value="가이드">가이드</option>
+            <option value="소식">소식</option>
+          </select>
+          <br/>
+
+          <!-- 행사 날짜 입력 (소식 카테고리 선택 시에만 표시)-->
+          <div class="form-group" id="eventFields" style="display: none;">
+            <label for="eventStartDate">행사 시작일</label>
+            <input type="date" id="eventStartDate" name="eventStartDate">
+            <label for="eventEndDate">행사 종료일</label>
+            <input type="date" id="eventEndDate" name="eventEndDate">
+          </div>
+
+          <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요." name="title" required>
+          </div>
+          <div class="mb-3 form-group">
+            <label for="editor" class="form-label">본문</label>
+            <div id="toolbar-container">
+                                    <span class="ql-formats">
+                                      <select class="ql-font"></select>
+                                      <select class="ql-size"></select>
+                                    </span>
+              <span class="ql-formats">
+                                      <button class="ql-bold"></button>
+                                      <button class="ql-italic"></button>
+                                      <button class="ql-underline"></button>
+                                      <button class="ql-strike"></button>
+                                    </span>
+              <span class="ql-formats">
+                                      <select class="ql-color"></select>
+                                      <select class="ql-background"></select>
+                                    </span>
+              <span class="ql-formats">
+                                      <button class="ql-direction" value="rtl"></button>
+                                      <select class="ql-align"></select>
+                                    </span>
+              <span class="ql-formats">
+                                      <button class="ql-image"></button>
+                                      <button class="ql-video"></button>
+                                    </span>
+            </div>
+
+            <div id="editor"></div>
+            <input type="hidden" id="hidden_content_input" name="content" required>
+            <input type="hidden" id="hidden_imgURL_input" name="imgUrl">
+
+          </div>
+
+          <div class="form-check form-switch justify-content-end">
+            <input class="form-check-input" type="checkbox" role="switch" id="anonymous">
+            <label class="form-check-label" for="anonymous">익명</label>
+            <input type="hidden" id="isAnonymous" name="isAnonymous" value="false">
+          </div>
+
+          <div class="hidden alert" id="liveAlertPlaceHolder"></div>
+
+          <div class="d-flex justify-content-center button-container">
+            <button type="reset" class="btn btn-light">취소</button>
+            <input type="submit" class="btn" value="등록">
+          </div>
+        </div>
+      </form>
+
     </div>
+  </section>
+</th:block>
 
-    <!-- 카테고리 선택 -->
-    <div class="form-group">
-      <label for="category">카테고리</label>
-      <select id="category" name="category" onchange="toggleEventFields(this.value)">
-        <option value="공지">공지</option>
-        <option value="가이드">가이드</option>
-        <option value="소식">소식</option>
-      </select>
-    </div>
 
-    <!-- 행사 날짜 입력 (소식 카테고리 선택 시에만 표시)-->
-  <div class="form-group" id="eventFields" style="display: none;">
-    <label for="eventStartDate">행사 시작일</label>
-    <input type="date" id="eventStartDate" name="eventStartDate">
-    <label for="eventEndDate">행사 종료일</label>
-    <input type="date" id="eventEndDate" name="eventEndDate">
-  </div>
+<th:block layout:fragment="javascript">
 
-    <!-- 내용 입력 -->
-    <div class="form-group">
-      <label for="content">내용</label>
-      <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
-    </div>
-
-    <!-- 이미지 업로드 -->
-    <div class="form-group">
-      <label for="image">이미지 업로드</label>
-      <input type="file" id="image" name="image">
-    </div>
-
-    <!-- 익명 여부 선택 -->
-    <div class="form-group">
-      <label for="isAnonymous">익명으로 작성</label>
-      <input type="hidden" id="isAnonymousHidden" name="isAnonymous" th:value="${post.isAnonymous ? 'true' : 'false'}"> <!-- 수정시에는 isAnonymous DTO 값을 초기화 시켜줘야함 -->
-      <input type="checkbox" id="isAnonymous" name="isAnonymous" value="true"
-             th:checked="${post.isAnonymous}"
-             onclick="document.getElementById('isAnonymousHidden').value = this.checked ? 'true' : 'false'">
-    </div>
-
-    <!-- 작성 버튼 -->
-    <div class="form-actions">
-      <button type="submit">작성</button>
-      <button type="button" onclick="window.location.href='/community'">취소</button>
-    </div>
-  </form>
-
+  <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+  <script src="https://unpkg.com/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
   <!-- JS: 카테고리 선택에 따른 이벤트 필드 토글-->  <!--toggleEventFields 함수는 카테고리 값이 "소식"일 때만 eventFields를 보이게하고, 그외엔 숨김-->
   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const role = '[[${role}]]'; /* 서버에서 현재 사용자의 역할을 전달 */
+          const categorySelect = document.querySelector('select[name="category"]');
+          if (role !== 'ADMIN') {
+              categorySelect.querySelectorAll('option[value="공지"], option[value="가이드"]').forEach(option => {
+                  option.disabled = true;
+              });
+          }
+      });
+
     function toggleEventFields(category){
       const eventFields = document.getElementById('eventFields');
       if (category === '소식'){
@@ -78,8 +118,170 @@
         eventFields.style.display = 'none';
       }
     }
+
+    // 카테고리 선택시 자격 확인(자격 없으면 appendAlert)
+
+    Quill.register('modules/imageResize', ImageResize.default || ImageResize);
+
+    // textEditor 생성 및 설정
+    const quill = new Quill('#editor', {
+        modules: {
+            toolbar: '#toolbar-container',
+            imageResize:{
+                displaySize: true
+            },
+        },
+        placeholder: "   내용을 입력 해주세요.(1,000자 이내)",
+
+        // placeholder: 'Compose an epic...',
+        theme: 'snow',
+    });
+
+    // file upload 시에 필요한 객체 미리 생성
+    const imageFileMap = new Map();
+    const hiddenImgUrlInput = document.getElementById("hidden_imgURL_input");
+
+
+    // textEditor 는 div에 구현되어 form 태그에 속해 있어도 submit 시 dto에 담기지 않는다.
+    // textEditor 에 기입되는 내용물 hidden input 으로 전달
+    // input 태그에 전달된 내용물이 form submit 시 같이 dto 에 담겨 넘어간다.
+    const hiddenContentInput = document.getElementById("hidden_content_input");
+    quill.on('text-change', function (){
+        hiddenContentInput.value = quill.root.innerHTML;
+        console.log(quill.root.innerHTML);
+    });
+
+    // 익명 토글
+    document.getElementById('anonymous').addEventListener('change', function () {
+        document.getElementById('isAnonymous').value = this.checked ? 'true' : 'false';
+    });
+
+    // required 가 걸리지 않는 textEditor 를 위해
+    // textEditor 내용물(본문)이 비었을시에 alert를 띄워주기 위한 객체와 함수를 만들어준다.
+    const alertPlaceholder = document.getElementById('liveAlertPlaceHolder');
+
+    const appendAlert = (message, type) => {
+        const wrapper = document.createElement('div')
+        wrapper.innerHTML = [
+            `<div class="alert alert-${type} alert-dismissible" role="alert" style="background-color: var(--beige)">`,
+            '<div>',
+            '<i class="fa-solid fa-triangle-exclamation" style="color: var(--point)"></i>',
+            `   ${message}</div>`,
+            '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+            '</div>'
+        ].join('')
+
+        alertPlaceholder.append(wrapper);
+    };
+
+    // 본문 내용검사후 통과 못하면 alert 적용
+    document.getElementById('writePostForm').onsubmit = async function (event) {
+        event.preventDefault();
+
+        // html 태그 제거
+        const cleanTxt = quill.root.innerHTML.replace(/<(?!img\s*\/?)[^>]+>/g, "");
+        // 모든 공백 제거
+        const resultTxt = cleanTxt.replace(/\s/g, '').trim();
+        if (resultTxt.length === 0) {
+            appendAlert("본문에 내용이 있어야 등록 가능합니다!", 'success');
+            return false;
+        } else{
+            const contentHTML = quill.root.innerHTML;
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(contentHTML, 'text/html');
+            const imgTags = Array.from(doc.getElementsByTagName('img'));
+
+            const remainingFiles = [];
+            const formData = new FormData();
+
+            imgTags.forEach(img => {
+                const base64URL = img.src;
+                if (imageFileMap.has(base64URL)){
+                    const file = imageFileMap.get(base64URL);
+                    formData.append('uploadFile', file);
+                    remainingFiles.push(file);
+                }
+            });
+
+            if(remainingFiles.length > 0){
+                try {
+                    const response = await fetch('/community/file/upload', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    console.log('File uploaded successfully:', data);
+                    hiddenImgUrlInput.value = data;
+                    imgTags.forEach((img, index) => {
+                        img.src = data[index];
+                    });
+                    quill.root.innerHTML = doc.body.innerHTML;
+
+                } catch(err) {
+                    console.error('Upload failed:', err);
+                    appendAlert("이미지 업로드 중 문제가 발생했습니다.", 'error');
+                    return false;
+                }
+            }
+
+            hiddenContentInput.value = quill.root.innerHTML;
+            document.getElementById('writePostForm').submit();
+
+        }
+    };
+
+
+
+    // 이미지 업로드시 text Editor 에 띄워주고 form submit시 업로드 준비
+    quill.getModule('toolbar').addHandler('image', function (){
+        selectLocalImage();
+    });
+
+    function selectLocalImage() {
+        const fileInput = document.createElement('input');
+        fileInput.setAttribute('type', 'file');
+        fileInput.accept = "image/*";
+        fileInput.click();
+        fileInput.addEventListener("change", function () {  // change 이벤트로 input 값이 바뀌면 실행
+
+            if (this.value !== "") { // 파일이 있을때만.
+                const ext = this.value.substring(this.value.lastIndexOf(".")).toLowerCase();
+                if (["gif", "jpg", "jpeg", "png", "bmp"].includes(ext)) {
+                    appendAlert("jpg, jpeg, png, bmp, gif 파일만 업로드 가능합니다.", 'success');
+                    return;
+                }
+                // var fileSize = this.files[0].size;
+                // var maxSize = 20 * 1024 * 1024;
+                // if (fileSize > maxSize) {
+                //     alert("업로드 가능한 최대 이미지 용량은 20MB입니다.");
+                //     return;
+                // }
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64URL = reader.result;
+                    const range = quill.getSelection();
+                    quill.insertEmbed(range.index, 'image', base64URL);
+                    imageFileMap.set(base64URL, file);
+                };
+                reader.readAsDataURL(file);
+
+                console.log(file);
+                // formData.append('uploadFile', file);
+                console.log(formData);
+            }
+        });
+    }
+
   </script>
-</div>
-</main>
-</body>
+
+</th:block>
+
 </html>

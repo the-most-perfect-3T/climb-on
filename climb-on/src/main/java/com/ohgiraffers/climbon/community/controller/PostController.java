@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -15,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +41,6 @@ public class PostController {
         // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
 
-
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -63,7 +62,7 @@ public class PostController {
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
-        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("category", category != null ? category : "전체");
@@ -84,6 +83,7 @@ public class PostController {
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
 
+
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
             comment.setUserNickname(userNickname);
@@ -97,15 +97,19 @@ public class PostController {
         model.addAttribute("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
         model.addAttribute("nextPost", nextPost);
         model.addAttribute("comments", comments);
-        model.addAttribute("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로드인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
+        model.addAttribute("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로그인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
         return "community/communityPostDetail"; // 상세보기용 communityPostDetail.html 템플릿 반환
     }
 
     // 게시글 작성 폼 페이지
     @GetMapping("/new")
-    public String CreatePostForm(@RequestParam(required = false) String category, Model model){
+    public String CreatePostForm(@RequestParam(required = false) String category, Model model, Principal principal){
+        String email = principal.getName();
+        Integer userId = postService.getUserIdByUserName(email);
+        String userRole = postService.getUserRoleById(userId);
         PostDTO post = new PostDTO();
         post.setCategory(category);
+         model.addAttribute("role", userRole); // 역할을 모델에 추가
          model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
             // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
         return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
@@ -121,12 +125,20 @@ public class PostController {
 
     // 게시글 작성 처리
     @PostMapping("/new")
-    public String createpost(@ModelAttribute PostDTO post, @RequestParam("image") MultipartFile imageFile, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal) throws IOException {
+    public String createpost(@ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal) throws IOException {
         // principal.getName()이 이메일일 경우, 이를 기반으로 userId 조회
         String email = principal.getName(); //principal을 통해 로그인한 사용자 ID (로그인한 user_id가 이메일이라서 email변수를 씀) 가져오기  //principal : Spring security에서 현재 인증된 사용자의 정보를 담고 있는 객체, 이 객체를 사용하여 로그인한 사용자의 ID나 이름 같은 정보를 갖고 올 수 있다.
 
         // 이메일로 userId 조회
         Integer userId = postService.findUserIdByEmail(email); //DB의 user.id 조회 메소드 (솔직히 이건 짤 필요없다. 작성자부분과 관련있을줄 알고 짰다;)(아니였다 사실 ☆★여기서 로직을 구현해야 nickname이 DTO에 담겨서 구현이된다!!!)
+
+        // 유저 권한 가져오기
+        String userRole = postService.getUserRoleById(userId);
+
+        // 카테고리가 공지 또는 가이드인 경우 권한 확인
+        if (("공지".equals(post.getCategory()) || "가이드".equals(post.getCategory())) && !"ADMIN".equals(userRole)) {
+            throw new AccessDeniedException("공지 및 가이드 게시글은 관리자만 작성할 수 있습니다."); // Spring Boot에서 사용하는 일반적인 권한 예외
+        }
 
         if (userId == null){
             throw new IllegalArgumentException("User ID not found for email: " + email);

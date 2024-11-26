@@ -44,10 +44,10 @@ public interface PostDAO {
     @Select("SELECT id FROM users WHERE user_id = #{email}")
     Integer getUserIdByEmail(@Param("email") String email);
 
-    @Update("UPDATE community_posts SET hearts_count = hearts_count + 1 WHERE id = #{postId}")
+    @Update("UPDATE community_posts SET like_count = like_count + 1 WHERE id = #{postId}")
     void incrementHearts(@Param("postId") int postId);
 
-    @Update("UPDATE community_posts SET hearts_count = hearts_count - 1 WHERE id = #{postId}")
+    @Update("UPDATE community_posts SET like_count = like_count - 1 WHERE id = #{postId}")
     void decrementHearts(@Param("postId") int postId);
 
     @Select("SELECT COUNT(*) FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
@@ -71,4 +71,6 @@ public interface PostDAO {
 
     List<PostDTO> getFixedPostsByCategory(@Param("category") String category, @Param("limit") int limit);
 
+    @Select("SELECT user_role FROM users WHERE id = #{userId}")
+    String getUserRoleById(@Param("userId") Integer userId);
 }

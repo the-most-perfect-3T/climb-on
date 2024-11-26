@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/Review")
@@ -28,8 +29,11 @@ public class ReviewsController {
     }
 
     @GetMapping("/getReview")
-    public ResponseEntity<ReviewDTO> getReviewById(@RequestParam Integer id) {
+    public ResponseEntity<ReviewDTO> getReviewById(@RequestParam Integer id, @AuthenticationPrincipal AuthDetail userDetails) {
         ReviewDTO review = reviewService.getReviewById(id);
+        Integer userId = userDetails.getLoginUserDTO().getId();
+        Integer userorigin = review.getReviewerId();
+        review.setUser(Objects.equals(userId, userorigin));
 
         return  ResponseEntity.ok(review);
     }
@@ -63,14 +67,27 @@ public class ReviewsController {
     @PostMapping("/reviewInsert")
     public ResponseEntity<Integer> reviewInsert(@AuthenticationPrincipal AuthDetail userDetails,
                                                 @RequestBody ReviewDTO reviewDTO) {
-
+        int result = 0;
         Integer userId = userDetails.getLoginUserDTO().getId();
         // 리뷰를 DB에 저장하는 서비스 호출
-        int result =  reviewService.reviewInsert(reviewDTO,userId);
+        if (reviewDTO.getId() != null) {
+            result  = reviewService.reviewUpdate(reviewDTO, userId);
+        } else{
+            result = reviewService.reviewInsert(reviewDTO, userId);
+        }
 
         // 리뷰 저장 후, 리뷰 목록 페이지로 리다이렉트
         return ResponseEntity.ok(result);
+    }
 
+    @PostMapping("/reviewDelete")
+    public ResponseEntity<Integer> reviewDelete(@RequestBody ReviewDTO reviewDTO)
+    {
+        int result = 0;
+
+        result = reviewService.reviewDelete(reviewDTO);
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/reviewUpdate")
