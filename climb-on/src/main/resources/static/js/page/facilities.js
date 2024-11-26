@@ -1,9 +1,8 @@
 
 /*window.onload = function() {
-    const savedCode = sessionStorage.getItem('searchCode');  // sessionStorage에서 'searchCode' 가져오기
-    if (savedCode) {
-        document.getElementById('codeInput').value = savedCode;  // 입력 필드에 값 넣기
-    }
+    const facilityDetailsContainer = document.querySelector('#facilityDetailsContainer');
+    // 'open' 클래스를 추가하여 애니메이션 실행
+    facilityDetailsContainer.classList.add('open');
 }*/
 //검색
 function showSuggestions() {
@@ -294,9 +293,10 @@ async function showFacilityDetails(facility) {
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
-            <img id="facilityImg" class="facility-banner-content" src=""/></br>
-            
+        <div class="facility-details-top">
+        <img id="facilityImg" class="facility-banner-content" src=""/></br>
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
+       </div>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
