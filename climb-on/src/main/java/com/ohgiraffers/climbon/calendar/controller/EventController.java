@@ -53,7 +53,7 @@ public class EventController
         //크루 코드 어떻게 불러와
 
         int userCode = userDetails.getLoginUserDTO().getId();
-        System.out.println("Event Controller get Crew Events => 어케 불러 옴");
+        System.out.println("Event Controller get Crew Events");
         if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님"); // 크루에 가입하세요? 정도의 메세지
         }
