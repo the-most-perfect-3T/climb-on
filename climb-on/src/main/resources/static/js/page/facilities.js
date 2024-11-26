@@ -747,11 +747,38 @@ document.addEventListener("DOMContentLoaded", function() {
 
         event.preventDefault();
 
-        document.getElementById("ratingValue").value = rating;
-        if (ratingValue === 0) {
+        const allGray = Array.from(document.querySelectorAll('#rating .star i')).every(icon => {
+            return icon.style.color === 'gray'; // 모든 아이콘이 회색인지 확인
+        });
+
+        if (allGray) {
+            console.log("모든 별이 회색입니다.");
             alert("평점을 선택해 주세요!");
-            event.preventDefault();  // 폼 제출을 막음
             return;
+        }
+        console.log("dsds"+rating);
+        if(rating === 0 || rating===""){
+            rating = document.getElementById("ratingValue").value;
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ value)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
+
+
+
+
+
+        }else {
+            document.getElementById("ratingValue").value = rating;
+// 모든 별 요소를 선택
+
+            console.log("입력했을때" + rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ value)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
         }
 
         // 리뷰 내용이 비어있으면 경고
@@ -796,7 +823,7 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
-
+        document.getElementById('reviewId').value = null;
 
         await loadReviews(currentfacility.id);
 
