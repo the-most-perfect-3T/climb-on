@@ -44,9 +44,9 @@
             <div class="header-container">
                 <!-- 카테고리 버튼 -->
                 <div class="category-buttons">
-                    <button onclick="setActiveCategory(this, '전체'); window.location.href='/community?category=전체&viewMode=' + viewMode">전체</button>
-                    <button onclick="setActiveCategory(this, '공지'); window.location.href='/community?category=공지&viewMode=' + viewMode">공지</button>
-                    <button onclick="setActiveCategory(this, '내크루'); window.location.href='/community?category=내 크루&viewMode=' + viewMode">내 크루</button>
+                    <button onclick="setActiveCategory(this, '전체'); window.location.href='/crew/home?category=전체&viewMode=' + viewMode">전체</button>
+                    <button onclick="setActiveCategory(this, '공지'); window.location.href='/crew/home?category=공지&viewMode=' + viewMode">공지</button>
+                    <button onclick="setActiveCategory(this, '내크루'); window.location.href='/crew/home?category=내 크루&viewMode=' + viewMode">내 크루</button>
                 </div>
 
                 <!-- 검색 입력 필드와 버튼 -->
@@ -83,7 +83,7 @@
                     </div>
                     <!-- 글쓰기 버튼 -->
                     <div class="create-button-container">
-                        <button class="create-button" onclick="window.location.href='/crew/writepost'"><i class="fa-solid fa-pen"></i>글쓰기
+                        <button class="create-button" id="writePostBtn"><i class="fa-solid fa-pen"></i>글쓰기
                         </button>
                     </div>
                 </div>
