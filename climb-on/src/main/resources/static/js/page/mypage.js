@@ -820,7 +820,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const modalElement = document.getElementById("exampleModal");
 
-// 모달 닫힘 이벤트에 리스너 추가
+    // 모달 닫힘 이벤트에 리스너 추가
     modalElement.addEventListener("hidden.bs.modal", function () {
         // 입력 필드 초기화
         document.getElementById("comment").value = "";
@@ -873,7 +873,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
 
-
         }else {
             document.getElementById("ratingValue").value = rating;
             console.log("입력했을때" + rating)
@@ -889,6 +888,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
         let id = document.getElementById('reviewId').value;
+
+        console.log("currentfacility.id" + currentfacility.id);
         document.getElementById('facilityId').value = currentfacility.id;
 
         // 폼 제출이 문제없이 진행됨
@@ -899,9 +900,7 @@ document.addEventListener("DOMContentLoaded", function() {
             comment: comment,
             facilityId: currentfacility.id,
             id : id
-
         };
-
 
         await fetch(url, {
             method: 'POST',  // POST 메소드로 요청
