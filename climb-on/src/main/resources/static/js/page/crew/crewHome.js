@@ -131,3 +131,24 @@ function renderPosts() { // 뷰 모드에 따라 표시되는 목록 전환
         cardView.style.display = 'none';
     }
 }
+
+document.getElementById("writePostBtn").addEventListener("click", () => {
+    writePost();
+})
+
+async function writePost(){
+    try {
+        const response = await fetch('/crew/checkHasCrew');
+        if(!response.ok){
+            throw new Error("서버에러");
+        }
+        const message = await response.text();
+        if(message.includes("소속된 크루X")){
+            alert("소속된 크루가 있어야만 게시글 작성이 가능합니다.");
+        }
+    } catch (error){
+        console.error(error);
+        alert(error);
+    }
+    window.location.href = "/crew/writepost";
+}

@@ -23,4 +23,10 @@ public interface CrewDAO {
     int countCrewsFilteredByAreas(List<String> areas);
 
     List<CrewDTO> getRecruitingCrews();
+
+    Object hasCrew(Integer id);
+
+    int crewCaptainInsert(Integer id, int crewCode);
+
+    int getCrewCodeFromCrewsByUserId(Integer id);
 }

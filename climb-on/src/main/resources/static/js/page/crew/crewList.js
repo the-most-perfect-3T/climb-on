@@ -9,6 +9,8 @@ let currentPage = 1;
 const filterAreas = [];
 let currentContext;
 
+
+
 // 지역 필터 버튼 클릭시(모달에서의 이벤트는 맨밑에서 관리, 등록,리스트 어디서 눌렀는지에 따라 이벤트 분리)
 areasFilterBtn.addEventListener('click', function () {
     secondModal.show();
@@ -123,6 +125,30 @@ async function loadCrews(page) {
         alert("크루 리스트를 불러오는중 문제가 발생했습니다.")
     }
 }
+
+document.getElementById("registerCrewModalBtn").addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    try {
+        const response = await fetch('/crew/checkHasCrew')
+        if(!response.ok){
+            throw new Error("서버에러");
+        }
+        const message = await response.text();
+        if(message.includes("로그인")){
+            window.location.href = "auth/login";
+        }
+        else if(message.includes("소속된 크루X")){
+            firstModal.show();
+        }
+        else if(message.includes("okay")){
+            alert("소속된 크루가 없어야 크루 등록이 가능합니다. \n1인 1크루 원칙!");
+        }
+    }catch (error){
+        console.error(error);
+        alert(error);
+    }
+});
 
 
 

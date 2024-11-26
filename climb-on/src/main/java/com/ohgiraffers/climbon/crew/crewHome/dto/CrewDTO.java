@@ -13,6 +13,7 @@ public class CrewDTO {
     private boolean recruitingStatus;
     private boolean permissionToJoin;
     private String activeArea;
+    private int captainId;
     private boolean status;
     private Date createdAt;
     private Date deletedAt;
@@ -20,7 +21,7 @@ public class CrewDTO {
     public CrewDTO() {
     }
 
-    public CrewDTO(int id, String crewName, String imgUrl, String description, String crewSns, String climbingCategory, boolean recruitingStatus, boolean permissionToJoin, String activeArea, boolean status, Date createdAt, Date deletedAt) {
+    public CrewDTO(int id, String crewName, String imgUrl, String description, String crewSns, String climbingCategory, boolean recruitingStatus, boolean permissionToJoin, String activeArea,int captainId, boolean status, Date createdAt, Date deletedAt) {
         this.id = id;
         this.crewName = crewName;
         this.imgUrl = imgUrl;
@@ -30,9 +31,18 @@ public class CrewDTO {
         this.recruitingStatus = recruitingStatus;
         this.permissionToJoin = permissionToJoin;
         this.activeArea = activeArea;
+        this.captainId = captainId;
         this.status = status;
         this.createdAt = createdAt;
         this.deletedAt = deletedAt;
+    }
+
+    public int getCaptainId() {
+        return captainId;
+    }
+
+    public void setCaptainId(int captainId) {
+        this.captainId = captainId;
     }
 
     public int getId() {
@@ -129,5 +139,24 @@ public class CrewDTO {
 
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "CrewDTO{" +
+                "id=" + id +
+                ", crewName='" + crewName + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", crewSns='" + crewSns + '\'' +
+                ", climbingCategory='" + climbingCategory + '\'' +
+                ", recruitingStatus=" + recruitingStatus +
+                ", permissionToJoin=" + permissionToJoin +
+                ", activeArea='" + activeArea + '\'' +
+                ", captainId=" + captainId +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", deletedAt=" + deletedAt +
+                '}';
     }
 }

@@ -13,6 +13,7 @@
         <result property="recruitingStatus" column="recruiting_status"/>
         <result property="permissionToJoin" column="is_permission"/>
         <result property="activeArea" column="active_area"/>
+        <result property="captainId" column="captain_id"/>
         <result property="status" column="status"/>
         <result property="createdAt" column="created_at"/>
         <result property="deletedAt" column="deleted_at"/>
@@ -24,7 +25,7 @@
     </select>
 
     <insert id="registerCrew" parameterType="com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO">
-        INSERT INTO crews (crew_name, img_url, description, crew_sns, climbing_category, recruiting_status, is_permission, active_area, deleted_at)
+        INSERT INTO crews (crew_name, img_url, description, crew_sns, climbing_category, recruiting_status, is_permission, active_area, captain_id, deleted_at)
         VALUES(
         #{crewName},
         #{imgUrl},
@@ -34,8 +35,20 @@
         #{recruitingStatus},
         #{permissionToJoin},
         #{activeArea},
+        #{captainId},
         NULL
         )
+    </insert>
+
+    <select id="getCrewCodeFromCrewsByUserId" parameterType="int" resultType="int">
+        SELECT id
+        FROM crews
+        WHERE captain_id = #{id}
+    </select>
+
+    <insert id="crewCaptainInsert" parameterType="int">
+        INSERT INTO user_crew (user_code, crew_code, role)
+        VALUES (#{id}, #{crewCode}, "크루장")
     </insert>
     
     <select id="countAllCrews" resultType="int">
@@ -48,7 +61,8 @@
         SELECT *
         FROM crews
         WHERE status=1
-        LIMIT 5;
+        ORDER BY created_at DESC
+        LIMIT 5
     </select>
 
     <select id="selectFiveCrews" parameterType="hashmap" resultMap="crew">
@@ -102,6 +116,12 @@
         FROM crews
         WHERE status=1 AND recruiting_status = TRUE
         LIMIT 8;
+    </select>
+
+    <select id="hasCrew" parameterType="Integer">
+        SELECT *
+        FROM user_crew
+        WHERE user_code = #{id}
     </select>
 
 
