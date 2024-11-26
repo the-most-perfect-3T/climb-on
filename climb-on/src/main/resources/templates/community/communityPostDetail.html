@@ -43,9 +43,9 @@
     <!-- 게시글 내용 -->
     <div class="post-content">
         <div class="post-image" th:if="${post.imageUrl != null}">
-            <img th:src="${post.imageUrl != null ? post.imageUrl : '/images/default-image.png'}" alt="게시글 이미지">
+            <p th:text="${post.imageUrl}"></p>
         </div>
-        <p th:text="${post.content}">게시글 내용 예시</p>
+        <p th:utext="${post.content}">게시글 내용 예시</p>
     </div>
 
     <!-- 하위 컨텐츠 컨테이너 -->

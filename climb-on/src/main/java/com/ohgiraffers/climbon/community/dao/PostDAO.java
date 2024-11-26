@@ -71,4 +71,6 @@ public interface PostDAO {
 
     List<PostDTO> getFixedPostsByCategory(@Param("category") String category, @Param("limit") int limit);
 
+    @Select("SELECT user_role FROM users WHERE id = #{userId}")
+    String getUserRoleById(@Param("userId") Integer userId);
 }

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -40,7 +41,6 @@ public class PostController {
         // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
 
-
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -62,7 +62,7 @@ public class PostController {
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
-        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("category", category != null ? category : "전체");
@@ -83,8 +83,6 @@ public class PostController {
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
 
-        System.out.println(post.getEventStartDate());
-        System.out.println(post.getEventEndDate());
 
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
@@ -105,9 +103,13 @@ public class PostController {
 
     // 게시글 작성 폼 페이지
     @GetMapping("/new")
-    public String CreatePostForm(@RequestParam(required = false) String category, Model model){
+    public String CreatePostForm(@RequestParam(required = false) String category, Model model, Principal principal){
+        String email = principal.getName();
+        Integer userId = postService.getUserIdByUserName(email);
+        String userRole = postService.getUserRoleById(userId);
         PostDTO post = new PostDTO();
         post.setCategory(category);
+         model.addAttribute("role", userRole); // 역할을 모델에 추가
          model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
             // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
         return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
@@ -129,6 +131,14 @@ public class PostController {
 
         // 이메일로 userId 조회
         Integer userId = postService.findUserIdByEmail(email); //DB의 user.id 조회 메소드 (솔직히 이건 짤 필요없다. 작성자부분과 관련있을줄 알고 짰다;)(아니였다 사실 ☆★여기서 로직을 구현해야 nickname이 DTO에 담겨서 구현이된다!!!)
+
+        // 유저 권한 가져오기
+        String userRole = postService.getUserRoleById(userId);
+
+        // 카테고리가 공지 또는 가이드인 경우 권한 확인
+        if (("공지".equals(post.getCategory()) || "가이드".equals(post.getCategory())) && !"ADMIN".equals(userRole)) {
+            throw new AccessDeniedException("공지 및 가이드 게시글은 관리자만 작성할 수 있습니다."); // Spring Boot에서 사용하는 일반적인 권한 예외
+        }
 
         if (userId == null){
             throw new IllegalArgumentException("User ID not found for email: " + email);

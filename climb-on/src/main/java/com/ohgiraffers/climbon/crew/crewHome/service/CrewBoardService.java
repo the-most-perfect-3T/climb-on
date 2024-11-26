@@ -6,10 +6,7 @@ import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CrewBoardService {
@@ -47,7 +44,7 @@ public class CrewBoardService {
         int offset = (page - 1) * pageSize;
 
         // 1. 공지 게시글 (2개 고정)
-        List<CrewPostDTO> noticePosts = crewBoardDAO.getFixedPostsByCategory("공지", 5);
+        List<CrewPostDTO> noticePosts = crewBoardDAO.getFixedPostsByCategory("공지", 3);
 
         /*// 2. 가이드 게시글 (1개 고정)
         List<PostDTO> guidePosts = crewBoardDAO.getFixedPostsByCategory("가이드", 1);*/
@@ -72,8 +69,8 @@ public class CrewBoardService {
 
         Map<String, List<CrewPostDTO>> result = new HashMap<>();
 
-        // 1. 공지 2개 고정
-        List<CrewPostDTO> pinnedNoticePosts = crewBoardDAO.getFixedPostsByCategory("공지", 5);
+        // 1. 공지 5개 고정
+        List<CrewPostDTO> pinnedNoticePosts = crewBoardDAO.getFixedPostsByCategory("공지", 3);
         result.put("pinnedNoticePosts", pinnedNoticePosts);
 
         for (CrewPostDTO post : pinnedNoticePosts) {
@@ -95,13 +92,29 @@ public class CrewBoardService {
         // 3. 일반 게시글
         List<CrewPostDTO> generalPosts = crewBoardDAO.getPostsByPageAndCategoryAndSearch(
                 offset, pageSize, category, searchKeyword, sort, /* dday,*/ status);
+
         result.put("generalPosts", generalPosts);
 
         for (CrewPostDTO post : generalPosts) {
             // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
             String userNickname =  crewBoardDAO.getUserNicknameById(post.getUserId());
             post.setUserNickname(userNickname);
+
+            String htmlContent = post.getContent();
+            String plainText = htmlContent.replaceAll("<[^>]*>", "");
+            post.setContent(plainText);
+
+            String images = post.getImgUrl();
+            String firstImage;
+            if(!Objects.isNull(images)){
+                firstImage = images.split(",")[0];
+            }else{
+                firstImage = "";
+            }
+            post.setImgUrl(firstImage);
+
         }
+
         return result;
     }
 

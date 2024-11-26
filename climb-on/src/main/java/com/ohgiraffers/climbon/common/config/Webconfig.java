@@ -23,5 +23,8 @@ public class Webconfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/images/crewPost/**")
                 .addResourceLocations(commonPath + "crew/posts/");
+
+        registry.addResourceHandler("/images/communityPost/**")
+                .addResourceLocations(commonPath + "community/posts/");
     }
 }
