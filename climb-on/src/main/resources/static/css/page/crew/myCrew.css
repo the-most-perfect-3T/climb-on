@@ -11,17 +11,33 @@
     height: 850px;
     margin-top: 98px;
     background-color: #fff;
-
     text-align: center;
     justify-content: center;
 }
 
-.crew-aside .crew-profile-img{
+.crew-aside .crew-profile-img-wrapper{
     width: 270px;
     height: 200px;
     background-color: #222222;
     border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.crew-aside .crew-profile-img-wrapper .thumbnail{
+    width: 100%;
+    object-fit: cover;
+}
+
+.crew-member-count-recruit-status-container .badge {
+    font-size: 0.9rem;
+    background-color: var(--point);
+}
+
+.crewname-sns-container .
 
 .crew-aside .crew-join-apply{
 

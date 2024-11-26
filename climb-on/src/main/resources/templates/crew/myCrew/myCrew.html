@@ -15,13 +15,25 @@
     <div class="inner d-flex">
         <aside class="crew-aside">
             <div class="crew-info">
-                <div class="crew-profile-img"></div>
-                <h3>크루명</h3>
-                <span>멤버 n명</span>
+                <div class="crew-profile-img-wrapper">
+                    <img th:src="${myCrew.imgUrl}" alt="Thumbnail" class="thumbnail">
+                </div>
+                <div class="crewname-sns-container">
+                    <h3 th:text="${myCrew.crewName}">크루명</h3>
+                    <th:block th:if="${myCrew.crewSns != null && myCrew.crewSns.length() > 0}">
+                        <a th:href="|https://www.instagram.com/${myCrew.crewSns}/|" target="_blank">
+                            <img src="/images/instagram.png" alt="no insta?" class="insta-img">
+                        </a>
+                    </th:block>
+                </div>
+                <div class="crew-member-count-recruit-status-container">
+                    <span th:text="|회원 ${memberCount}명|">멤버 n명</span>
+                    <span class="badge rounded-pill" th:if="${myCrew.recruitingStatus == true}">모집중</span>
+                </div>
+                <div class="crew-description" th:text="${myCrew.description}">크루 소개글</div>
             </div>
 
             <!--사이드 내용-->
-
             <button class="crew-join-apply">
                 <p>가입신청하기</p>
             </button>

@@ -48,8 +48,6 @@ public class CrewController {
 
         int pageSize = 15;
 
-        // 일반 게시글
-        List<CrewPostDTO> posts = crewBoardService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, status);
         // 전체 게시글 수   // 전체 게시글 수를 가져와 페이지수를 계산
         int totalPosts = crewBoardService.getTotalPostCount(category, searchKeyword);
         // 전체 페이지 수 계산  // ceil 함수는 올림을 해줌
@@ -187,6 +185,7 @@ public class CrewController {
         // 크루정보 조회 (5개만 보내준다)
         List<CrewDTO> crews = crewService.selectCrews();
         System.out.println(crews);
+
         if(Objects.isNull(crews)){
             mv.addObject("message", "조회 가능한 크루가 없습니다.");
         }else{
