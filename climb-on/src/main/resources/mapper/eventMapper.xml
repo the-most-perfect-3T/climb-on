@@ -12,6 +12,12 @@
         <result property="description" column="DESCRIPTION"/>
         <result property="backgroundColor" column="COLOR"/>
         <result property="userCode" column="USER_CODE"/>
+        <result property="role" column="IS_ADMIN"/>
+    </resultMap>
+
+    <resultMap id="crewEventResult" type="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
+        <id property="userCode" column="USER_CODE"/>
+        <result property="crewCode" column="CREW_CODE"/>
     </resultMap>
 
 
@@ -22,11 +28,18 @@
         WHERE user_code = #{userCode};
     </select>
 
-<!--    <select id="getAllEventsFromCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO" resultMap="eventResult">-->
-<!--        SELECT-->
-<!--        *-->
-<!--        FROM tbl_crewevents_test;-->
-<!--    </select>-->
+    <select id="getAllEventsFromCrew" parameterType="int" resultMap="eventResult">
+        SELECT
+        *
+        FROM calendar_events
+        WHERE crew_code = #{value};
+    </select>
+
+    <select id="getMainEvents" parameterType="boolean" resultMap="eventResult">
+        SELECT *
+        FROM calendar_events
+        WHERE is_admin = #{role};
+    </select>
 
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         INSERT INTO calendar_events (title, user_code, start_datetime, end_datetime, description, color)
@@ -55,5 +68,11 @@
         FROM calendar_events AS c
         JOIN users AS u ON c.user_code = u.id
         WHERE u.user_role = #{value};
+    </select>
+
+    <select id="isUserInCrew" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO" resultType="Integer">
+        SELECT COUNT(*)
+        FROM user_crew
+        WHERE user_code = #{userCode} AND crew_code = #{crewCode};
     </select>
 </mapper>
