@@ -804,7 +804,7 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
-
+        document.getElementById('reviewId').value = null;
 
         await loadReviews(currentfacility.id);
 
