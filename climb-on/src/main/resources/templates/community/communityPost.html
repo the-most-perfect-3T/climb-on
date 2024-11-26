@@ -13,39 +13,28 @@
 
      <div class="head-container">
     <!-- 소식 제목 -->
-    <h2 class="news-title">소식</h2>
+    <h2>소식</h2>
         <!-- 더보기 버튼-->
     <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
      </div>
 
     <div class="timeline-container">
-
         <!-- 타임라인 -->
         <div class="timeline">
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=진행중'}">진행중</a>
+            <div class="ongoing-news">
+                <div class="ongoing-news-container">
+                    <!-- 각 게시글을 카드 형태로 나눔 -->
+                    <div th:each="post : ${ongoingPosts}" class="ongoing-news-item">
+                        <div class="news-box">
+                            <span class="status-label">진행중</span>
+                            <a th:href="@{'/community/' + ${post.id}}" class="news-title" th:text="${post.title}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=1'}">D-1</a>
-        </div>
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=5'}">D-5</a>
-        </div>
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=10'}">D-10</a>
-        </div>
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=20'}">D-20</a>
-        </div>
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=30'}">D-30</a>
-        </div>
-        <div class="timeline-item">
-            <a th:href="@{'/community?category=소식&dday=종료됨'}">지난일정</a>
-        </div>
-        </div>
-    </div>
 
+        </div>
         <!-- 게시글 목록 -->
    <div class="post-list">
        <h2>커뮤니티 게시판</h2>
@@ -223,16 +212,14 @@
                 </tr>
                 </tbody>
             </table>
-            <div th:each="post : ${generalPosts}" class="card">
+            <div th:each="post : ${generalPosts}" class="card d-flex flex-row">
+                <div class="card-body">
                 <div class="card-title">
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">게시글 제목 예시</span>
                     </a>
                 </div>
-                <div class="card-content" th:utext="${post.content}">게시글 내용 요약</div>
-                <div class="post-image" th:if="${post.imageUrl != null}">
-                    <p th:text="${post.imageUrl != null ? post.imageUrl : '/images/default-image.png'}" alt="게시글 이미지"></p>
-                </div>
+                <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
                 <div class="card-meta">
                     <span th:text="${post.displayName}">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
@@ -241,8 +228,12 @@
                     <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
                 </div>
             </div>
+                <div class="thumbnail-wrapper" th:if="${post.imageUrl.length() > 0}">
+                    <img th:src="${post.imageUrl}" alt="Thumbnail" class="thumbnail">
+                </div>
         </div>
     </div>
+   </div>
 
     <!-- 페이지네이션 -->
     <section class="pagination">

@@ -76,4 +76,5 @@ public interface PostDAO {
 
     @Select("SELECT profile_pic FROM users WHERE id = #{userId}")
     String getUserProfilePicById(Integer userId);
+
 }
