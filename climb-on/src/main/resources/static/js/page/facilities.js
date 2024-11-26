@@ -746,20 +746,39 @@ document.addEventListener("DOMContentLoaded", function() {
         // 평점이 선택되지 않았으면 경고
 
         event.preventDefault();
+
+        const allGray = Array.from(document.querySelectorAll('#rating .star i')).every(icon => {
+            return icon.style.color === 'gray'; // 모든 아이콘이 회색인지 확인
+        });
+
+        if (allGray) {
+            console.log("모든 별이 회색입니다.");
+            alert("평점을 선택해 주세요!");
+            return;
+        }
         console.log("dsds"+rating);
-        if(rating === 0){
+        if(rating === 0 || rating===""){
             rating = document.getElementById("ratingValue").value;
-            console.log("입력했을때안했을때"+ rating)
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ rating)
+                console.log("입력했을때안했을때"+ value)
                 alert("평점을 선택해 주세요!");
                 return;
             }
 
 
+
+
+
         }else {
             document.getElementById("ratingValue").value = rating;
+// 모든 별 요소를 선택
+
             console.log("입력했을때" + rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ value)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
         }
 
         // 리뷰 내용이 비어있으면 경고
