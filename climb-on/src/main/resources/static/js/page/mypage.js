@@ -219,6 +219,58 @@ async function getIsFavorite(id) {
     }
 }
 
+
+
+/**
+ * 공통 페이지네이션 함수
+ * @param {HTMLElement} paginationElement - 페이지네이션을 렌더링할 DOM 요소
+ * @param {Number} totalItems - 총 아이템 수
+ * @param {Number} itemsPerPage - 한 페이지당 표시할 아이템 수
+ * @param {Number} currentPage - 현재 페이지 번호
+ * @param {Function} onPageChange - 페이지 변경 시 호출할 콜백 함수 (페이지 번호 전달)
+ */
+function renderPagination(paginationElement, totalItems, itemsPerPage, currentPage, onPageChange) {
+    paginationElement.textContent = ""; // 기존 페이지네이션 초기화
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // 이전 버튼
+    const prevButton = document.createElement("li");
+    prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+    prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+    prevButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    });
+    paginationElement.appendChild(prevButton);
+
+    // 페이지 번호 버튼
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("li");
+        pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+        pageButton.innerHTML = `<a href="#">${i}</a>`;
+        pageButton.querySelector("a").addEventListener("click", (e) => {
+            e.preventDefault();
+            onPageChange(i);
+        });
+        paginationElement.appendChild(pageButton);
+    }
+
+    // 다음 버튼
+    const nextButton = document.createElement("li");
+    nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+    nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+    nextButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    });
+    paginationElement.appendChild(nextButton);
+}
+
+
+
+
+
 const favoriteTab = document.getElementById("favorite-tab");
 
 /*페이지네이션 없이..*/
@@ -368,7 +420,7 @@ favoriteTab.addEventListener("click", async function () {
             };
 
             // 페이지네이션 버튼 렌더링
-            const renderPagination = () => {
+            /*const renderPagination = () => {
                 console.log('페이지네이션 렌더링');
                 const pagination = document.querySelector("#favorite .pagination");
                 pagination.textContent = "";
@@ -419,11 +471,18 @@ favoriteTab.addEventListener("click", async function () {
                     }
                 });
                 pagination.appendChild(nextButton);
-            };
+            };*/
 
             // 첫 페이지 렌더링
             if (Array.isArray(data)) await renderData(currentPage);
-            if(data.length > itemsPerPage) renderPagination();
+            if(data.length > itemsPerPage) {
+                const paginationElement = document.querySelector("#favorite .pagination");
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                    currentPage = newPage;
+                    renderData(currentPage);
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+                });
+            }
 
             // 즐겨찾기 버튼 클릭 이벤트 설정
             const favoriteList = document.getElementById("favorite").querySelector("ul.list");
@@ -479,10 +538,15 @@ favoriteTab.addEventListener("click", async function () {
 
                             // 삭제 후 다시 렌더링
                             await renderData(currentPage);
-                            if (data.length >= itemsPerPage) {
-                                renderPagination();
+                            if(data.length > itemsPerPage) {
+                                const paginationElement = document.querySelector("#favorite .pagination");
+                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                                    currentPage = newPage;
+                                    renderData(currentPage);
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+                                });
                             } else {
-                                document.querySelector(".pagination").textContent = "";
+                                document.querySelector("#favorite .pagination").textContent = "";
                             }
                         }
                     }  catch (error) {
@@ -501,6 +565,17 @@ favoriteTab.addEventListener("click", async function () {
         console.error("AJAX 오류:", error);
     }
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*리뷰*/
@@ -577,60 +652,18 @@ async function reviewClickFunction(){
                 }
             };
 
-            // 페이지네이션 버튼 렌더링
-            const renderPagination = () => {
-                const pagination = document.querySelector("#review .pagination");
-                console.log("pagination: " + pagination);
-                pagination.textContent = "";
 
-                const totalPages = Math.ceil(data.length / itemsPerPage);
-
-                // 이전 버튼
-                const prevButton = document.createElement("li");
-                prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
-                prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
-                prevButton.querySelector("a").addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) {
-                        currentPage--;
-                        renderData(currentPage);
-                        renderPagination();
-                    }
-                });
-                pagination.appendChild(prevButton);
-
-                // 페이지 번호 버튼
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageButton = document.createElement("li");
-                    pageButton.className = `num ${i === currentPage ? "current" : ""}`;
-                    pageButton.innerHTML = `<a href="#">${i}</a>`;
-                    pageButton.querySelector("a").addEventListener("click", (e) => {
-                        e.preventDefault();
-                        currentPage = i;
-                        renderData(currentPage);
-                        renderPagination();
-                    });
-                    pagination.appendChild(pageButton);
-                }
-
-                // 다음 버튼
-                const nextButton = document.createElement("li");
-                nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
-                nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
-                nextButton.querySelector("a").addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        renderData(currentPage);
-                        renderPagination();
-                    }
-                });
-                pagination.appendChild(nextButton);
-            };
 
             // 첫 페이지 렌더링
             if (Array.isArray(data)) await renderData(currentPage);
-            if(data.length > itemsPerPage) renderPagination();
+            if(data.length > itemsPerPage) {
+                const paginationElement = document.querySelector("#review .pagination");
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                    currentPage = newPage;
+                    renderData(currentPage);
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+                });
+            }
 
 
             // 리뷰 삭제
@@ -672,9 +705,14 @@ async function reviewClickFunction(){
                             // 삭제 후 다시 렌더링
                             await renderData(currentPage);
                             if (data.length >= itemsPerPage) {
-                                renderPagination();
+                                const paginationElement = document.querySelector("#review .pagination");
+                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                                    currentPage = newPage;
+                                    renderData(currentPage);
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+                                });
                             } else {
-                                document.querySelector(".pagination").textContent = "";
+                                document.querySelector("#review .pagination").textContent = "";
                             }
                         }
 
@@ -944,103 +982,172 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+
 /*게시판*/
 const boardTab = document.getElementById("board-tab");
 boardTab.addEventListener("click", async function(){
     console.log("클릭됨");
 
-    const response = await fetch("/user/board");
-    if (!response.ok) {
-        throw new Error("서버 오류: " + response.status);
-    }
+    try {
+        const response = await fetch("/user/board");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
 
-    const post = await response.json();
-    console.log("받은 데이터:", post);
+        const data = await response.json();
+        console.log("받은 데이터:", data);
 
-    const cardContainer = document.querySelector("#board .card-container");
-    cardContainer.textContent = "";
+        const cardContainer = document.querySelector("#board .card-container");
+        cardContainer.textContent = "";
 
-    if(post.length === 0 || post.message === "작성된 게시물이 없습니다."){
+        const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
+        let currentPage = 1;
 
-    }else {
-        const table = document.createElement("table");
-        table.style.width = '100%';
-        table.style.borderCollapse = 'collapse';
-        let tableHtml = `
-            <thead>
-                <tr>
-                    <th>카테고리</th>
-                    <th>제목</th>
-                    <th>작성자</th>
-                    <th>작성일</th>
-                </tr>
-            </thead>
-            <tbody>`
+        if (data.length === 0 || data.message === "작성된 게시물이 없습니다.") {
 
-        /*공지 핀포스트*/
-        for(let item of post.pinnedNoticePosts){
-            tableHtml +=`
+        } else {
+
+
+            // 데이터 렌더링 함수
+            const renderData = async (page) => {
+
+                console.log("렌더링?");
+
+                const cardContainer = document.querySelector("#board .card-container");
+                cardContainer.textContent = "";
+
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                console.log(startIndex, endIndex);
+
+                console.log(data.pinnedNoticePosts?.length, data.pinnedGuidePosts?.length, data.generalPosts?.length)
+                const itemsToShow = data.generalPosts?.slice(startIndex, endIndex);
+                console.log(itemsToShow);
+
+                /*const itemsToShow = data.slice(startIndex, endIndex);*/
+           /*     const mergedPosts = [
+                    ...(data.pinnedNoticePosts || []),
+                    ...(data.pinnedGuidePosts || []),
+                    ...(data.generalPosts || []),
+                ];
+
+                console.log("data.pinnedNoticePosts" + data.pinnedNoticePosts);
+                console.log("mergedPosts" + mergedPosts);
+                console.log("mergedPosts.pinnedNoticePosts" + mergedPosts.pinnedNoticePosts);*/
+
+                // 현재 페이지에 맞는 데이터 추출
+                // const itemsToShow = mergedPosts.slice(startIndex, endIndex);
+                // console.log("itemsToshow " + itemsToShow);
+
+               /* const table = document.createElement("table");
+                table.style.width = '100%';
+                table.style.borderCollapse = 'collapse';
+                let tableHtml = `
+                <thead>
+                    <tr>
+                        <th>카테고리</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>`*/
+
+                /*공지 핀포스트*/
+
+              /*  if (itemsToShow.pinnedNoticePosts?.length > 0) {
+                    for (let item of itemsToShow.pinnedNoticePosts) {
+                        tableHtml += `
+                    <tr class="pinned-post">
+                        <td>${item.category}</td>
+                        <td>
+                            <a href="/community/${item.id}">
+                                <span>${item.title}</span>
+                                <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                            </a>
+                        </td>
+                        <td>${item.displayName}</td>
+                        <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                    </tr>
+                `
+                    }
+                }
+
+                /!* 가이드 핀포스트 *!/
+                if (itemsToShow.pinnedGuidePosts?.length > 0) {
+                    for (let item of itemsToShow.pinnedGuidePosts) {
+                        tableHtml += `
                 <tr class="pinned-post">
-                    <td>${item.category}</td>
-                    <td>
-                        <a href="/community/${item.id}">
-                            <span>${item.title}</span>
-                            <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
-                        </a>
-                    </td>
-                    <td>${item.displayName}</td>
-                    <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
-                </tr>
-            `
-        }
-        /* 가이드 핀포스트 */
-        for(let item of post.pinnedGuidePosts) {
-            tableHtml +=`
-            <tr class="pinned-post">
-                    <td>${item.category}</td>
-                    <td>
-                        <a href="/community/${item.id}">
-                            <span>${item.title}</span>
-                            <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
-                        </a>
-                    </td>
-                    <td>${item.displayName}</td>
-                    <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
-                </tr>
-            `;
-        }
+                        <td>${item.category}</td>
+                        <td>
+                            <a href="/community/${item.id}">
+                                <span>${item.title}</span>
+                                <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                            </a>
+                        </td>
+                        <td>${item.displayName}</td>
+                        <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                    </tr>
+                `;
+                    }
+                }
 
-        tableHtml += `</tbody>`;
+                tableHtml += `</tbody>`;
 
-        table.innerHTML = tableHtml;
+                table.innerHTML = tableHtml;*/
 
-        const cardList = document.createElement("div");
-        cardList.classList.add('card-list');
-        let cardHtml = '';
-        for(let item of post.generalPosts){
-            cardHtml += `
-                <div class="card-item">
-                    <div class="card-category">${item.category}</div>
-                    <div class="card-title">
-                        <a th:href=/community/${item.id}">
-                            <span>${item.title}</span>
-                        </a>
+                const cardList = document.createElement("div");
+                cardList.classList.add('card-list');
+                let cardHtml = '';
+
+                if (itemsToShow.length > 0) {
+                    console.log("이거")
+                    for (let item of itemsToShow) {
+                        console.log(item);
+                        cardHtml += `
+                    <div class="card-item">
+                        <div class="card-category">${item.category}</div>
+                        <div class="card-title">
+                            <a th:href=/community/${item.id}">
+                                <span>${item.title}</span>
+                            </a>
+                        </div>
+                        <div class="card-content">${item.content}</div>
+                        <div class="card-meta">
+                            <span>${item.displayName}</span>
+                            <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                            <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
+                            <i class="fa-regular fa-heart"></i><span>${item.heartsCount}</span>
+                            <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                        </div>
                     </div>
-                    <div class="card-content">${item.content}</div>
-                    <div class="card-meta">
-                        <span>${item.displayName}</span>
-                        <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
-                        <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
-                        <i class="fa-regular fa-heart"></i><span>${item.heartsCount}</span>
-                        <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
-                    </div>
-                </div>
-            `
-        }
+                `
+                    }
+                }
 
-        cardList.innerHTML = cardHtml;
-        cardContainer.appendChild(table);
-        cardContainer.appendChild(cardList);
+
+                cardList.innerHTML = cardHtml;
+                // cardContainer.appendChild(table);
+                cardContainer.appendChild(cardList);
+            };
+
+            // 첫 페이지 렌더링
+            if ( (Array.isArray(data.generalPosts) && data.generalPosts.length > 0) ) await renderData(currentPage);
+            const totalPosts =
+                data.generalPosts?.length || 0 /*+
+                (data.pinnedNoticePosts?.length || 0) +
+                (data.pinnedGuidePosts?.length || 0)*/;
+
+            if (totalPosts > itemsPerPage) {
+                const paginationElement = document.querySelector("#board .pagination");
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                    currentPage = newPage;
+                    renderData(currentPage);
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+                });
+            }
+        }
+    }catch(e){
+        console.error("AJAX 오류:", e);
     }
-
 });

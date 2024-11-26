@@ -1,7 +1,7 @@
 @charset "utf-8";
 
-.section-mypage .aside,
-.section-mypage .tab-content {
+.section-mypage > .inner > .aside,
+.section-mypage > .inner > .tab-content {
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
 }
 
@@ -71,11 +71,11 @@
 
 
 /*tab content*/
-.section-mypage .tab-content {
+.section-mypage > .inner > .tab-content  {
     width: calc(100% - 320px);
     overflow-y: auto;
 }
-.section-mypage .tab-content .tab-pane {
+.section-mypage > .inner > .tab-content > .tab-pane {
     height: 100%;
 }
 

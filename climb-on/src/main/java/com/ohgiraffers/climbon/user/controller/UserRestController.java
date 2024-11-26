@@ -148,7 +148,7 @@ public class UserRestController {
 
         Map<String, Object> resultMap = new HashMap<>();
 
-
+/*
         List<PostDTO> pinnedNoticePosts = postsWithPinned.get("pinnedNoticePosts");
         System.out.println("pinnedNoticePosts = " + pinnedNoticePosts);
 
@@ -164,14 +164,13 @@ public class UserRestController {
                 }
             }
         }
-        System.out.println("pinnedNoticePosts = " + pinnedNoticePosts);
 
 
 
         List<PostDTO> pinnedGuidePosts = postsWithPinned.get("pinnedGuidePosts");System.out.println("pinnedGuidePosts = " + pinnedGuidePosts);
 
         if(pinnedGuidePosts != null || !pinnedGuidePosts.isEmpty()) {
-            Iterator<PostDTO> iterator = pinnedNoticePosts.iterator();
+            Iterator<PostDTO> iterator = pinnedGuidePosts.iterator();
             while (iterator.hasNext()) {
                 PostDTO post = iterator.next();
                 if (post.getUserId() != userId) {
@@ -181,15 +180,14 @@ public class UserRestController {
                     System.out.println("같은거 있음");
                 }
             }
-        }
-        System.out.println("pinnedGuidePosts = " + pinnedGuidePosts);
+        }*/
 
 
 
         List<PostDTO> generalPosts = postsWithPinned.get("generalPosts");
         System.out.println("generalPosts = " + generalPosts);
         if(generalPosts != null || !generalPosts.isEmpty()) {
-            Iterator<PostDTO> iterator = pinnedNoticePosts.iterator();
+            Iterator<PostDTO> iterator = generalPosts.iterator();
             while (iterator.hasNext()) {
                 PostDTO post = iterator.next();
                 if (post.getUserId() != userId) {
@@ -204,13 +202,16 @@ public class UserRestController {
         System.out.println("generalPosts = " + generalPosts);
 
 
+        /*resultMap.put("pinnedNoticePosts", pinnedNoticePosts);
+        resultMap.put("pinnedGuidePosts", pinnedGuidePosts);*/
+        resultMap.put("generalPosts", generalPosts);
 
-
-        resultMap.put("pinnedNoticePosts", pinnedNoticePosts != null ? pinnedNoticePosts : null);
-        resultMap.put("pinnedGuidePosts", pinnedGuidePosts != null ? pinnedNoticePosts : null);
-        resultMap.put("generalPosts", generalPosts != null ? pinnedNoticePosts : null);
-
-
+        /*if(pinnedNoticePosts.isEmpty() && pinnedGuidePosts.isEmpty() && generalPosts.isEmpty()){
+            return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
+        }*/
+        if(generalPosts.isEmpty()){
+            return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
+        }
 /*
 
         resultMap.put("currentPage", page);
