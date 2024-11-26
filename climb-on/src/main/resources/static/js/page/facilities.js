@@ -381,10 +381,16 @@ function loadReviews(facilityId) {
                 <div class="item2">
                 <p> 
                     <span class="review-sum">리뷰 : ${data.length}</span>
-                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span>
+                    <p class="review-guide">리뷰를 남기면 나의 체크인목록에 표시됩니다.<br\>
+                        다른 클라이머들을 위해 리뷰를 남겨주세요</p>
+                        <div class="reveiw-star-sum">
+                    <span class="review-avg">평점 : ${Math.floor(data[0].averageRating * 10)/10}/5</span>
                 </p>
                 <div id="stars-container"></div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">작성</button>
+                </div>
+                
+                <i type="button" class="btn-fmodal" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-pencil" aria-hidden="true"></i>작성</i>
+                
                 <br><br><br><br>
                 </div>
             `;
@@ -749,6 +755,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const allGray = Array.from(document.querySelectorAll('#rating .star i')).every(icon => {
             return icon.style.color === 'gray'; // 모든 아이콘이 회색인지 확인
+
         });
 
         if (allGray) {
@@ -757,10 +764,11 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
         console.log("dsds"+rating);
+        rating = Number(rating); // 다시 숫자로 변환
         if(rating === 0 || rating===""){
             rating = document.getElementById("ratingValue").value;
+            console.log("뭐지" + rating)
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ value)
                 alert("평점을 선택해 주세요!");
                 return;
             }
