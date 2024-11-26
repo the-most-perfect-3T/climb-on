@@ -23,12 +23,18 @@
                     </form>
                 </div>
                 <!-- 초기화 버튼 -->
+                <div class="button-container-facility">
+
                 <button type="button" onclick="resetForm()">전체 조회</button>
-
                 <button type="button" onclick="handleCategorySubmit(1)">볼더링</button>
-                <button type="button" onclick="handleCategorySubmit(2)">리드</button>
-                <button type="button" onclick="handleCategorySubmit(3)">되라좀</button>
-
+                    <div class="img-wrap">
+                <img src="/images/lead_climbing.svg" class="fcategory_button"
+                     onclick="handleCategorySubmit(2)" alt="리드"  width="50" height="50">
+                        </div>
+                    <div class="img-wrap">
+                <img src="/images/outdoor_mountain.png" class="fcategory_button" onclick="handleCategorySubmit(3)" alt="자연">
+                    </div>
+                </div>
                 <div class="offcanvas-body">
                     <!-- 볼더링 카테고리 버튼 -->
                     <!--검색기능-->
@@ -39,10 +45,15 @@
                             <tr th:each="facility : ${facilitiesList}" th:onclick="'showFacilityId(' + ${facility.id} + ')'">
                                 <td>
                                 <div class="facility-info">
-                                    <img id="facilitymainImg" class="facility-details-content" th:src="@{${facility.imageUrl}}" alt="시설 이미지"></br>
+
+                                    <div>
                                     <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
                                     <div class="facility-address" th:text="${facility.address}">주소</div>
-                                </div>
+                                    </div>
+                                    <div class="img-wrap">
+                                        <img id="facilitymainImg" class="facility-details-content" th:src="@{${facility.imageUrl}}" alt="시설 이미지">
+                                    </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
@@ -62,7 +73,15 @@
            <!--<div class="facilityDetails" id="reviewContainer"></div>-->
         </div>
             <div th:replace="~{/facilities/facilitymodal :: facilityModalFragment}"></div>
-
+        <div class="input-wrap d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <label for="businessFile">사업자등록증</label>
+                <small>※ 지원하는 이미지 파일 형식 : ( jpeg, jpg, gif, png )</small>
+            </div>
+            <input type="file" name="businessFile" id="businessFile"/>
+            <button class="btn-fileupload border" type="button"><i class="fa-solid fa-plus"></i><span>파일첨부</span></button>
+            <div class="attachFile align-items-center"><p class="fileName">파일이름.jpg(예시)</p><button type="button"><i class="fa-solid fa-xmark"></i></button></div>
+        </div>
 
     </th:block>
 

@@ -1,9 +1,8 @@
 
 /*window.onload = function() {
-    const savedCode = sessionStorage.getItem('searchCode');  // sessionStorage에서 'searchCode' 가져오기
-    if (savedCode) {
-        document.getElementById('codeInput').value = savedCode;  // 입력 필드에 값 넣기
-    }
+    const facilityDetailsContainer = document.querySelector('#facilityDetailsContainer');
+    // 'open' 클래스를 추가하여 애니메이션 실행
+    facilityDetailsContainer.classList.add('open');
 }*/
 //검색
 function showSuggestions() {
@@ -294,9 +293,10 @@ async function showFacilityDetails(facility) {
    // console.log(isFavorite)
     const facilityDetailsHTML = `
  <div class="facility-details">
-            <img id="facilityImg" class="facility-banner-content" src=""/></br>
-            
+        <div class="facility-details-top">
+        <img id="facilityImg" class="facility-banner-content" src=""/></br>
         <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
+       </div>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
@@ -381,10 +381,16 @@ function loadReviews(facilityId) {
                 <div class="item2">
                 <p> 
                     <span class="review-sum">리뷰 : ${data.length}</span>
-                    <span class="review-avg">평점 : ${data[0].averageRating}/5</span>
+                    <p class="review-guide">리뷰를 남기면 나의 체크인목록에 표시됩니다.<br\>
+                        다른 클라이머들을 위해 리뷰를 남겨주세요</p>
+                        <div class="reveiw-star-sum">
+                    <span class="review-avg">평점 : ${Math.floor(data[0].averageRating * 10)/10}/5</span>
                 </p>
                 <div id="stars-container"></div>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">작성</button>
+                </div>
+                
+                <i type="button" class="btn-fmodal" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-pencil" aria-hidden="true"></i>작성</i>
+                
                 <br><br><br><br>
                 </div>
             `;
@@ -747,11 +753,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
         event.preventDefault();
 
-        document.getElementById("ratingValue").value = rating;
-        if (ratingValue === 0) {
+        const allGray = Array.from(document.querySelectorAll('#rating .star i')).every(icon => {
+            return icon.style.color === 'gray'; // 모든 아이콘이 회색인지 확인
+
+        });
+
+        if (allGray) {
+            console.log("모든 별이 회색입니다.");
             alert("평점을 선택해 주세요!");
-            event.preventDefault();  // 폼 제출을 막음
             return;
+        }
+        console.log("dsds"+rating);
+        rating = Number(rating); // 다시 숫자로 변환
+        if(rating === 0 || rating===""){
+            rating = document.getElementById("ratingValue").value;
+            console.log("뭐지" + rating)
+            if (rating === 0 || rating ==="") {
+                alert("평점을 선택해 주세요!");
+                return;
+            }
+
+
+
+
+
+        }else {
+            document.getElementById("ratingValue").value = rating;
+// 모든 별 요소를 선택
+
+            console.log("입력했을때" + rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ value)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
         }
 
         // 리뷰 내용이 비어있으면 경고
@@ -796,7 +831,7 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
-
+        document.getElementById('reviewId').value = null;
 
         await loadReviews(currentfacility.id);
 
