@@ -7,6 +7,7 @@ public class EventDTO
     private int id;
     private String title;
     private int userCode;
+    private boolean role;
     private String start;
     private String end;
     private String description;
@@ -16,11 +17,12 @@ public class EventDTO
     {
     }
 
-    public EventDTO(int id, String title, int userCode, String start, String end, String description, String backgroundColor)
+    public EventDTO(int id, String title, int userCode, boolean role, String start, String end, String description, String backgroundColor)
     {
         this.id = id;
         this.title = title;
         this.userCode = userCode;
+        this.role = role;
         this.start = start;
         this.end = end;
         this.description = description;
@@ -55,6 +57,17 @@ public class EventDTO
     public void setUserCode(int userCode)
     {
         this.userCode = userCode;
+    }
+
+    public boolean getRole()
+    {
+        return role;
+    }
+
+    public boolean setRole(boolean role)
+    {
+        this.role = role;
+        return role;
     }
 
     public String getStart()

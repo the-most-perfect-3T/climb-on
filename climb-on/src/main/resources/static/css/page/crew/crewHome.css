@@ -88,6 +88,9 @@ h2 {
 }
 
 /* 카테고리 및 정렬 섹션 */
+.post-list h2 {
+    margin-bottom: 17px;
+}
 .header-container {
     display: flex;
     justify-content: space-between;
@@ -139,8 +142,9 @@ h2 {
 /* 검색창을 중앙 정렬 */
 .search-bar {
     display: flex; /* 플렉스 박스를 활성화 */
-    justify-content: center; /* 수평 중앙 정렬 */
-    margin: 0 auto; /* 부모 요소 기준 중앙 정렬 */
+    /*justify-content: center; !* 수평 중앙 정렬 *!*/
+    /*margin: 0 auto; !* 부모 요소 기준 중앙 정렬 *!*/
+    margin-left: 30px;
     width: 100%; /* 전체 폭 설정 */
     max-width: 500px; /* 필요하면 최대 폭 설정 */
 }
@@ -173,6 +177,7 @@ h2 {
     display: flex;
     gap: 10px;
     align-items: center;
+    margin-left: auto;
 }
 
 .view-buttons {
@@ -182,10 +187,11 @@ h2 {
 
 .view-buttons button {
     background-color: transparent;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     border-radius: 5px;
     width: 40px;
     height: 40px;
+    font-size: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -194,9 +200,8 @@ h2 {
 }
 
 .view-buttons button.active {
-    background-color: #FF7F00;
-    color: white;
-    border-color: #FF7F00;
+    background-color: transparent;
+    color: var(--point);
 }
 
 .dropdown {
@@ -204,21 +209,25 @@ h2 {
 }
 
 .dropdown .sort-button {
-    display: inline-flex;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    width: 110px;
+    height: 40px;
     gap: 8px;
-    padding: 10px 15px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
+    padding: 5px;
+    border: 1px solid var(--borderColor);
+    border-radius: 8px;
+    font-size: 17px;
+    font-weight: bold;
     cursor: pointer;
 }
 
 .dropdown .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    width: 110px;
+    background-color: var(--bs-white);
     border: 1px solid #ddd;
     border-radius: 8px;
     top: 40px;
@@ -235,30 +244,37 @@ h2 {
     padding: 8px 12px;
     display: block;
     text-decoration: none;
+    text-align: center;
     color: #333;
     transition: background-color 0.2s ease;
 }
 
 .dropdown-content a:hover {
-    background-color: #f1f1f1;
+    color: var(--point);
 }
 
 /* 글쓰기 버튼 */
 .create-button-container {
     display: flex;
     justify-content: flex-end;
-    margin-left: auto;
+    /*margin-left: auto;*/
 }
 
 .create-button {
-    padding: 10px 15px;
-    background-color: #FF7F00;
+    padding: 5px;
+    background-color: var(--point);
     color: white;
     border: none;
-    border-radius: 20px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
+    width: 110px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 /* 카드 뷰 컨테이너 */
@@ -339,25 +355,36 @@ h2 {
     margin: 20px auto;
 }
 
-.list-view th, .list-view td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-}
-
 .pinned-post {
-    background-color: #f9f9f9; /* 연한 회색 배경 */
-    border-left: 4px solid #ff9900; /* 왼쪽 테두리에 오렌지색 강조 */
+    background-color: rgba(250, 239, 221, 0.2); /* 연한 회색 배경 */
+    /*border-left: 4px solid #ff9900; !* 왼쪽 테두리에 오렌지색 강조 *!*/
     font-weight: bold; /* 글씨를 굵게 */
 }
 
+/* 공지 */
+.pinned-postCategory {
+    padding: 5px;
+    background-color: rgba(250, 239, 221, 1);
+    color: var(--placeholder);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 60px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .pinned-post td {
-    padding: 12px; /* 셀의 여백 */
+    padding: 15px; /* 셀의 여백 */
+    border-bottom: 1px solid rgba(250, 239, 221, 1); /* 기본 행 구분선 */
+    text-align: left;
 }
 
 .post-list {
     width: 100%;
-
 }
 
 .post-list table {
@@ -365,16 +392,25 @@ h2 {
     border-collapse: collapse;
 }
 
-.post-list th, .post-list td {
+.post-list th {
     padding: 15px;
-    border-bottom: 1px solid #ddd; /* 기본 행 구분선 */
+    border-bottom: 1px solid rgba(250, 239, 221, 1); /* 기본 행 구분선 */
+    text-align: left;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.post-list #generalPosts td {
+    padding: 15px;
+    border-bottom: 1px solid var(--borderColor); /* 기본 행 구분선 */
     text-align: left;
 }
 
 /* 게시글 테이블의 맨 위 구분선 */
 .post-list thead tr {
-    border-top: 2px solid #ddd; /* 맨 위 구분선 */
+    border-top: 2px solid var(--black); /* 맨 위 구분선 */
 }
+
 
 /* 페이지네이션 스타일 */
 .pagination {
