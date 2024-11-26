@@ -9,6 +9,7 @@ public class CommentDTO {
     private Integer postId;
     private Integer userId;
     private String userNickname;
+    private String userProfilePic;
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -16,6 +17,18 @@ public class CommentDTO {
     private int commentsCount;
 
     public CommentDTO() {
+    }
+
+    public String getUserProfilePic() {
+        return userProfilePic;
+    }
+
+    public void setUserProfilePic(String userProfilePic) {
+        this.userProfilePic = userProfilePic;
+    }
+
+    public boolean isStatus() {
+        return status;
     }
 
     public LocalDateTime getUpdatedAt() {
@@ -154,6 +167,7 @@ public class CommentDTO {
                 ", postId=" + postId +
                 ", userId=" + userId +
                 ", userNickname='" + userNickname + '\'' +
+                ", userProfilePic='" + userProfilePic + '\'' +
                 ", content='" + content + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
