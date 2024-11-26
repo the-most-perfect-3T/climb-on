@@ -746,12 +746,20 @@ document.addEventListener("DOMContentLoaded", function() {
         // 평점이 선택되지 않았으면 경고
 
         event.preventDefault();
+        console.log("dsds"+rating);
+        if(rating === 0){
+            rating = document.getElementById("ratingValue").value;
+            console.log("입력했을때안했을때"+ rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ rating)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
 
-        document.getElementById("ratingValue").value = rating;
-        if (ratingValue === 0) {
-            alert("평점을 선택해 주세요!");
-            event.preventDefault();  // 폼 제출을 막음
-            return;
+
+        }else {
+            document.getElementById("ratingValue").value = rating;
+            console.log("입력했을때" + rating)
         }
 
         // 리뷰 내용이 비어있으면 경고
