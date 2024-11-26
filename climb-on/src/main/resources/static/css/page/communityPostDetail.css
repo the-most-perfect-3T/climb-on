@@ -297,9 +297,6 @@
 /* 수정/삭제 메뉴 */
 .comment-actions-menu {
     position: absolute;
-
-
-
     top: 0;
     right: 0; /* 오른쪽 끝 정렬 */
 }

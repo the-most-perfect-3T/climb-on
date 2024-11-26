@@ -2,7 +2,7 @@
 h2 {
     font-weight: bold; /* 글가 굵기 설정*/
     color: #333;
-    font-size: 20px;
+    font-size: 24px;
 }
 
 .news-title {
@@ -24,7 +24,7 @@ h2 {
     display: flex; /* 가로로 배치 */
     justify-content: space-between; /* 양쪽 끝으로 정렬 */
     align-items: center; /* 세로 중앙 정렬 */
-    margin-bottom: 25px; /* 아래 간격 추가 */
+    margin-bottom: 50px; /* 아래 간격 추가 */
 }
 
 /* 게시글 제목 옆 댓글 수 스타일 */
@@ -34,14 +34,12 @@ h2 {
     font-size: 0.9em; /* 댓글 수를 작게 표시 */
 }
 
-/* 타임라인 컨테이너 스타일 */
 .timeline-container {
     display: flex;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    gap: 20px; /* 아이템 간격 */
+    gap: 20px; /* 카드 간격 */
     width: 100%;
     margin-bottom: 120px; /* 아래쪽 여백 */
-    overflow-x: auto; /* 가로 스크롤 허용 */
+    overflow: visible; /* 숨겨진 부분 표시 */
 }
 
 /* 진행중 아이템 컨테이너 */
@@ -52,23 +50,32 @@ h2 {
     width: 100%; /* 부모 컨테이너 폭 */
 }
 
-/* 진행중 아이템 */
 .ongoing-news-item {
-    width: 100%; /* 카드 폭을 더 크게 설정 */
-    border-radius: 8px;
-    padding: 10px; /* 내부 여백 추가 */
-    background: #f9f9f9;
+    width: 30%; /* 고정된 카드 폭 */
+    max-width: 160px; /* 카드 최대 폭 설정 */
+    min-width: 160px; /* 카드 최소 폭 설정 */
+    border-radius: 8px; /* 둥근 모서리 */
+    padding: 15px; /* 내부 여백 */
+    background: #f9f9f9; /* 카드 배경색 */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
-    text-align: center;
-    flex-shrink: 0; /* 가로로 나열 시 크기 고정 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    flex-shrink: 0; /* 박스 크기 고정 */
+    overflow: hidden; /* 넘치는 내용 숨김 */
+    display: flex;
+    flex-direction: column; /* 내부 요소를 세로 정렬 */
+    justify-content: space-between; /* 상하 공간 균등 배치 */
+    align-items: center; /* 가로 정렬 */
 }
 
 .news-box {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    width: 100%; /* 부모 크기에 맞춤 */
+    overflow: hidden; /* 넘치는 내용 숨김 */
 }
+
 
 .status-label {
     font-size: 14px;
@@ -83,20 +90,21 @@ h2 {
     box-sizing: border-box; /* 패딩과 테두리를 포함하여 폭 계산 */
 }
 
-/* 제목 스타일 */
+
 .news-title {
-    font-size: 16px;
+    font-size: 16px; /* 텍스트 크기 */
     font-weight: bold;
-    color: var(--black);
+    color: var(--black); /* 텍스트 색상 */
     text-decoration: none;
-    word-wrap: break-word; /* 긴 제목 줄바꿈 */
+    word-wrap: break-word; /* 긴 단어 줄바꿈 */
     overflow: hidden; /* 넘치는 텍스트 숨김 */
-    text-overflow: ellipsis; /* 말줄임 표시 */
-    white-space: nowrap; /* 한 줄로 표시 */
-    width: 100%; /* 제목이 박스 너비에 맞도록 설정 */
-    display: inline-block; /* inline-block으로 텍스트 중심 유지 */
-    box-sizing: border-box; /* 패딩과 테두리를 포함하여 폭 계산 */
-    text-align: center;
+    text-overflow: ellipsis; /* 말줄임표 표시 */
+    white-space: nowrap; /* 한 줄로 유지 */
+    width: 100%; /* 부모 폭에 맞춤 */
+    line-height: 20px; /* 줄 간격 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 10px; /* 상단 간격 */
+    margin-left: 0;
 }
 
 .news-title:hover {
@@ -295,12 +303,32 @@ h2 {
 .card {
     width: 100%; /* 카드가 컨테이너에 맞도록 설정 */
     /*padding: 15px; !* 리스트 뷰와 동일한 내부 여백 *!*/
-    border-bottom: 1px solid var(--borderColor); /* 카드 구분선 */
+    border-bottom: 1px solid #ddd; /* 카드 구분선 */
     border-radius: 0; /* 모서리 반경 제거 */
     box-shadow: none; /* 그림자 제거 */
     --bs-card-border-color: none;
     padding-left: 30px;
     padding-right: 30px;
+}
+
+.thumbnail-wrapper {
+    width: 120px; /* 부모 컨테이너의 고정 폭 */
+    height: 120px; /* 부모 컨테이너의 고정 높이 */
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    overflow: hidden; /* 넘치는 부분 숨김 */
+    border-radius: 8px; /* 둥근 모서리 */
+    background-color: #f9f9f9; /* 배경색 */
+    margin-top: 12px;
+}
+
+.thumbnail {
+    max-width: 120px; /* 이미지의 최대 폭 설정 */
+    max-height: 120px; /* 이미지의 최대 높이 설정 */
+    width: 120px; /* 비율에 따라 자동 조정 */
+    height: 120px; /* 비율에 따라 자동 조정 */
+    display: block; /* 이미지를 블록 요소로 */
 }
 
 .card-body {
@@ -312,6 +340,7 @@ h2 {
     color: #333;
     text-decoration: none;
     font-weight: bold;
+    margin-bottom: 15px;
 }
 
 .card-meta {
@@ -325,7 +354,7 @@ h2 {
     font-size: 16px;
     color: var(--black);
     line-height: 1.5;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -334,17 +363,6 @@ h2 {
     height: 3rem;
     text-overflow: ellipsis;
     white-space: normal;
-}
-
-.thumbnail-wrapper {
-    flex: 0 0 150px;
-}
-
-.thumbnail {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
 }
 
 /* 리스트 뷰 스타일 */
