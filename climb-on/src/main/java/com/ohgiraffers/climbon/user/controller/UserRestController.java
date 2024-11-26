@@ -6,17 +6,21 @@
 package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.facilities.dto.ReviewDTO;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
 import com.ohgiraffers.climbon.facilities.service.ReviewService;
 import com.ohgiraffers.climbon.user.service.UserService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -104,5 +108,116 @@ public class UserRestController {
         }
 
         return ResponseEntity.ok(reviewList);
+    }
+
+    @GetMapping("/board")
+    public ResponseEntity<Object> getAllPosts(@AuthenticationPrincipal AuthDetail userDetails,
+                                              @RequestParam(defaultValue = "1") int page,
+                                              @RequestParam(required = false) String category,
+                                              @RequestParam(required = false) String searchKeyword,
+                                              @RequestParam(defaultValue = "latest") String sort,
+                                              @RequestParam(required = false) String dday,
+                                              @Param("status") Boolean status){
+
+
+        Integer userId = userDetails.getLoginUserDTO().getId();
+        String nickname = userService.findById(userId);
+
+
+
+        int pageSize = 15;
+
+        // 일반 게시글
+        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+
+        int totalPosts = postService.getTotalPostCount(category, searchKeyword);
+        int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
+
+        for (PostDTO post : posts) {
+            String userNickname =  postService.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
+
+        Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(
+                page, pageSize, category, searchKeyword, sort, dday, status);
+
+        if(postsWithPinned == null || postsWithPinned.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+
+
+        List<PostDTO> pinnedNoticePosts = postsWithPinned.get("pinnedNoticePosts");
+        System.out.println("pinnedNoticePosts = " + pinnedNoticePosts);
+
+        if(pinnedNoticePosts != null || !pinnedNoticePosts.isEmpty()) {
+            Iterator<PostDTO> iterator = pinnedNoticePosts.iterator();
+            while (iterator.hasNext()) {
+                PostDTO post = iterator.next();
+                if (post.getUserId() != userId) {
+                    System.out.println("해당 아이디 삭제");
+                    iterator.remove();
+                } else {
+                    System.out.println("같은거 있음");
+                }
+            }
+        }
+        System.out.println("pinnedNoticePosts = " + pinnedNoticePosts);
+
+
+
+        List<PostDTO> pinnedGuidePosts = postsWithPinned.get("pinnedGuidePosts");System.out.println("pinnedGuidePosts = " + pinnedGuidePosts);
+
+        if(pinnedGuidePosts != null || !pinnedGuidePosts.isEmpty()) {
+            Iterator<PostDTO> iterator = pinnedNoticePosts.iterator();
+            while (iterator.hasNext()) {
+                PostDTO post = iterator.next();
+                if (post.getUserId() != userId) {
+                    System.out.println("해당 아이디 삭제");
+                    iterator.remove();
+                } else {
+                    System.out.println("같은거 있음");
+                }
+            }
+        }
+        System.out.println("pinnedGuidePosts = " + pinnedGuidePosts);
+
+
+
+        List<PostDTO> generalPosts = postsWithPinned.get("generalPosts");
+        System.out.println("generalPosts = " + generalPosts);
+        if(generalPosts != null || !generalPosts.isEmpty()) {
+            Iterator<PostDTO> iterator = pinnedNoticePosts.iterator();
+            while (iterator.hasNext()) {
+                PostDTO post = iterator.next();
+                if (post.getUserId() != userId) {
+                    System.out.println("해당 아이디 삭제");
+                    iterator.remove();
+                }else {
+                    System.out.println("같은거 있음");
+                }
+            }
+        }
+
+        System.out.println("generalPosts = " + generalPosts);
+
+
+
+
+        resultMap.put("pinnedNoticePosts", pinnedNoticePosts != null ? pinnedNoticePosts : null);
+        resultMap.put("pinnedGuidePosts", pinnedGuidePosts != null ? pinnedNoticePosts : null);
+        resultMap.put("generalPosts", generalPosts != null ? pinnedNoticePosts : null);
+
+
+/*
+
+        resultMap.put("currentPage", page);
+        resultMap.put("totalPages", totalPages);
+*/
+
+
+        return ResponseEntity.ok(resultMap);
     }
 }

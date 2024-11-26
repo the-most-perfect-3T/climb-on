@@ -942,3 +942,105 @@ document.addEventListener("DOMContentLoaded", function() {
 
     });
 });
+
+
+/*게시판*/
+const boardTab = document.getElementById("board-tab");
+boardTab.addEventListener("click", async function(){
+    console.log("클릭됨");
+
+    const response = await fetch("/user/board");
+    if (!response.ok) {
+        throw new Error("서버 오류: " + response.status);
+    }
+
+    const post = await response.json();
+    console.log("받은 데이터:", post);
+
+    const cardContainer = document.querySelector("#board .card-container");
+    cardContainer.textContent = "";
+
+    if(post.length === 0 || post.message === "작성된 게시물이 없습니다."){
+
+    }else {
+        const table = document.createElement("table");
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+        let tableHtml = `
+            <thead>
+                <tr>
+                    <th>카테고리</th>
+                    <th>제목</th>
+                    <th>작성자</th>
+                    <th>작성일</th>
+                </tr>
+            </thead>
+            <tbody>`
+
+        /*공지 핀포스트*/
+        for(let item of post.pinnedNoticePosts){
+            tableHtml +=`
+                <tr class="pinned-post">
+                    <td>${item.category}</td>
+                    <td>
+                        <a href="/community/${item.id}">
+                            <span>${item.title}</span>
+                            <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                        </a>
+                    </td>
+                    <td>${item.displayName}</td>
+                    <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                </tr>
+            `
+        }
+        /* 가이드 핀포스트 */
+        for(let item of post.pinnedGuidePosts) {
+            tableHtml +=`
+            <tr class="pinned-post">
+                    <td>${item.category}</td>
+                    <td>
+                        <a href="/community/${item.id}">
+                            <span>${item.title}</span>
+                            <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                        </a>
+                    </td>
+                    <td>${item.displayName}</td>
+                    <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                </tr>
+            `;
+        }
+
+        tableHtml += `</tbody>`;
+
+        table.innerHTML = tableHtml;
+
+        const cardList = document.createElement("div");
+        cardList.classList.add('card-list');
+        let cardHtml = '';
+        for(let item of post.generalPosts){
+            cardHtml += `
+                <div class="card-item">
+                    <div class="card-category">${item.category}</div>
+                    <div class="card-title">
+                        <a th:href=/community/${item.id}">
+                            <span>${item.title}</span>
+                        </a>
+                    </div>
+                    <div class="card-content">${item.content}</div>
+                    <div class="card-meta">
+                        <span>${item.displayName}</span>
+                        <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                        <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
+                        <i class="fa-regular fa-heart"></i><span>${item.heartsCount}</span>
+                        <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                    </div>
+                </div>
+            `
+        }
+
+        cardList.innerHTML = cardHtml;
+        cardContainer.appendChild(table);
+        cardContainer.appendChild(cardList);
+    }
+
+});
