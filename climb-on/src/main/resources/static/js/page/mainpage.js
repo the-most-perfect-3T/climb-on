@@ -61,29 +61,37 @@ document.getElementById('category-tabs').addEventListener('click', (event) => {
 });
 
 let slideIndex = 1;
-
-
+let autoSlideTimeout; // 시간 세는 변수
 const plusSlides = (n) =>
 {
-    showSlides(slideIndex += n);
-}
-
-const currentSlides = (n) =>
-{
-    showSlides(slideIndex = n);
+    slideIndex += n;
+    showSlides(slideIndex);
+    resetAutoSlides();
 }
 
 const showSlides = (n) =>
 {
     let i;
     let slides = document.getElementsByClassName("mySlides");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
     for (i = 0; i < slides.length; i++) {
         slides[i].style.display = "none";
     }
-    slideIndex++;
-    if (slideIndex > slides.length) {slideIndex = 1}
     slides[slideIndex-1].style.display = "block";
-    setTimeout(showSlides, 5500); // 5.5초마다 바뀜
+}
+
+const autoSlides = () =>
+{
+    slideIndex++;
+    showSlides(slideIndex);
+    autoSlideTimeout = setTimeout(autoSlides, 6000); // 6초마다 바뀜
+}
+
+const resetAutoSlides = () =>
+{
+    clearTimeout(autoSlideTimeout);
+    autoSlides();
 }
 
 // 유저 롤 변경
@@ -97,7 +105,7 @@ async function updateUserRole(newRole) {
             body: JSON.stringify({ id: "", role: newRole })
         });
         if (response.ok) {
-            alert('업데이트 됏긔');
+            alert('유저 권한 업데이트');
         } else {
             const errorText = await response.text();  // Get server error response
             alert('Error: ' + errorText);
