@@ -59,6 +59,7 @@ async function loadCrews(page) {
 
             const tdImage = document.createElement('td');
             tdImage.style.width = '15%';
+            tdImage.style.flexShrink = '0';
             tdImage.classList.add('d-flex', 'flex-column', 'gap-2');
 
             const imgWrapper = document.createElement('div');
@@ -87,7 +88,7 @@ async function loadCrews(page) {
             tr.appendChild(tdImage);
 
             const tdCrewInfo = document.createElement('td');
-            tdCrewInfo.style.width = '20%';
+            tdCrewInfo.style.width = '30%';
 
             const crewName = document.createElement('p');
             crewName.classList.add('mb-1', 'fw-bold');
@@ -102,7 +103,8 @@ async function loadCrews(page) {
             tr.appendChild(tdCrewInfo);
 
             const tdDescription = document.createElement('td');
-            tdDescription.style.width = '65%';
+            tdDescription.classList.add('description');
+            tdDescription.style.width = '70%';
             tdDescription.textContent = crew.description;
 
             tr.appendChild(tdDescription);

@@ -63,4 +63,14 @@ public class ReviewService {
         reviewDTO.setReviewerId(id);
         return reviewDAO.reviewUpdate(reviewDTO);
     }
+
+    public ReviewDTO getReviewById(Integer id) {
+        ReviewDTO reviewDTO = reviewDAO.getReviewById(id);
+        return reviewDTO;
+    }
+
+    public int reviewDelete(ReviewDTO reviewDTO) {
+        int result = reviewDAO.reviewDelete(reviewDTO);
+        return result;
+    }
 }

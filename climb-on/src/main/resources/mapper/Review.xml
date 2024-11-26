@@ -14,6 +14,7 @@
         <result property="userNickname" column="userNickname"/>
         <result property="likeCount" column="likeCount"/>
         <result property="averageRating" column="averageRating"/>
+        <result property="profilePic" column="PROFILE_PIC"/>
     </resultMap>
 
     <select id="getReview" resultMap="ReviewResultMap">
@@ -52,10 +53,12 @@
 
     <select id="getReviewByUserId" resultMap="ReviewResultMap">
         SELECT
+            a.ID,
             a.USER_ID,
             a.RATING,
             a.COMMENT,
-            b.NICKNAME userNickname
+            b.NICKNAME userNickname,
+            b.PROFILE_PIC
         FROM REVIEWS a
         JOIN USERS b
           ON a.USER_ID = b.ID
@@ -82,4 +85,20 @@
         VALUES (#{userId},#{facilityId},#{comment},#{rating})
 
     </insert>
+    <update id="reviewUpdate" parameterType="com.ohgiraffers.climbon.facilities.dao.ReviewDAO">
+        UPDATE REVIEWS
+        SET COMMENT = #{comment}, RATING = #{rating}
+        WHERE USER_ID = #{userId} AND FACILITY_ID = #{facilityId} AND id = #{id};
+    </update>
+
+    <select id="getReviewById" parameterType="int" resultMap="ReviewResultMap">
+        SELECT
+        *
+        FROM REVIEWS
+        WHERE id = #{id}
+    </select>
+
+    <delete id="reviewDelete" parameterType="com.ohgiraffers.climbon.facilities.dao.ReviewDAO">
+        DELETE FROM REVIEWS WHERE id = #{id};
+    </delete>
 </mapper>

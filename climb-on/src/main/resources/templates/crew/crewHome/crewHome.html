@@ -8,6 +8,10 @@
 </th:block>
 
 <th:block layout:fragment="containerFragment">
+    <div>
+        <!--배너~~~~~~~-->
+    </div>
+
     <div class="inner">
 
         <div class="head-container">
@@ -15,21 +19,23 @@
             <h2 class="news-title">모집중인 크루들</h2>
             <!-- 더보기 버튼-->
             <button onclick="window.location.href='/crew/crewlist'" class="more-button">더보기 &gt;</button>
+
         </div>
 
-        <section class="timeline-container">
-
-            <!-- 타임라인 -->
-            <div class="timeline">
-                <div class="timeline-item">
-
+        <section class="crewlist-container">
+            <div th:each="crew : ${crews}" class="crew-item text-center" style="width: 144px;">
+                <div class="position-relative" style="width: 100%; height: 144px;">
+                    <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                        <img th:src="${crew.imgUrl}" alt="/images/logo.svg" class="w-100">
+                    </div>
                 </div>
-                <div class="timeline-item">
-                </div>
-                <div class="timeline-item">
-                </div>
+                <span th:text="${crew.crewName}" class="crew-name">크루명</span>
             </div>
         </section>
+
+        <div>
+            <!--  가까운 크루 일정~~~~  -->
+        </div>
 
         <!-- 게시글 목록 -->
         <section class="post-list">
@@ -40,7 +46,7 @@
                 <div class="category-buttons">
                     <button onclick="setActiveCategory(this, '전체'); window.location.href='/community?category=전체&viewMode=' + viewMode">전체</button>
                     <button onclick="setActiveCategory(this, '공지'); window.location.href='/community?category=공지&viewMode=' + viewMode">공지</button>
-                    <button onclick="setActiveCategory(this, '내크루'); window.location.href='/community?category=내크루&viewMode=' + viewMode">가이드</button>
+                    <button onclick="setActiveCategory(this, '내크루'); window.location.href='/community?category=내 크루&viewMode=' + viewMode">내 크루</button>
                 </div>
 
                 <!-- 검색 입력 필드와 버튼 -->
@@ -48,7 +54,7 @@
                     <form action="/community" method="get" style="display:flex; align-items: center;">
                         <input type="hidden" name="category" th:value="${category}"/>     <!--category와 searchKeyword를 함께 서버로 전송하여, 해당 카테고리의 검색 결과를 표시할 수 있게 했다-->
                         <input type="hidden" name="viewMode" th:value="${viewMode}"/> <!--뷰모드 유지-->
-                        <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
+                        <input type="text" name="searchKeyword" placeholder="크루게시판 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
                         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                 </div>
@@ -60,7 +66,7 @@
                             <i class="fa-solid fa-bars-progress"></i>
                         </button>
                         <button onclick="setViewMode('list')" id="listViewButton">
-                            <i class="fa-solid fa-list"></i>
+                            <i class="fa-solid fa-rectangle-list"></i>
                         </button>
                     </div>
                     <!-- 정렬 버튼과 드롭다운 -->
@@ -73,20 +79,15 @@
                             <a href="#" onclick = "sortPosts('comments')">댓글순</a>
                             <a href="#" onclick = "sortPosts('views')">조회순</a>
                             <a href="#" onclick = "sortPosts('hearts')">좋아요순</a>
-                            <!-- 일반 버튼 정렬
-                            <button onclick="window.location.href='/community?sort=latest'" th:classappend="${sort == 'latest'} ? 'active' : ''">최신순</button>
-                            <button>댓글순</button>
-                            <button onclick="window.location.href='/community?sort=views'" th:classappend="${sort == 'views'} ? 'active' : ''">조회순</button>
-                            <button>좋아요순</button>-->
                         </div>
+                    </div>
+                    <!-- 글쓰기 버튼 -->
+                    <div class="create-button-container">
+                        <button class="create-button" onclick="window.location.href='/crew/writepost'"><i class="fa-solid fa-pen"></i>글쓰기
+                        </button>
                     </div>
                 </div>
 
-                <!-- 글쓰기 버튼 -->
-                <div class="create-button-container">
-                    <button class="create-button" onclick="window.location.href='/crew/writepost'"><i class="fa-solid fa-pencil"></i>글쓰기
-                    </button>
-                </div>
             </div>
             <!-- 리스트 뷰 형식 -->
             <div class="list-view">
@@ -103,53 +104,27 @@
                     <tbody>
                     <!-- 공지 핀포스트 -->
                     <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                        <td th:text="${post.category}">공지</td>
+                        <td th:text="${post.category}"><div class="pinned-postCategory">공지</div></td>
                         <td>
-                            <a th:href="@{'/community/' + ${post.id}}">
+                            <a th:href="@{'/crew/post/' + ${post.id}}">
                                 <span th:text="${post.title}">공지 게시글 제목</span>
                                 <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                             </a>
                         </td>
-                        <td th:text="${post.isAnonymous? '익명' : post.nickName}">작성자</td>
+                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</td>
                         <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                     </tr>
 
-                    <!--            &lt;!&ndash; 공지 게시글 출력(핀 포스트) &ndash;&gt;  이렇게 하면 공지 카테고리 들어갔을 때 공지 핀포스트 다음에 일반공지게시글이 나옴 핀포스트 가이드는 나중에 나옴-->
-                    <!--            <tr th:each="post : ${posts}" th:if="${post.category == '공지'}" class="pinned-post">-->
-                    <!--                <td th:text="${post.category}">공지</td>-->
-                    <!--                <td>-->
-                    <!--                    <a th:href="@{'/community/' + ${post.id}}">-->
-                    <!--                        <span th:text="${post.title}">공지 게시글 제목</span>-->
-                    <!--                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>-->
-                    <!--                    </a>-->
-                    <!--                </td>-->
-                    <!--                <td th:text="${post.displayName}">작성자</td>-->
-                    <!--                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>-->
-                    <!--            </tr>-->
-
-                    <!--            &lt;!&ndash; 가이드 게시글 출력 (핀 포스트) &ndash;&gt;-->
-                    <!--            <tr th:each="post : ${posts}" th:if="${post.category == '가이드'}" class="pinned-post">-->
-                    <!--                <td th:text="${post.category}">가이드</td>-->
-                    <!--                <td>-->
-                    <!--                    <a th:href="@{'/community/' + ${post.id}}">-->
-                    <!--                        <span th:text="${post.title}">가이드 게시글 제목</span>-->
-                    <!--                        <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>-->
-                    <!--                    </a>-->
-                    <!--                </td>-->
-                    <!--                <td th:text="${post.displayName}">작성자</td>-->
-                    <!--                <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>-->
-                    <!--            </tr>-->
-
                     <!-- 일반 게시글 출력 -->
-                    <tr th:each="post : ${generalPosts}">
+                    <tr id="generalPosts" th:each="post : ${generalPosts}" >
                         <td th:text="${post.category}">카테고리</td>
                         <td>
-                            <a th:href="@{'/community/' + ${post.id}}">
+                            <a th:href="@{'/crew/post/' + ${post.id}}">
                                 <span th:text="${post.title}">게시글 제목 예시</span>
                                 <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                             </a>
                         </td>
-                        <td th:text="${post.isAnonymous? '익명' : post.nickName}">작성자</td>
+                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</td>
                         <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                     </tr>
 
@@ -173,30 +148,34 @@
                     <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
                         <td th:text="${post.category}">공지</td>
                         <td>
-                            <a th:href="@{'/community/' + ${post.id}}">
+                            <a th:href="@{'/crew/post/' + ${post.id}}">
                                 <span th:text="${post.title}">공지 게시글 제목</span>
                                 <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                             </a>
                         </td>
-                        <td th:text="${post.isAnonymous? '익명' : post.nickName}">작성자</td>
+                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</td>
                         <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                     </tr>
                     </tbody>
                 </table>
-                <div th:each="post : ${generalPosts}" class="card">
-                    <div class="card-category" th:text="${post.category}">카테고리</div>
-                    <div class="card-title">
-                        <a th:href="@{'/community/' + ${post.id}}">
-                            <span th:text="${post.title}">게시글 제목 예시</span>
-                        </a>
+                <div th:each="post : ${generalPosts}" class="card d-flex flex-row">
+                    <div class="card-body">
+                        <div class="card-title">
+                            <a th:href="@{'/crew/post/' + ${post.id}}">
+                                <span th:text="${post.title}">게시글 제목 예시</span>
+                            </a>
+                        </div>
+                        <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
+                        <div class="card-meta">
+                            <span th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</span>
+                            <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
+                            <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
+                            <i class="fa-regular fa-heart"></i><span th:text="${post.likeCount}">0</span>
+                            <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
+                        </div>
                     </div>
-                    <div class="card-content" th:text="${post.content}">게시글 내용 요약</div>
-                    <div class="card-meta">
-                        <span th:text="${post.isAnonymous? '익명' : post.nickName}">작성자</span>
-                        <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
-                        <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
-                        <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
-                        <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
+                    <div class="thumbnail-wrapper" th:if="${post.imgUrl.length() > 0}">
+                        <img th:src="${post.imgUrl}" alt="Thumbnail" class="thumbnail">
                     </div>
                 </div>
             </div>

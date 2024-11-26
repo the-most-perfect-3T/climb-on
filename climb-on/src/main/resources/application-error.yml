@@ -1,0 +1,7 @@
+server:
+  error:
+    include-exception: true
+    include-stacktrace: on_param
+    whitelabel:
+      enabled: false
+    path: /error
