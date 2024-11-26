@@ -23,10 +23,10 @@ import java.util.Map;
 @RestController
 public class EventController
 {
-    public int userCode =0;
     @Autowired
     private EventService eventService;
 
+    private int user;
 
 //    @GetMapping
 //    public List<EventDTO> getEventsByType(@RequestParam("type") String type) {
@@ -39,6 +39,7 @@ public class EventController
         if(userDetails != null)
         {
             if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
+                user = userDetails.getLoginUserDTO().getId();
                 System.out.println("EventController.getPublicEvents.   ::   you are admin");
             }
         }
@@ -51,8 +52,8 @@ public class EventController
     {
         //크루 코드 어떻게 불러와
 
-        System.out.println("Event Controller get Crew Events => 어케 불러 옴");
         int userCode = userDetails.getLoginUserDTO().getId();
+        System.out.println("Event Controller get Crew Events => 어케 불러 옴");
         if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님"); // 크루에 가입하세요? 정도의 메세지
         }
@@ -70,23 +71,25 @@ public class EventController
             return null;
         }
 
-        userCode = userDetails.getLoginUserDTO().getId(); // user mypage에서 보여줄 내용
+        int userCode = userDetails.getLoginUserDTO().getId(); // user mypage에서 보여줄 내용
         return eventService.getAllEvents(userCode);
     }
 
-    @PostMapping("/batch")
+    // 이벤트 저장
+    @RequestMapping(value = "/events/batch", method = RequestMethod.POST)
     public void addEvent(@RequestBody List<EventDTO> events)
     {
-        if(events==null || events.size()==0 || userCode==0)
+
+        if (events == null || events.size() == 0 || user == 0)
         {
             System.out.println("이벤트를 저장할 수 없습니다.");
         }
 
         for (EventDTO event : events)
         {
-            event.setUserCode(userCode);
+            event.setUserCode(user);
             // 조건 검사
-            if(eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode()))
+            if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode()))
             {
                 // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
                 continue;
@@ -95,7 +98,7 @@ public class EventController
         }
     }
 
-    @PostMapping("/modify")
+    @RequestMapping(value = "/events/modify", method = RequestMethod.POST)
     public void modifyEvent(@RequestBody EventDTO event)
     {
         if(event == null)
@@ -106,7 +109,7 @@ public class EventController
         eventService.modifyEvent(event);
     }
 
-    @PostMapping("/{id}")
+    @RequestMapping(value = "/events/{id}", method = RequestMethod.POST)
     public void deleteEvent(@PathVariable("id") int id)
     {
         eventService.deleteEvent(id);
