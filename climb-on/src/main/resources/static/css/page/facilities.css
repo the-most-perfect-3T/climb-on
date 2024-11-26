@@ -17,7 +17,7 @@
 }
 /* 테이블 스타일 */
 .content #facilitiestb {
-    width: 400px;
+    width: 100%;
     border-collapse: collapse; /* 셀 간 경계선 겹침 방지 */
 }
 
@@ -175,21 +175,21 @@ div#facilityDetailsContainer::-webkit-scrollbar-thumb {
 .facility-details {
     background-color: #fff;
     max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 .facility-details h3 {
     color: #333;
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    font-weight: bold;
+    font-size: 25px;
+
+
 }
 .facility-details p {
     font-size: 1.1rem;
     color: #555;
-    margin: 10px 0;
+}
+.facility-details-top {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 .facility-details p strong {
     color: #333;
@@ -223,12 +223,19 @@ p {
     position: relative;
 }
 .facility-details-content{
-    width: 50px;
-    height: 50px;
+    width: 100%;
     background-color: #f79256; /* Orange background */
     position: relative;
 }
-
+.img-wrap {
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 /* 평점 별 기본 스타일 */
 .rating {
     unicode-bidi: bidi-override;
@@ -307,7 +314,18 @@ p {
 textarea#comment {
     width: 100%;
 }
+.facility-name {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
 
+/*구분선*/
+.facility-separator {
+    border: 0;  /* 기본 border 제거 */
+    border-top: 2px solid #ccc;   /* 구분선 추가 (두께 2px, 색상 검정) */
+    margin: 10px 0;  /* 상하 여백 추가 */
+    width: 130%;  /* 구분선 길이를 부모 요소 너비에 맞춤 */
+}
 /*
 .review-actions {
     margin-left: auto;
