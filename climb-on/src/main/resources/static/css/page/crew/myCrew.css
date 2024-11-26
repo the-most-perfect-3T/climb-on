@@ -1,6 +1,5 @@
 @charset "utf-8";
 
-.crew-aside
 .crew-main{
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
 }
@@ -32,12 +31,27 @@
     object-fit: cover;
 }
 
+.crewname-sns-container {
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.crewname-sns-container h3 {
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
 .crew-member-count-recruit-status-container .badge {
     font-size: 0.9rem;
     background-color: var(--point);
 }
 
-.crewname-sns-container .
+.crewname-sns-container .insta-img {
+    width: 50px;
+    height: 50px;
+}
 
 .crew-aside .crew-join-apply{
 

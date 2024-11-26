@@ -18,7 +18,7 @@
                 <div class="crew-profile-img-wrapper">
                     <img th:src="${myCrew.imgUrl}" alt="Thumbnail" class="thumbnail">
                 </div>
-                <div class="crewname-sns-container">
+                <div class="crewname-sns-container d-flex">
                     <h3 th:text="${myCrew.crewName}">크루명</h3>
                     <th:block th:if="${myCrew.crewSns != null && myCrew.crewSns.length() > 0}">
                         <a th:href="|https://www.instagram.com/${myCrew.crewSns}/|" target="_blank">
