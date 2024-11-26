@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', function() {
     let calendarMainE1 = document.getElementById('main-calendar');
     let calendarCrewE1 = document.getElementById('crew-calendar');
@@ -241,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 크루 캘린더
     if(calendarCrewE1){
-        let crewEvent;
         $.ajax(
             {
                 url: "/api/user/crewcode",
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // 모든 이벤트 저장
                                 try
                                 {
-                                    const response = await fetch('/events/crew', {
+                                    const response = await fetch('/events/batch', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json'
@@ -495,14 +495,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         crewCalendar.render();
 
-        function CalendarTypeSet(fTip)
-        {
-            let x = document.getElementById('cal_tip');
-            x.value=fTip;
-            //$('#calendar').fullCalendar('rerenderEvents');
-            crewCalendar.rerenderEvents('#crewCalendar');
-        }
+        $('.crew-tab-nav li').click(function(){
+            console.log("렌더하라고 미친놈아");
+            setTimeout(() => {crewCalendar.render()}, 1);
+        });
 
+        if (typeof crewCalendar !== 'undefined') {
+            crewCalendar.refetchEvents();
+        }
     }
 
     // 개인 캘린더
@@ -724,6 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
     //
     //     })
     // })
+
 
 
 });

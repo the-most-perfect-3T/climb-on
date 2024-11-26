@@ -3,6 +3,9 @@
     text-align: center;
     padding: 40px 20px;
     background-color: var(--beige);
+    width: 100vw; /* 화면 너비를 100%로 설정 */
+    margin-left: calc(-50vw + 50%); /* 화면 전체로 확장된 배경을 가운데 정렬 */
+    position: relative; /* 요소의 위치를 기준으로 설정 */
 }
 
 /* 제목 스타일 */
@@ -33,12 +36,13 @@
 .head-search-input {
     width: 70%;
     padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: none; /* 경계선 제거 */
+    background-color: transparent; /* 배경색 투명 */
+    outline: none; /* 포커스 시 생기는 기본 윤곽선 제거 */
     margin-right: 10px;
     font-size: 16px;
+    color: var(--black); /* 텍스트 색상 */
 }
-
 
 .head-search-button {
     padding: 10px 20px;

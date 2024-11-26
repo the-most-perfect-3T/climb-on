@@ -181,7 +181,6 @@
         VALUES (#{postId}, #{userId}, #{content}, NOW(), #{status})
     </insert>
 
-
     <!-- 게시글 수정 -->
     <update id="updatePost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
         UPDATE community_posts
