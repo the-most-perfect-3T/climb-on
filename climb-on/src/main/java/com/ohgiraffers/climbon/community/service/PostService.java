@@ -219,4 +219,8 @@ public class PostService {
     public String getUserRoleById(Integer userId) {
         return postDAO.getUserRoleById(userId);
     }
+
+    public String getUserProfilePicById(Integer userId) {
+        return postDAO.getUserProfilePicById(userId);
+    }
 }
