@@ -505,9 +505,10 @@ favoriteTab.addEventListener("click", async function () {
 
 /*리뷰*/
 const reviewTab = document.getElementById("review-tab");
-reviewTab.addEventListener("click", async function(){
-    console.log("리뷰 탭 클릭됨")
+reviewTab.addEventListener("click", reviewClickFunction);
 
+
+async function reviewClickFunction(){
     try {
         const response = await fetch("/user/review");
         if (!response.ok) {
@@ -693,7 +694,8 @@ reviewTab.addEventListener("click", async function(){
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
-});
+}
+
 
 function renderStars(averageRating) {
     let starsHtml = '';
@@ -758,6 +760,7 @@ async function editReview(id){
 async function getReview(id) {
     const response = await fetch(`/Review/getReview?id=${id}`);
     const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+    console.log(review);
 
     return review;
 }
@@ -770,9 +773,11 @@ function loadReviewData(review) {
     console.log("보자보자"+ review.rating)
 
 // review.comment 값을 textarea에 설정
+    console.log("review.comment" + review.comment);
     document.getElementById('comment').value = review.comment;
-
+    console.log("review.id" + review.id);
     document.getElementById("reviewId").value = review.id;
+    document.getElementById("facilityId").value = review.facilityId;
 
 // 평점에 맞는 별 표시
     document.querySelectorAll('#rating .star').forEach(star => {
@@ -795,10 +800,8 @@ function loadReviewData(review) {
 
 document.addEventListener("DOMContentLoaded", function() {
     const stars = document.querySelectorAll(".rating .star"); // 별 요소들
-    const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
 
-
-    let rating =0;
+    let rating= 0;
     // 별 클릭 시 평점 설정
     stars.forEach(star => {
         star.addEventListener("click", function() {
@@ -863,21 +866,36 @@ document.addEventListener("DOMContentLoaded", function() {
         // 평점이 선택되지 않았으면 경고
 
         event.preventDefault();
+
+        const allGray = Array.from(document.querySelectorAll('#rating .star i')).every(icon => {
+            return icon.style.color === 'gray'; // 모든 아이콘이 회색인지 확인
+        });
+
+        if (allGray) {
+            console.log("모든 별이 회색입니다.");
+            alert("평점을 선택해 주세요!");
+            return;
+        }
         console.log("dsds"+rating);
-        if(rating === 0){
+        if(rating === 0 || rating===""){
             rating = document.getElementById("ratingValue").value;
-            console.log("입력했을때안했을때"+ rating)
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ rating)
+                console.log("입력했을때안했을때"+ value)
                 alert("평점을 선택해 주세요!");
                 return;
             }
 
         }else {
             document.getElementById("ratingValue").value = rating;
-            console.log("입력했을때" + rating)
-        }
+            // 모든 별 요소를 선택
 
+            console.log("입력했을때" + rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ value)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
+        }
 
         // 리뷰 내용이 비어있으면 경고
         const comment = document.getElementById("comment").value;
@@ -888,17 +906,25 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
         let id = document.getElementById('reviewId').value;
-
-        console.log("currentfacility.id" + currentfacility.id);
-        document.getElementById('facilityId').value = currentfacility.id;
+        /*document.getElementById('facilityId').value = review.facilityId;*/
+        const facilityId = document.getElementById("facilityId").value;
 
         // 폼 제출이 문제없이 진행됨
+        console.log("리뷰 데이터:", {
+            rating: rating,
+            comment: comment,
+            facilityId: facilityId,
+            id : id
+        });
+
+
+        console.log("되나요ㅕ?"+ id);
 
         const url = '/Review/reviewInsert';
         const data = {
             rating: rating,
             comment: comment,
-            facilityId: currentfacility.id,
+            facilityId: facilityId,
             id : id
         };
 
@@ -909,9 +935,10 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
+        document.getElementById('reviewId').value = null;
 
-
-        await loadReviews(currentfacility.id);
+        /*await loadReviews(review.facilityId);*/
+        await reviewClickFunction();
 
     });
 });
