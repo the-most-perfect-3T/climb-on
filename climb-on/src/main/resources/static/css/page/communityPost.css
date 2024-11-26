@@ -15,7 +15,7 @@ h2 {
 /* 페이지 전체 스타일 */
 
 .content .inner{
-    padding-top: calc(var(--headerHeight) - 45px); /* 헤더 높이만큼 패딩 추가 */
+    padding-top: calc(var(--headerHeight) - 23px); /* 헤더 높이만큼 패딩 추가 */
     padding-bottom: var(--footerHeight); /* 푸터 높이만큼 패딩 추가 */
 }
 
@@ -36,44 +36,71 @@ h2 {
 
 /* 타임라인 컨테이너 스타일 */
 .timeline-container {
-    justify-content: space-between;
     display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    gap: 20px; /* 아이템 간격 */
     width: 100%;
     margin-bottom: 120px; /* 아래쪽 여백 */
+    overflow-x: auto; /* 가로 스크롤 허용 */
 }
 
-/* 타임라인 */
-.timeline {
-    gap: 95px; /* 버튼 사이의 간격 */
+/* 진행중 아이템 컨테이너 */
+.ongoing-news-container {
     display: flex;
+    flex-direction: row; /* 아이템을 가로로 나열 */
+    gap: 20px; /* 카드 간격 */
+    width: 100%; /* 부모 컨테이너 폭 */
 }
 
-/* 타임라인 아이템 */
-.timeline-item {
+/* 진행중 아이템 */
+.ongoing-news-item {
+    width: 100%; /* 카드 폭을 더 크게 설정 */
+    border-radius: 8px;
+    padding: 10px; /* 내부 여백 추가 */
+    background: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* 카드 그림자 */
+    text-align: center;
+    flex-shrink: 0; /* 가로로 나열 시 크기 고정 */
+}
+
+.news-box {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    width: 120px; /* 버튼 크기 */
-    height: 120px;
-    background-color: #ddd; /* 배경색 */
-    border-radius: 20px; /* 모서리를 둥글게 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    justify-content: center;
 }
 
-.timeline-item a {
-    text-decoration: none;
-    color: #333;
+.status-label {
     font-size: 14px;
     font-weight: bold;
+    color: var(--black);
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 5px; /* 라벨과 경계선 간격 */
+    border-bottom: 1px solid var(--borderColor);
+    display: inline-block; /* inline-block으로 텍스트 중심 유지 */
+    box-sizing: border-box; /* 패딩과 테두리를 포함하여 폭 계산 */
+}
+
+/* 제목 스타일 */
+.news-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--black);
+    text-decoration: none;
+    word-wrap: break-word; /* 긴 제목 줄바꿈 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 말줄임 표시 */
+    white-space: nowrap; /* 한 줄로 표시 */
+    width: 100%; /* 제목이 박스 너비에 맞도록 설정 */
+    display: inline-block; /* inline-block으로 텍스트 중심 유지 */
+    box-sizing: border-box; /* 패딩과 테두리를 포함하여 폭 계산 */
     text-align: center;
 }
 
-/* 호버 효과 */
-.timeline-item:hover {
-    background-color: var(--point); /* 호버 시 배경색 변경 */
-    transform: translateY(-5px); /* 살짝 위로 올라가는 효과 */
-    cursor: pointer;
+.news-title:hover {
+    text-decoration: underline;
 }
 
 /* 더보기 버튼 스타일 */
@@ -102,7 +129,6 @@ h2 {
     box-sizing: border-box; /* 테두리와 내부 여백 포함 */
     margin-top: 10px;
 }
-
 
 .category-buttons {
     display: flex;
@@ -265,18 +291,24 @@ h2 {
 }
 
 
-
 /* 카드 뷰 개별 카드 */
 .card {
     width: 100%; /* 카드가 컨테이너에 맞도록 설정 */
-    padding: 15px; /* 리스트 뷰와 동일한 내부 여백 */
-    border-bottom: 1px solid #ddd; /* 카드 구분선 */
+    /*padding: 15px; !* 리스트 뷰와 동일한 내부 여백 *!*/
+    border-bottom: 1px solid var(--borderColor); /* 카드 구분선 */
     border-radius: 0; /* 모서리 반경 제거 */
     box-shadow: none; /* 그림자 제거 */
+    --bs-card-border-color: none;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.card-body {
+    flex: 1;
 }
 
 .card-title a {
-    font-size: 22px;
+    font-size: 20px;
     color: #333;
     text-decoration: none;
     font-weight: bold;
@@ -291,13 +323,28 @@ h2 {
 
 .card-content {
     font-size: 16px;
-    color: #555;
+    color: var(--black);
     line-height: 1.5;
     margin-bottom: 20px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2; /* For browsers that support it */
+    height: 3rem;
+    text-overflow: ellipsis;
+    white-space: normal;
 }
 
 .thumbnail-wrapper {
     flex: 0 0 150px;
+}
+
+.thumbnail {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
 }
 
 /* 리스트 뷰 스타일 */
