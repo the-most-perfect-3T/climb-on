@@ -6,8 +6,11 @@
 package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
+import com.ohgiraffers.climbon.crew.crewHome.service.CrewBoardService;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.facilities.dto.ReviewDTO;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
@@ -15,19 +18,21 @@ import com.ohgiraffers.climbon.facilities.service.ReviewService;
 import com.ohgiraffers.climbon.user.service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/user")
 public class UserRestController {
+
 
     @Autowired
     private UserService userService;
@@ -37,6 +42,8 @@ public class UserRestController {
     private PostService postService;
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private CrewBoardService crewBoardService;
 
 
     @PostMapping("/registFacility")
@@ -119,19 +126,14 @@ public class UserRestController {
                                               @RequestParam(required = false) String dday,
                                               @Param("status") Boolean status){
 
-
-        Integer userId = userDetails.getLoginUserDTO().getId();
-        String nickname = userService.findById(userId);
-
-
-
-        int pageSize = 15;
+        /*int pageSize = 15;*/
+        int pageSize = postService.getTotalPostCount(category, searchKeyword); // status 1 만 불러옴
+        System.out.println("pageSize = " + pageSize);
 
         // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
 
-        int totalPosts = postService.getTotalPostCount(category, searchKeyword);
-        int totalPages = (int) Math.ceil((double) totalPosts / pageSize);
+        /*int totalPages = (int) Math.ceil((double) totalPosts / pageSize);*/
 
         for (PostDTO post : posts) {
             String userNickname =  postService.getUserNicknameById(post.getUserId());
@@ -146,7 +148,7 @@ public class UserRestController {
             return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
         }
 
-        Map<String, Object> resultMap = new HashMap<>();
+//        Map<String, Object> resultMap = new HashMap<>();
 
 /*
         List<PostDTO> pinnedNoticePosts = postsWithPinned.get("pinnedNoticePosts");
@@ -183,42 +185,119 @@ public class UserRestController {
         }*/
 
 
+        /*resultMap.put("generalPosts", generalPosts);*/
 
+
+        // 유저 아이디
+        Integer userId = userDetails.getLoginUserDTO().getId();
+
+        // 일반 포스트
         List<PostDTO> generalPosts = postsWithPinned.get("generalPosts");
         System.out.println("generalPosts = " + generalPosts);
         if(generalPosts != null || !generalPosts.isEmpty()) {
             Iterator<PostDTO> iterator = generalPosts.iterator();
             while (iterator.hasNext()) {
                 PostDTO post = iterator.next();
-                if (post.getUserId() != userId) {
-                    System.out.println("해당 아이디 삭제");
+                if (post.getUserId() != userId) { // 해당 유저가 아니면 삭제
                     iterator.remove();
-                }else {
-                    System.out.println("같은거 있음");
                 }
             }
         }
 
         System.out.println("generalPosts = " + generalPosts);
+        System.out.println("generalPosts = " + generalPosts.size());
 
 
-        /*resultMap.put("pinnedNoticePosts", pinnedNoticePosts);
-        resultMap.put("pinnedGuidePosts", pinnedGuidePosts);*/
-        resultMap.put("generalPosts", generalPosts);
-
-        /*if(pinnedNoticePosts.isEmpty() && pinnedGuidePosts.isEmpty() && generalPosts.isEmpty()){
-            return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
-        }*/
         if(generalPosts.isEmpty()){
             return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
         }
-/*
-
-        resultMap.put("currentPage", page);
-        resultMap.put("totalPages", totalPages);
-*/
 
 
-        return ResponseEntity.ok(resultMap);
+        return ResponseEntity.ok(generalPosts);
     }
+
+
+
+
+    @GetMapping("/crew")
+        public ResponseEntity<Object> getAllCrewPosts(@AuthenticationPrincipal AuthDetail userDetails,
+                                                      @RequestParam(defaultValue = "1") int page,
+                                                      @RequestParam(required = false) String category,
+                                                      @RequestParam(required = false) String searchKeyword,
+                                                      @RequestParam(defaultValue = "latest") String sort,
+                                                      @Param("status") Boolean status){
+
+        // 전체 게시글
+        int pageSize = crewBoardService.getTotalPostCount(category, searchKeyword);
+        System.out.println("pageSize = " + pageSize);
+
+        Map<String, List<CrewPostDTO>> postsWithPinned = crewBoardService.getPostsWithPinned(
+                page, pageSize, category, searchKeyword, sort, status);
+
+        if(postsWithPinned == null || postsWithPinned.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
+        }
+
+        // 유저 아이디
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+        }
+        Integer userId = userDetails.getLoginUserDTO().getId();
+
+        // 일반 포스트
+        List<CrewPostDTO> generalPosts = postsWithPinned.get("generalPosts");
+        System.out.println("generalPosts = " + generalPosts);
+        System.out.println("generalPosts.size() = " + generalPosts.size());
+        if(generalPosts != null && !generalPosts.isEmpty()) {
+            Iterator<CrewPostDTO> iterator = generalPosts.iterator();
+            while (iterator.hasNext()) {
+                CrewPostDTO post = iterator.next();
+                if (post.getUserId() != userId) { // 해당 유저가 아니면 삭제
+                    iterator.remove();
+                }
+            }
+        }
+
+
+        if(generalPosts.isEmpty()){
+            return ResponseEntity.ok(Map.of("message", "작성한 게시글이 없습니다."));
+        }
+
+
+        System.out.println("generalPosts = " + generalPosts);
+        System.out.println("generalPosts.size() = " + generalPosts.size());
+
+
+        return ResponseEntity.ok(generalPosts);
+    }
+
+
+    @GetMapping("comments")
+    public ResponseEntity<Object> getComments(@AuthenticationPrincipal AuthDetail userDetails){
+
+        // 유저 아이디
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+        }
+        Integer id = userDetails.getLoginUserDTO().getId();
+        System.out.println("id = " + id);
+
+        // 댓글 목록 가져오기
+        List<CommentDTO> comments = postService.getCommentsById(id);
+        for (CommentDTO comment : comments) {
+            String commentUserNickname = postService.getUserNicknameById(comment.getUserId());
+            String commentUserProfilePic = postService.getUserProfilePicById(comment.getUserId());
+            comment.setUserNickname(commentUserNickname);
+            comment.setUserProfilePic(commentUserProfilePic);
+        }
+
+        System.out.println("comments = " + comments);
+
+        if(comments.isEmpty() || comments == null){
+            return ResponseEntity.ok(Map.of("comments", "작성한 댓글이 없습니다."));
+        }
+
+        return ResponseEntity.ok(comments);
+    }
+
 }

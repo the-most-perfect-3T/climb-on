@@ -27,6 +27,7 @@
                 <li><button type="button"  id="btnToggle"><i class="fa-solid fa-circle-half-stroke"></i></button></li>
                 <li>
                     <!--로그인된 사용자에게만 보임 -->
+                    <!--<a th:href="@{/mypage/home/{id}(id=${#authentication.principal.loginUserDTO.id})}" sec:authorize="isAuthenticated()"><i class="fa-solid fa-user"></i></a>-->
                     <a th:href="@{/mypage/home}" sec:authorize="isAuthenticated()"><i class="fa-solid fa-user"></i></a>
                     <!--비로그인 사용자에게만 보임-->
                     <a th:href="@{/login}" sec:authorize="isAnonymous()"><i class="fa-regular fa-user"></i></a>
@@ -35,6 +36,8 @@
         </div>
     </div>
 </header>
+<script>
 
+</script>
 
 </html>

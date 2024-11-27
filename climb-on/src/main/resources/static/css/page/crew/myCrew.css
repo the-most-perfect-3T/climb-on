@@ -44,9 +44,6 @@
     padding-left: 10px;
 }
 
-.crew-member-count-recruit-status-container {
-
-}
 
 .crew-member-count-recruit-status-container .badge {
     font-size: 0.9rem;
@@ -233,4 +230,26 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+
+/* 멤버 탭 */
+.container-list td:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-left: 40px;
+}
+
+.table img {
+    object-fit: cover;
+}
+
+.table .badge {
+    font-size: 0.9rem;
+    background-color: var(--point);
+}
+
+.table>:not(caption)>*>*{
+    border-bottom: none;
 }

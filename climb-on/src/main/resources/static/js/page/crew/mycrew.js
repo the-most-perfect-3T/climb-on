@@ -9,10 +9,6 @@ test.forEach(function(a){
     document.querySelector('#test').appendChild(test1);
 });
 
-const memberTabBtn = document.getElementById("member-tab");
-memberTabBtn.addEventListener('click', async function() {
-})
-
 // 가져온 이벤트 활동 페이지에 뿌려주는 로직
 function populateEventList(eventData) {
     const eventListContainer = document.getElementById('crew-activity-event-list');
@@ -47,3 +43,63 @@ function populateEventList(eventData) {
     })
 
 }
+
+const memberTabBtn = document.getElementById("member-tab");
+memberTabBtn.addEventListener('click', async function() {
+    try {
+        const response = await fetch("/mycrew/member");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+        const data = await response.json();
+        const memberListContainer = document.getElementById("memberList-container");
+        memberListContainer.innerHTML = "";
+
+        data.forEach((member) => {
+            const memberTr = document.createElement('tr');
+            memberTr.classList.add('border-bottom');
+            memberTr.innerHTML = `
+            <td class="d-flex flex-column gap-2" >
+              <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
+                <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                  <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100">
+                </div>
+              </div>          
+            </td>
+            <td>
+              <p class="mb-1 fw-bold">${member.nickname}</p>
+            </td>   
+            <td>
+              <div class="badge rounded-pill" style="display: ${member.role == 'CAPTAIN'? "" : "none" }">크루장</div>
+            </td>                     
+            `
+            memberListContainer.appendChild(memberTr);
+        });
+    } catch (error) {
+        console.error("AJAX 오류:", error);
+    }
+})
+
+const albumTabBtn = document.getElementById("album-tab");
+albumTabBtn.addEventListener('click', async function() {
+    try {
+        const response = await fetch("/mycrew/album");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+        const data = await response.json();
+        const gridContainer = document.querySelector('.grid-container');
+        gridContainer.innerHTML = "";
+
+        data.forEach((img) => {
+            const gridItem = document.createElement('div');
+            gridItem.classList.add('grid-item');
+            gridItem.innerHTML = `
+            <img src="${img}" alt="/images/logo.svg">          
+            `
+            gridContainer.appendChild(gridItem);
+        })
+    } catch (error) {
+        console.error("AJAX 오류:", error);
+    }
+});
