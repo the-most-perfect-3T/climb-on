@@ -1,59 +1,91 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/baseLayout}"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      layout:decorate="~{/layout/baseLayout}">
 
 <th:block layout:fragment="css">
-
+    <link rel="stylesheet" th:href="@{/css/page/searchForm.css}">
+    <link rel="stylesheet" th:href="@{/css/page/communityPost.css}">
 </th:block>
 
 
 
 <th:block layout:fragment="containerFragment">
     <div class="inner">
-        <h2>통합검색</h2>
+        <div class="headcontainer">
+        <h2 class="head-title">통합검색</h2>
 
         <!-- 검색어 입력 폼 -->
-        <form action="/search" method="get" style="margin-bottom: 20px;">
+        <form action="/search" method="get" class="head-search-form">
             <input type="text" name="keyword" placeholder="검색어를 입력하세요" minlength="2" required
-                   th:value="${keyword}">
-            <button type="submit">검색</button>
+                   th:value="${keyword}" class="search-input">
+            <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
+        </div>
 
         <!-- 검색 결과 영역 -->
-        <div>
+        <div class="search-results">
         <!-- 크루 결과 -->
-        <section>
-            <h2>크루</h2>
-            <p th:if="${crewNames.size()} == 0">결과가 없습니다.</p>
-            <div th:each="crew : ${crewNames}">
+        <section class="result-section">
+            <h2>크루
+            <span class="crewCount" th:text="${crewCount}">0</span>
+            </h2>
+            <p class="no-result" th:if="${crewCount == 0}">결과가 없습니다.</p>
+            <div class="crew-results" th:if="${crewCount > 0}">
+            <div th:each="crew : ${limitedCrewNames}">
+                <p th:text="${crew.imgUrl}"></p>
                 <p th:text="${crew.crewName}"></p>
+            </div>
             </div>
         </section>
 
         <!-- 시설 결과 -->
         <section>
-            <h2>운동시설</h2>
-            <p th:if="${facilities.size()} == 0">결과가 없습니다.</p>
-            <div th:each="facility : ${facilities}">
+            <h2>운동시설
+            <span class="facilityCount" th:text="${facilitiesCount}">0</span>
+            </h2>
+            <p class="no-result" th:if="${facilitiesCount} == 0">결과가 없습니다.</p>
+            <div class="facility-results" th:if="${facilitiesCount > 0}">
+            <div th:each="facility : ${limitedfacilities}">
                 <p th:text="${facility.facilityName} + ' - ' + ${facility.address}"></p>
+            </div>
             </div>
         </section>
 
         <!-- 게시글 결과 -->
-        <section>
-            <h2>게시글</h2>
-            <p th:if="${communityPosts.size()} == 0">결과가 없습니다.</p>
-            <div th:each="post : ${communityPosts}">
-                <p th:utext="${post.title}"></p>
-                <p th:utext="${post.content}"></p>
+        <section class="result-section">
+            <h2>게시물
+            <span class="communityPostCount" th:text="${communityPostCount}">0</span>
+            </h2>
+            <p class="no-result" th:if="${communityPosts.size()} == 0">결과가 없습니다.</p>
+            <div th:each="post : ${limitedCommunityPosts}" class="card d-flex flex-row">
+                <div class="card-body">
+                    <div class="card-title">
+                        <a th:href="@{'/community/' + ${post.id}}">
+                            <span th:text="${post.title}">게시글 제목 예시</span>
+                        </a>
+                    </div>
+                    <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
+                    <div class="card-meta">
+                        <span th:text="${post.displayName}">작성자</span>
+<!--                        <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>-->
+                        <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
+                        <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
+                        <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
+                    </div>
+                </div>
+<!--                <div class="thumbnail-wrapper" th:if="${post.imageUrl.length() > 0}">-->
+<!--                    <img th:src="${post.imageUrl}" alt="Thumbnail" class="thumbnail">-->
+<!--                </div>-->
             </div>
         </section>
     </div>
     </div>
+
+
 </th:block>
 
 
 <th:block layout:fragment="javascript">
 
 </th:block>
+</html>

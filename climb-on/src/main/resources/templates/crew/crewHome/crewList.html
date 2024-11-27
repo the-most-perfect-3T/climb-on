@@ -15,7 +15,7 @@
         <div class="container-forall">
 
             <div class="register">
-                <button type="button" class="btn btn-light btn-lg w-100 text-start d-flex align-items-center gap-3 btn-primary" data-bs-toggle="modal" data-bs-target="#creWRegisterModal"
+                <button type="button" id="registerCrewModalBtn" class="btn btn-light btn-lg w-100 text-start d-flex align-items-center gap-3 btn-primary"
                     style="height: 100px;">
                     <div class="circleRgstr rounded-circle text-white d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
                         <i class="fa-solid fa-plus"></i>
@@ -83,6 +83,13 @@
 
 <th:block layout:fragment="javascript">
     <script type="module"  th:src="@{/js/page/crew/crewList.js}"></script>
+    <script th:inline="javascript">
+        const alertMessage = [[${alertMessage}]];
+        if(alertMessage){
+            alert(alertMessage);
+        }
+
+    </script>
 
 </th:block>
 

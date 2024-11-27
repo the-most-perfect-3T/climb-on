@@ -42,9 +42,6 @@
 
     <!-- 게시글 내용 -->
     <div class="post-content">
-        <div class="post-image" th:if="${post.imageUrl != null}">
-            <p th:text="${post.imageUrl}"></p>
-        </div>
         <p th:utext="${post.content}">게시글 내용 예시</p>
     </div>
 
@@ -86,7 +83,7 @@
             <!-- 댓글 작성자 프로필 -->
             <div class="comment-header">
             <div class="post-author">
-                <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                <img th:src="${comment.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
                 <div class="author-info">
             <!-- 댓글 본문 -->
                     <span class="author-name" th:text="${comment.userNickname}">댓글 작성자</span>

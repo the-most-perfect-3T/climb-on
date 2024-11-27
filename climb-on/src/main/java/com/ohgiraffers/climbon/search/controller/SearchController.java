@@ -1,5 +1,8 @@
 package com.ohgiraffers.climbon.search.controller;
 
+import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,15 +29,31 @@ public class SearchController {
             model.addAttribute("communityPosts", List.of()); // 빈 리스트 전달
             model.addAttribute("facilities", List.of());
             model.addAttribute("crewNames", List.of());
+            model.addAttribute("crewCount", 0);
             return "search/searchForm"; // 검색 폼과 빈 결과 페이지
         }
 
         Map<String, Object> searchResults = searchService.searchAll(keyword);
+        // 전체 게시글 리스트
+        List<CrewDTO> crewNames = (List<CrewDTO>) searchResults.get("crewNames");
+        List<FacilitiesDTO> facilities = (List<FacilitiesDTO>) searchResults.get("facilities");
+        List<PostDTO> communityPosts = (List<PostDTO>) searchResults.get("communityPosts");
+        // 제한된 게시글 리스트
+        List<CrewDTO> limitedCrewNames = (List<CrewDTO>) searchResults.get("limitedCrewNames");
+        List<PostDTO> limitedCommunityPosts = (List<PostDTO>) searchResults.get("limitedCommunityPosts");
+        List<FacilitiesDTO> limitedfacilities = (List<FacilitiesDTO>) searchResults.get("limitedfacilities");
+
 
         model.addAttribute("keyword", keyword);
-        model.addAttribute("communityPosts", searchResults.get("communityPosts"));
-        model.addAttribute("facilities", searchResults.get("facilities"));
-        model.addAttribute("crewNames", searchResults.get("crewNames"));
+        model.addAttribute("communityPosts",communityPosts);
+        model.addAttribute("facilities", facilities);
+        model.addAttribute("crewNames", crewNames);
+        model.addAttribute("crewCount", crewNames.size());
+        model.addAttribute("limitedCrewNames", limitedCrewNames);
+        model.addAttribute("limitedfacilities", limitedfacilities);
+        model.addAttribute("limitedCommunityPosts", limitedCommunityPosts);
+        model.addAttribute("facilitiesCount", facilities.size());
+        model.addAttribute("communityPostCount", communityPosts.size());
 
         return "search/searchForm";
     }

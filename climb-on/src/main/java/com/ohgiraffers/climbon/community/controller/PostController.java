@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 @Controller
 @RequestMapping("/community")
 public class PostController {
@@ -41,6 +40,9 @@ public class PostController {
         // 일반 게시글
         List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
 
+        // '진행 중' 게시글만 가져오기
+        List<PostDTO> ongoingPosts = postService.getOngoingPosts();
+
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
@@ -58,6 +60,7 @@ public class PostController {
         Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(
                 page, pageSize, category, searchKeyword, sort, dday, status);
 
+        model.addAttribute("ongoingPosts", ongoingPosts); // 진행 중 게시글 전달
         model.addAttribute("pinnedNoticePosts", postsWithPinned.get("pinnedNoticePosts"));
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
@@ -83,10 +86,16 @@ public class PostController {
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
 
+        String userProfilePic = postService.getUserProfilePicById(post.getUserId());
+        post.setUserProfilePic(userProfilePic);
+
 
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
-            comment.setUserNickname(userNickname);
+            String commentUserNickname = postService.getUserNicknameById(comment.getUserId());
+            String commentUserProfilePic = postService.getUserProfilePicById(comment.getUserId());
+            comment.setUserNickname(commentUserNickname);
+            comment.setUserProfilePic(commentUserProfilePic);
         }
 
 //        post.setUserNickname(postService.getUserNicknameById(userId));
@@ -109,9 +118,9 @@ public class PostController {
         String userRole = postService.getUserRoleById(userId);
         PostDTO post = new PostDTO();
         post.setCategory(category);
-         model.addAttribute("role", userRole); // 역할을 모델에 추가
-         model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
-            // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
+        model.addAttribute("role", userRole); // 역할을 모델에 추가
+        model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
+        // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
         return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
     }
 
@@ -149,7 +158,6 @@ public class PostController {
         if (userNickname == null){
             throw new IllegalArgumentException("User Nickname not found for ID: " + userId);
         }
-
 
         // PostDTO에 userId와 nickname 설정
         post.setUserId(userId);      //Principal 객체를 통해 현재 로그인한 사용자의 ID 또는 username을 쉽게 가져올 수 있다. ※대신에 principal.getName은 로그인한 이메일주소(유저아이디)만 가져올 수 있다! ,로그인한 사용자에게만 특정 데이터를 보여주거나, 해당 사용자가 작성한 게시글 등을 처리할 수 있다. (이 객체는 세션 내에서 관리되기 때문에, 사용자 정보를 안전하게 다룰 수 있다.)
@@ -197,7 +205,6 @@ public class PostController {
 //        postService.insertPost(post); // 새로운 게시글 DB에 추가
 //        return "redirect:/community"; // 작성 후 게시글 목록으로 리다이렉트
 //    }
-
 
     // 게시글 수정 처리
     @PostMapping("/{id}/edit")

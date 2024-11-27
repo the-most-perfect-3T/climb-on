@@ -299,6 +299,7 @@ h2 {
     --bs-card-border-color: none;
     padding-left: 30px;
     padding-right: 30px;
+    align-items: center;
 }
 .card-category {
     margin-bottom: 10px;
@@ -306,11 +307,17 @@ h2 {
 
 .thumbnail-wrapper {
     flex: 0 0 150px;
+    width: 144px;
+    height: 144px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .thumbnail {
     width: 100%;
-    height: auto;
     object-fit: cover;
     border-radius: 8px;
 }
@@ -338,6 +345,7 @@ h2 {
     color: var(--black);
     line-height: 1.5;
     margin-bottom: 20px;
+    margin-right: 40px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;

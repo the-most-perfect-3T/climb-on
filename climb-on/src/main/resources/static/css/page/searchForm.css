@@ -1,0 +1,84 @@
+
+.headcontainer{
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--beige);
+    width: 100vw; /* 화면 너비를 100%로 설정 */
+    margin-left: calc(-50vw + 50%); /* 화면 전체로 확장된 배경을 가운데 정렬 */
+    position: relative; /* 요소의 위치를 기준으로 설정 */
+}
+
+/* 제목 스타일 */
+.head-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--black); /* 검은색 텍스트 */
+    margin-bottom: 15px;
+}
+
+/* 검색 폼 스타일 */
+.head-search-form {
+    display: inline-flex; /* 인라인 플렉스 정렬 */
+    align-items: center; /* 세로 정렬 중앙 */
+    background-color: #fff; /* 흰색 배경 */
+    border: 1px solid var(--borderColor); /* 연한 경계선 */
+    border-radius: 50px; /* 둥근 모서리 */
+    padding: 10px 40px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    margin-top : 20px;
+    font-size: 16px;
+}
+
+.head-search-form i{
+    color: var(--point);
+}
+
+.head-search-input {
+    width: 70%;
+    padding: 10px;
+    border: none; /* 경계선 제거 */
+    background-color: transparent; /* 배경색 투명 */
+    outline: none; /* 포커스 시 생기는 기본 윤곽선 제거 */
+    margin-right: 10px;
+    font-size: 16px;
+    color: var(--black); /* 텍스트 색상 */
+}
+
+.head-search-button {
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+.search-results {
+    margin-top: 30px;
+    margin-left: 40px;
+}
+
+.result-section {
+    margin-bottom: 20px;
+}
+
+.result-section h2 {
+    font-size: 20px;
+    color: #444;
+    border-bottom: 2px solid #ff6600;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.no-result {
+    color: #999;
+    font-style: italic;
+}
+
+.result-section p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}

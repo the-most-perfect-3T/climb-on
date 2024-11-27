@@ -19,7 +19,7 @@
     <select id="getPopularPosts" resultMap="mainResult">
         SELECT *
         FROM community_posts
-        ORDER BY hearts_count DESC LIMIT 10;
+        ORDER BY like_count DESC LIMIT 10;
     </select>
 
     <select id="getCommentsCount" parameterType="int" resultType="Integer">
