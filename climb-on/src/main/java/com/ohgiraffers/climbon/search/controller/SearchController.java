@@ -34,12 +34,14 @@ public class SearchController {
         }
 
         Map<String, Object> searchResults = searchService.searchAll(keyword);
-
+        // 전체 게시글 리스트
         List<CrewDTO> crewNames = (List<CrewDTO>) searchResults.get("crewNames");
         List<FacilitiesDTO> facilities = (List<FacilitiesDTO>) searchResults.get("facilities");
         List<PostDTO> communityPosts = (List<PostDTO>) searchResults.get("communityPosts");
-        List<PostDTO> limitedPosts = (List<PostDTO>) searchResults.get("limitedCommunityPosts"); // 제한된 게시글 리스트
-        List<FacilitiesDTO> limitedfacilities = (List<FacilitiesDTO>) searchResults.get("limitedFacilities");
+        // 제한된 게시글 리스트
+        List<CrewDTO> limitedCrewNames = (List<CrewDTO>) searchResults.get("limitedCrewNames");
+        List<PostDTO> limitedCommunityPosts = (List<PostDTO>) searchResults.get("limitedCommunityPosts");
+        List<FacilitiesDTO> limitedfacilities = (List<FacilitiesDTO>) searchResults.get("limitedfacilities");
 
 
         model.addAttribute("keyword", keyword);
@@ -47,8 +49,9 @@ public class SearchController {
         model.addAttribute("facilities", facilities);
         model.addAttribute("crewNames", crewNames);
         model.addAttribute("crewCount", crewNames.size());
+        model.addAttribute("limitedCrewNames", limitedCrewNames);
         model.addAttribute("limitedfacilities", limitedfacilities);
-        model.addAttribute("limitedcommunityPosts", limitedPosts);
+        model.addAttribute("limitedCommunityPosts", limitedCommunityPosts);
         model.addAttribute("facilitiesCount", facilities.size());
         model.addAttribute("communityPostCount", communityPosts.size());
 

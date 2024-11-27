@@ -1,10 +1,10 @@
+/*let Reviews22;
 
-/*window.onload = function() {
-    const facilityDetailsContainer = document.querySelector('#facilityDetailsContainer');
-    // 'open' 클래스를 추가하여 애니메이션 실행
-    facilityDetailsContainer.classList.add('open');
+window.onload = async function() {
+
+
 }*/
-//검색
+//검색*/
 function showSuggestions() {
     const name = document.getElementById('codeInput').value;
     const suggestionsDiv = document.getElementById('suggestions');
@@ -279,14 +279,16 @@ async function reviewcheckFavorite(id) {
 }
 
 let globalDettails;
-let reviewLoaded = true; //리뷰 상태저장
+ //리뷰 상태저장
 const detailsContainer = document.getElementById('facilityDetailsContainer');
 async function showFacilityDetails(facility) {
     // facility 객체의 값을 조건에 맞게 출력
     if (facility != null) {
         facilityDetailsContainer.style.display = 'block';
     }
-  const isFavorite = await checkFavorite(facility.id);
+    let isFavorite;
+
+       isFavorite = await checkFavorite(facility.id);
 
 
 
@@ -295,7 +297,7 @@ async function showFacilityDetails(facility) {
  <div class="facility-details">
         <div class="facility-details-top">
         <img id="facilityImg" class="facility-banner-content" src=""/></br>
-        <h3>시설명: ${facility.facilityName || '정보 없음'}</h3>
+        <h3>${facility.facilityName || '정보 없음'}</h3>
        </div>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
@@ -313,17 +315,16 @@ async function showFacilityDetails(facility) {
 
 
     // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
-    if (reviewLoaded) {
 
-        await loadReviews(facility.id);
-    }
-
-
+    console.log("여긴 들어와?");
+    await loadReviews(facility.id);
+    console.log("여긴 들어와?");
     await loadImage(facility.id);
+    console.log("여긴 들어와?");
 
     currentfacility = facility;
     // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
-    reviewLoaded = true;
+
 
 }
 
@@ -349,7 +350,7 @@ function renderStars(averageRating) {
 function loadReviews(facilityId) {
     // detailsContainer의 기존 HTML을 지우지 않고, 새로운 데이터를 추가하는 방식으로 수정
 
-
+    console.log("여긴 들어와?");
     // 1. 기존 리뷰 아이템 삭제
     const existingReviews = detailsContainer.querySelectorAll('.Review-item');
     existingReviews.forEach(review => {
@@ -371,27 +372,35 @@ function loadReviews(facilityId) {
             if (!response.ok) {
                 throw new Error('서버 오류: ' + response.status);
             }
+
             return response.json();
         })
+
         .then(async data => {
             // 데이터를 받아와서 리뷰가 존재하는 경우에만 처리
-            if (data && data.length > 0) {
+
+            if (1) {
                 // 기존 내용 갱신 (기존 html이 있으면 그 내용 추가)
+                let Reviews22 = await getUserId();
+                console.log(Reviews22);
                 const reviewSummary = `
                 <div class="item2">
-                <p> 
-                    <span class="review-sum">리뷰 : ${data.length}</span>
-                    <p class="review-guide">리뷰를 남기면 나의 체크인목록에 표시됩니다.<br\>
+                  <div class="item4">
+                    <span class="review-sum">리뷰 : <i style="color: #FF7F27">${data.length}</i></span>
+                  </div>    
+                   
+                  <div class="reveiw-star-sum">
+                    <span class="review-avg"> ${data[0] && data[0].averageRating !== undefined ? (Math.floor(data[0].averageRating * 10) / 10) : 0}/5</span>
+                            <div id="stars-container"></div> 
+                             <p style="display:  ${Reviews22 === undefined || Reviews22 === 0 ? 'none' : 'block'}" class="review-guide">리뷰를 남기면 나의 체크인목록에 표시됩니다.<br\>
                         다른 클라이머들을 위해 리뷰를 남겨주세요</p>
-                        <div class="reveiw-star-sum">
-                    <span class="review-avg">평점 : ${Math.floor(data[0].averageRating * 10)/10}/5</span>
-                </p>
-                <div id="stars-container"></div>
-                </div>
-                
-                <i type="button" class="btn-fmodal" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-pencil" aria-hidden="true"></i>작성</i>
-                
-                <br><br><br><br>
+                        <p style="display:  ${Reviews22 === undefined || Reviews22 === 0 ? 'block' : 'none'}" class="review-guide">리뷰를 남기시려면 로그인을 해주세요.<br\></p>
+                  </div>
+                  <div class="item3">
+                    <i type="button" class="btn-fmodal" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    style="display:  ${Reviews22 === undefined || Reviews22 === 0 ? 'none' : 'block'}" >작성</i>
+                  </div>
+                    <br>
                 </div>
             `;
 
@@ -401,14 +410,15 @@ function loadReviews(facilityId) {
                 detailsContainer.appendChild(item2);
 
 
-
+                if (data && data.length > 0)
+                {
                 // 별점 렌더링
                 document.getElementById('stars-container').innerHTML = renderStars(data[0].averageRating);
 
                 // 각 리뷰 내용 동적으로 생성하여 추가
                 for (const Reviews of data) {
                     let Reviews2 = await getReview(Reviews.id);
-                    const isFavorite = await reviewcheckFavorite(Reviews.id);
+                    const isFavorite = await reviewcheckFavorite(Reviews.id || defaultId);
                     console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
                     const item = document.createElement('div');
                     const reviewDate = new Date(Reviews.createdAt);
@@ -439,11 +449,12 @@ function loadReviews(facilityId) {
                     starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
                 }
             }
+                }
         })
         .catch(error => {
             console.error('Error:', error);
         });
-    reviewLoaded = true;
+
 }
 
 
@@ -586,8 +597,12 @@ async function updateFavoriteOnServer(id, addFavorite) {
     return response;
 }
 async function reviewgetIsFavorite(id) {
+    console.log(id);
+    const validId = id || 0; // 기본값을 0으로 설정 (기본값을 다른 값으로 설정할 수도 있습니다)
+    console.log(validId);
+
     try {
-        const response = await fetch(`/Review/getIsFavorite?id=${id}`, {
+        const response = await fetch(`/Review/getIsFavorite?id=${validId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -608,7 +623,7 @@ async function reviewgetIsFavorite(id) {
         }
     } catch (error) {
         console.error('오류 발생:', error);
-        return null;  // 오류 발생시 null 반환
+        return 0;  // 오류 발생시 null 반환
     }
 }
 
@@ -618,7 +633,9 @@ async function reviewgetIsFavorite(id) {
 
 async function getIsFavorite(id) {
     try {
-        const response = await fetch(`/facilities/getIsFavorite?id=${id}`, {
+        console.log("뭐가문제야" + id);
+        const validId = id || 0; // 기본값을 0으로 설정 (기본값을 다른 값으로 설정할 수도 있습니다)
+        const response = await fetch(`/facilities/getIsFavorite?id=${validId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -666,8 +683,8 @@ async function loadImage(facilityId){
     const imgElement = document.getElementById('facilityImg');
 
 if(Array.isArray(imagePath) && imagePath.length) {
-    console.log("imagePath" + imagePath[1].filePath);
-    imgElement.src = imagePath[1].filePath;
+    console.log("imagePath" + imagePath[0].filePath);
+    imgElement.src = imagePath[0].filePath;
 }
 
 else
@@ -936,4 +953,12 @@ function loadReviewData(review) {
             }
         }
     });
+}
+
+async function getUserId(){
+    const response = await fetch(`/facilities/userId`);
+    const Id = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+    console.log((Id));
+    return Id;
+
 }

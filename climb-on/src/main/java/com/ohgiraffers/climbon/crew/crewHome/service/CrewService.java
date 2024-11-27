@@ -59,4 +59,18 @@ public class CrewService {
     public List<CrewDTO> getRecruitingCrews() {
         return crewDAO.getRecruitingCrews();
     }
+
+    public Object hasCrew(Integer id) {
+        return crewDAO.hasCrew(id);
+    }
+
+    public int getCrewCodeFromCrewsByUserId(Integer id) {
+        return crewDAO.getCrewCodeFromCrewsByUserId(id);
+    }
+
+    public int crewCaptainInsert(Integer id, int crewCode) {
+        return crewDAO.crewCaptainInsert(id, crewCode);
+    }
+
+
 }

@@ -125,15 +125,38 @@ public class FacilitiesController {
     }
     @PostMapping("/getIsFavorite")
     public ResponseEntity<Integer> getIsFavorite(@RequestParam int id, @AuthenticationPrincipal AuthDetail userDetails) {
-        Integer userId = userDetails.getLoginUserDTO().getId();
-        Integer result = facilitiesService.getIsFavorite(id,userId);
+        Integer userId;
+        Integer result;
+        if(userDetails == null || userDetails.getLoginUserDTO().getId() == null) {
+            result = 0;
+        }
+        else{
+            userId = userDetails.getLoginUserDTO().getId();
+
+
+
+            result = facilitiesService.getIsFavorite(id, userId);
+        }
+
         System.out.println("여기맞지? = " + result);
         return ResponseEntity.ok(result);
     }
 
 
 
+    @GetMapping("/userId")
+    public ResponseEntity<Integer> getAll( @AuthenticationPrincipal AuthDetail userDetails) {
+        Integer userId;
 
+        if(userDetails == null || userDetails.getLoginUserDTO().getId() == null) {
+            userId = 0;
+        }
+        else {
+            assert userDetails != null;
+            userId = userDetails.getLoginUserDTO().getId();
+        }
+        return ResponseEntity.ok(userId);
+    }
 
 
 
