@@ -207,7 +207,7 @@ public class PostController {
 
     // 게시글 수정 처리
     @PostMapping("/{id}/edit")
-    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal){
+    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous){
         post.setId(id);
         post.setAnonymous(isAnonymous);  // 수정 폼에도 따로 html에서의 isAnonymous값을 가져와야 하므로 여기서 set을 해준다! 다른 PostDTO들은 ModelAttribute로 받음
         postService.updatePost(post);
@@ -233,6 +233,11 @@ public class PostController {
     // 댓글 작성 처리
     @PostMapping("/{id}/comment")
     public String addComment(@PathVariable("id") Integer postId, @RequestParam String content, Principal principal, Model model){
+
+        // 댓글 글자 수 제한 확인
+        if (content.length() > 500) {
+            throw new IllegalArgumentException("댓글은 500자를 초과할 수 없습니다.");
+        }
 
         // 1. 로그인된 사용자의 user_id(고유키) 가져오기
         Integer userId = postService.getUserIdByUserName(principal.getName());

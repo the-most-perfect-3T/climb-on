@@ -92,7 +92,7 @@
     <script>
     let offset = 2; // 초기 게시글 수
     const limit = 3; // 더보기 시 추가로 가져올 게시글 수
-    const keyword = /*[[${keyword}]]*/ ''; // 서버에서 전달된 검색어 값
+    const keyword = '[[${keyword}]]'; // 서버에서 전달된 검색어 값
     const encodedKeyword = encodeURIComponent(keyword);
 
     function loadMorePosts(){
