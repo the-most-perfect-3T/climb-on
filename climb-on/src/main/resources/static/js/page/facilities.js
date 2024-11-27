@@ -989,3 +989,67 @@ async function getUserId(){
     return Id;
 
 }
+
+// 첫 페이지 렌더링
+if (Array.isArray(data)) await renderData(currentPage);
+if(data.length > itemsPerPage) {
+    const paginationElement = document.querySelector("#review .pagination");
+    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+        currentPage = newPage;
+        renderData(currentPage);
+        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+    });
+}
+
+
+// 삭제 후 다시 렌더링
+await renderData(currentPage);
+if (data.length >= itemsPerPage) {
+    const paginationElement = document.querySelector("#review .pagination");
+    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+        currentPage = newPage;
+        renderData(currentPage);
+        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+    });
+} else {
+    document.querySelector("#review .pagination").textContent = "";
+}
+
+
+function renderPagination(paginationElement, totalItems, itemsPerPage, currentPage, onPageChange) {
+    paginationElement.textContent = ""; // 기존 페이지네이션 초기화
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // 이전 버튼
+    const prevButton = document.createElement("li");
+    prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+    prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+    prevButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    });
+    paginationElement.appendChild(prevButton);
+
+    // 페이지 번호 버튼
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("li");
+        pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+        pageButton.innerHTML = `<a href="#">${i}</a>`;
+        pageButton.querySelector("a").addEventListener("click", (e) => {
+            e.preventDefault();
+            onPageChange(i);
+        });
+        paginationElement.appendChild(pageButton);
+    }
+
+    // 다음 버튼
+    const nextButton = document.createElement("li");
+    nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+    nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+    nextButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    });
+    paginationElement.appendChild(nextButton);
+}

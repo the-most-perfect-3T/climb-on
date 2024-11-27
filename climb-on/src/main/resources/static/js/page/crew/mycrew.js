@@ -23,3 +23,11 @@ test.forEach(function(a){ // pants 라는 변수에 array 갯수만큼 안에 �
     test1.innerHTML = a;
     document.querySelector('#test').appendChild(test1);
 });
+
+
+
+
+const memberTabBtn = document.getElementById("member-tab");
+memberTabBtn.addEventListener('click', async function() {
+
+})

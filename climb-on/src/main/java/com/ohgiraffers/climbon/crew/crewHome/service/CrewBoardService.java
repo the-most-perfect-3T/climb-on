@@ -80,6 +80,10 @@ public class CrewBoardService {
         List<CrewPostDTO> generalPosts = crewBoardDAO.getPostsByPageAndCategoryAndSearch(
                 offset, pageSize, category, searchKeyword, sort, status);
 
+        for (CrewPostDTO post : generalPosts) {
+            post.setCrewName(crewBoardDAO.getCrewNameByCrewCode(post.getCrewCode()));
+        }
+
         result.put("generalPosts", generalPosts);
 
         for (CrewPostDTO post : generalPosts) {

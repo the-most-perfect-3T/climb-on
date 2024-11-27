@@ -24,11 +24,20 @@ public class CrewPostDTO {
     private String userProfilePic;
     private int commentsCount;
     private boolean isLiked;
+    private String crewName;
 
     public CrewPostDTO() {
     }
 
-    public CrewPostDTO(Integer id, Integer crewCode, Integer userId, String category, String title, String content, String imgUrl, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int likeCount, boolean isAnonymous, boolean status, String userNickname, String userProfilePic, int commentsCount, boolean isLiked) {
+    public String getCrewName() {
+        return crewName;
+    }
+
+    public void setCrewName(String crewName) {
+        this.crewName = crewName;
+    }
+
+    public CrewPostDTO(Integer id, Integer crewCode, Integer userId, String category, String title, String content, String imgUrl, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int likeCount, boolean isAnonymous, boolean status, String userNickname, String userProfilePic, int commentsCount, boolean isLiked, String crewName) {
         this.id = id;
         this.crewCode = crewCode;
         this.userId = userId;
@@ -46,6 +55,7 @@ public class CrewPostDTO {
         this.userProfilePic = userProfilePic;
         this.commentsCount = commentsCount;
         this.isLiked = isLiked;
+        this.crewName = crewName;
     }
 
     // 작성일을 포맷팅해서 반환하는 메소드 : createdAt 필드가 오늘 날짜인 경우 몇시 몇분 형식으로 반환, 오늘날짜가 아닌경우 년/월/일 형식으로 반환 // 1,2,3일전은 하루전, 이틀전, 3일전으로 나타낼 수 있게 추가
@@ -235,7 +245,7 @@ public class CrewPostDTO {
                 "id=" + id +
                 ", crewCode=" + crewCode +
                 ", userId=" + userId +
-                ", category=" + category +
+                ", category='" + category + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", imgUrl='" + imgUrl + '\'' +
@@ -249,6 +259,7 @@ public class CrewPostDTO {
                 ", userProfilePic='" + userProfilePic + '\'' +
                 ", commentsCount=" + commentsCount +
                 ", isLiked=" + isLiked +
+                ", crewName='" + crewName + '\'' +
                 '}';
     }
 }

@@ -28,18 +28,19 @@ public class MyCrewController
     public ModelAndView getMyCrew(ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails, RedirectAttributes redirectAttributes)
     {
         try {
-            // Fetch data from service and add to model
-            if(Objects.isNull(userDetails)){
-                mv.setViewName("auth/login");
+            if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+                mv.addObject("message", "로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
+                mv.setViewName("/auth/login");
                 return mv;
-            }else{
+            }
+            // Fetch data from service and add to model
+            else{
                 int myId = userDetails.getLoginUserDTO().getId();
                 UserCrewDTO userCrewDTO = myCrewService.getMyCrewCodeAndRole(myId);
                 if(Objects.isNull(userCrewDTO)){
                     redirectAttributes.addFlashAttribute("alertMessage", "크루에 가입되어 있지 않습니다.");
                     mv.setViewName("redirect:/crew/crewlist");
                     return mv;
-//                    return "crew/crewHome/crewList";
                 }else {
                     CrewDTO myCrew = myCrewService.getMyCrewById(myId);
                     List<UserDTO> memberList = myCrewService.getCrewMemeberList(myCrew.getId());
