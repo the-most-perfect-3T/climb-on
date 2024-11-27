@@ -89,7 +89,6 @@ public class PostController {
         String userProfilePic = postService.getUserProfilePicById(post.getUserId());
         post.setUserProfilePic(userProfilePic);
 
-
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
             String commentUserNickname = postService.getUserNicknameById(comment.getUserId());
