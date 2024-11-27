@@ -350,7 +350,7 @@ function renderStars(averageRating) {
 function loadReviews(facilityId) {
     // detailsContainer의 기존 HTML을 지우지 않고, 새로운 데이터를 추가하는 방식으로 수정
 
-    console.log("여긴 들어와?");
+
     // 1. 기존 리뷰 아이템 삭제
     const existingReviews = detailsContainer.querySelectorAll('.Review-item');
     existingReviews.forEach(review => {
@@ -730,7 +730,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("comment").value = "";
         document.getElementById("ratingValue").value = "";
         document.getElementById("facilityId").value = "";
-
+        document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //닫힐때 초기화
         resetStars();
         console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
     });
@@ -801,6 +801,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log("입력했을때" + rating)
             if (rating === 0 || rating ==="") {
                 console.log("입력했을때안했을때"+ value)
+
                 alert("평점을 선택해 주세요!");
                 return;
             }
@@ -810,6 +811,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const comment = document.getElementById("comment").value;
         if (comment.trim() === "") {
             alert("리뷰 내용을 작성해 주세요!");
+
             event.preventDefault();  // 폼 제출을 막음
             return;
         }
@@ -829,7 +831,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-       console.log("되나요ㅕ?"+ id);
+
 
         const url = '/Review/reviewInsert';
         const data = {
@@ -849,7 +851,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
         document.getElementById('reviewId').value = null;
-
+        document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //폼보내고 초기화
         await loadReviews(currentfacility.id);
 
 
@@ -929,6 +931,8 @@ function loadReviewData(review) {
     console.log(review);
     // review.rating 값을 숨겨진 input에 설정
     document.getElementById('ratingValue').setAttribute('value', review.rating);
+    document.getElementById('exampleModalLabel').innerHTML = "리뷰 수정"; //함수들어오면 수정
+
 
 // review.comment 값을 textarea에 설정
     document.getElementById('comment').value = review.comment;

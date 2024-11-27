@@ -33,7 +33,9 @@
 
 /* 시설명과 주소가 세로로 나열되도록 설정 */
 .content .facility-info {
-    display: block; /* 세로로 배치 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /* 시설명 스타일 */
@@ -243,7 +245,6 @@ p {
 .rating {
     unicode-bidi: bidi-override;
     direction: rtl;
-    font-size: 2rem; /* 별의 크기 */
 }
 
 .rating > span {
@@ -253,9 +254,12 @@ p {
 }
 
 .rating > span i {
-    color: gray;
+    color: var(--gray);
     cursor: pointer;
+    font-size: 18px;
 }
+
+
 
 /* 마우스 오버 및 이전 별에 대해 별 채우기 */
 .rating > span:hover i,
@@ -268,6 +272,7 @@ p {
     color: #f79256;
 
 }
+
 #stars-container{
     display: block;  /* 별을 다른 줄로 내리기 위해 block으로 변경 */
     font-size: 20px;
@@ -435,4 +440,77 @@ body .btn-fmodal {
     padding: 3px 16px;
     background-color: #f79256;
     color: white;
+}
+
+.modal-content {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    background-color: var(--bs-modal-bg) !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: var(--bs-modal-border-radius) !important;
+}
+#exampleModal .modal-body {
+    padding: 35px 30px 50px;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: var(--bs-modal-padding);
+}
+#exampleModal .modal-body .section-title {
+    text-align: center;
+    margin-bottom: 22px;
+}
+.py-4 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+}
+.align-items-center {
+    align-items: center !important;
+}
+.justify-content-between {
+    justify-content: space-between !important;
+}
+.border-bottom {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+.d-flex {
+    display: flex !important;
+}
+#exampleModal .modal-footer {
+    border: none;
+    justify-content: center;
+    padding: 0;
+}
+
+#exampleModal .modal-footer button {
+    width: 140px;
+    height: 45px;
+    border-radius: 6px;
+    margin: 0;
+}
+#exampleModal .modal-footer button.review-Insert-btn {
+    background: var(--point);
+    color: #fff;
+    font-weight: 600;
+    margin-left: 20px;
+}
+#exampleModal .modal-footer button {
+    width: 140px;
+    height: 45px;
+    border-radius: 6px;
+    margin: 0;
+}
+#exampleModal .modal-body label {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+#exampleModal .modal-body textarea {
+    border-radius: 10px;
+    padding: 20px;
 }
