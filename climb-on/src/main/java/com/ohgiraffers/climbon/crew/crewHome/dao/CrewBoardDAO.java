@@ -39,4 +39,6 @@ public interface CrewBoardDAO {
     //전체 게시글 수를 반환하여 페이지 수 계산에 사용된다. //검색어 추가
     int getTotalPostCount(@Param("category") String category, @Param("searchKeyword") String searchKeyword);
 
+    @Select("SELECT crew_name FROM crews WHERE id = #{crewCode}")
+    String getCrewNameByCrewCode(Integer crewCode);
 }
