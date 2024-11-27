@@ -1,15 +1,17 @@
 package com.ohgiraffers.climbon.crew.mycrew.dto;
 
+import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
+
 public class UserCrewDTO {
 
     private Integer userCode;
     private Integer crewCode;
-    private String role;
+    private CrewRole role;
 
     public UserCrewDTO() {
     }
 
-    public UserCrewDTO(Integer userCode, Integer crewCode, String role) {
+    public UserCrewDTO(Integer userCode, Integer crewCode, CrewRole role) {
         this.userCode = userCode;
         this.crewCode = crewCode;
         this.role = role;
@@ -31,11 +33,11 @@ public class UserCrewDTO {
         this.crewCode = crewCode;
     }
 
-    public String getRole() {
+    public CrewRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(CrewRole role) {
         this.role = role;
     }
 
