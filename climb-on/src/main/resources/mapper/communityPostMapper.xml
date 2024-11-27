@@ -228,4 +228,12 @@
         WHERE id = #{id}
     </update>
 
+    <!--댓글 불러오기(유저)-->
+    <select id="getCommentsById" resultMap="commentResultMap">
+        SELECT id, post_id, user_id, content, created_at, updated_at, status
+        FROM community_comments
+        WHERE user_id = #{id} AND status = 1
+        ORDER BY created_at DESC
+    </select>
+
 </mapper>

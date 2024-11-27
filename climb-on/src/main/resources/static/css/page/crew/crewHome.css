@@ -460,3 +460,67 @@ footer {
     font-size: 0.8em;
     color: #aaa;
 }
+
+/* 크루 이벤트 섹션 스타일*/
+
+.crew-home-events-shower .crew-activity-event-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FAEFDD;
+    border-radius: 8px;
+    padding: 16px;
+    width: 100%;
+    height: 154px;
+    margin: 20px auto;
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-info {
+    display: flex;
+    align-items: center;
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-status-tag {
+    background-color: var(--point);
+    color: white;
+    font-size: 16px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin-right: 16px;
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-details p {
+    margin: 0;
+    font-size: 16px;
+    color: var(--black);
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-center {
+     flex-grow: 1;
+     text-align: center;
+ }
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-right {
+    text-align: right;
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-location,
+.crew-home-events-shower .crew-activity-event-item .crew-event-crewname {
+    margin: 0;
+    font-size: 16px;
+    color: var(--subColor2);
+}
+
+.crew-home-events-shower .crew-activity-event-item .crew-event-image-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: var(--point);
+    border-radius: 8px;
+    margin-top: 10px;
+}

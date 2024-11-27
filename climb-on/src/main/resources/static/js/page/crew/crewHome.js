@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateSortButtonText(currentSort);
     setViewMode(viewMode); // 페이지 로드 시 현재 뷰 설정 (초기 뷰설정)
+    loadPost();
 
     // 버튼 활성화 처리
     const buttons = document.querySelectorAll('.category-buttons button');
@@ -151,4 +152,58 @@ async function writePost(){
         alert(error);
     }
     window.location.href = "/crew/writepost";
+}
+
+async function loadPost(){
+    try{
+        const res = await fetch('/events/allevent');
+        if(!res.ok){
+            throw new Error("크루 일정을 가져오지 못했습니다." + res);
+        }
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            const data = await res.json();
+            console.log(data);
+            populateAllCrewEvents(data);
+        } else {
+            throw new Error("Received non-JSON response.");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('이벤트 데이터를 불러오는 중 문제가 발생했습니다.');
+    }
+}
+
+// 가져온 이벤트 활동 페이지에 뿌려주는 로직
+function populateAllCrewEvents(eventData) {
+    const eventListContainer = document.getElementById('crew-activity-event-list');
+    eventListContainer.innerHTML = '';
+
+    if(eventData.length > 0)
+    {
+        for(let i =0; i < eventData.length; i++) {
+            if(i === 3) break;
+            console.log("이벤트 시작: " + i);
+            const eventItem = document.createElement('div');
+            eventItem.className = 'crew-activity-event-item';
+            eventItem.innerHTML = `
+               <div class="crew-event-info">
+                   <span class="crew-event-status-tag">예정</span> <!--start 시점이랑 오늘 date 비교해서 예정, 진행중으로 보여지게 만들어야 됨-->
+                   <div class="crew-event-details">
+                       <p class="crew-event-date">${new Date(eventData[i].start).toLocaleDateString()} · ${new Date(eventData[i].start).toLocaleTimeString([], {
+                           hour: '2-digit', minute: '2-digit'
+                       })}</p>
+                   </div>
+               </div>
+               <div class="crew-event-center">
+                   <p class="crew-event-title">${eventData[i].title}</p>
+               </div>
+               <div class="crew-event-right">
+                   <p class="crew-event-location">서울숲클라이밍 종로점</p> <!--eventData[i].location 추가해서 여기-->
+                   <p class="crew-event-crewname">크루명</p>
+                   <div class="crew-event-image-placeholder"></div>
+               </div>`;
+            eventListContainer.appendChild(eventItem);
+        }
+    }
 }

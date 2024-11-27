@@ -319,18 +319,19 @@ const detailsContainer = document.getElementById('facilityDetailsContainer');
         const facilityDetailsHTML = `
  <div class="facility-details">
         <div class="facility-details-top">
-        <img id="facilityImg" class="facility-banner-content" src=""/></br>
+        <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
        <div class="nameAndStart">
         <h3>${facility.facilityName || '정보 없음'}</h3>
-        <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
+        <div className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
         ${isFavorite ?? false ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
-          </button>
+          </div>
           </div>
        </div>
-        <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
-        <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
-        <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
-        <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
+       <h4><strong>기본정보</strong></h4>
+        <p>주소: ${facility.address || '정보 없음'}</p>
+        <p>전화번호: ${facility.contact || '정보 없음'}</p>
+        <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
+        <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
         </div>
     `;
         // facilityDetailsContainer에 세부 정보를 삽입
@@ -450,20 +451,31 @@ function loadReviews(facilityId) {
                     // 리뷰 내용 구성
                     item.innerHTML = `
                     <div class="review-detail">
-                        <p>${Reviews.userNickname}</p>
-                          <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
-                            <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteReview(${Reviews.id})">삭제</button>
+                        <div class="review-detail-nickname">
+                            <p>${Reviews.userNickname}</p>
+                                <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
+                                    <button class="menu-buttonreview" onclick="toggleDropdown()" ><i class="fa-solid fa-bars"></i></button>
+                                    <div class="dropdown-menureview">
+                                        <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>    
+                                        <button class="delete-btn" onclick="confirmDelete(${Reviews.id})">삭제</button>
+                                    </div>
+                                </div>  
+                                
+                                
                         </div>
-                        <span>${timeText}</span>
-                        <div class="review-rating">
-                            <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                        
+                        <div class="time-rating">
+                             <span class="review-time">${timeText}</span>   
+                            <div class="review-rating">
+                                <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                            </div>
                         </div>
-                        <p>${Reviews.likeCount}</p>
-                        <p>${Reviews.comment || '댓글이 없습니다'}</p>
-                        <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
-                            ${isFavorite ?? false ? '싫어요' : '좋아요'}
-                        </button>
+                        <p class="review-text">${Reviews.comment || '댓글이 없습니다'}</p>
+                        <div class="review-text-fav">
+                            <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
+                                ${isFavorite ?? false ?   '<i class="fa-heart fa-solid""></i>':'<i class="fa-heart fa-regular"></i>'}
+                            </button>
+                        </div>          
                     </div>
                 `;
                     detailsContainer.appendChild(item); // 새로 추가된 리뷰 항목을 detailsContainer에 추가
@@ -563,7 +575,7 @@ async function showButton(id, isFavorite ) {
 
     const button = document.getElementById(`favorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>';
+        button.innerHTML = isFavorite ? '<i class="fa-bookmark fa-solid"></i>':'<i class="fa fa-bookmark-o"></i>' ;
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `toggleFavorite(${id}, ${isFavorite})`);
@@ -575,7 +587,7 @@ async function reviewshowButton(id, isFavorite ) {
 
     const button = document.getElementById(`reviewfavorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '싫어요' : '좋아요';
+        button.innerHTML = isFavorite ? '<i class="fa-solid fa-heart"></i>':'<i class="fa-heart fa-regular"></i>' ;
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `reviewtoggleFavorite(${id}, ${isFavorite})`);
@@ -721,6 +733,9 @@ else
 
 
 document.addEventListener("DOMContentLoaded", function() {
+
+
+
     const stars = document.querySelectorAll(".rating .star"); // 별 요소들
     const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
 
@@ -1054,3 +1069,54 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
     });
     paginationElement.appendChild(nextButton);
 }*/
+// 삭제 확인 함수
+function confirmDelete(reviewId) {
+    // 사용자가 "확인"을 클릭한 경우에만 삭제를 실행
+    if (confirm('정말 삭제하시겠습니까?')) {
+        deleteReview(reviewId);  // 삭제 함수 호출
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // 모든 드롭다운 버튼을 가져옵니다.
+    const menuButtons = document.querySelectorAll('.menu-buttonreview');
+
+    menuButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            // 현재 버튼의 바로 다음 요소(드롭다운)를 찾습니다.
+            const dropdown = button.nextElementSibling;
+
+            if (dropdown) {
+                dropdown.classList.toggle('open'); // 'open' 클래스 추가/제거
+            } else {
+                console.error('Dropdown not found for button:', button);
+            }
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    document.addEventListener('click', (event) => {
+        const openDropdowns = document.querySelectorAll('.dropdown-menureview.open');
+        openDropdowns.forEach((dropdown) => {
+            if (
+                !dropdown.contains(event.target) && // 드롭다운 내부 클릭이 아닌 경우
+                !dropdown.previousElementSibling.contains(event.target) // 버튼 클릭이 아닌 경우
+            ) {
+                dropdown.classList.remove('open');
+            }
+        });
+    });
+});
+
+function toggleDropdown() {
+    var dropdown = document.querySelector('.dropdown-menureview');
+    // 이미 열린 상태라면 숨기고, 닫힌 상태라면 열기
+    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+    // 애니메이션 효과를 위한 상태 변경
+    if (dropdown.style.display === 'block') {
+        dropdown.style.opacity = 1;
+        dropdown.style.transform = 'translateX(0)';
+    } else {
+        dropdown.style.opacity = 0;
+        dropdown.style.transform = 'translateX(10px)';
+    }
+}

@@ -9,16 +9,14 @@ import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.calendar.dto.CrewEventDTO;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
-import com.ohgiraffers.climbon.common.forconvenienttest.RoleUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class EventController
@@ -27,11 +25,6 @@ public class EventController
     private EventService eventService;
 
     private int user;
-
-//    @GetMapping
-//    public List<EventDTO> getEventsByType(@RequestParam("type") String type) {
-//        return eventService.getEventsByType(type);
-//    }
 
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
@@ -43,21 +36,25 @@ public class EventController
                 System.out.println("EventController.getPublicEvents.   ::   you are admin");
             }
         }
-        System.out.println("main calendar will show you the schedules");
         return eventService.getMainEvents(true);
     }
 
     @GetMapping("/myCrew")
-    public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
+    public ResponseEntity<?> getMyCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
     {
-        //크루 코드 어떻게 불러와
-
+        // 수정 필요
         int userCode = userDetails.getLoginUserDTO().getId();
-        System.out.println("Event Controller get Crew Events => 어케 불러 옴");
         if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님"); // 크루에 가입하세요? 정도의 메세지
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님");
         }
         List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);
+        return ResponseEntity.ok(crewEvents);
+    }
+
+    @RequestMapping(value = "/events/crew", method = RequestMethod.GET)
+    public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode)
+    {
+        List<EventDTO> crewEvents = eventService.getCrewEvents(1);
         return ResponseEntity.ok(crewEvents);
     }
 
@@ -77,11 +74,8 @@ public class EventController
 
     // 이벤트 저장
     @RequestMapping(value = "/events/batch", method = RequestMethod.POST)
-    public void addEvent(@RequestBody List<EventDTO> events)
-    {
-
-        if (events == null || events.size() == 0 || user == 0)
-        {
+    public void addEvent(@RequestBody List<EventDTO> events) {
+        if (events == null || events.size() == 0 || user == 0) {
             System.out.println("이벤트를 저장할 수 없습니다.");
         }
 
@@ -89,8 +83,7 @@ public class EventController
         {
             event.setUserCode(user);
             // 조건 검사
-            if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode()))
-            {
+            if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode())) {
                 // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
                 continue;
             }
@@ -113,5 +106,14 @@ public class EventController
     public void deleteEvent(@PathVariable("id") int id)
     {
         eventService.deleteEvent(id);
+    }
+
+    @RequestMapping(value = "/events/allevent", method = RequestMethod.GET)
+    public List<EventDTO> getAllCrewsEvents(ModelAndView mv)
+    {
+        List<EventDTO> allCrewEvents = eventService.getAllCrewsEvents();
+        System.out.println("allCrewEvents.isEmpty(): " + allCrewEvents.isEmpty());
+
+        return allCrewEvents;
     }
 }

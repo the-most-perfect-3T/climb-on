@@ -249,4 +249,8 @@ public class PostService {
         return postDAO.getPostsByPageAndCategoryAndSearch(0, 10, "소식", null, "latest", "진행중", true);
     }
 
+    public List<CommentDTO> getCommentsById(Integer id) {
+        List<CommentDTO> commentList = postDAO.getCommentsById(id);
+        return commentList;
+    }
 }

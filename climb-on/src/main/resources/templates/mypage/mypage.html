@@ -29,15 +29,21 @@
                         <th:block sec:authorize="hasAnyAuthority('USER')">
                             <li role="presentation">
                                 <button id="review-tab"  data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">
-                                    <i class="fas fa-comment-dots"></i>
+                                    <i class="fa-solid fa-star"></i>
                                     <span>리뷰 관리</span>
                                 </button>
                             </li>
                         </th:block>
                         <li role="presentation">
+                            <button id="comments-tab" data-bs-toggle="tab" data-bs-target="#commentsTab" type="button" role="tab" aria-controls="comment" aria-selected="false">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>댓글 관리</span>
+                            </button>
+                        </li>
+                        <li role="presentation">
                             <button id="board-tab" data-bs-toggle="tab" data-bs-target="#board" type="button" role="tab" aria-controls="board" aria-selected="false">
                                 <i class="fas fa-file-alt"></i>
-                                <span>게시판 관리</span>
+                                <span>게시물 관리</span>
                             </button>
                         </li>
                         <th:block sec:authorize="hasAnyAuthority('USER')">
@@ -59,6 +65,7 @@
                 <div class="tab-content">
                     <th:block th:replace="~{/mypage/tab/profileTab :: tabContFragment}"></th:block>
                     <th:block th:replace="~{/mypage/tab/reviewTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{/mypage/tab/commentsTab :: tabContFragment}"></th:block>
                     <th:block th:replace="~{/mypage/tab/boardTab :: tabContFragment}"></th:block>
                     <th:block th:replace="~{/mypage/tab/favoriteTab :: tabContFragment}"></th:block>
                 </div>
