@@ -168,6 +168,7 @@
                         <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
                         <div class="card-meta">
                             <span th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</span>
+                            <span th:text="${post.crewName}">크루명</span>
                             <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                             <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
                             <i class="fa-regular fa-heart"></i><span th:text="${post.likeCount}">0</span>

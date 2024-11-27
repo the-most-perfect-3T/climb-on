@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.crew.crewHome.dao;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public interface CrewDAO {
 
     Object hasCrew(Integer id);
 
-    int crewCaptainInsert(Integer id, int crewCode);
+    int crewCaptainInsert(UserCrewDTO captain);
 
     int getCrewCodeFromCrewsByUserId(Integer id);
 }

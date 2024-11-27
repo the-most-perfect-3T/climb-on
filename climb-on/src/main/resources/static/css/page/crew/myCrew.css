@@ -34,6 +34,7 @@
 .crewname-sns-container {
     align-items: center;
     margin-top: 10px;
+    margin-bottom: 10px;
     gap: 10px;
 }
 
@@ -41,6 +42,10 @@
     font-size: 24px;
     font-weight: bold;
     padding-left: 10px;
+}
+
+.crew-member-count-recruit-status-container {
+
 }
 
 .crew-member-count-recruit-status-container .badge {
