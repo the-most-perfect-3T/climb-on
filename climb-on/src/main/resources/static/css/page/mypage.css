@@ -524,6 +524,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    height: 38px;
 }
 .section-mypage #board .section00 .card-list .card-item .card-meta {
     vertical-align: middle;

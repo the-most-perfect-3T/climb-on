@@ -234,8 +234,6 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    console.log("totalPages : ", totalPages);
-    console.log("currentPage : ", currentPage);
 
     // 이전 버튼
     const prevButton = document.createElement("li");
@@ -244,7 +242,6 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
     prevButton.querySelector("a").addEventListener("click", (e) => {
         e.preventDefault();
         if (currentPage > 1) onPageChange(currentPage - 1);
-        console.log("현재 페이지(이전) ", currentPage);
     });
     paginationElement.appendChild(prevButton);
 
@@ -256,7 +253,6 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
         pageButton.querySelector("a").addEventListener("click", (e) => {
             e.preventDefault();
             onPageChange(i);
-            console.log("현재 페이지 번호 ", i);
         });
         paginationElement.appendChild(pageButton);
     }
@@ -268,7 +264,6 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
     nextButton.querySelector("a").addEventListener("click", (e) => {
         e.preventDefault();
         if (currentPage < totalPages) onPageChange(currentPage + 1);
-        console.log("현재 페이지(다음) ", currentPage);
     });
     paginationElement.appendChild(nextButton);
 }
@@ -279,94 +274,7 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
 
 const favoriteTab = document.getElementById("favorite-tab");
 
-/*페이지네이션 없이..*/
-/*favoriteTab.addEventListener("click", async function () {
-    console.log("즐겨찾기 탭 클릭됨");
-
-    try {
-        const response = await fetch("/user/favorite");
-        if (!response.ok) {
-            throw new Error("서버 오류: " + response.status);
-        }
-
-        const data = await response.json();
-        console.log("받은 데이터:", data);
-
-        const favoriteList = document.getElementById("favorite").querySelector("ul.list");
-        favoriteList.textContent = "";
-
-        if (data.message === '저장된 즐겨찾기가 없습니다.') {
-            const liItem = document.createElement("li");
-            liItem.classList.add('no-result', 'border-top');
-            liItem.textContent = "저장된 즐겨찾기가 없습니다.";
-            favoriteList.appendChild(liItem);
-        }
-
-
-
-        for (const item of data) {
-
-            const isFavorite = await getIsFavorite(item.id);
-
-            const liItem = document.createElement("li");
-            liItem.classList.add("border");
-            liItem.innerHTML = `
-                <!--<a href="/facilities/select">-->
-                    <div class="img-wrap border">
-                        <img src="" alt="">
-                    </div>
-                    <a href="/facilities/select" class="name">${item.facilityName}</a>
-                    <p class="address">${item.address}</p>
-                    <button type="button" class='favorite-btn' data-id="${item.id}" data-favorite="${isFavorite}">
-                        <i class="fa-bookmark fa-solid"></i> 
-                    </button>
-                <!--</a>-->
-            `;
-            favoriteList.appendChild(liItem);
-        }
-
-
-        // 즐겨찾기 버튼 클릭 이벤트 설정
-        favoriteList.addEventListener("click", async (event) => {
-            const button = event.target.closest(".favorite-btn");
-            if (button) {
-                const facilityId = parseInt(button.getAttribute("data-id"));
-                const currentFavoriteStatus = parseInt(button.getAttribute("data-favorite"));
-
-                // 즐겨찾기 상태 토글
-                await toggleFavorite(facilityId, currentFavoriteStatus);
-
-                console.log(facilityId);
-                // UI 업데이트
-                const updatedFavoriteStatus = await checkFavorite(facilityId);
-                console.log("update", updatedFavoriteStatus);
-
-                button.setAttribute("data-favorite", updatedFavoriteStatus);
-
-                // i 태그 클래스 토글
-                const icon = button.querySelector("i");
-                if (icon) {
-                    icon.classList.toggle("fa-solid", updatedFavoriteStatus === 1);
-                    icon.classList.toggle("fa-regular", updatedFavoriteStatus === 0);
-                }
-
-                if(updatedFavoriteStatus === 0){
-                    event.target.closest("li").remove();
-                }
-
-            }
-
-
-
-        });
-    } catch (error) {
-        console.error("AJAX 오류:", error);
-    }
-});*/
-
-
 favoriteTab.addEventListener("click", async function () {
-    console.log("즐겨찾기 탭 클릭됨");
 
     try {
         const response = await fetch("/user/favorite");
@@ -375,7 +283,7 @@ favoriteTab.addEventListener("click", async function () {
         }
 
         const data = await response.json();
-        console.log("받은 데이터:", data);
+        /*console.log("받은 데이터:", data);*/
         const favoriteList = document.getElementById("favorite").querySelector("ul.list");
         favoriteList.textContent = "";
 
@@ -398,7 +306,6 @@ favoriteTab.addEventListener("click", async function () {
                 const itemsToShow = data.slice(startIndex, endIndex);
 
                 if (itemsToShow.length === 0) {
-                    console.log("렌더링할 데이터가 비어 있음");
                     const liItem = document.createElement("li");
                     liItem.classList.add('no-result', 'border-top');
                     liItem.textContent = "저장된 즐겨찾기가 없습니다.";
@@ -508,14 +415,12 @@ favoriteTab.addEventListener("click", async function () {
                             return;
                         }
 
-                        console.log(facilityId, currentFavoriteStatus);
 
                         // 즐겨찾기 상태 토글
                         await toggleFavorite(facilityId, currentFavoriteStatus);
 
                         // UI 업데이트
                         const updatedFavoriteStatus = await checkFavorite(facilityId);
-                        console.log(updatedFavoriteStatus, "updatedFavoriteStatus")
 
                         button.setAttribute("data-favorite", updatedFavoriteStatus);
 
@@ -604,7 +509,7 @@ async function reviewClickFunction(){
         }
 
         const data = await response.json();
-        console.log("받은 데이터:", data);
+        /*console.log("받은 데이터:", data);*/
 
         const reviewList = document.getElementById("review").querySelector("ul.review-list");
         reviewList.textContent = "";
@@ -628,7 +533,6 @@ async function reviewClickFunction(){
                 const itemsToShow = data.slice(startIndex, endIndex);
 
                 if (itemsToShow.length === 0) {
-                    console.log("렌더링할 데이터가 비어 있음");
                     const liItem = document.createElement("li");
                     liItem.classList.add('no-result', 'border-top');
                     liItem.textContent = "작성한 리뷰가 없습니다.";
@@ -696,7 +600,7 @@ async function reviewClickFunction(){
 
                         // 삭제 결과
                         const result = await deleteReview(facilityId);
-                        console.log("result : " + result);
+                        /*console.log("result : " + result);*/
 
                         if(result > 0){
                             const liItem = event.target.closest("li"); // 버튼이 속한 li를 찾음
@@ -800,7 +704,7 @@ async function deleteReview(id){
         }
 
         const result = await response.json(); // 응답 데이터를 JSON으로 변환
-        console.log("data : ", result);
+        /*console.log("data : ", result);*/
         return result; // 결과 반환
     } catch (error) {
         console.error('AJAX 오류:', error);
@@ -826,7 +730,6 @@ async function editReview(id){
 async function getReview(id) {
     const response = await fetch(`/Review/getReview?id=${id}`);
     const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
-    console.log(review);
 
     return review;
 }
@@ -836,12 +739,10 @@ function loadReviewData(review) {
 
     // review.rating 값을 숨겨진 input에 설정
     document.getElementById('ratingValue').setAttribute('value', review.rating);
-    console.log("보자보자"+ review.rating)
+    document.getElementById('exampleModalLabel').innerHTML = "리뷰 수정";
 
-// review.comment 값을 textarea에 설정
-    console.log("review.comment" + review.comment);
+    // review.comment 값을 textarea에 설정
     document.getElementById('comment').value = review.comment;
-    console.log("review.id" + review.id);
     document.getElementById("reviewId").value = review.id;
     document.getElementById("facilityId").value = review.facilityId;
 
@@ -897,7 +798,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("facilityId").value = "";
 
         resetStars();
-        console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
+        /*console.log("모달이 닫혔습니다. 데이터 초기화 완료!");*/
     });
 
     // 별 초기화 함수
@@ -938,15 +839,15 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         if (allGray) {
-            console.log("모든 별이 회색입니다.");
+            /*console.log("모든 별이 회색입니다.");*/
             alert("평점을 선택해 주세요!");
             return;
         }
-        console.log("dsds"+rating);
+
         if(rating === 0 || rating===""){
             rating = document.getElementById("ratingValue").value;
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ value)
+                /*console.log("입력했을때안했을때"+ value)*/
                 alert("평점을 선택해 주세요!");
                 return;
             }
@@ -955,9 +856,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("ratingValue").value = rating;
             // 모든 별 요소를 선택
 
-            console.log("입력했을때" + rating)
+            /*console.log("입력했을때" + rating)*/
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ value)
+                /*console.log("입력했을때안했을때"+ value)*/
                 alert("평점을 선택해 주세요!");
                 return;
             }
@@ -975,16 +876,7 @@ document.addEventListener("DOMContentLoaded", function() {
         /*document.getElementById('facilityId').value = review.facilityId;*/
         const facilityId = document.getElementById("facilityId").value;
 
-        // 폼 제출이 문제없이 진행됨
-        console.log("리뷰 데이터:", {
-            rating: rating,
-            comment: comment,
-            facilityId: facilityId,
-            id : id
-        });
 
-
-        console.log("되나요ㅕ?"+ id);
 
         const url = '/Review/reviewInsert';
         const data = {
@@ -1011,10 +903,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-/*게시판*/
+/*게시물 -커뮤니티*/
 const boardTab = document.getElementById("board-tab");
 boardTab.addEventListener("click", async function(){
-    console.log("클릭됨");
 
     try {
         const response = await fetch("/user/board");
@@ -1023,7 +914,7 @@ boardTab.addEventListener("click", async function(){
         }
 
         const data = await response.json();
-        console.log("받은 데이터:", data);
+        /*console.log("받은 데이터:", data);*/
 
         const cardContainer = document.querySelector("#posts .card-container");
         cardContainer.textContent = "";
@@ -1041,7 +932,6 @@ boardTab.addEventListener("click", async function(){
             // 데이터 렌더링 함수
             const renderData = async (page) => {
 
-                console.log("렌더링?");
 
                 const cardContainer = document.querySelector("#posts .card-container");
                 cardContainer.textContent = "";
@@ -1130,7 +1020,6 @@ boardTab.addEventListener("click", async function(){
 
                 if (itemsToShow.length > 0) {
                     for (let item of itemsToShow) {
-                        console.log(item);
                         cardHtml += `
                     <div class="card-item d-flex justify-content-between border-bottom">
                         <div class="">
@@ -1196,9 +1085,10 @@ boardTab.addEventListener("click", async function(){
 });
 
 
+/* 게시물- 크루 */
 const crewTab = document.getElementById("crew-post-tab");
 crewTab.addEventListener("click", async function(){
-    console.log("크루탭 클릭!!");
+
 
     try {
         const response = await fetch("/user/crew");
@@ -1207,7 +1097,7 @@ crewTab.addEventListener("click", async function(){
         }
 
         const data = await response.json();
-        console.log("받은 데이터:", data);
+        /*console.log("받은 데이터:", data);*/
 
         const cardContainer = document.querySelector("#crewPosts .card-container");
         cardContainer.textContent = "";
@@ -1225,7 +1115,6 @@ crewTab.addEventListener("click", async function(){
             // 데이터 렌더링 함수
             const renderData = async (page) => {
 
-                console.log("렌더링?");
 
                 const cardContainer = document.querySelector("#crewPosts .card-container");
                 cardContainer.textContent = "";
@@ -1298,3 +1187,98 @@ crewTab.addEventListener("click", async function(){
     }
 
 });
+
+
+/* 댓글 - 커뮤니티 */
+const commentTab = document.getElementById("comments-tab");
+commentTab.addEventListener("click", async function() {
+
+    console.log("댓글 탭 클릭!");
+    try {
+        const response = await fetch("/user/comments");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+        const data = await response.json();
+        console.log("받은 데이터:", data);
+
+        const commentList = document.querySelector(".comment-list");
+        commentList.textContent = "";
+
+        const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
+        let currentPage = 1;
+
+        if(data.length === 0 || data.message === "작성한 댓글이 없습니다."){
+            const noResult = document.createElement("div");
+            noResult.classList.add('no-result', 'border-top');
+            noResult.textContent = "작성한 게시글이 없습니다.";
+            commentList.appendChild(noResult);
+        }else {
+            const renderData = async (page) => {
+
+                const commentList = document.querySelector(".comment-list");
+                commentList.textContent = "";
+
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+
+                const comment = document.createElement("div");
+                comment.classList.add('comment');
+                let commentHtml = '';
+
+                if (itemsToShow.length > 0) {
+                    for (let item of itemsToShow) {
+                        commentHtml += `
+                            <!-- 댓글 작성자 프로필 -->
+                            <div class="comment-header">
+                                <div class="post-author">
+                                    <img src="${item.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                                    <div class="author-info">
+                                        <!-- 댓글 본문 -->
+                                        <span class="author-name">${item.userNickname}</span>
+                                        <div class="meta-info">
+                                        <span class="post-date">${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                        </div>
+                                    </div>
+                                </div>
+               
+                            </div>
+                            <p class="comment-text">${item.content}</p>
+                        </div>
+                        `
+                    }
+                }
+
+
+                comment.innerHTML = commentHtml;
+                commentList.appendChild(comment);
+            };
+
+            // 첫 렌더링
+            if(Array.isArray(data)) await renderData(currentPage);
+            // 페이지네이션
+            if (data.length > itemsPerPage) {
+                const paginationElement = document.querySelector("#communityComments .pagination");
+
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            }else {
+                const paginationElement = document.querySelector("#communityComments .pagination");
+                paginationElement.textContent = "";
+            }
+
+        }
+    }catch(e){
+        console.error("AJAX 오류:", e);
+    }
+});
+

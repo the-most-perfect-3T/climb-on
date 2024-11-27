@@ -6,6 +6,7 @@
 package com.ohgiraffers.climbon.user.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
+import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
@@ -271,5 +272,32 @@ public class UserRestController {
     }
 
 
+    @GetMapping("comments")
+    public ResponseEntity<Object> getComments(@AuthenticationPrincipal AuthDetail userDetails){
+
+        // 유저 아이디
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+        }
+        Integer id = userDetails.getLoginUserDTO().getId();
+        System.out.println("id = " + id);
+
+        // 댓글 목록 가져오기
+        List<CommentDTO> comments = postService.getCommentsByPostId();
+        for (CommentDTO comment : comments) {
+            String commentUserNickname = postService.getUserNicknameById(comment.getUserId());
+            String commentUserProfilePic = postService.getUserProfilePicById(comment.getUserId());
+            comment.setUserNickname(commentUserNickname);
+            comment.setUserProfilePic(commentUserProfilePic);
+        }
+
+        System.out.println("comments = " + comments);
+
+        if(comments.isEmpty() || comments == null){
+            return ResponseEntity.ok(Map.of("comments", "작성한 댓글이 없습니다."));
+        }
+
+        return ResponseEntity.ok(comments);
+    }
 
 }
