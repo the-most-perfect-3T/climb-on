@@ -67,4 +67,8 @@ public class EventService
         return eventMapper.getMainEvents(role);
     }
 
+    public List<EventDTO> getAllCrewsEvents()
+    {
+        return eventMapper.getAllCrewsEvents();
+    }
 }

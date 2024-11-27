@@ -76,4 +76,10 @@
         FROM user_crew
         WHERE user_code = #{userCode} AND crew_code = #{crewCode};
     </select>
+
+    <select id="getAllCrewsEvents" resultMap="eventResult">
+        SELECT *
+        FROM calendar_events
+        WHERE crew_code IS NOT NULL;
+    </select>
 </mapper>

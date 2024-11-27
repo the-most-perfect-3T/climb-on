@@ -25,4 +25,6 @@ public interface EventMapper
     List<EventDTO> getMainEvents(boolean admin);
 
     Integer isUserInCrew(CrewEventDTO crewEventDTO);
+
+    List<EventDTO> getAllCrewsEvents();
 }

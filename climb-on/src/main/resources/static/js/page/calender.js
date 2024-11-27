@@ -754,40 +754,6 @@ document.addEventListener('DOMContentLoaded', function () {
             crewCalendar.refetchEvents();
         }
 
-        function populateEventList(eventData) {
-            const eventListContainer = document.getElementById('crew-activity-event-list');
-            eventListContainer.innerHTML = '';
-
-            eventData.forEach(event => {
-                const eventItem = document.createElement('div');
-                eventItem.className = 'crew-activity-event-item';
-                eventItem.innerHTML = `
-                                       <div class="crew-event-info">
-                            <span class="crew-event-status-tag">예정</span>
-                            <div class="crew-event-details">
-                                <p class="crew-event-date">${new Date(event.start).toLocaleDateString()} · ${new Date(event.start).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                })}</p>
-                                <p class="crew-event-location">서울숲클라이밍 종로점</p>
-                            </div>
-                          </div>
-                          <div class="crew-event-center">
-                            <p class="crew-event-title">${event.title}</p>
-                          </div>
-                          <div class="crew-event-right">
-                            <button class="participate-btn">
-                              <i class="fa-solid fa-child-reaching"></i><br/>
-                              <span> 참여 + </span> <!-- 참여 눌렀을 때 링크테이블에 추가-->
-                            </button>
-                          </div>
-
-        `;
-                eventListContainer.appendChild(eventItem);
-            })
-
-        }
-
     }
 
     // 개인 캘린더

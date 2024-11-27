@@ -9,16 +9,14 @@ import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.calendar.dto.CrewEventDTO;
 import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import com.ohgiraffers.climbon.calendar.service.EventService;
-import com.ohgiraffers.climbon.common.forconvenienttest.RoleUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class EventController
@@ -27,11 +25,6 @@ public class EventController
     private EventService eventService;
 
     private int user;
-
-//    @GetMapping
-//    public List<EventDTO> getEventsByType(@RequestParam("type") String type) {
-//        return eventService.getEventsByType(type);
-//    }
 
     @RequestMapping(value = "/events", method = RequestMethod.GET)
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
@@ -43,7 +36,6 @@ public class EventController
                 System.out.println("EventController.getPublicEvents.   ::   you are admin");
             }
         }
-        System.out.println("main calendar will show you the schedules");
         return eventService.getMainEvents(true);
     }
 
@@ -114,5 +106,14 @@ public class EventController
     public void deleteEvent(@PathVariable("id") int id)
     {
         eventService.deleteEvent(id);
+    }
+
+    @RequestMapping(value = "/events/allevent", method = RequestMethod.GET)
+    public List<EventDTO> getAllCrewsEvents(ModelAndView mv)
+    {
+        List<EventDTO> allCrewEvents = eventService.getAllCrewsEvents();
+        System.out.println("allCrewEvents.isEmpty(): " + allCrewEvents.isEmpty());
+
+        return allCrewEvents;
     }
 }
