@@ -19,6 +19,9 @@ public class SearchService {
     @Autowired
     private SearchDAO searchDAO;
 
+    @Autowired
+    private PostDAO postDAO;
+
 
     public Map<String, Object> searchAll(String keyword){
         // 커뮤니티 게시글 검색
@@ -42,7 +45,6 @@ public class SearchService {
         int postLimit = Math.min(2, communityPosts.size());
         List<PostDTO> limitedPosts = communityPosts.subList(0, postLimit);
 
-
         // 결과를 Map으로 묶어서 반환
         Map<String, Object> result = new HashMap<>();
         result.put("communityPosts", communityPosts); // 전체 게시글
@@ -54,6 +56,24 @@ public class SearchService {
         result.put("limitedfacilities", facilitiesLimited);
 
         return result;
+    }
+
+    public List<FacilitiesDTO> loadMoreFacilities(String keyword, int offset, int limit){
+        List<FacilitiesDTO> facilities = searchDAO.searchFacilities(keyword);
+        int startIndex = Math.min(offset, facilities.size());
+        int endIndex = Math.min(offset + limit, facilities.size());
+        return facilities.subList(startIndex, endIndex);
+    }
+
+    public List<PostDTO> loadMorePosts(String keyword, int offset, int limit){
+        List<PostDTO> communityPosts = searchDAO.searchCommunityPosts(keyword);
+        int startIndex = Math.min(offset, communityPosts.size());
+        int endIndex = Math.min(offset + limit, communityPosts.size());
+        return communityPosts.subList(startIndex, endIndex);
+    }
+
+    public String getUserNicknameById(Integer userId) {
+        return postDAO.getUserNicknameById(userId);
     }
 
 }
