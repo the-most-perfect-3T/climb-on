@@ -542,6 +542,18 @@
     margin-right: 12px;
 }
 
+.section-mypage #board .section00 .card-list .card-item .card-meta span.crew-name {
+    position: relative;
+    padding-left: 12px;
+    margin-right: 12px;
+}
+.section-mypage #board .section00 .card-list .card-item .card-meta span.crew-name::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+}
+
+
 .section-mypage #board .section00 .card-list .card-item .card-meta .icon-wrap {
     margin-left: 45px;
     display: flex;
@@ -599,7 +611,7 @@
     margin-right: 15px;
 }
 .section-mypage #commentsTab .section00 .comment-list .author-info .author-name {
-    font-weight: 600px;
+    font-weight: 600;
 }
 .section-mypage #commentsTab .section00 .comment-list .author-info .meta-info {
     margin-top: 5px;

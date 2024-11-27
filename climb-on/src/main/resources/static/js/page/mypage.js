@@ -1097,7 +1097,7 @@ crewTab.addEventListener("click", async function(){
         }
 
         const data = await response.json();
-        /*console.log("받은 데이터:", data);*/
+        console.log("받은 데이터:", data);
 
         const cardContainer = document.querySelector("#crewPosts .card-container");
         cardContainer.textContent = "";
@@ -1141,6 +1141,7 @@ crewTab.addEventListener("click", async function(){
                                     <div class="card-content">${item.content}</div>
                                     <div class="card-meta">
                                         <span class="name">${item.isAnonymous ? "익명" : item.userNickname}</span>
+                                        <span class="crew-name">${item.crewName}</span>
                                         <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
                                         <div class="icon-wrap">
                                             <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
