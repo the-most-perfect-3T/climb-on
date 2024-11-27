@@ -41,6 +41,23 @@
         <result property="role" column="role"/>
     </resultMap>
 
+    <resultMap id="crewMembers" type="com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO">
+        <id property="id" column="ID"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="nickname" column="NICKNAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="userRole" column="USER_ROLE"/>
+        <result property="profilePic" column="PROFILE_PIC"/>
+        <result property="oneLiner" column="ONE_LINER"/>
+        <result property="facilityCode" column="FACILITY_CODE"/>
+        <result property="status" column="STATUS"/>
+        <result property="isBusiness" column="IS_BUSINESS"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="inactiveAt" column="INACTIVE_AT"/>
+        <result property="crewCode" column="crew_code"/>
+        <result property="role" column="role"/>
+    </resultMap>
+
     <select id="getMyCrewCodeAndRole" parameterType="int" resultMap="userCrew">
         SELECT *
         FROM user_crew
@@ -56,12 +73,21 @@
         AND b.user_code = #{myId};
     </select>
 
-    <select id="getCrewMemeberList" parameterType="int" resultMap="userMap">
-        SELECT u.*
+    <select id="getCrewMemberList" parameterType="int" resultMap="crewMembers">
+        SELECT
+            u.*,
+            uc.crew_code,
+            uc.role
         FROM users u
         JOIN user_crew uc
         on u.id = uc.user_code
-        WHERE uc.crew_code = #{id};
+        WHERE uc.crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
+    </select>
+
+    <select id="getImgUrlList" parameterType="int">
+        SELECT img_url
+        FROM crew_posts
+        WHERE crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
     </select>
 
 

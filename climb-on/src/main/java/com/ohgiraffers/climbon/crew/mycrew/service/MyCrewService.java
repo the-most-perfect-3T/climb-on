@@ -2,6 +2,7 @@ package com.ohgiraffers.climbon.crew.mycrew.service;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dao.MyCrewMapper;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,11 @@ public class MyCrewService
         return myCrewMapper.getMyCrewById(myId);
     }
 
-    public List<UserDTO> getCrewMemeberList(int id) {
-        return myCrewMapper.getCrewMemeberList(id);
+    public List<CrewMembersDTO> getCrewMemberList(int key) {
+        return myCrewMapper.getCrewMemberList(key);
+    }
+
+    public List<String> getImgUrlList(Integer key) {
+        return myCrewMapper.getImgUrlList(key);
     }
 }
