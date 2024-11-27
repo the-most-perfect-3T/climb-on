@@ -1,7 +1,7 @@
 @charset "utf-8";
 
-.section-mypage .aside,
-.section-mypage .tab-content {
+.section-mypage > .inner > .aside,
+.section-mypage > .inner > .tab-content {
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
 }
 
@@ -71,11 +71,11 @@
 
 
 /*tab content*/
-.section-mypage .tab-content {
+.section-mypage > .inner > .tab-content  {
     width: calc(100% - 320px);
     overflow-y: auto;
 }
-.section-mypage .tab-content .tab-pane {
+.section-mypage > .inner > .tab-content > .tab-pane {
     height: 100%;
 }
 
@@ -500,32 +500,3 @@
     font-weight: 600;
 }
 
-/* 평점 별 기본 스타일 */
-.rating {
-    unicode-bidi: bidi-override;
-    direction: rtl;
-    font-size: 2rem; /* 별의 크기 */
-}
-
-.rating > span {
-    display: inline-block;
-    position: relative;
-    width: 1.1em;
-}
-
-.rating > span i {
-    color: gray;
-    cursor: pointer;
-}
-
-/* 마우스 오버 및 이전 별에 대해 별 채우기 */
-.rating > span:hover i,
-.rating > span:hover ~ span i {
-    color: #f79256; /* 선택된 별을 금색으로 표시 */
-}
-
-/* 선택된 평점에 대한 별 */
-.rating > span.selected i {
-    color: #f79256;
-
-}

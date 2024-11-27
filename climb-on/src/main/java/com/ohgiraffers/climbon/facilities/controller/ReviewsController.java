@@ -90,6 +90,9 @@ public class ReviewsController {
         } else{
             result = reviewService.reviewInsert(reviewDTO, userId);
         }
+        System.out.println("userId = " + userId);
+        System.out.println("result = " + result);
+        System.out.println(reviewDTO);
 
         // 리뷰 저장 후, 리뷰 목록 페이지로 리다이렉트
         return ResponseEntity.ok(result);
