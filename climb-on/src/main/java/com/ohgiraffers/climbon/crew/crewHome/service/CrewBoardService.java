@@ -1,5 +1,7 @@
 package com.ohgiraffers.climbon.crew.crewHome.service;
 
+import com.ohgiraffers.climbon.community.dto.CommentDTO;
+import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dao.CrewBoardDAO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
@@ -39,37 +41,32 @@ public class CrewBoardService {
 
 
 
-    public List<CrewPostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, /*String dday,*/ Boolean status) {
+    public List<CrewPostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, Boolean status) {
         // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
         int offset = (page - 1) * pageSize;
 
         // 1. 공지 게시글 (2개 고정)
         List<CrewPostDTO> noticePosts = crewBoardDAO.getFixedPostsByCategory("공지", 3);
 
-        /*// 2. 가이드 게시글 (1개 고정)
-        List<PostDTO> guidePosts = crewBoardDAO.getFixedPostsByCategory("가이드", 1);*/
-
-        // 3. 일반 게시글 (페이징 적용)
-        List<CrewPostDTO> posts = crewBoardDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, /*dday,*/ status);
+        // 2. 일반 게시글 (페이징 적용)
+        List<CrewPostDTO> posts = crewBoardDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, status);
         // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
 
-        //4. 게시글 합치기
+        // 3. 게시글 합치기
         List<CrewPostDTO> allPosts = new ArrayList<>();
         allPosts.addAll(noticePosts);
-//        allPosts.addAll(guidePosts);
         allPosts.addAll(posts);
-//        System.out.println(dday); dday 들어오는지 확인용 출력
         return allPosts;
     }
 
 
     public Map<String, List<CrewPostDTO>> getPostsWithPinned(
-            int page, int pageSize, String category, String searchKeyword, String sort, /*String dday,*/ Boolean status) {
+            int page, int pageSize, String category, String searchKeyword, String sort, Boolean status) {
         int offset = (page - 1) * pageSize;
 
         Map<String, List<CrewPostDTO>> result = new HashMap<>();
 
-        // 1. 공지 5개 고정
+        // 1. 공지 3개 고정
         List<CrewPostDTO> pinnedNoticePosts = crewBoardDAO.getFixedPostsByCategory("공지", 3);
         result.put("pinnedNoticePosts", pinnedNoticePosts);
 
@@ -79,19 +76,13 @@ public class CrewBoardService {
             post.setUserNickname(userNickname);
         }
 
-//        // 2. 가이드 1개 고정
-//        List<CrewPostDTO> pinnedGuidePosts = crewBoardDAO.getFixedPostsByCategory("가이드", 1);
-//        result.put("pinnedGuidePosts", pinnedGuidePosts);
-
-//        for (CrewPostDTO post : pinnedGuidePosts) {
-//            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
-//            String userNickname =  crewBoardDAO.getUserNicknameById(post.getUserId());
-//            post.setUserNickname(userNickname);
-//        }
-
-        // 3. 일반 게시글
+        // 2. 일반 게시글
         List<CrewPostDTO> generalPosts = crewBoardDAO.getPostsByPageAndCategoryAndSearch(
-                offset, pageSize, category, searchKeyword, sort, /* dday,*/ status);
+                offset, pageSize, category, searchKeyword, sort, status);
+
+        for (CrewPostDTO post : generalPosts) {
+            post.setCrewName(crewBoardDAO.getCrewNameByCrewCode(post.getCrewCode()));
+        }
 
         result.put("generalPosts", generalPosts);
 
@@ -138,5 +129,17 @@ public class CrewBoardService {
     public String getUserNicknameById(Integer userId) {
         return crewBoardDAO.getUserNicknameById(userId);
     }
+
+    /*public PostDTO getPostById(Integer id, Integer userId) {
+    }
+
+    public List<CommentDTO> getCommentsByPostId(Integer id) {
+    }
+
+    public PostDTO getPreviousPost(Integer id) {
+    }
+
+    public PostDTO getNextPost(Integer id) {
+    }*/
 }
 

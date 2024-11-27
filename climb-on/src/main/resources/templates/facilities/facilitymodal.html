@@ -2,20 +2,15 @@
 <html lang="en">
 <div th:fragment="facilityModalFragment" class="facility-modal">
 
-
     <!-- 모달 -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">리뷰를 작성해주세요</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body">
-
+                    <h5 class="section-title" id="exampleModalLabel">리뷰 작성</h5>
                     <form id="reviewinsertForm">
-                        <div>
-                            <label for="ratingValue">평점 (1~5):</label>
+                        <div class="d-flex align-items-center justify-content-between py-4 border-bottom">
+                            <label for="ratingValue">평점 (1~5)</label>
                             <!-- 평점별 별을 표시하는 요소 -->
 
                             <div id="rating" class="rating">
@@ -30,16 +25,16 @@
                             <input type="hidden" id="reviewId" name="reviewId" value="">
                         </div>
 
-                        <div>
-                            <label for="comment">리뷰 내용:</label>
-                            <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
+                        <div class="py-4">
+                            <label for="comment" class="mb-2">리뷰 내용</label>
+                            <textarea id="comment" name="comment" rows="4" cols="50" placeholder="리뷰 내용을 입력해주세요. (최대255자)" maxlength="255" class="border w-100"></textarea>
                         </div>
                         <!-- 시설 아이디를 숨겨진 필드로 추가 -->
                         <input type="hidden" id="facilityId" name="facilityId" value="">
 
                         <div class="modal-footer">
-                            <button type="button" id="modal-close" data-bs-dismiss="modal">닫기</button>
-                            <button type="submit" class="review-Insert-btn" data-bs-dismiss="modal">리뷰작성</button>
+                            <button type="button" id="modal-close" data-bs-dismiss="modal" class="border">취소</button>
+                            <button type="submit" class="review-Insert-btn" data-bs-dismiss="modal">등록</button>
                         </div>
                     </form>
                 </div>

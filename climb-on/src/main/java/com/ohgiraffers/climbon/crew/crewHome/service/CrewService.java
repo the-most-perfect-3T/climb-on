@@ -2,6 +2,8 @@ package com.ohgiraffers.climbon.crew.crewHome.service;
 
 import com.ohgiraffers.climbon.crew.crewHome.dao.CrewDAO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
+import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,4 +61,22 @@ public class CrewService {
     public List<CrewDTO> getRecruitingCrews() {
         return crewDAO.getRecruitingCrews();
     }
+
+    public Object hasCrew(Integer id) {
+        return crewDAO.hasCrew(id);
+    }
+
+    public int getCrewCodeFromCrewsByUserId(Integer id) {
+        return crewDAO.getCrewCodeFromCrewsByUserId(id);
+    }
+
+    public int crewCaptainInsert(Integer id, int crewCode) {
+        UserCrewDTO captain = new UserCrewDTO();
+        captain.setUserCode(id);
+        captain.setCrewCode(crewCode);
+        captain.setRole(CrewRole.CAPTAIN);
+        return crewDAO.crewCaptainInsert(captain);
+    }
+
+
 }

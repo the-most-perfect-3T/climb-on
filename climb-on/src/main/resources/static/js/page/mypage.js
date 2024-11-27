@@ -219,6 +219,64 @@ async function getIsFavorite(id) {
     }
 }
 
+
+
+/**
+ * 공통 페이지네이션 함수
+ * @param {HTMLElement} paginationElement - 페이지네이션을 렌더링할 DOM 요소
+ * @param {Number} totalItems - 총 아이템 수
+ * @param {Number} itemsPerPage - 한 페이지당 표시할 아이템 수
+ * @param {Number} currentPage - 현재 페이지 번호
+ * @param {Function} onPageChange - 페이지 변경 시 호출할 콜백 함수 (페이지 번호 전달)
+ */
+function renderPagination(paginationElement, totalItems, itemsPerPage, currentPage, onPageChange) {
+    paginationElement.textContent = ""; // 기존 페이지네이션 초기화
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    console.log("totalPages : ", totalPages);
+    console.log("currentPage : ", currentPage);
+
+    // 이전 버튼
+    const prevButton = document.createElement("li");
+    prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+    prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+    prevButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage > 1) onPageChange(currentPage - 1);
+        console.log("현재 페이지(이전) ", currentPage);
+    });
+    paginationElement.appendChild(prevButton);
+
+    // 페이지 번호 버튼
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("li");
+        pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+        pageButton.innerHTML = `<a href="#">${i}</a>`;
+        pageButton.querySelector("a").addEventListener("click", (e) => {
+            e.preventDefault();
+            onPageChange(i);
+            console.log("현재 페이지 번호 ", i);
+        });
+        paginationElement.appendChild(pageButton);
+    }
+
+    // 다음 버튼
+    const nextButton = document.createElement("li");
+    nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+    nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+    nextButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+        console.log("현재 페이지(다음) ", currentPage);
+    });
+    paginationElement.appendChild(nextButton);
+}
+
+
+
+
+
 const favoriteTab = document.getElementById("favorite-tab");
 
 /*페이지네이션 없이..*/
@@ -368,7 +426,7 @@ favoriteTab.addEventListener("click", async function () {
             };
 
             // 페이지네이션 버튼 렌더링
-            const renderPagination = () => {
+            /*const renderPagination = () => {
                 console.log('페이지네이션 렌더링');
                 const pagination = document.querySelector("#favorite .pagination");
                 pagination.textContent = "";
@@ -419,11 +477,22 @@ favoriteTab.addEventListener("click", async function () {
                     }
                 });
                 pagination.appendChild(nextButton);
-            };
+            };*/
 
             // 첫 페이지 렌더링
             if (Array.isArray(data)) await renderData(currentPage);
-            if(data.length > itemsPerPage) renderPagination();
+            if(data.length > itemsPerPage) {
+
+                const paginationElement = document.querySelector("#favorite .pagination");
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            }
 
             // 즐겨찾기 버튼 클릭 이벤트 설정
             const favoriteList = document.getElementById("favorite").querySelector("ul.list");
@@ -479,10 +548,18 @@ favoriteTab.addEventListener("click", async function () {
 
                             // 삭제 후 다시 렌더링
                             await renderData(currentPage);
-                            if (data.length >= itemsPerPage) {
-                                renderPagination();
+                            if(data.length > itemsPerPage) {
+                                const paginationElement = document.querySelector("#favorite .pagination");
+                                const updatePagination = (newPage) => {
+                                    currentPage = newPage; // 페이지 변경
+                                    renderData(currentPage); // 데이터 렌더링
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                                };
+
+                                // 초기 렌더링 호출
+                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
                             } else {
-                                document.querySelector(".pagination").textContent = "";
+                                document.querySelector("#favorite .pagination").textContent = "";
                             }
                         }
                     }  catch (error) {
@@ -503,11 +580,23 @@ favoriteTab.addEventListener("click", async function () {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
 /*리뷰*/
 const reviewTab = document.getElementById("review-tab");
-reviewTab.addEventListener("click", async function(){
-    console.log("리뷰 탭 클릭됨")
+reviewTab.addEventListener("click", reviewClickFunction);
 
+
+async function reviewClickFunction(){
     try {
         const response = await fetch("/user/review");
         if (!response.ok) {
@@ -555,7 +644,7 @@ reviewTab.addEventListener("click", async function(){
                     <div class="d-flex justify-content-between">
                         <div class="left d-flex align-items-center">
                             <div class="img-wrap border">
-                                <img src="${item.profilePic}" alt="프로밀 이미지">
+                                <img src="${item.profilePic}" alt="프로필 이미지">
                             </div>
                             <div>
                                 <p class="name">${item.userNickname}</p>
@@ -565,7 +654,6 @@ reviewTab.addEventListener("click", async function(){
                             </div>
                         </div>
                         <div class="right">
-                            <!--할것인지 확인-->
                             <button type="button" class="btn-modify" onclick="editReview(${item.id})"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button type="button" class="btn-delete" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
@@ -576,60 +664,25 @@ reviewTab.addEventListener("click", async function(){
                 }
             };
 
-            // 페이지네이션 버튼 렌더링
-            const renderPagination = () => {
-                const pagination = document.querySelector("#review .pagination");
-                console.log("pagination: " + pagination);
-                pagination.textContent = "";
 
-                const totalPages = Math.ceil(data.length / itemsPerPage);
-
-                // 이전 버튼
-                const prevButton = document.createElement("li");
-                prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
-                prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
-                prevButton.querySelector("a").addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) {
-                        currentPage--;
-                        renderData(currentPage);
-                        renderPagination();
-                    }
-                });
-                pagination.appendChild(prevButton);
-
-                // 페이지 번호 버튼
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageButton = document.createElement("li");
-                    pageButton.className = `num ${i === currentPage ? "current" : ""}`;
-                    pageButton.innerHTML = `<a href="#">${i}</a>`;
-                    pageButton.querySelector("a").addEventListener("click", (e) => {
-                        e.preventDefault();
-                        currentPage = i;
-                        renderData(currentPage);
-                        renderPagination();
-                    });
-                    pagination.appendChild(pageButton);
-                }
-
-                // 다음 버튼
-                const nextButton = document.createElement("li");
-                nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
-                nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
-                nextButton.querySelector("a").addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        renderData(currentPage);
-                        renderPagination();
-                    }
-                });
-                pagination.appendChild(nextButton);
-            };
 
             // 첫 페이지 렌더링
             if (Array.isArray(data)) await renderData(currentPage);
-            if(data.length > itemsPerPage) renderPagination();
+            if(data.length > itemsPerPage) {
+                const paginationElement = document.querySelector("#review .pagination");
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            } else {
+                const paginationElement = document.querySelector("#review .pagination");
+                paginationElement.textContent = "";
+            }
 
 
             // 리뷰 삭제
@@ -671,9 +724,23 @@ reviewTab.addEventListener("click", async function(){
                             // 삭제 후 다시 렌더링
                             await renderData(currentPage);
                             if (data.length >= itemsPerPage) {
-                                renderPagination();
+                                const paginationElement = document.querySelector("#review .pagination");
+                                /*renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                                    currentPage = newPage;
+                                    renderData(currentPage);
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+                                });*/
+                                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                                const updatePagination = (newPage) => {
+                                    currentPage = newPage; // 페이지 변경
+                                    renderData(currentPage); // 데이터 렌더링
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                                };
+
+                                // 초기 렌더링 호출
+                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
                             } else {
-                                document.querySelector(".pagination").textContent = "";
+                                document.querySelector("#review .pagination").textContent = "";
                             }
                         }
 
@@ -693,7 +760,8 @@ reviewTab.addEventListener("click", async function(){
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
-});
+}
+
 
 function renderStars(averageRating) {
     let starsHtml = '';
@@ -758,6 +826,7 @@ async function editReview(id){
 async function getReview(id) {
     const response = await fetch(`/Review/getReview?id=${id}`);
     const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
+    console.log(review);
 
     return review;
 }
@@ -770,9 +839,11 @@ function loadReviewData(review) {
     console.log("보자보자"+ review.rating)
 
 // review.comment 값을 textarea에 설정
+    console.log("review.comment" + review.comment);
     document.getElementById('comment').value = review.comment;
-
+    console.log("review.id" + review.id);
     document.getElementById("reviewId").value = review.id;
+    document.getElementById("facilityId").value = review.facilityId;
 
 // 평점에 맞는 별 표시
     document.querySelectorAll('#rating .star').forEach(star => {
@@ -795,10 +866,8 @@ function loadReviewData(review) {
 
 document.addEventListener("DOMContentLoaded", function() {
     const stars = document.querySelectorAll(".rating .star"); // 별 요소들
-    const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
 
-
-    let rating =0;
+    let rating= 0;
     // 별 클릭 시 평점 설정
     stars.forEach(star => {
         star.addEventListener("click", function() {
@@ -820,7 +889,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const modalElement = document.getElementById("exampleModal");
 
-// 모달 닫힘 이벤트에 리스너 추가
+    // 모달 닫힘 이벤트에 리스너 추가
     modalElement.addEventListener("hidden.bs.modal", function () {
         // 입력 필드 초기화
         document.getElementById("comment").value = "";
@@ -863,22 +932,36 @@ document.addEventListener("DOMContentLoaded", function() {
         // 평점이 선택되지 않았으면 경고
 
         event.preventDefault();
+
+        const allGray = Array.from(document.querySelectorAll('#rating .star i')).every(icon => {
+            return icon.style.color === 'gray'; // 모든 아이콘이 회색인지 확인
+        });
+
+        if (allGray) {
+            console.log("모든 별이 회색입니다.");
+            alert("평점을 선택해 주세요!");
+            return;
+        }
         console.log("dsds"+rating);
-        if(rating === 0){
+        if(rating === 0 || rating===""){
             rating = document.getElementById("ratingValue").value;
-            console.log("입력했을때안했을때"+ rating)
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ rating)
+                console.log("입력했을때안했을때"+ value)
                 alert("평점을 선택해 주세요!");
                 return;
             }
 
-
         }else {
             document.getElementById("ratingValue").value = rating;
-            console.log("입력했을때" + rating)
-        }
+            // 모든 별 요소를 선택
 
+            console.log("입력했을때" + rating)
+            if (rating === 0 || rating ==="") {
+                console.log("입력했을때안했을때"+ value)
+                alert("평점을 선택해 주세요!");
+                return;
+            }
+        }
 
         // 리뷰 내용이 비어있으면 경고
         const comment = document.getElementById("comment").value;
@@ -889,19 +972,27 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         // 이 부분을 통해 시설 ID를 가져오는 로직을 작성하세요.
         let id = document.getElementById('reviewId').value;
-        document.getElementById('facilityId').value = currentfacility.id;
+        /*document.getElementById('facilityId').value = review.facilityId;*/
+        const facilityId = document.getElementById("facilityId").value;
 
         // 폼 제출이 문제없이 진행됨
+        console.log("리뷰 데이터:", {
+            rating: rating,
+            comment: comment,
+            facilityId: facilityId,
+            id : id
+        });
+
+
+        console.log("되나요ㅕ?"+ id);
 
         const url = '/Review/reviewInsert';
         const data = {
             rating: rating,
             comment: comment,
-            facilityId: currentfacility.id,
+            facilityId: facilityId,
             id : id
-
         };
-
 
         await fetch(url, {
             method: 'POST',  // POST 메소드로 요청
@@ -910,9 +1001,300 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
+        document.getElementById('reviewId').value = null;
 
-
-        await loadReviews(currentfacility.id);
+        /*await loadReviews(review.facilityId);*/
+        await reviewClickFunction();
 
     });
+});
+
+
+
+/*게시판*/
+const boardTab = document.getElementById("board-tab");
+boardTab.addEventListener("click", async function(){
+    console.log("클릭됨");
+
+    try {
+        const response = await fetch("/user/board");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("받은 데이터:", data);
+
+        const cardContainer = document.querySelector("#posts .card-container");
+        cardContainer.textContent = "";
+
+        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+        let currentPage = 1;
+
+        if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
+            const noResult = document.createElement("div");
+            noResult.classList.add('no-result', 'border-top');
+            noResult.textContent = "작성한 게시글이 없습니다.";
+            cardContainer.appendChild(noResult);
+        } else {
+
+            // 데이터 렌더링 함수
+            const renderData = async (page) => {
+
+                console.log("렌더링?");
+
+                const cardContainer = document.querySelector("#posts .card-container");
+                cardContainer.textContent = "";
+
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                /*console.log(data.pinnedNoticePosts?.length, data.pinnedGuidePosts?.length, data.generalPosts?.length)*/
+                /*const itemsToShow = data.generalPosts?.slice(startIndex, endIndex);*/
+                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+
+           /*     const mergedPosts = [
+                    ...(data.pinnedNoticePosts || []),
+                    ...(data.pinnedGuidePosts || []),
+                    ...(data.generalPosts || []),
+                ];
+
+                console.log("data.pinnedNoticePosts" + data.pinnedNoticePosts);
+                console.log("mergedPosts" + mergedPosts);
+                console.log("mergedPosts.pinnedNoticePosts" + mergedPosts.pinnedNoticePosts);*/
+
+                // 현재 페이지에 맞는 데이터 추출
+                // const itemsToShow = mergedPosts.slice(startIndex, endIndex);
+                // console.log("itemsToshow " + itemsToShow);
+
+               /* const table = document.createElement("table");
+                table.style.width = '100%';
+                table.style.borderCollapse = 'collapse';
+                let tableHtml = `
+                <thead>
+                    <tr>
+                        <th>카테고리</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>`*/
+
+                /*공지 핀포스트*/
+
+              /*  if (itemsToShow.pinnedNoticePosts?.length > 0) {
+                    for (let item of itemsToShow.pinnedNoticePosts) {
+                        tableHtml += `
+                    <tr class="pinned-post">
+                        <td>${item.category}</td>
+                        <td>
+                            <a href="/community/${item.id}">
+                                <span>${item.title}</span>
+                                <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                            </a>
+                        </td>
+                        <td>${item.displayName}</td>
+                        <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                    </tr>
+                `
+                    }
+                }
+
+                /!* 가이드 핀포스트 *!/
+                if (itemsToShow.pinnedGuidePosts?.length > 0) {
+                    for (let item of itemsToShow.pinnedGuidePosts) {
+                        tableHtml += `
+                <tr class="pinned-post">
+                        <td>${item.category}</td>
+                        <td>
+                            <a href="/community/${item.id}">
+                                <span>${item.title}</span>
+                                <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                            </a>
+                        </td>
+                        <td>${item.displayName}</td>
+                        <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                    </tr>
+                `;
+                    }
+                }
+
+                tableHtml += `</tbody>`;
+
+                table.innerHTML = tableHtml;*/
+
+                const cardList = document.createElement("div");
+                cardList.classList.add('card-list');
+                let cardHtml = '';
+
+                if (itemsToShow.length > 0) {
+                    for (let item of itemsToShow) {
+                        console.log(item);
+                        cardHtml += `
+                    <div class="card-item d-flex justify-content-between border-bottom">
+                        <div class="">
+                            <div class="card-title">
+                                <a href="/community/${item.id}">
+                                    <span>${item.title}</span>
+                                </a>
+                            </div>
+                            <div class="card-content">${item.content}</div>
+                            <div class="card-meta">
+                                <span class="name">${item.displayName}</span>
+                                <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                <div class="icon-wrap">
+                                    <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
+                                    <i class="fa-regular fa-heart"></i><span>${item.heartsCount}</span>
+                                    <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="img-wrap">
+                            <img src="${item.imageUrl != null ? item.imageUrl : ""}" alt="">
+                        </div>
+                    </div>
+                `
+                    }
+                }
+
+
+                cardList.innerHTML = cardHtml;
+                // cardContainer.appendChild(table);
+                cardContainer.appendChild(cardList);
+            };
+
+            // 첫 페이지 렌더링
+            /*if ( (Array.isArray(data.generalPosts) && data.generalPosts.length > 0) ) await renderData(currentPage);*/
+            /*const totalPosts =
+                (data.generalPosts?.length || 0) +
+                (data.pinnedNoticePosts?.length || 0) +
+                (data.pinnedGuidePosts?.length || 0)*/
+
+            if(Array.isArray(data)) await renderData(currentPage);
+
+            if (data.length > itemsPerPage) { // if (totalPosts > itemsPerPage) {
+                const paginationElement = document.querySelector("#board .pagination");
+
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                function updatePagination(newPage) {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                }
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            } else {
+                const paginationElement = document.querySelector("#board .pagination");
+                paginationElement.textContent = "";
+            }
+        }
+    }catch(e){
+        console.error("AJAX 오류:", e);
+    }
+});
+
+
+const crewTab = document.getElementById("crew-post-tab");
+crewTab.addEventListener("click", async function(){
+    console.log("크루탭 클릭!!");
+
+    try {
+        const response = await fetch("/user/crew");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("받은 데이터:", data);
+
+        const cardContainer = document.querySelector("#crewPosts .card-container");
+        cardContainer.textContent = "";
+
+        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+        let currentPage = 1;
+
+        if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
+            const noResult = document.createElement("div");
+            noResult.classList.add('no-result', 'border-top');
+            noResult.textContent = "작성한 게시글이 없습니다.";
+            cardContainer.appendChild(noResult);
+        } else {
+
+            // 데이터 렌더링 함수
+            const renderData = async (page) => {
+
+                console.log("렌더링?");
+
+                const cardContainer = document.querySelector("#crewPosts .card-container");
+                cardContainer.textContent = "";
+
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+
+                const cardList = document.createElement("div");
+                cardList.classList.add('card-list');
+                let cardHtml = '';
+
+                if (itemsToShow.length > 0) {
+                    for (let item of itemsToShow) {
+                        cardHtml += `
+                            <div class="card-item d-flex justify-content-between border-bottom">
+                                <div class="">
+                                    <div class="card-title">
+                                        <a href="/crew/post/${item.id}">
+                                            <span>${item.title}</span>
+                                        </a>
+                                    </div>
+                                    <div class="card-content">${item.content}</div>
+                                    <div class="card-meta">
+                                        <span class="name">${item.isAnonymous ? "익명" : item.userNickname}</span>
+                                        <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                        <div class="icon-wrap">
+                                            <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
+                                            <i class="fa-regular fa-heart"></i><span>${item.likeCount}</span>
+                                            <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="img-wrap">
+                                    <img src="${item.imageUrl != null ? item.imageUrl : ""}" alt="">
+                                </div>
+                            </div>
+                        `
+                    }
+                }
+
+
+                cardList.innerHTML = cardHtml;
+                cardContainer.appendChild(cardList);
+            };
+
+            // 첫 렌더링
+            if(Array.isArray(data)) await renderData(currentPage);
+            // 페이지네이션
+            if (data.length > itemsPerPage) {
+                const paginationElement = document.querySelector("#crewPosts .pagination");
+
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            }else {
+                const paginationElement = document.querySelector("#crewPosts .pagination");
+                paginationElement.textContent = "";
+            }
+        }
+    }catch (e){
+        console.error("AJAX 오류:", e);
+    }
+
 });

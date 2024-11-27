@@ -149,14 +149,36 @@ function loadKakaoMap(facilities) {
 
         kakao.maps.event.addListener(facilityMarker, 'click', function () {
 
+            var moveLatLon = new kakao.maps.LatLng(facility.latitude,facility.longitude);
+            map.panTo(moveLatLon);  // 지도 중심 이동
 
+            // 로컬 서버의 이미지를 마커로 설정
+            var markerImage = new kakao.maps.MarkerImage(
+                '/images/logo.svg', // 상대 경로로 로컬 이미지 지정
+                new kakao.maps.Size(50, 50),  // 마커 크기 (50x50)
+                { offset: new kakao.maps.Point(25, 50) } // 마커의 기준점 (중앙 하단)
+            );
+            // 기존 마커가 있으면 제거
+            if (currentMarker) {
+                currentMarker.setMap(null); // 기존 마커 삭제
+            }
 
-            // 시설 정보가 보이는지 여부를 체크
+            // 새로운 마커 생성
+            var marker = new kakao.maps.Marker({
+                position: moveLatLon,  // 마커 위치 설정
+                image: markerImage      // 커스텀 이미지 설정
+            });
 
-            console.log(markerPosition.getLat())
+            // 마커 지도에 표시
+            marker.setMap(map);
+
+            currentMarker = marker;
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
-            showFacility(facility);
+        //
+            setTimeout(function() {
+                showFacilityDetails(facility)
+            }, 300);  // 지도 이동 및 확대/축소가 끝난 후 800ms 후에 표시
 
 
         });
@@ -176,14 +198,13 @@ function loadKakaoMap(facilities) {
         map: map
     });*/
 
-  /*  // 지도 클릭 이벤트
-    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+   // 지도 클릭 이벤트
+  /*  kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
         const latlng = mouseEvent.latLng;
 
-      /!*  // 마커 위치 변경
+        // 마커 위치 변경
         marker.setPosition(latlng);
-        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};*!/
-        showFacility
+        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};
         // 선택된 좌표를 콘솔에 출력
         console.log(`Selected Location: ${selectedPosition.lat}, ${selectedPosition.lng}`);
     });*/
@@ -203,7 +224,6 @@ function showFacility(facility) {
         new kakao.maps.Size(50, 50),  // 마커 크기 (50x50)
         { offset: new kakao.maps.Point(25, 50) } // 마커의 기준점 (중앙 하단)
     );
-    console.log(facility.latitude,facility.longitude)
     // 기존 마커가 있으면 제거
     if (currentMarker) {
         currentMarker.setMap(null); // 기존 마커 삭제
@@ -219,9 +239,9 @@ function showFacility(facility) {
     marker.setMap(map);
 
     currentMarker = marker;
-
-    showFacilityDetails(facility)
-
+    setTimeout(function() {
+        showFacilityDetails(facility)
+    }, 300);
 }
 // 카카오 지도 API 스크립트 로드
 function loadKakaoApi(facilities) {
@@ -281,50 +301,53 @@ async function reviewcheckFavorite(id) {
 let globalDettails;
  //리뷰 상태저장
 const detailsContainer = document.getElementById('facilityDetailsContainer');
-async function showFacilityDetails(facility) {
-    // facility 객체의 값을 조건에 맞게 출력
-    if (facility != null) {
-        facilityDetailsContainer.style.display = 'block';
-    }
-    let isFavorite;
-
-       isFavorite = await checkFavorite(facility.id);
 
 
 
-   // console.log(isFavorite)
-    const facilityDetailsHTML = `
+    async function showFacilityDetails(facility) {
+
+        // facility 객체의 값을 조건에 맞게 출력
+        if (facility != null) {
+            facilityDetailsContainer.style.display = 'block';
+        }
+        let isFavorite;
+
+        isFavorite = await checkFavorite(facility.id);
+
+
+        // console.log(isFavorite)
+        const facilityDetailsHTML = `
  <div class="facility-details">
         <div class="facility-details-top">
         <img id="facilityImg" class="facility-banner-content" src=""/></br>
+       <div class="nameAndStart">
         <h3>${facility.facilityName || '정보 없음'}</h3>
+        <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
+        ${isFavorite ?? false ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
+          </button>
+          </div>
        </div>
         <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
         <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
         <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
         <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
-        <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
-        ${isFavorite ?? false ? '즐겨찾기 취소' : '즐겨찾기 추가'}
-          </button>
         </div>
     `;
-    // facilityDetailsContainer에 세부 정보를 삽입
+        // facilityDetailsContainer에 세부 정보를 삽입
 
-     globalDettails = facilityDetailsHTML;
-    detailsContainer.innerHTML = facilityDetailsHTML;
+        globalDettails = facilityDetailsHTML;
+        detailsContainer.innerHTML = facilityDetailsHTML;
 
 
-    // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
+        // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
 
-    console.log("여긴 들어와?");
-    await loadReviews(facility.id);
-    console.log("여긴 들어와?");
-    await loadImage(facility.id);
-    console.log("여긴 들어와?");
 
-    currentfacility = facility;
-    // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
+        await loadReviews(facility.id);
 
+        await loadImage(facility.id);
+
+        currentfacility = facility;
+        // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
 
 }
 
@@ -350,7 +373,7 @@ function renderStars(averageRating) {
 function loadReviews(facilityId) {
     // detailsContainer의 기존 HTML을 지우지 않고, 새로운 데이터를 추가하는 방식으로 수정
 
-    console.log("여긴 들어와?");
+
     // 1. 기존 리뷰 아이템 삭제
     const existingReviews = detailsContainer.querySelectorAll('.Review-item');
     existingReviews.forEach(review => {
@@ -439,7 +462,7 @@ function loadReviews(facilityId) {
                         <p>${Reviews.likeCount}</p>
                         <p>${Reviews.comment || '댓글이 없습니다'}</p>
                         <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
-                            ${isFavorite ?? false ? '싫어요누르면 삭제됨' : '좋아요'}
+                            ${isFavorite ?? false ? '싫어요' : '좋아요'}
                         </button>
                     </div>
                 `;
@@ -540,7 +563,7 @@ async function showButton(id, isFavorite ) {
 
     const button = document.getElementById(`favorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '즐겨찾기 취소' : '즐겨찾기 추가';
+        button.innerHTML = isFavorite ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>';
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `toggleFavorite(${id}, ${isFavorite})`);
@@ -730,7 +753,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("comment").value = "";
         document.getElementById("ratingValue").value = "";
         document.getElementById("facilityId").value = "";
-
+        document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //닫힐때 초기화
         resetStars();
         console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
     });
@@ -801,6 +824,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log("입력했을때" + rating)
             if (rating === 0 || rating ==="") {
                 console.log("입력했을때안했을때"+ value)
+
                 alert("평점을 선택해 주세요!");
                 return;
             }
@@ -810,6 +834,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const comment = document.getElementById("comment").value;
         if (comment.trim() === "") {
             alert("리뷰 내용을 작성해 주세요!");
+
             event.preventDefault();  // 폼 제출을 막음
             return;
         }
@@ -829,7 +854,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-       console.log("되나요ㅕ?"+ id);
+
 
         const url = '/Review/reviewInsert';
         const data = {
@@ -849,7 +874,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
         });
         document.getElementById('reviewId').value = null;
-
+        document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //폼보내고 초기화
         await loadReviews(currentfacility.id);
 
 
@@ -929,6 +954,8 @@ function loadReviewData(review) {
     console.log(review);
     // review.rating 값을 숨겨진 input에 설정
     document.getElementById('ratingValue').setAttribute('value', review.rating);
+    document.getElementById('exampleModalLabel').innerHTML = "리뷰 수정"; //함수들어오면 수정
+
 
 // review.comment 값을 textarea에 설정
     document.getElementById('comment').value = review.comment;
@@ -962,3 +989,68 @@ async function getUserId(){
     return Id;
 
 }
+
+/*
+// 첫 페이지 렌더링
+if (Array.isArray(data)) await renderData(currentPage);
+if(data.length > itemsPerPage) {
+    const paginationElement = document.querySelector("#review .pagination");
+    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+        currentPage = newPage;
+        renderData(currentPage);
+        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+    });
+}
+
+
+// 삭제 후 다시 렌더링
+await renderData(currentPage);
+if (data.length >= itemsPerPage) {
+    const paginationElement = document.querySelector("#review .pagination");
+    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+        currentPage = newPage;
+        renderData(currentPage);
+        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+    });
+} else {
+    document.querySelector("#review .pagination").textContent = "";
+}
+
+
+function renderPagination(paginationElement, totalItems, itemsPerPage, currentPage, onPageChange) {
+    paginationElement.textContent = ""; // 기존 페이지네이션 초기화
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // 이전 버튼
+    const prevButton = document.createElement("li");
+    prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+    prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+    prevButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    });
+    paginationElement.appendChild(prevButton);
+
+    // 페이지 번호 버튼
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("li");
+        pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+        pageButton.innerHTML = `<a href="#">${i}</a>`;
+        pageButton.querySelector("a").addEventListener("click", (e) => {
+            e.preventDefault();
+            onPageChange(i);
+        });
+        paginationElement.appendChild(pageButton);
+    }
+
+    // 다음 버튼
+    const nextButton = document.createElement("li");
+    nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+    nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+    nextButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    });
+    paginationElement.appendChild(nextButton);
+}*/

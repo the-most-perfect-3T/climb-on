@@ -1,6 +1,5 @@
 @charset "utf-8";
 
-.crew-aside
 .crew-main{
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
 }
@@ -11,16 +10,52 @@
     height: 850px;
     margin-top: 98px;
     background-color: #fff;
-
     text-align: center;
     justify-content: center;
 }
 
-.crew-aside .crew-profile-img{
+.crew-aside .crew-profile-img-wrapper{
     width: 270px;
     height: 200px;
     background-color: #222222;
     border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.crew-aside .crew-profile-img-wrapper .thumbnail{
+    width: 100%;
+    object-fit: cover;
+}
+
+.crewname-sns-container {
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.crewname-sns-container h3 {
+    font-size: 24px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.crew-member-count-recruit-status-container {
+
+}
+
+.crew-member-count-recruit-status-container .badge {
+    font-size: 0.9rem;
+    background-color: var(--point);
+}
+
+.crewname-sns-container .insta-img {
+    width: 50px;
+    height: 50px;
 }
 
 .crew-aside .crew-join-apply{

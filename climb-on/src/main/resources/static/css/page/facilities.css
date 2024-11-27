@@ -25,27 +25,33 @@
 .content #facilitiestb td {
     padding: 10px;
     text-align: left;
-    border-top: 1px solid #DEE2E6;  /* 위쪽 경계선 */
-    border-bottom: 1px solid #DEE2E6; /* 아래쪽 경계선 */
-    border-left: none;  /* 왼쪽 경계선 제거 */
-    border-right: none; /* 오른쪽 경계선 제거 */
+   /* border-top: 1px solid #DEE2E6;  !* 위쪽 경계선 *!
+    border-bottom: 1px solid #DEE2E6; !* 아래쪽 경계선 *!
+    border-left: none;  !* 왼쪽 경계선 제거 *!
+    border-right: none; !* 오른쪽 경계선 제거 *!*/
+}
+.content #facilitiestb td:hover{
+    background: rgba(255, 153, 0, 0.3);
+    border-color: var(--point);
+    border-radius: 10px;
 }
 
 /* 시설명과 주소가 세로로 나열되도록 설정 */
 .content .facility-info {
-    display: block; /* 세로로 배치 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 /* 시설명 스타일 */
 .content .facility-name {
-    font-weight: bold;
     font-size: 16px;
-    margin-bottom: 5px; /* 시설명과 주소 사이에 여백 추가 */
+
 }
 
 /* 주소 스타일 */
 .content .facility-address {
-    font-size: 14px;
+    font-size: 12px;
     color: #555;
 }
 .content .inner {
@@ -181,7 +187,7 @@ div#facilityDetailsContainer::-webkit-scrollbar-thumb {
 }
 .facility-details h3 {
     color: #333;
-    font-size: 25px;
+    font-size: 20px;
 
 
 }
@@ -222,8 +228,8 @@ p {
 .facility-banner-content{
     width: 100%;
     height: 150px;
-    background-color: #f79256; /* Orange background */
     position: relative;
+    margin-bottom: 10px;
 }
 .facility-details-content{
     width: 100%;
@@ -243,7 +249,6 @@ p {
 .rating {
     unicode-bidi: bidi-override;
     direction: rtl;
-    font-size: 2rem; /* 별의 크기 */
 }
 
 .rating > span {
@@ -253,9 +258,12 @@ p {
 }
 
 .rating > span i {
-    color: gray;
+    color: var(--gray);
     cursor: pointer;
+    font-size: 18px;
 }
+
+
 
 /* 마우스 오버 및 이전 별에 대해 별 채우기 */
 .rating > span:hover i,
@@ -268,6 +276,7 @@ p {
     color: #f79256;
 
 }
+
 #stars-container{
     display: block;  /* 별을 다른 줄로 내리기 위해 block으로 변경 */
     font-size: 20px;
@@ -435,4 +444,97 @@ body .btn-fmodal {
     padding: 3px 16px;
     background-color: #f79256;
     color: white;
+}
+
+.modal-content {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    background-color: var(--bs-modal-bg) !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: var(--bs-modal-border-radius) !important;
+}
+#exampleModal .modal-body {
+    padding: 35px 30px 50px;
+}
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: var(--bs-modal-padding);
+}
+#exampleModal .modal-body .section-title {
+    text-align: center;
+    margin-bottom: 22px;
+}
+.py-4 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+}
+.align-items-center {
+    align-items: center !important;
+}
+.justify-content-between {
+    justify-content: space-between !important;
+}
+.border-bottom {
+    border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+}
+.d-flex {
+    display: flex !important;
+}
+#exampleModal .modal-footer {
+    border: none;
+    justify-content: center;
+    padding: 0;
+}
+
+#exampleModal .modal-footer button {
+    width: 140px;
+    height: 45px;
+    border-radius: 6px;
+    margin: 0;
+}
+#exampleModal .modal-footer button.review-Insert-btn {
+    background: var(--point);
+    color: #fff;
+    font-weight: 600;
+    margin-left: 20px;
+}
+#exampleModal .modal-footer button {
+    width: 140px;
+    height: 45px;
+    border-radius: 6px;
+    margin: 0;
+}
+#exampleModal .modal-body label {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+#exampleModal .modal-body textarea {
+    border-radius: 10px;
+    padding: 20px;
+}
+.nameAndStart{
+    display: flex;
+}
+
+.fa.fa-bookmark-o{
+    position: absolute;
+    right: 30px;
+    top: 25px;
+    color: var(--point);
+    font-size: 24px;
+    margin-top: 135px;
+}
+.fa-bookmark{
+    position: absolute;
+    right: 30px;
+    top: 25px;
+    color: var(--point);
+    font-size: 24px;
+    margin-top: 135px;
 }

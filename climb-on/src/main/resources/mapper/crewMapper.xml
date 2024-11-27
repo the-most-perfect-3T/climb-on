@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ohgiraffers.climbon.crew.crewHome.dao.CrewDAO">
+
     <resultMap id="crew" type="com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO">
         <id property="id" column="id"/>
         <result property="crewName" column="crew_name"/>
@@ -13,6 +14,7 @@
         <result property="recruitingStatus" column="recruiting_status"/>
         <result property="permissionToJoin" column="is_permission"/>
         <result property="activeArea" column="active_area"/>
+        <result property="captainId" column="captain_id"/>
         <result property="status" column="status"/>
         <result property="createdAt" column="created_at"/>
         <result property="deletedAt" column="deleted_at"/>
@@ -24,7 +26,7 @@
     </select>
 
     <insert id="registerCrew" parameterType="com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO">
-        INSERT INTO crews (crew_name, img_url, description, crew_sns, climbing_category, recruiting_status, is_permission, active_area, deleted_at)
+        INSERT INTO crews (crew_name, img_url, description, crew_sns, climbing_category, recruiting_status, is_permission, active_area, captain_id, deleted_at)
         VALUES(
         #{crewName},
         #{imgUrl},
@@ -34,8 +36,20 @@
         #{recruitingStatus},
         #{permissionToJoin},
         #{activeArea},
+        #{captainId},
         NULL
         )
+    </insert>
+
+    <select id="getCrewCodeFromCrewsByUserId" parameterType="int" resultType="int">
+        SELECT id
+        FROM crews
+        WHERE captain_id = #{id}
+    </select>
+
+    <insert id="crewCaptainInsert" parameterType="com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO">
+        INSERT INTO user_crew (user_code, crew_code, role)
+        VALUES (#{userCode}, #{crewCode}, #{role})
     </insert>
     
     <select id="countAllCrews" resultType="int">
@@ -48,7 +62,8 @@
         SELECT *
         FROM crews
         WHERE status=1
-        LIMIT 5;
+        ORDER BY created_at DESC
+        LIMIT 5
     </select>
 
     <select id="selectFiveCrews" parameterType="hashmap" resultMap="crew">
@@ -62,7 +77,7 @@
         FROM crews a
         WHERE a.status =1
             <if test="areas != null and areas.size != 0">
-                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT ">
+                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT " separator=" AND a.active_area LIKE CONCAT ">
                     ('%' , #{area}, '%')
                 </foreach>
             </if>
@@ -75,7 +90,7 @@
         on a.id = b.crew_code
         WHERE a.status =1
             <if test="areas != null and areas.size != 0">
-                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT ">
+                <foreach collection="areas" item="area" open=" AND a.active_area LIKE CONCAT " separator=" AND a.active_area LIKE CONCAT ">
                     ('%' , #{area}, '%')
                 </foreach>
             </if>
@@ -91,7 +106,7 @@
         FROM crews
         WHERE status =1
         <if test="areas != null and areas.size != 0">
-            <foreach collection="areas" item="area" open=" AND active_area LIKE CONCAT ">
+            <foreach collection="areas" item="area" open=" AND active_area LIKE CONCAT " separator=" AND active_area LIKE CONCAT ">
                 ('%' , #{area}, '%')
             </foreach>
         </if>
@@ -102,6 +117,12 @@
         FROM crews
         WHERE status=1 AND recruiting_status = TRUE
         LIMIT 8;
+    </select>
+
+    <select id="hasCrew" parameterType="Integer">
+        SELECT *
+        FROM user_crew
+        WHERE user_code = #{id}
     </select>
 
 
