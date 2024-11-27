@@ -10,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/search")
@@ -23,6 +25,7 @@ public class SearchController {
 
     @GetMapping
     public String search(@RequestParam(value = "keyword", required = false) String keyword, Model model){
+
         // 검색어가 없으면 기본값 설정
         if (keyword == null || keyword.isEmpty()) {
             model.addAttribute("keyword", ""); // 빈 검색어로 기본 페이지 표시
@@ -43,6 +46,14 @@ public class SearchController {
         List<PostDTO> limitedCommunityPosts = (List<PostDTO>) searchResults.get("limitedCommunityPosts");
         List<FacilitiesDTO> limitedfacilities = (List<FacilitiesDTO>) searchResults.get("limitedfacilities");
 
+        for (PostDTO post : communityPosts) {
+            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+            String userNickname =  searchService.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+            String htmlContent = post.getContent();
+            String plainText = htmlContent.replaceAll("<[^>]*>", "");
+            post.setContent(plainText);
+        }
 
         model.addAttribute("keyword", keyword);
         model.addAttribute("communityPosts",communityPosts);
@@ -56,5 +67,17 @@ public class SearchController {
         model.addAttribute("communityPostCount", communityPosts.size());
 
         return "search/searchForm";
+    }
+
+    @GetMapping("/more-facilities")
+    @ResponseBody
+    public List<FacilitiesDTO> loadMoreFacilities(@RequestParam String keyword, @RequestParam int offset, @RequestParam int limit) {
+        return searchService.loadMoreFacilities(keyword, offset, limit);
+    }
+
+    @GetMapping("/more-posts")
+    @ResponseBody
+    public List<PostDTO> loadMorePosts(@RequestParam String keyword, @RequestParam int offset, @RequestParam int limit) {
+        return searchService.loadMorePosts(keyword, offset, limit);
     }
 }
