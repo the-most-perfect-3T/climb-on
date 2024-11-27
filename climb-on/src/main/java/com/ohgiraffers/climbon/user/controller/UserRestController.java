@@ -283,7 +283,7 @@ public class UserRestController {
         System.out.println("id = " + id);
 
         // 댓글 목록 가져오기
-        List<CommentDTO> comments = postService.getCommentsByPostId();
+        List<CommentDTO> comments = postService.getCommentsById(id);
         for (CommentDTO comment : comments) {
             String commentUserNickname = postService.getUserNicknameById(comment.getUserId());
             String commentUserProfilePic = postService.getUserProfilePicById(comment.getUserId());

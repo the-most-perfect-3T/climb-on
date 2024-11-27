@@ -1205,7 +1205,7 @@ commentTab.addEventListener("click", async function() {
         const commentList = document.querySelector(".comment-list");
         commentList.textContent = "";
 
-        const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
+        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
         let currentPage = 1;
 
         if(data.length === 0 || data.message === "작성한 댓글이 없습니다."){
@@ -1225,28 +1225,28 @@ commentTab.addEventListener("click", async function() {
                 const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
 
                 const comment = document.createElement("div");
-                comment.classList.add('comment');
+                comment.classList.add('comment-wrap');
                 let commentHtml = '';
 
                 if (itemsToShow.length > 0) {
                     for (let item of itemsToShow) {
                         commentHtml += `
                             <!-- 댓글 작성자 프로필 -->
-                            <div class="comment-header">
-                                <div class="post-author">
-                                    <img src="${item.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                            <div class="comment border-bottom">
+                                <div class="post-author d-flex align-items-center">
+                                    <div class="img-wrap">                                   
+                                        <img src="${item.userProfilePic}" alt="프로필 이미지"/>
+                                    </div>
                                     <div class="author-info">
                                         <!-- 댓글 본문 -->
                                         <span class="author-name">${item.userNickname}</span>
                                         <div class="meta-info">
-                                        <span class="post-date">${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                            <span class="post-date">${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
                                         </div>
                                     </div>
                                 </div>
-               
+                                <a href="/community/${item.postId}" class="comment-text">${item.content}</a>
                             </div>
-                            <p class="comment-text">${item.content}</p>
-                        </div>
                         `
                     }
                 }
