@@ -990,6 +990,7 @@ async function getUserId(){
 
 }
 
+/*
 // 첫 페이지 렌더링
 if (Array.isArray(data)) await renderData(currentPage);
 if(data.length > itemsPerPage) {
@@ -1052,4 +1053,4 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
         if (currentPage < totalPages) onPageChange(currentPage + 1);
     });
     paginationElement.appendChild(nextButton);
-}
+}*/
