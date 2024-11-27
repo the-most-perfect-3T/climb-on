@@ -69,7 +69,7 @@
     <div class="comment-section">
         <form th:action="@{'/community/' + ${post.id} + '/comment'}" method="post" class="comment-form">
             <div class="textarea-wrapper">
-        <textarea name="content" placeholder="댓글을 입력해주세요" required></textarea>
+        <textarea name="content" placeholder="댓글을 입력해주세요(500자 이내)" maxlength="500" required></textarea>
             </div>
             <div class="button-wrapper">
         <button class="submit-comment">작성</button>

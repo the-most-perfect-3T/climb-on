@@ -287,11 +287,12 @@
 }
 
 
-/* 댓글 내용 */
 .comment-text {
     font-size: 14px;
     color: #444;
     line-height: 1.6;
+    word-wrap: break-word; /* 단어를 자를 수 있도록 설정 */
+    white-space: pre-wrap; /* 공백과 줄바꿈을 유지하면서 다음 줄로 넘어감 */
 }
 
 /* 수정/삭제 메뉴 */

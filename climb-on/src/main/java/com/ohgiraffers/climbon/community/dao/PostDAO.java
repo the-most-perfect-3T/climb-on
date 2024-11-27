@@ -56,7 +56,7 @@ public interface PostDAO {
     @Delete("DELETE FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}")
     void removeLike(int postId, Integer userId);
 
-    @Insert("INSERT INTO user_post_heart (post_code, user_code) VALUES (#{postId}, #{userId})")  // 매퍼대신 여기에 쿼리문 작성 // 왜요??이유가있음?
+    @Insert("INSERT INTO user_post_heart (post_code, user_code, category) VALUES (#{postId}, #{userId}, 1)")  // 매퍼대신 여기에 쿼리문 작성 // 왜요??이유가있음?
     void addLike(int postId, Integer userId);
 
     @Select("SELECT COUNT(*) > 0 FROM user_post_heart WHERE post_code = #{postId} AND user_code = #{userId}") //매퍼대신 여기에 쿼리문 작성

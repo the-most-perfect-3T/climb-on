@@ -151,12 +151,22 @@ public class PostService {
     }
 
     public void updatePost(PostDTO post) {
-        // 수정 시 이미지 URL이 존재하지 않을 경우 기존 값을 유지
         PostDTO existingPost = postDAO.getPostById(post.getId());
-        if (post.getImageUrl() == null || post.getImageUrl().isEmpty()){
+        if (post.getImageUrl() == null || post.getImageUrl().isEmpty() || post.getContent() == null || post.getContent().isEmpty()) {
             post.setImageUrl(existingPost.getImageUrl());
+            String htmlContent = existingPost.getContent();
+            String plainText = htmlContent.replaceAll("<[^>]*>", "");
+            existingPost.setContent(plainText);
+            post.setContent(existingPost.getContent()); // 기존 게시글 내용 추가
+            String images = existingPost.getImageUrl();
+            String firstImage;
+            if (!Objects.isNull(images)) {
+                firstImage = images.split(",")[0];
+            } else {
+                firstImage = "";
+            }
+            post.setImageUrl(firstImage);
         }
-
         postDAO.updatePost(post);
     }
 

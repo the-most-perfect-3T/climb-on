@@ -32,7 +32,7 @@
     color: var(--point);
 }
 
-.head-search-input {
+.head-search-input[type="text"] {
     width: 70%;
     padding: 10px;
     border: none; /* 경계선 제거 */
