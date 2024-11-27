@@ -153,6 +153,7 @@ button:disabled {
 /* content */
 .content {
     padding-top: var(--headerHeight);
+    min-width: 1440px;
 }
 
 .section-title {
