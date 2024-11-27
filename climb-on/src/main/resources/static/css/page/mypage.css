@@ -367,7 +367,7 @@
 /*페이지네이션*/
 .pagination {
     /*display: none;*/
-    margin: 60px auto 0;
+    margin: 50px auto 0 !important;
     align-items: center;
     justify-content: center;
 }
@@ -410,7 +410,7 @@
     padding: 55px 0 55px 80px;
 }
 .section-mypage #review .section00 .section-title {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 .section-mypage #review .section00 .review-list li:not(.no-result) {
@@ -477,26 +477,77 @@
     max-height: 90px;
 }
 
+
 /*게시판 */
 .section-mypage #board .section00 {
-    padding: 55px 0 55px 80px;
+    padding: 55px 0 0 80px;
 }
 .section-mypage #board .section00 .section-title {
-    margin-bottom: 50px;
+    margin-bottom: 25px;
 }
-.section-mypage #board .section00 ul {
+.section-mypage #board .section00 > ul {
     margin-bottom: 30px;
 }
-.section-mypage #board .section00 ul li button {
-    width: 80px;
+.section-mypage #board .section00 > ul > li button {
+    /*width: 80px;*/
     height: 40px;
     border-radius: 999px;
     margin-right: 10px;
+    padding: 0 15px;
 }
-.section-mypage #board .section00 ul li button.active {
+.section-mypage #board .section00 > ul > li button.active {
     background: var(--point);
     border-color: var(--point) !important;
     color: #fff;
     font-weight: 600;
 }
 
+.section-mypage #board .section00 .card-container .no-result {
+    padding: 30px 0;
+}
+
+.section-mypage #board .section00 .card-list {
+    border-top: 2px solid var(--black);
+}
+.section-mypage #board .section00 .card-list .card-item {
+    padding: 20px 25px;
+}
+.section-mypage #board .section00 .card-list .card-item .card-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.section-mypage #board .section00 .card-list .card-item .card-content {
+    font-size: 14px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.section-mypage #board .section00 .card-list .card-item .card-meta {
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+}
+.section-mypage #board .section00 .card-list .card-item .card-meta span,
+.section-mypage #board .section00 .card-list .card-item .card-meta i {
+    font-size: 14px;
+    color: var(--gray);
+}
+.section-mypage #board .section00 .card-list .card-item .card-meta span.name {
+    color: var(--darkGray);
+    margin-right: 12px;
+}
+
+.section-mypage #board .section00 .card-list .card-item .card-meta .icon-wrap {
+    margin-left: 45px;
+    display: flex;
+    align-items: center;
+}
+.section-mypage #board .section00 .card-list .card-item .card-meta .icon-wrap i {
+    margin-right: 5px;
+}
+.section-mypage #board .section00 .card-list .card-item .card-meta .icon-wrap span {
+    margin-right: 10px;
+}

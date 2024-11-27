@@ -234,6 +234,9 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
+    console.log("totalPages : ", totalPages);
+    console.log("currentPage : ", currentPage);
+
     // 이전 버튼
     const prevButton = document.createElement("li");
     prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
@@ -241,6 +244,7 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
     prevButton.querySelector("a").addEventListener("click", (e) => {
         e.preventDefault();
         if (currentPage > 1) onPageChange(currentPage - 1);
+        console.log("현재 페이지(이전) ", currentPage);
     });
     paginationElement.appendChild(prevButton);
 
@@ -252,6 +256,7 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
         pageButton.querySelector("a").addEventListener("click", (e) => {
             e.preventDefault();
             onPageChange(i);
+            console.log("현재 페이지 번호 ", i);
         });
         paginationElement.appendChild(pageButton);
     }
@@ -263,6 +268,7 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
     nextButton.querySelector("a").addEventListener("click", (e) => {
         e.preventDefault();
         if (currentPage < totalPages) onPageChange(currentPage + 1);
+        console.log("현재 페이지(다음) ", currentPage);
     });
     paginationElement.appendChild(nextButton);
 }
@@ -476,12 +482,16 @@ favoriteTab.addEventListener("click", async function () {
             // 첫 페이지 렌더링
             if (Array.isArray(data)) await renderData(currentPage);
             if(data.length > itemsPerPage) {
+
                 const paginationElement = document.querySelector("#favorite .pagination");
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
-                    currentPage = newPage;
-                    renderData(currentPage);
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
-                });
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
             }
 
             // 즐겨찾기 버튼 클릭 이벤트 설정
@@ -540,11 +550,14 @@ favoriteTab.addEventListener("click", async function () {
                             await renderData(currentPage);
                             if(data.length > itemsPerPage) {
                                 const paginationElement = document.querySelector("#favorite .pagination");
-                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
-                                    currentPage = newPage;
-                                    renderData(currentPage);
-                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
-                                });
+                                const updatePagination = (newPage) => {
+                                    currentPage = newPage; // 페이지 변경
+                                    renderData(currentPage); // 데이터 렌더링
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                                };
+
+                                // 초기 렌더링 호출
+                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
                             } else {
                                 document.querySelector("#favorite .pagination").textContent = "";
                             }
@@ -631,7 +644,7 @@ async function reviewClickFunction(){
                     <div class="d-flex justify-content-between">
                         <div class="left d-flex align-items-center">
                             <div class="img-wrap border">
-                                <img src="${item.profilePic}" alt="프로밀 이미지">
+                                <img src="${item.profilePic}" alt="프로필 이미지">
                             </div>
                             <div>
                                 <p class="name">${item.userNickname}</p>
@@ -641,7 +654,6 @@ async function reviewClickFunction(){
                             </div>
                         </div>
                         <div class="right">
-                            <!--할것인지 확인-->
                             <button type="button" class="btn-modify" onclick="editReview(${item.id})"><i class="fa-solid fa-pen-to-square"></i></button>
                             <button type="button" class="btn-delete" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
@@ -658,11 +670,18 @@ async function reviewClickFunction(){
             if (Array.isArray(data)) await renderData(currentPage);
             if(data.length > itemsPerPage) {
                 const paginationElement = document.querySelector("#review .pagination");
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
-                    currentPage = newPage;
-                    renderData(currentPage);
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
-                });
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            } else {
+                const paginationElement = document.querySelector("#review .pagination");
+                paginationElement.textContent = "";
             }
 
 
@@ -706,11 +725,20 @@ async function reviewClickFunction(){
                             await renderData(currentPage);
                             if (data.length >= itemsPerPage) {
                                 const paginationElement = document.querySelector("#review .pagination");
-                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+                                /*renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
                                     currentPage = newPage;
                                     renderData(currentPage);
                                     renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
-                                });
+                                });*/
+                                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                                const updatePagination = (newPage) => {
+                                    currentPage = newPage; // 페이지 변경
+                                    renderData(currentPage); // 데이터 렌더링
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                                };
+
+                                // 초기 렌더링 호출
+                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
                             } else {
                                 document.querySelector("#review .pagination").textContent = "";
                             }
@@ -997,34 +1025,34 @@ boardTab.addEventListener("click", async function(){
         const data = await response.json();
         console.log("받은 데이터:", data);
 
-        const cardContainer = document.querySelector("#board .card-container");
+        const cardContainer = document.querySelector("#posts .card-container");
         cardContainer.textContent = "";
 
-        const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
+        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
         let currentPage = 1;
 
-        if (data.length === 0 || data.message === "작성된 게시물이 없습니다.") {
-
+        if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
+            const noResult = document.createElement("div");
+            noResult.classList.add('no-result', 'border-top');
+            noResult.textContent = "작성한 게시글이 없습니다.";
+            cardContainer.appendChild(noResult);
         } else {
-
 
             // 데이터 렌더링 함수
             const renderData = async (page) => {
 
                 console.log("렌더링?");
 
-                const cardContainer = document.querySelector("#board .card-container");
+                const cardContainer = document.querySelector("#posts .card-container");
                 cardContainer.textContent = "";
 
                 const startIndex = (page - 1) * itemsPerPage;
                 const endIndex = startIndex + itemsPerPage;
-                console.log(startIndex, endIndex);
 
-                console.log(data.pinnedNoticePosts?.length, data.pinnedGuidePosts?.length, data.generalPosts?.length)
-                const itemsToShow = data.generalPosts?.slice(startIndex, endIndex);
-                console.log(itemsToShow);
+                /*console.log(data.pinnedNoticePosts?.length, data.pinnedGuidePosts?.length, data.generalPosts?.length)*/
+                /*const itemsToShow = data.generalPosts?.slice(startIndex, endIndex);*/
+                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
 
-                /*const itemsToShow = data.slice(startIndex, endIndex);*/
            /*     const mergedPosts = [
                     ...(data.pinnedNoticePosts || []),
                     ...(data.pinnedGuidePosts || []),
@@ -1101,24 +1129,29 @@ boardTab.addEventListener("click", async function(){
                 let cardHtml = '';
 
                 if (itemsToShow.length > 0) {
-                    console.log("이거")
                     for (let item of itemsToShow) {
                         console.log(item);
                         cardHtml += `
-                    <div class="card-item">
-                        <div class="card-category">${item.category}</div>
-                        <div class="card-title">
-                            <a th:href=/community/${item.id}">
-                                <span>${item.title}</span>
-                            </a>
+                    <div class="card-item d-flex justify-content-between border-bottom">
+                        <div class="">
+                            <div class="card-title">
+                                <a href="/community/${item.id}">
+                                    <span>${item.title}</span>
+                                </a>
+                            </div>
+                            <div class="card-content">${item.content}</div>
+                            <div class="card-meta">
+                                <span class="name">${item.displayName}</span>
+                                <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                <div class="icon-wrap">
+                                    <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
+                                    <i class="fa-regular fa-heart"></i><span>${item.heartsCount}</span>
+                                    <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-content">${item.content}</div>
-                        <div class="card-meta">
-                            <span>${item.displayName}</span>
-                            <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
-                            <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
-                            <i class="fa-regular fa-heart"></i><span>${item.heartsCount}</span>
-                            <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                        <div class="img-wrap">
+                            <img src="${item.imageUrl != null ? item.imageUrl : ""}" alt="">
                         </div>
                     </div>
                 `
@@ -1132,22 +1165,136 @@ boardTab.addEventListener("click", async function(){
             };
 
             // 첫 페이지 렌더링
-            if ( (Array.isArray(data.generalPosts) && data.generalPosts.length > 0) ) await renderData(currentPage);
-            const totalPosts =
-                data.generalPosts?.length || 0 /*+
+            /*if ( (Array.isArray(data.generalPosts) && data.generalPosts.length > 0) ) await renderData(currentPage);*/
+            /*const totalPosts =
+                (data.generalPosts?.length || 0) +
                 (data.pinnedNoticePosts?.length || 0) +
-                (data.pinnedGuidePosts?.length || 0)*/;
+                (data.pinnedGuidePosts?.length || 0)*/
 
-            if (totalPosts > itemsPerPage) {
+            if(Array.isArray(data)) await renderData(currentPage);
+
+            if (data.length > itemsPerPage) { // if (totalPosts > itemsPerPage) {
                 const paginationElement = document.querySelector("#board .pagination");
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
-                    currentPage = newPage;
-                    renderData(currentPage);
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
-                });
+
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                function updatePagination(newPage) {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                }
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            } else {
+                const paginationElement = document.querySelector("#board .pagination");
+                paginationElement.textContent = "";
             }
         }
     }catch(e){
         console.error("AJAX 오류:", e);
     }
+});
+
+
+const crewTab = document.getElementById("crew-post-tab");
+crewTab.addEventListener("click", async function(){
+    console.log("크루탭 클릭!!");
+
+    try {
+        const response = await fetch("/user/crew");
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status);
+        }
+
+        const data = await response.json();
+        console.log("받은 데이터:", data);
+
+        const cardContainer = document.querySelector("#crewPosts .card-container");
+        cardContainer.textContent = "";
+
+        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+        let currentPage = 1;
+
+        if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
+            const noResult = document.createElement("div");
+            noResult.classList.add('no-result', 'border-top');
+            noResult.textContent = "작성한 게시글이 없습니다.";
+            cardContainer.appendChild(noResult);
+        } else {
+
+            // 데이터 렌더링 함수
+            const renderData = async (page) => {
+
+                console.log("렌더링?");
+
+                const cardContainer = document.querySelector("#crewPosts .card-container");
+                cardContainer.textContent = "";
+
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+
+                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+
+                const cardList = document.createElement("div");
+                cardList.classList.add('card-list');
+                let cardHtml = '';
+
+                if (itemsToShow.length > 0) {
+                    for (let item of itemsToShow) {
+                        cardHtml += `
+                            <div class="card-item d-flex justify-content-between border-bottom">
+                                <div class="">
+                                    <div class="card-title">
+                                        <a href="/crew/post/${item.id}">
+                                            <span>${item.title}</span>
+                                        </a>
+                                    </div>
+                                    <div class="card-content">${item.content}</div>
+                                    <div class="card-meta">
+                                        <span class="name">${item.isAnonymous ? "익명" : item.userNickname}</span>
+                                        <span>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                        <div class="icon-wrap">
+                                            <i class="fa-solid fa-eye"></i><span>${item.viewCount}</span>
+                                            <i class="fa-regular fa-heart"></i><span>${item.likeCount}</span>
+                                            <i class="fa-regular fa-comment-dots"></i><span>${item.commentsCount}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="img-wrap">
+                                    <img src="${item.imageUrl != null ? item.imageUrl : ""}" alt="">
+                                </div>
+                            </div>
+                        `
+                    }
+                }
+
+
+                cardList.innerHTML = cardHtml;
+                cardContainer.appendChild(cardList);
+            };
+
+            // 첫 렌더링
+            if(Array.isArray(data)) await renderData(currentPage);
+            // 페이지네이션
+            if (data.length > itemsPerPage) {
+                const paginationElement = document.querySelector("#crewPosts .pagination");
+
+                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                const updatePagination = (newPage) => {
+                    currentPage = newPage; // 페이지 변경
+                    renderData(currentPage); // 데이터 렌더링
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                };
+
+                // 초기 렌더링 호출
+                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+            }else {
+                const paginationElement = document.querySelector("#crewPosts .pagination");
+                paginationElement.textContent = "";
+            }
+        }
+    }catch (e){
+        console.error("AJAX 오류:", e);
+    }
+
 });
