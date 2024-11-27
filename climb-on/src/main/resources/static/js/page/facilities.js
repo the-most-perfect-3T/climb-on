@@ -149,14 +149,36 @@ function loadKakaoMap(facilities) {
 
         kakao.maps.event.addListener(facilityMarker, 'click', function () {
 
+            var moveLatLon = new kakao.maps.LatLng(facility.latitude,facility.longitude);
+            map.panTo(moveLatLon);  // 지도 중심 이동
 
+            // 로컬 서버의 이미지를 마커로 설정
+            var markerImage = new kakao.maps.MarkerImage(
+                '/images/logo.svg', // 상대 경로로 로컬 이미지 지정
+                new kakao.maps.Size(50, 50),  // 마커 크기 (50x50)
+                { offset: new kakao.maps.Point(25, 50) } // 마커의 기준점 (중앙 하단)
+            );
+            // 기존 마커가 있으면 제거
+            if (currentMarker) {
+                currentMarker.setMap(null); // 기존 마커 삭제
+            }
 
-            // 시설 정보가 보이는지 여부를 체크
+            // 새로운 마커 생성
+            var marker = new kakao.maps.Marker({
+                position: moveLatLon,  // 마커 위치 설정
+                image: markerImage      // 커스텀 이미지 설정
+            });
 
-            console.log(markerPosition.getLat())
+            // 마커 지도에 표시
+            marker.setMap(map);
+
+            currentMarker = marker;
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
-            showFacility(facility);
+        //
+            setTimeout(function() {
+                showFacilityDetails(facility)
+            }, 300);  // 지도 이동 및 확대/축소가 끝난 후 800ms 후에 표시
 
 
         });
@@ -176,14 +198,13 @@ function loadKakaoMap(facilities) {
         map: map
     });*/
 
-  /*  // 지도 클릭 이벤트
-    kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
+   // 지도 클릭 이벤트
+  /*  kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
         const latlng = mouseEvent.latLng;
 
-      /!*  // 마커 위치 변경
+        // 마커 위치 변경
         marker.setPosition(latlng);
-        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};*!/
-        showFacility
+        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};
         // 선택된 좌표를 콘솔에 출력
         console.log(`Selected Location: ${selectedPosition.lat}, ${selectedPosition.lng}`);
     });*/
@@ -203,7 +224,6 @@ function showFacility(facility) {
         new kakao.maps.Size(50, 50),  // 마커 크기 (50x50)
         { offset: new kakao.maps.Point(25, 50) } // 마커의 기준점 (중앙 하단)
     );
-    console.log(facility.latitude,facility.longitude)
     // 기존 마커가 있으면 제거
     if (currentMarker) {
         currentMarker.setMap(null); // 기존 마커 삭제
@@ -219,9 +239,9 @@ function showFacility(facility) {
     marker.setMap(map);
 
     currentMarker = marker;
-
-    showFacilityDetails(facility)
-
+    setTimeout(function() {
+        showFacilityDetails(facility)
+    }, 300);
 }
 // 카카오 지도 API 스크립트 로드
 function loadKakaoApi(facilities) {
@@ -281,50 +301,54 @@ async function reviewcheckFavorite(id) {
 let globalDettails;
  //리뷰 상태저장
 const detailsContainer = document.getElementById('facilityDetailsContainer');
-async function showFacilityDetails(facility) {
-    // facility 객체의 값을 조건에 맞게 출력
-    if (facility != null) {
-        facilityDetailsContainer.style.display = 'block';
-    }
-    let isFavorite;
-
-       isFavorite = await checkFavorite(facility.id);
 
 
 
-   // console.log(isFavorite)
-    const facilityDetailsHTML = `
+    async function showFacilityDetails(facility) {
+
+        // facility 객체의 값을 조건에 맞게 출력
+        if (facility != null) {
+            facilityDetailsContainer.style.display = 'block';
+        }
+        let isFavorite;
+
+        isFavorite = await checkFavorite(facility.id);
+
+
+        // console.log(isFavorite)
+        const facilityDetailsHTML = `
  <div class="facility-details">
         <div class="facility-details-top">
-        <img id="facilityImg" class="facility-banner-content" src=""/></br>
+        <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
+       <div class="nameAndStart">
         <h3>${facility.facilityName || '정보 없음'}</h3>
+        <div className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
+        ${isFavorite ?? false ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
+          </div>
+          </div>
        </div>
-        <p><strong>주소:</strong> ${facility.address || '정보 없음'}</p>
-        <p><strong>전화번호:</strong> ${facility.contact || '정보 없음'}</p>
-        <p><strong>운영시간:</strong> ${facility.openingTime || '정보 없음'}</p>
-        <p><strong>시설 유형:</strong> ${facility.facilityType || '정보 없음'}</p>
-        <button className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
-        ${isFavorite ?? false ? '즐겨찾기 취소' : '즐겨찾기 추가'}
-          </button>
+       <h4><strong>기본정보</strong></h4>
+        <p>주소: ${facility.address || '정보 없음'}</p>
+        <p>전화번호: ${facility.contact || '정보 없음'}</p>
+        <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
+        <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
         </div>
     `;
-    // facilityDetailsContainer에 세부 정보를 삽입
+        // facilityDetailsContainer에 세부 정보를 삽입
 
-     globalDettails = facilityDetailsHTML;
-    detailsContainer.innerHTML = facilityDetailsHTML;
+        globalDettails = facilityDetailsHTML;
+        detailsContainer.innerHTML = facilityDetailsHTML;
 
 
-    // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
+        // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
 
-    console.log("여긴 들어와?");
-    await loadReviews(facility.id);
-    console.log("여긴 들어와?");
-    await loadImage(facility.id);
-    console.log("여긴 들어와?");
 
-    currentfacility = facility;
-    // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
+        await loadReviews(facility.id);
 
+        await loadImage(facility.id);
+
+        currentfacility = facility;
+        // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
 
 }
 
@@ -427,20 +451,31 @@ function loadReviews(facilityId) {
                     // 리뷰 내용 구성
                     item.innerHTML = `
                     <div class="review-detail">
-                        <p>${Reviews.userNickname}</p>
-                          <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
-                            <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteReview(${Reviews.id})">삭제</button>
+                        <div class="review-detail-nickname">
+                            <p>${Reviews.userNickname}</p>
+                                <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
+                                    <button class="menu-buttonreview" onclick="toggleDropdown()" ><i class="fa-solid fa-bars"></i></button>
+                                    <div class="dropdown-menureview">
+                                        <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>    
+                                        <button class="delete-btn" onclick="confirmDelete(${Reviews.id})">삭제</button>
+                                    </div>
+                                </div>  
+                                
+                                
                         </div>
-                        <span>${timeText}</span>
-                        <div class="review-rating">
-                            <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                        
+                        <div class="time-rating">
+                             <span class="review-time">${timeText}</span>   
+                            <div class="review-rating">
+                                <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
+                            </div>
                         </div>
-                        <p>${Reviews.likeCount}</p>
-                        <p>${Reviews.comment || '댓글이 없습니다'}</p>
-                        <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
-                            ${isFavorite ?? false ? '싫어요누르면 삭제됨' : '좋아요'}
-                        </button>
+                        <p class="review-text">${Reviews.comment || '댓글이 없습니다'}</p>
+                        <div class="review-text-fav">
+                            <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
+                                ${isFavorite ?? false ?   '<i class="fa-heart fa-solid""></i>':'<i class="fa-heart fa-regular"></i>'}
+                            </button>
+                        </div>          
                     </div>
                 `;
                     detailsContainer.appendChild(item); // 새로 추가된 리뷰 항목을 detailsContainer에 추가
@@ -540,7 +575,7 @@ async function showButton(id, isFavorite ) {
 
     const button = document.getElementById(`favorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '즐겨찾기 취소' : '즐겨찾기 추가';
+        button.innerHTML = isFavorite ? '<i class="fa-bookmark fa-solid"></i>':'<i class="fa fa-bookmark-o"></i>' ;
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `toggleFavorite(${id}, ${isFavorite})`);
@@ -552,7 +587,7 @@ async function reviewshowButton(id, isFavorite ) {
 
     const button = document.getElementById(`reviewfavorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '싫어요' : '좋아요';
+        button.innerHTML = isFavorite ? '<i class="fa-solid fa-heart"></i>':'<i class="fa-heart fa-regular"></i>' ;
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `reviewtoggleFavorite(${id}, ${isFavorite})`);
@@ -698,6 +733,9 @@ else
 
 
 document.addEventListener("DOMContentLoaded", function() {
+
+
+
     const stars = document.querySelectorAll(".rating .star"); // 별 요소들
     const resetBtn = document.getElementById("modal-close"); // '닫기' 버튼
 
@@ -965,4 +1003,120 @@ async function getUserId(){
     console.log((Id));
     return Id;
 
+}
+
+/*
+// 첫 페이지 렌더링
+if (Array.isArray(data)) await renderData(currentPage);
+if(data.length > itemsPerPage) {
+    const paginationElement = document.querySelector("#review .pagination");
+    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+        currentPage = newPage;
+        renderData(currentPage);
+        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+    });
+}
+
+
+// 삭제 후 다시 렌더링
+await renderData(currentPage);
+if (data.length >= itemsPerPage) {
+    const paginationElement = document.querySelector("#review .pagination");
+    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, (newPage) => {
+        currentPage = newPage;
+        renderData(currentPage);
+        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, arguments.callee);
+    });
+} else {
+    document.querySelector("#review .pagination").textContent = "";
+}
+
+
+function renderPagination(paginationElement, totalItems, itemsPerPage, currentPage, onPageChange) {
+    paginationElement.textContent = ""; // 기존 페이지네이션 초기화
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    // 이전 버튼
+    const prevButton = document.createElement("li");
+    prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+    prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+    prevButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage > 1) onPageChange(currentPage - 1);
+    });
+    paginationElement.appendChild(prevButton);
+
+    // 페이지 번호 버튼
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("li");
+        pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+        pageButton.innerHTML = `<a href="#">${i}</a>`;
+        pageButton.querySelector("a").addEventListener("click", (e) => {
+            e.preventDefault();
+            onPageChange(i);
+        });
+        paginationElement.appendChild(pageButton);
+    }
+
+    // 다음 버튼
+    const nextButton = document.createElement("li");
+    nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+    nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+    nextButton.querySelector("a").addEventListener("click", (e) => {
+        e.preventDefault();
+        if (currentPage < totalPages) onPageChange(currentPage + 1);
+    });
+    paginationElement.appendChild(nextButton);
+}*/
+// 삭제 확인 함수
+function confirmDelete(reviewId) {
+    // 사용자가 "확인"을 클릭한 경우에만 삭제를 실행
+    if (confirm('정말 삭제하시겠습니까?')) {
+        deleteReview(reviewId);  // 삭제 함수 호출
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // 모든 드롭다운 버튼을 가져옵니다.
+    const menuButtons = document.querySelectorAll('.menu-buttonreview');
+
+    menuButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+            // 현재 버튼의 바로 다음 요소(드롭다운)를 찾습니다.
+            const dropdown = button.nextElementSibling;
+
+            if (dropdown) {
+                dropdown.classList.toggle('open'); // 'open' 클래스 추가/제거
+            } else {
+                console.error('Dropdown not found for button:', button);
+            }
+        });
+    });
+
+    // 외부 클릭 시 드롭다운 닫기
+    document.addEventListener('click', (event) => {
+        const openDropdowns = document.querySelectorAll('.dropdown-menureview.open');
+        openDropdowns.forEach((dropdown) => {
+            if (
+                !dropdown.contains(event.target) && // 드롭다운 내부 클릭이 아닌 경우
+                !dropdown.previousElementSibling.contains(event.target) // 버튼 클릭이 아닌 경우
+            ) {
+                dropdown.classList.remove('open');
+            }
+        });
+    });
+});
+
+function toggleDropdown() {
+    var dropdown = document.querySelector('.dropdown-menureview');
+    // 이미 열린 상태라면 숨기고, 닫힌 상태라면 열기
+    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+    // 애니메이션 효과를 위한 상태 변경
+    if (dropdown.style.display === 'block') {
+        dropdown.style.opacity = 1;
+        dropdown.style.transform = 'translateX(0)';
+    } else {
+        dropdown.style.opacity = 0;
+        dropdown.style.transform = 'translateX(10px)';
+    }
 }
