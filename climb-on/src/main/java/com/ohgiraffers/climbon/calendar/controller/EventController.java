@@ -48,16 +48,21 @@ public class EventController
     }
 
     @GetMapping("/myCrew")
-    public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
+    public ResponseEntity<?> getMyCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
     {
-        //크루 코드 어떻게 불러와
-
+        // 수정 필요
         int userCode = userDetails.getLoginUserDTO().getId();
-        System.out.println("Event Controller get Crew Events");
         if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님"); // 크루에 가입하세요? 정도의 메세지
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님");
         }
         List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);
+        return ResponseEntity.ok(crewEvents);
+    }
+
+    @RequestMapping(value = "/events/crew", method = RequestMethod.GET)
+    public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode)
+    {
+        List<EventDTO> crewEvents = eventService.getCrewEvents(1);
         return ResponseEntity.ok(crewEvents);
     }
 
@@ -77,11 +82,8 @@ public class EventController
 
     // 이벤트 저장
     @RequestMapping(value = "/events/batch", method = RequestMethod.POST)
-    public void addEvent(@RequestBody List<EventDTO> events)
-    {
-
-        if (events == null || events.size() == 0 || user == 0)
-        {
+    public void addEvent(@RequestBody List<EventDTO> events) {
+        if (events == null || events.size() == 0 || user == 0) {
             System.out.println("이벤트를 저장할 수 없습니다.");
         }
 
@@ -89,8 +91,7 @@ public class EventController
         {
             event.setUserCode(user);
             // 조건 검사
-            if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode()))
-            {
+            if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode())) {
                 // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
                 continue;
             }
