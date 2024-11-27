@@ -1,4 +1,3 @@
-
 .headcontainer{
     text-align: center;
     padding: 40px 20px;
@@ -46,7 +45,7 @@
 
 .head-search-button {
     padding: 10px 20px;
-    background-color: #ff6600;
+    background-color: var(--point);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -54,31 +53,223 @@
     font-size: 16px;
 }
 
-
 .search-results {
     margin-top: 30px;
     margin-left: 40px;
 }
 
-.result-section {
+.img-wrap {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 100%;
+    overflow: hidden;
+    /*margin-right: 40px;
+    margin-bottom: 6px;*/
+    background-color: #D9D9D9;
+    flex-shrink: 0;
+}
+
+.result-crew {
+    margin-top: 54px;
+    margin-bottom: 60px;
+}
+
+.crew-item {
+    display: flex; /* 사진과 이름을 세로로 정렬 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    align-items: center; /* 가운데 정렬 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    width: 150px; /* 각 아이템의 고정 너비 */
+}
+
+.crew-results {
+    display: flex; /* Flexbox 레이아웃 사용 */
+    flex-wrap: wrap; /* 너비 초과 시 다음 줄로 넘김 */
+    gap: 20px; /* 각 항목 간격 조정 */
+    justify-content: flex-start; /* 아이템을 왼쪽 정렬 */
+}
+
+.result-crew h2 {
+    display: flex; /* Flexbox로 가로 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 10px; /* 숫자와 메시지 간격 */
+    font-size: 18px;
+    color: var(--black);
+    padding-bottom: 5px;
     margin-bottom: 20px;
 }
 
-.result-section h2 {
-    font-size: 20px;
+.result-crew p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: var(--black);
+}
+
+.crewCount{
+    margin-left:5px;
+    font-size:18px;
+    color: var(--point);
+}
+
+/* 운동시설 아이템 스타일 */
+.facility-item {
+    padding: 20px 0; /* Add vertical padding for space */
+    border-bottom: 1px solid #ddd; /* Light gray bottom border */
+    margin-top: 5px;
+}
+
+.facility-item p {
+    margin: 0; /* Remove default margins */
+    font-size: 16px; /* Adjust text size */
+    color: #333; /* Set text color */
+}
+
+.result-facility {
+    margin-bottom: 124px;
+}
+
+.result-facility h2 {
+    font-size: 18px;
     color: #444;
-    border-bottom: 2px solid #ff6600;
     padding-bottom: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+    display: flex; /* Flexbox로 가로 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 10px; /* 숫자와 메시지 간격 */
+}
+
+.result-facility p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.facilityCount{
+    margin-left:5px;
+    font-size:18px;
+    color: var(--point);
+}
+
+.result-post {
+    margin-bottom: 145px;
+}
+
+.result-post h2 {
+    font-size: 18px;
+    color: #444;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    display: flex; /* Flexbox로 가로 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    gap: 10px; /* 숫자와 메시지 간격 */
+}
+
+.result-post p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.communityPostCount{
+    margin-left:5px;
+    font-size:18px;
+    color: var(--point);
+}
+
+.slash{
+    font-weight: bold;
 }
 
 .no-result {
     color: #999;
-    font-style: italic;
+    font-weight: normal;
 }
 
-.result-section p {
-    margin: 5px 0;
-    font-size: 16px;
+/* 카드 뷰 컨테이너 */
+.card-container {
+    display: flex; /* 플렉스 레이아웃 */
+    flex-direction: column; /* 세로로 정렬 */
+    margin : 20px auto;
+    width: 100%; /* CLI'MON의 C와 맞추기 위해 동일한 폭 설정 */
+    padding: 0; /* 리스트 뷰와 동일하게 내부 여백 제거 */
+    box-sizing: border-box; /* 패딩 포함한 폭 계산 */
+}
+
+
+/* 카드 뷰 개별 카드 */
+.card {
+    width: 100%; /* 카드가 컨테이너에 맞도록 설정 */
+    /*padding: 15px; !* 리스트 뷰와 동일한 내부 여백 *!*/
+    border-bottom: 1px solid #ddd; /* 카드 구분선 */
+    border-radius: 0; /* 모서리 반경 제거 */
+    box-shadow: none; /* 그림자 제거 */
+    --bs-card-border-color: none;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.thumbnail-wrapper {
+    width: 120px; /* 부모 컨테이너의 고정 폭 */
+    height: 120px; /* 부모 컨테이너의 고정 높이 */
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    overflow: hidden; /* 넘치는 부분 숨김 */
+    border-radius: 8px; /* 둥근 모서리 */
+    background-color: #f9f9f9; /* 배경색 */
+    margin-top: 12px;
+}
+
+.thumbnail {
+    max-width: 120px; /* 이미지의 최대 폭 설정 */
+    max-height: 120px; /* 이미지의 최대 높이 설정 */
+    width: 120px; /* 비율에 따라 자동 조정 */
+    height: 120px; /* 비율에 따라 자동 조정 */
+    display: block; /* 이미지를 블록 요소로 */
+}
+
+.card-body {
+    flex: 1;
+}
+
+.card-title a {
+    font-size: 20px;
     color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.card-meta {
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    gap: 5px; /* 아이템 간의 간격 */
+}
+
+.card-content {
+    font-size: 16px;
+    color: var(--black);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-clamp: 2; /* For browsers that support it */
+    height: 3rem;
+    text-overflow: ellipsis;
+    white-space: normal;
+}
+
+#more-btn-post {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: var(--point);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
