@@ -327,3 +327,26 @@ button:disabled {
     font-size: 24px;
     font-weight: 600;
 }
+
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--point) rgba(0,0,0,0);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 20px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--point);
+    border-radius: 100%;
+    border: none;
+}
