@@ -5,10 +5,19 @@ window.onload = async function() {
 
 }*/
 //검색*/
+
+/*document.addEventListener('DOMContentLoaded', async () => {
+    // DOMContentLoaded 이벤트가 발생하면, getFacilityDetails로부터 시설 정보를 받아옴
+    const facility = await getFacilityDetails();  // 서버에서 시설 정보 받기
+    await showFacilityDetails(facility);  // 받은 시설 정보를 보여줌
+
+});*/
+
 function showSuggestions() {
     const name = document.getElementById('codeInput').value;
     const suggestionsDiv = document.getElementById('suggestions');
 
+    suggestionsDiv.style.display = 'block';
     if (name) {
         fetch(`/facilities/suggestions?code=${encodeURIComponent(name)}`) // 패치요청 responseEntity 로 jason 받음
             .then(response => {                         // encodeURIComponent 안전하게하는것
@@ -22,12 +31,12 @@ function showSuggestions() {
                 suggestionsDiv.textContent = ''; // 이전 추천 결과 초기화
                 if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
                     data.forEach(facilities => {
-                        console.log(facilities.facilityName + "데이터가있음?"); // 각 메뉴 확인
+
                         const item = document.createElement('div');
                         item.className = 'suggestion-item';
                         item.textContent = facilities.facilityName; // 메뉴 코드 표시
                         item.onclick = () => selectSuggestion(facilities.facilityName);// 클릭 시 선택
-                        console.log(facilities.facilityName);
+
                         suggestionsDiv.appendChild(item);
                     });
                     suggestionsDiv.style.display = 'block'; // 추천 결과 표시
@@ -39,14 +48,15 @@ function showSuggestions() {
                 console.error('AJAX 오류:', error);
                 suggestionsDiv.style.display = 'none'; // 오류 발생 시 숨김
             });
-    } else {
+
+    }
+    else {
         suggestionsDiv.textContent = '';
         suggestionsDiv.style.display = 'none'; // 입력이 없을 경우 숨김
     }
 }
 
 function selectSuggestion(facilities) {
-    console.log(facilities);
     document.getElementById('codeInput').value = facilities; // 입력창에 선택한 코드 삽입
     document.getElementById('suggestions').style.display = 'none'; // 추천 결과 숨김
 }
@@ -58,12 +68,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const searchForm = document.getElementById('searchForm');
     searchForm.addEventListener('submit', handleSubmit);
     const favoriteButton = document.getElementById('favorite-btn-${facility.id}');
-    favoriteButton.addEventListener('click', function(event) {
-        // isFavorite 값을 서버나 초기 데이터에서 받아옵니다.
-        const isFavorite =
-            toggleFavorite(event, facility.id, isFavorite);
-    });
-
 
 
 
@@ -122,7 +126,14 @@ let selectedPosition = {lat: 37.4988635, lng: 127.0266457}; // 초기 위치
 
 // 카카오 지도 API 로드 함수
 function loadKakaoMap(facilities) {
+
+
     const {kakao} = window;
+
+    // 지도 로딩 중 애니메이션 표시
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    loadingSpinner.style.display = 'block'; // 로딩 스피너 보이기
+
 
     // 지도와 마커 생성
     const latitude = facilities[0]?.latitude || selectedPosition.lat;
@@ -131,15 +142,19 @@ function loadKakaoMap(facilities) {
     const container = document.getElementById('map');
     const options = {
         center: new kakao.maps.LatLng(latitude, longitude),
-        level: 3
+        level: 8
     };
     map = new kakao.maps.Map(container, options);
+    console.log("Kakao map is loaded!");
+
+    showOffcanvas();
+
 
     // 시설마다 마커 추가
     // facilities는 loadKakaoApi 호출 시 전달해야 함
     facilities.forEach(facility => {
         const markerPosition = new kakao.maps.LatLng(facility.latitude, facility.longitude);
-        console.log(facility)
+
         const facilityMarker = new kakao.maps.Marker({
             position: markerPosition,  // 마커 위치 설정
             map: map  // 지도에 마커 추가
@@ -175,21 +190,27 @@ function loadKakaoMap(facilities) {
             currentMarker = marker;
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
-        //
-            setTimeout(function() {
-                showFacilityDetails(facility)
-            }, 300);  // 지도 이동 및 확대/축소가 끝난 후 800ms 후에 표시
+            facilityDetailsContainer.classList.remove('visible');
+            facilityDetailsContainer.style.visibility = 'hidden';
+            showFacility(facility);
+
+
+            setTimeout(() => {
+                facilityDetailsContainer.classList.add('visible');  // visible 클래스를 추가하여 애니메이션 효과 시작
+            }, 500); // 50ms 정도 대기 후 애니메이션 시작
+
 
 
         });
         kakao.maps.event.addListener(map, 'click', function () {
 
-            facilityDetailsContainer.style.display = 'none';
-
-
-
+            facilityDetailsContainer.classList.remove('visible');
+            facilityDetailsContainer.style.visibility = 'hidden';
 
         });
+
+
+     //
     });
 
 /*    // 초기 마커 설정
@@ -241,6 +262,7 @@ function showFacility(facility) {
     currentMarker = marker;
     setTimeout(function() {
         showFacilityDetails(facility)
+
     }, 300);
 }
 // 카카오 지도 API 스크립트 로드
@@ -303,53 +325,52 @@ let globalDettails;
 const detailsContainer = document.getElementById('facilityDetailsContainer');
 
 
+const detailsContainerContainer = document.getElementById('facility-detail333');
 
-    async function showFacilityDetails(facility) {
+async function showFacilityDetails(facility) {
 
-        // facility 객체의 값을 조건에 맞게 출력
-        if (facility != null) {
-            facilityDetailsContainer.style.display = 'block';
-        }
-        let isFavorite;
+    // facility 객체의 값을 조건에 맞게 출력
+    if (facility != null) {
+        setTimeout(() => {
+            facilityDetailsContainer.classList.add('visible');
+        }, 50); // 50ms 정도 대기 후 애니메이션 시작
+    }
+    let isFavorite;
 
-        isFavorite = await checkFavorite(facility.id);
+    isFavorite = await checkFavorite(facility.id);
 
+    // facilityDetailsHTML 내에 로딩 스피너와 세부 정보를 함께 포함
+    const facilityDetailsHTML = `
+        <div class="facility-details">
 
-        // console.log(isFavorite)
-        const facilityDetailsHTML = `
- <div class="facility-details">
-        <div class="facility-details-top">
-        <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
-       <div class="nameAndStart">
-        <h3>${facility.facilityName || '정보 없음'}</h3>
-        <div className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
-        ${isFavorite ?? false ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
-          </div>
-          </div>
-       </div>
-       <h4><strong>기본정보</strong></h4>
-        <p>주소: ${facility.address || '정보 없음'}</p>
-        <p>전화번호: ${facility.contact || '정보 없음'}</p>
-        <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
-        <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
+            <div class="facility-details-top">
+                <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
+                <div class="nameAndStart">
+                    <h3>${facility.facilityName || '정보 없음'}</h3>
+                    <div class="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
+                        ${isFavorite ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
+                    </div>
+                </div>
+            </div>
+            <h4><strong>기본정보</strong></h4>
+            <p>주소: ${facility.address || '정보 없음'}</p>
+            <p>전화번호: ${facility.contact || '정보 없음'}</p>
+            <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
+            <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
         </div>
     `;
-        // facilityDetailsContainer에 세부 정보를 삽입
 
-        globalDettails = facilityDetailsHTML;
-        detailsContainer.innerHTML = facilityDetailsHTML;
+    // facilityDetailsContainer에 세부 정보를 삽입
+    globalDettails = facilityDetailsHTML;
+    detailsContainer.innerHTML = facilityDetailsHTML;
+    // loadReviews와 loadImage가 완료된 후
+    await loadReviews(facility.id);
+    await loadImage(facility.id);
 
 
-        // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
 
 
-        await loadReviews(facility.id);
-
-        await loadImage(facility.id);
-
-        currentfacility = facility;
-        // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
-
+    currentfacility = facility;
 }
 
 function renderStars(averageRating) {
@@ -385,7 +406,7 @@ function loadReviews(facilityId) {
     if (reviewSummary) {
         reviewSummary.remove();  // reviewSummary 삭제
     }
-
+    showSkeletonLoader();
     fetch(`/Review/Reviews?code=${facilityId}`, {
         method: 'GET',
         headers: {
@@ -398,16 +419,18 @@ function loadReviews(facilityId) {
             }
 
             return response.json();
+
         })
 
         .then(async data => {
             // 데이터를 받아와서 리뷰가 존재하는 경우에만 처리
-
+            hideSkeletonLoader();
             if (1) {
                 // 기존 내용 갱신 (기존 html이 있으면 그 내용 추가)
                 let Reviews22 = await getUserId();
                 console.log(Reviews22);
                 const reviewSummary = `
+                <div class="facilityReviews" id="facilityReviews">
                 <div class="item2">
                   <div class="item4">
                     <span class="review-sum">리뷰 : <i style="color: #FF7F27">${data.length}</i></span>
@@ -426,6 +449,7 @@ function loadReviews(facilityId) {
                   </div>
                     <br>
                 </div>
+                </div>
             `;
 
                 const item2 = document.createElement('div');
@@ -441,6 +465,7 @@ function loadReviews(facilityId) {
 
                 // 각 리뷰 내용 동적으로 생성하여 추가
                 for (const Reviews of data) {
+                    console.log(Reviews)
                     let Reviews2 = await getReview(Reviews.id);
                     const isFavorite = await reviewcheckFavorite(Reviews.id || defaultId);
                     console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
@@ -450,11 +475,13 @@ function loadReviews(facilityId) {
                     item.className = 'Review-item';
                     // 리뷰 내용 구성
                     item.innerHTML = `
-                    <div class="review-detail">
+                    <div class="review-detail" id="review-detail">
                         <div class="review-detail-nickname">
-                            <p>${Reviews.userNickname}</p>
+                        
+                            <p class="userModalOpen" data-id="${Reviews.reviewerId}">${Reviews.userNickname}</p>
+                            <span class="review-time">${timeText}</span>   
                                 <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
-                                    <button class="menu-buttonreview" onclick="toggleDropdown()" ><i class="fa-solid fa-bars"></i></button>
+                                    <button class="menu-buttonreview" ><i class="fa-solid fa-bars"></i></button>
                                     <div class="dropdown-menureview">
                                         <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>    
                                         <button class="delete-btn" onclick="confirmDelete(${Reviews.id})">삭제</button>
@@ -465,7 +492,7 @@ function loadReviews(facilityId) {
                         </div>
                         
                         <div class="time-rating">
-                             <span class="review-time">${timeText}</span>   
+      
                             <div class="review-rating">
                                 <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
                             </div>
@@ -473,7 +500,7 @@ function loadReviews(facilityId) {
                         <p class="review-text">${Reviews.comment || '댓글이 없습니다'}</p>
                         <div class="review-text-fav">
                             <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
-                                ${isFavorite ?? false ?   '<i class="fa-heart fa-solid""></i>':'<i class="fa-heart fa-regular"></i>'}
+                                ${isFavorite ?? false ?'<i class="fa-heart fa-solid"></i>':'<i class="fa-heart fa-regular"></i>'}
                             </button>
                         </div>          
                     </div>
@@ -482,13 +509,17 @@ function loadReviews(facilityId) {
 
                     const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
                     starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
+
                 }
+                    userMondalOpen();
+                    console.log("되나요");
             }
-                }
+        }
         })
         .catch(error => {
             console.error('Error:', error);
         });
+
 
 }
 
@@ -587,7 +618,7 @@ async function reviewshowButton(id, isFavorite ) {
 
     const button = document.getElementById(`reviewfavorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '<i class="fa-solid fa-heart"></i>':'<i class="fa-heart fa-regular"></i>' ;
+        button.innerHTML = isFavorite ? '<i class="fa-solid fa-heart"></i>':'<i class="fa-heart fa-regular"></i>';
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `reviewtoggleFavorite(${id}, ${isFavorite})`);
@@ -600,7 +631,7 @@ async function reviewupdateFavoriteOnServer(id, addFavorite) {
         facilityId: id,
         isFavorite: addFavorite,  // 즐겨찾기 추가 여부
     };
-
+    showSkeletonLoader();
     const response = await fetch(url, {
         method: 'POST',  // POST 메소드로 요청
         headers: {
@@ -608,7 +639,7 @@ async function reviewupdateFavoriteOnServer(id, addFavorite) {
         },
         body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
     });
-
+    hideSkeletonLoader();
     return response;
 }
 
@@ -700,6 +731,8 @@ async function getIsFavorite(id) {
 
 
 async function loadImage(facilityId){
+
+
     const url = `/facilityImg/getImage?facilityId=${facilityId}`;
 
 
@@ -720,10 +753,12 @@ async function loadImage(facilityId){
 if(Array.isArray(imagePath) && imagePath.length) {
     console.log("imagePath" + imagePath[0].filePath);
     imgElement.src = imagePath[0].filePath;
+
 }
 
 else
     imgElement.src = "/images/default.jpg";
+
 }
 
 
@@ -879,7 +914,7 @@ document.addEventListener("DOMContentLoaded", function() {
             id : id
 
         };
-
+        showSkeletonLoader();
 
         await fetch(url, {
             method: 'POST',  // POST 메소드로 요청
@@ -887,7 +922,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 'Content-Type': 'application/json',  // JSON 형식으로 전송
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+
         });
+        hideSkeletonLoader();
         document.getElementById('reviewId').value = null;
         document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //폼보내고 초기화
         await loadReviews(currentfacility.id);
@@ -899,10 +936,11 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 async function getReview(id) {
+    showSkeletonLoader();
     const response = await fetch(`/Review/getReview?id=${id}`);
     const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
     console.log(review);
-
+    hideSkeletonLoader();
 /*
 
     const reviewActions = document.querySelector(`#review-actions-${id}`);
@@ -1107,16 +1145,170 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function toggleDropdown() {
-    var dropdown = document.querySelector('.dropdown-menureview');
-    // 이미 열린 상태라면 숨기고, 닫힌 상태라면 열기
-    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
-    // 애니메이션 효과를 위한 상태 변경
-    if (dropdown.style.display === 'block') {
-        dropdown.style.opacity = 1;
-        dropdown.style.transform = 'translateX(0)';
-    } else {
-        dropdown.style.opacity = 0;
-        dropdown.style.transform = 'translateX(10px)';
+// 스켈레톤 로딩 표시
+function showSkeletonLoader() {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'skeleton-loader';
+    skeleton.innerHTML = '<div class="skeleton-item"></div>'.repeat(3); // 반복되는 스켈레톤 항목
+    detailsContainer.appendChild(skeleton);
+}
+
+// 스켈레톤 로딩 제거
+function hideSkeletonLoader() {
+    const skeleton = detailsContainer.querySelector('.skeleton-loader');
+    if (skeleton) skeleton.remove();
+}
+
+
+
+
+
+// DOM이 완전히 로드된 후 실행
+document.addEventListener("DOMContentLoaded", function () {
+    // 기존 이미지에 대해 처리
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (img.complete) {
+            // 이미지가 이미 로드된 경우
+            handleImageLoad({ target: img });
+        } else {
+            // 새로 로드되는 경우
+            img.addEventListener('load', handleImageLoad);
+        }
+
+        // 로드 실패 처리
+        img.addEventListener('error', () => {
+            console.error(`Failed to load image: ${img.src}`);
+        });
+    });
+
+    // 동적으로 추가된 이미지에 대한 처리
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.tagName === 'IMG') {
+                    if (node.complete) {
+                        handleImageLoad({ target: node });
+                    } else {
+                        node.addEventListener('load', handleImageLoad);
+                    }
+
+                    // 로드 실패 처리
+                    node.addEventListener('error', () => {
+                        console.error(`Failed to load image: ${node.src}`);
+                    });
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+
+// 이미지 로드 핸들러
+function handleImageLoad(event) {
+    const image = event.target; // 이벤트의 대상이 되는 이미지
+
+
+    // 부모 요소에서 skeleton-item을 찾고 숨김
+    const skeleton = image.parentElement.querySelector('.skeleton-item');
+    if (skeleton) {
+        skeleton.style.display = 'none';
+    }
+
+    // 이미지 표시
+
+    image.style.display = 'block';
+}
+
+
+
+
+
+// offcanvas를 보이게 하는 함수
+function showOffcanvas() {
+
+    const offcanvas = document.querySelector('.content .offcanvas');
+
+    // 로딩이 완료되었을 때
+
+    offcanvas.style.visibility = 'visible';  // 보이게 설정
+    offcanvas.style.transform = 'translateX(0)';  // 왼쪽으로 슬라이드
+
+    setTimeout(() => {
+        loadingSpinner.style.display = 'none'; // 애니메이션 숨기기
+    }, 500);  // 애니메이션이 끝날 때까지 약간의 시간 지연
+}
+
+// MutationObserver 설정
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+            // 맵이 로드된 후 추가되는 요소를 감지
+            if (node.nodeType === 1 && node.matches('#map')) {
+                // #map 요소가 DOM에 추가되었을 때 offcanvas를 표시
+                showOffcanvas();
+            }
+        });
+    });
+});
+
+// body나 특정 영역에서 새로운 요소가 추가되는지 감지
+observer.observe(document.body, { childList: true, subtree: true });
+
+
+
+
+function userMondalOpen() {
+    const userModalOpen = document.querySelectorAll(".userModalOpen");
+    if(userModalOpen){
+        userModalOpen.forEach(function(el, i){
+
+            console.log("el", el);
+
+            if(el.textContent === "익명"){
+                el.style.cursor = "default";
+            }
+            el.addEventListener("click", function(e){
+
+                console.log("e", e.target);
+                const userId = parseInt(e.target.getAttribute("data-id"));
+                console.log("userId", userId);
+
+                if (isNaN(userId)) {
+                    console.error("Invalid userId:", userId);
+                    return; // 유효하지 않은 경우 요청 중단
+                }
+                console.log("userId", userId);
+
+                fetch(`/user/${userId}`) // 서버의 요청 URL
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error: ${response.status}`);
+                        }
+                        return response.json(); // JSON 데이터를 기대
+                    })
+                    .then(data => {
+                        console.log("data", data);
+                        // 서버에서 받은 데이터로 모달 내용 채우기
+                        const userViewModal = document.getElementById("userViewModal");
+                        console.log(userViewModal.querySelector(".top .img-wrap img"));
+                        userViewModal.querySelector(".top .img-wrap img").setAttribute("src", data.user.profilePic);
+                        userViewModal.querySelector(".top .nickname").textContent = data.user.nickname;
+                        userViewModal.querySelector(".top .one-liner").textContent = data.user.oneLiner != null ? data.user.oneLiner : "한줄 소개가 없습니다.";
+                        userViewModal.querySelector(".middle .crew .cont").textContent = data.crewName != null ? data.crewName : "가입한 크루가 없습니다.";
+                        userViewModal.querySelector(".middle .home .cont").textContent = data.homeName != null ? data.homeName : "등록한 홈짐이 없습니다.";
+
+                        // 모달 띄우기
+                        const modal = new bootstrap.Modal(document.getElementById('userViewModal'));
+                        modal.show();
+                    })
+                    .catch(error => {
+                        console.error("에러 발생:", error);
+                    });
+            });
+        });
+
     }
 }
+
