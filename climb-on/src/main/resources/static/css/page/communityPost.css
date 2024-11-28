@@ -243,7 +243,7 @@ h2 {
 .dropdown .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 5px;
@@ -436,7 +436,7 @@ h2 {
     height: 36px;
     border: none;
     text-decoration: none;
-    color: #333; /* 기본 텍스트 색상 */
+    color: var(--black); /* 기본 텍스트 색상 */
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -448,7 +448,7 @@ h2 {
     align-items: center;
     border: 1px solid var(--borderColor); /* 기본 테두리 */
     text-decoration: none;
-    color: #333; /* 기본 텍스트 색상 */
+    color: var(--black); /* 기본 텍스트 색상 */
     border-radius: 50px; /* 약간 둥근 모서리 */
     transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -467,6 +467,23 @@ h2 {
     color: #ffffff; /* 아이콘 버튼의 호버 텍스트 색상 */
     border-color: var(--black); /* 아이콘 버튼의 호버 테두리 색상 */
 }
+
+.pagination a.disabled {
+    pointer-events: none; /* 클릭 불가능 */
+    color: #aaa; /* 흐린 색상 */
+    border-color: #ddd; /* 흐린 테두리 */
+    background-color: #f5f5f5; /* 비활성화된 배경색 */
+    cursor: not-allowed; /* 마우스 커서 변경 */
+}
+
+.pagination i.disabled {
+    pointer-events: none;
+    color: #aaa;
+    border-color: #ddd;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
 
 
 /* 활성화된 페이지 버튼 스타일 */

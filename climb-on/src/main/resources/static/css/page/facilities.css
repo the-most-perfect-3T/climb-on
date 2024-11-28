@@ -191,9 +191,15 @@ div#facilityDetailsContainer::-webkit-scrollbar-thumb {
 
 
 }
+.facility-details h4 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 20px;
+    color: #555;
+}
 .facility-details p {
-    margin: 10px;
-    font-size: 16px;
+    margin: 3px;
+    font-size: 12px;
     color: #555;
 }
 .facility-details-top {
@@ -292,9 +298,13 @@ p {
     color: #f79256;
 }
 
+.review-rating {
+    align-items: center;
+}
 /* 채워진 별 스타일 */
 .review-rating span.filled {
     color: #f79256; /* 채워진 별 색상 */
+
 }
 
 
@@ -389,12 +399,13 @@ textarea#comment {
 .review-guide {
     font-size: 12px;
     text-align: center; /* 텍스트를 가운데 정렬 */
-    margin-top: 20px;
+    margin-top: 10px;
     opacity: 80%;/* 위쪽 여백 추가 */
+
 }
 
 .reveiw-star-sum{
-    margin-top: 12px;
+
     text-align: center;
 }
 
@@ -406,10 +417,10 @@ textarea#comment {
 }
 .item4{
     text-align: left;  /* 부모 요소에 오른쪽 정렬 */
-    margin: 16px;
+    margin-top: 16px;
 }
 .item2{
-    border-bottom: 2px solid #ccc; /* 구분선 추가 (두께 2px, 색상 회색) */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 .review-avgtext{
     color: black;
@@ -523,6 +534,7 @@ body .btn-fmodal {
 }
 
 .fa.fa-bookmark-o{
+    cursor: default;  /* 기본 커서로 설정 */
     position: absolute;
     right: 30px;
     top: 25px;
@@ -531,10 +543,129 @@ body .btn-fmodal {
     margin-top: 135px;
 }
 .fa-bookmark{
+    cursor: default;  /* 기본 커서로 설정 */
     position: absolute;
     right: 30px;
     top: 25px;
     color: var(--point);
     font-size: 24px;
     margin-top: 135px;
+}
+.favorite-btn{
+    cursor: default;  /* 기본 커서로 설정 */
+}
+
+.review-detail{
+    margin-top: 10px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+
+
+}
+
+.review-detail-nickname{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.review-detail-nickname p{
+    padding-left: 10px;
+}
+.review-time{
+    padding-left: 10px;
+    font-size: 13px;
+    opacity: 70%;
+}
+.review-detail-nickname span{
+
+}
+.reviewstars-container{
+    padding-right: 16px;
+    font-size: 12px;
+
+}
+.review-text{
+    margin:10px;
+    font-size: 14px;
+    text-align: center;
+    padding-left: 10px;
+}
+.review-text-fav{
+    text-align: right;
+    margin: 10px;
+    padding-bottom: 5px;
+}
+
+.fa-heart.fa-solid{
+    color: var(--point);
+}
+.fa-heart.fa-regular{
+    color: var(--point);
+}
+.comment-actions-menu {
+    position: absolute;
+    top: 0;
+    right: 0; /* 오른쪽 끝 정렬 */
+}
+/* 기본 review-actions 스타일 */
+.review-actions {
+    position: relative;
+    background: none;
+    border: none;
+    opacity: 60%;
+    cursor: pointer;
+    color: #888;
+    margin-right: 12px;
+}
+
+/* dropdown 메뉴 스타일 */
+.dropdown-menureview {
+    display: block;
+    position: sticky;
+    top: 25px;
+    right: 0;
+    background: white;
+    border: 1px solid var(--borderColor);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 3px 8px;
+    font-size: 12px;
+
+    /* 숨김 상태 */
+    opacity: 0;
+    transform: translateX(0%);
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* 열림 상태 */
+.dropdown-menureview.open {
+    opacity: 1;
+    transform: translateX(-100%);
+    pointer-events: auto;
+}
+
+/* dropdown 항목 버튼 스타일 */
+.dropdown-menureview button,
+.dropdown-menureview form button {
+    font-size: 13px;
+    padding: 5px 10px;
+    margin: 2px 0;
+}
+
+/* review-actions에 hover 시 dropdown 메뉴 보이게 설정 */
+.review-actions:hover .dropdown-menureview {
+    display: block; /* hover 상태에서 dropdown 메뉴 보이게 */
+}
+
+/* .comment-actions-menu가 상위 div가 되었다면 해당 스타일 추가 */
+.comment-actions-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.time-rating{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -15,7 +15,7 @@
   <section>
     <div class="inner">
       <div class="top area">
-        <h2>커뮤니티게시판 글 쓰기</h2>
+        <h2 th:text="${post.id != null ? '커뮤니티게시판 수정' : '커뮤니티게시판 글 쓰기'}"></h2>
       </div>
       <br/>
       <form th:action="${post.id != null} ? '/community/' + ${post.id} + '/edit' : '/community/new'" method="post" id="writePostForm">
@@ -108,6 +108,12 @@
                   option.disabled = true;
               });
           }
+
+          const existingContent = '[[${post.content}]]';
+          if (existingContent) {
+              quill.root.innerHTML = existingContent; // Quill 에디터에 기존 내용 설정
+          }
+
       });
 
     function toggleEventFields(category){

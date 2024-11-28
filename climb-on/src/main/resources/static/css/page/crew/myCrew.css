@@ -36,16 +36,19 @@
     margin-top: 10px;
     margin-bottom: 10px;
     gap: 10px;
+    padding-left: 10px;
 }
 
 .crewname-sns-container h3 {
     font-size: 24px;
     font-weight: bold;
-    padding-left: 10px;
 }
 
 .crew-member-count-recruit-status-container {
-
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    gap: 10px;
 }
 
 .crew-member-count-recruit-status-container .badge {
@@ -58,8 +61,15 @@
     height: 50px;
 }
 
-.crew-aside .crew-join-apply{
+.crew-description {
+    margin-top: 20px;
+    padding-left: 10px;
+    align-items: center;
+    word-break: keep-all;
+    text-align: left;
+}
 
+.crew-aside .crew-join-apply{
     width: 250px;
     height: 55px;
     background-color: #FF7F27;
@@ -233,4 +243,43 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+
+/* 멤버 탭 */
+.container-list tr {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 870px;
+}
+
+.container-list td:first-child {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-left: 40px;
+}
+
+.table img {
+    object-fit: cover;
+}
+
+.container-list td:nth-child(2) {
+    align-self: center;
+    margin-left: 20px;
+}
+
+.container-list td:nth-child(3) {
+    align-self: center;
+    margin-left: 20px;
+}
+
+.table .badge {
+    font-size: 0.9rem;
+    background-color: var(--point);
+}
+
+.table>:not(caption)>*>*{
+    border-bottom: none;
 }

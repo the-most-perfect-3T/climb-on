@@ -2,6 +2,7 @@ package com.ohgiraffers.climbon.crew.mycrew.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
@@ -43,12 +44,10 @@ public class MyCrewController
                     return mv;
                 }else {
                     CrewDTO myCrew = myCrewService.getMyCrewById(myId);
-                    List<UserDTO> memberList = myCrewService.getCrewMemeberList(myCrew.getId());
+                    List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(myCrew.getId());
                     System.out.println(myCrew);
                     System.out.println(userCrewDTO);
-                    for(UserDTO member : memberList){
-                        System.out.println(member);
-                    }
+
 
 
                     mv.addObject("memberList", memberList);

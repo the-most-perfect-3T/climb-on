@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.crew.mycrew.dao;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,5 +16,7 @@ public interface MyCrewMapper
 
     CrewDTO getMyCrewById(int myId);
 
-    List<UserDTO> getCrewMemeberList(int id);
+    List<CrewMembersDTO> getCrewMemberList(int key);
+
+    List<String> getImgUrlList(Integer key);
 }

@@ -2,6 +2,8 @@ package com.ohgiraffers.climbon.crew.mycrew.controller;
 
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
 import com.ohgiraffers.climbon.facilities.dto.ReviewDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
@@ -14,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/mycrew")
@@ -29,18 +31,28 @@ public class MyCrewRestController {
     public ResponseEntity<Object> showMemberList(@AuthenticationPrincipal AuthDetail userDetails) {
         // 유저 pk
         Integer key = userDetails.getLoginUserDTO().getId();
-
-        List<UserDTO> memberList = myCrewService.getCrewMemeberList(key);
-
-
-
-        /*if (reviewList == null || reviewList.isEmpty()) {
-            return ResponseEntity.ok(Map.of("message", "작성한 리뷰가 없습니다."));
-        }*/
-
+        List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(key);
         return ResponseEntity.ok(memberList);
     }
 
+    @GetMapping("/album")
+    public ResponseEntity<Object> showAlbum(@AuthenticationPrincipal AuthDetail userDetails) {
+        // 유저 pk
+        Integer key = userDetails.getLoginUserDTO().getId();
+
+        // 크루멤버들이 쓴 게시글의 imgUrl 컬럼(null 포합)
+        List<String> imgUrlList = myCrewService.getImgUrlList(key);
+
+        // list 정리를 쉽게 해주는 stream API
+        // null 값 필터, split, 빈 값("") 제거, 다시 리스트로 반환
+        List<String> imgList = imgUrlList.stream()
+                .filter(Objects::nonNull)
+                .flatMap(url -> Arrays.stream(url.split(",")))
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(imgList);
+    }
 
 
 }
