@@ -269,56 +269,53 @@ function renderPagination(paginationElement, totalItems, itemsPerPage, currentPa
 }
 
 
-
-
-
 const favoriteTab = document.getElementById("favorite-tab");
+if(favoriteTab){
+    favoriteTab.addEventListener("click", async function () {
 
-favoriteTab.addEventListener("click", async function () {
+        try {
+            const response = await fetch("/user/favorite");
+            if (!response.ok) {
+                throw new Error("서버 오류: " + response.status);
+            }
 
-    try {
-        const response = await fetch("/user/favorite");
-        if (!response.ok) {
-            throw new Error("서버 오류: " + response.status);
-        }
+            const data = await response.json();
+            /*console.log("받은 데이터:", data);*/
+            const favoriteList = document.getElementById("favorite").querySelector("ul.list");
+            favoriteList.textContent = "";
 
-        const data = await response.json();
-        /*console.log("받은 데이터:", data);*/
-        const favoriteList = document.getElementById("favorite").querySelector("ul.list");
-        favoriteList.textContent = "";
+            if (data.message === '저장된 즐겨찾기가 없습니다.' || data.length === 0) {
+                const liItem = document.createElement("li");
+                liItem.classList.add('no-result', 'border-top');
+                liItem.textContent = "저장된 즐겨찾기가 없습니다.";
+                favoriteList.appendChild(liItem);
+            }else {
+                const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
+                let currentPage = 1;
 
-        if (data.message === '저장된 즐겨찾기가 없습니다.' || data.length === 0) {
-            const liItem = document.createElement("li");
-            liItem.classList.add('no-result', 'border-top');
-            liItem.textContent = "저장된 즐겨찾기가 없습니다.";
-            favoriteList.appendChild(liItem);
-        }else {
-            const itemsPerPage = 4; // 한 페이지에 표시할 아이템 수
-            let currentPage = 1;
+                // 데이터 렌더링 함수
+                const renderData = async (page) => {
+                    const favoriteList = document.getElementById("favorite").querySelector("ul.list");
+                    favoriteList.textContent = ""; // 기존 리스트 초기화
 
-            // 데이터 렌더링 함수
-            const renderData = async (page) => {
-                const favoriteList = document.getElementById("favorite").querySelector("ul.list");
-                favoriteList.textContent = ""; // 기존 리스트 초기화
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+                    const itemsToShow = data.slice(startIndex, endIndex);
 
-                const startIndex = (page - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
-                const itemsToShow = data.slice(startIndex, endIndex);
+                    if (itemsToShow.length === 0) {
+                        const liItem = document.createElement("li");
+                        liItem.classList.add('no-result', 'border-top');
+                        liItem.textContent = "저장된 즐겨찾기가 없습니다.";
+                        favoriteList.appendChild(liItem);
+                        document.querySelector("#favorite .pagination").textContent = "";
+                        return; // 데이터가 없으면 이후 렌더링 중단
+                    }
 
-                if (itemsToShow.length === 0) {
-                    const liItem = document.createElement("li");
-                    liItem.classList.add('no-result', 'border-top');
-                    liItem.textContent = "저장된 즐겨찾기가 없습니다.";
-                    favoriteList.appendChild(liItem);
-                    document.querySelector("#favorite .pagination").textContent = "";
-                    return; // 데이터가 없으면 이후 렌더링 중단
-                }
-
-                for (const item of itemsToShow) {
-                    const liItem = document.createElement("li");
-                    const isFavorite = await getIsFavorite(item.id);
-                    liItem.classList.add("border");
-                    liItem.innerHTML = `
+                    for (const item of itemsToShow) {
+                        const liItem = document.createElement("li");
+                        const isFavorite = await getIsFavorite(item.id);
+                        liItem.classList.add("border");
+                        liItem.innerHTML = `
                     <div class="img-wrap border">
                         <img src="${item.imageUrl != null ? item.imageUrl : " "}" alt="시설 이미지">
                     </div>
@@ -328,177 +325,170 @@ favoriteTab.addEventListener("click", async function () {
                         <i class="fa-bookmark fa-solid"></i>
                     </button>
                 `;
-                    favoriteList.appendChild(liItem);
-                }
-            };
-
-            // 페이지네이션 버튼 렌더링
-            /*const renderPagination = () => {
-                console.log('페이지네이션 렌더링');
-                const pagination = document.querySelector("#favorite .pagination");
-                pagination.textContent = "";
-
-                const totalPages = Math.ceil(data.length / itemsPerPage);
-
-
-                // 이전 버튼
-                const prevButton = document.createElement("li");
-                prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
-                prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
-                prevButton.querySelector("a").addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) {
-                        currentPage--;
-                        renderData(currentPage);
-                        renderPagination();
+                        favoriteList.appendChild(liItem);
                     }
-                });
-                pagination.appendChild(prevButton);
-                console.log(prevButton);
-
-                // 페이지 번호 버튼
-                for (let i = 1; i <= totalPages; i++) {
-                    const pageButton = document.createElement("li");
-                    pageButton.className = `num ${i === currentPage ? "current" : ""}`;
-                    pageButton.innerHTML = `<a href="#">${i}</a>`;
-                    pageButton.querySelector("a").addEventListener("click", (e) => {
-                        e.preventDefault();
-                        currentPage = i;
-                        renderData(currentPage);
-                        renderPagination();
-                    });
-                    pagination.appendChild(pageButton);
-                }
-
-
-                // 다음 버튼
-                const nextButton = document.createElement("li");
-                nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
-                nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
-                nextButton.querySelector("a").addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        renderData(currentPage);
-                        renderPagination();
-                    }
-                });
-                pagination.appendChild(nextButton);
-            };*/
-
-            // 첫 페이지 렌더링
-            if (Array.isArray(data)) await renderData(currentPage);
-            if(data.length > itemsPerPage) {
-
-                const paginationElement = document.querySelector("#favorite .pagination");
-                const updatePagination = (newPage) => {
-                    currentPage = newPage; // 페이지 변경
-                    renderData(currentPage); // 데이터 렌더링
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
                 };
 
-                // 초기 렌더링 호출
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
-            }
+                // 페이지네이션 버튼 렌더링
+                /*const renderPagination = () => {
+                    console.log('페이지네이션 렌더링');
+                    const pagination = document.querySelector("#favorite .pagination");
+                    pagination.textContent = "";
 
-            // 즐겨찾기 버튼 클릭 이벤트 설정
-            const favoriteList = document.getElementById("favorite").querySelector("ul.list");
-            favoriteList.addEventListener("click", async (event) => {
-                const button = event.target.closest(".favorite-btn");
-                if (button) {
-                    button.disabled = true;
-                    try{
-                        const facilityId = parseInt(button.getAttribute("data-id"));
-                        const currentFavoriteStatus = parseInt(button.getAttribute("data-favorite"));
-                        if (isNaN(currentFavoriteStatus)) {
-                            console.error("Invalid data-favorite value:", button.getAttribute("data-favorite"));
-                            return;
+                    const totalPages = Math.ceil(data.length / itemsPerPage);
+
+
+                    // 이전 버튼
+                    const prevButton = document.createElement("li");
+                    prevButton.className = `prev ${currentPage === 1 ? "disabled" : ""}`;
+                    prevButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-left"></i></a>`;
+                    prevButton.querySelector("a").addEventListener("click", (e) => {
+                        e.preventDefault();
+                        if (currentPage > 1) {
+                            currentPage--;
+                            renderData(currentPage);
+                            renderPagination();
                         }
+                    });
+                    pagination.appendChild(prevButton);
+                    console.log(prevButton);
 
-
-                        // 즐겨찾기 상태 토글
-                        await toggleFavorite(facilityId, currentFavoriteStatus);
-
-                        // UI 업데이트
-                        const updatedFavoriteStatus = await checkFavorite(facilityId);
-
-                        button.setAttribute("data-favorite", updatedFavoriteStatus);
-
-                        if (updatedFavoriteStatus === 0) {
-                            const liItem = event.target.closest("li"); // 버튼이 속한 li를 찾음
-                            if (liItem) {
-                                liItem.remove(); // li 삭제
-                            }
-
-                            // 데이터 배열에서 삭제
-                            const indexToRemove = data.findIndex(item => item.id === facilityId);
-                            if (indexToRemove > -1) {
-                                data.splice(indexToRemove, 1); // 배열에서 해당 아이템 삭제
-                            }
-
-
-                            // 데이터가 없으면 '저장된 즐겨찾기가 없습니다.' 메시지 표시
-                            if (data.length === 0) {
-                                const noResultItem = document.createElement("li");
-                                noResultItem.classList.add('no-result', 'border-top');
-                                noResultItem.textContent = "저장된 즐겨찾기가 없습니다.";
-                                favoriteList.appendChild(noResultItem);
-                            }
-
-                            // 현재 페이지가 데이터 크기를 초과하면 이전 페이지로 이동
-                            const totalPages = Math.ceil(data.length / itemsPerPage);
-                            if (currentPage > totalPages) {
-                                currentPage = totalPages;
-                            }
-
-                            // 삭제 후 다시 렌더링
-                            await renderData(currentPage);
-                            if(data.length > itemsPerPage) {
-                                const paginationElement = document.querySelector("#favorite .pagination");
-                                const updatePagination = (newPage) => {
-                                    currentPage = newPage; // 페이지 변경
-                                    renderData(currentPage); // 데이터 렌더링
-                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
-                                };
-
-                                // 초기 렌더링 호출
-                                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
-                            } else {
-                                document.querySelector("#favorite .pagination").textContent = "";
-                            }
-                        }
-                    }  catch (error) {
-                        console.error("Error toggling favorite:", error);
-                    } finally {
-                        button.disabled = false; // Re-enable
+                    // 페이지 번호 버튼
+                    for (let i = 1; i <= totalPages; i++) {
+                        const pageButton = document.createElement("li");
+                        pageButton.className = `num ${i === currentPage ? "current" : ""}`;
+                        pageButton.innerHTML = `<a href="#">${i}</a>`;
+                        pageButton.querySelector("a").addEventListener("click", (e) => {
+                            e.preventDefault();
+                            currentPage = i;
+                            renderData(currentPage);
+                            renderPagination();
+                        });
+                        pagination.appendChild(pageButton);
                     }
 
 
+                    // 다음 버튼
+                    const nextButton = document.createElement("li");
+                    nextButton.className = `next ${currentPage === totalPages ? "disabled" : ""}`;
+                    nextButton.innerHTML = `<a href="#"><i class="fa-solid fa-circle-chevron-right"></i></a>`;
+                    nextButton.querySelector("a").addEventListener("click", (e) => {
+                        e.preventDefault();
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            renderData(currentPage);
+                            renderPagination();
+                        }
+                    });
+                    pagination.appendChild(nextButton);
+                };*/
+
+                // 첫 페이지 렌더링
+                if (Array.isArray(data)) await renderData(currentPage);
+                if(data.length > itemsPerPage) {
+
+                    const paginationElement = document.querySelector("#favorite .pagination");
+                    const updatePagination = (newPage) => {
+                        currentPage = newPage; // 페이지 변경
+                        renderData(currentPage); // 데이터 렌더링
+                        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    };
+
+                    // 초기 렌더링 호출
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
                 }
-            });
+
+                // 즐겨찾기 버튼 클릭 이벤트 설정
+                const favoriteList = document.getElementById("favorite").querySelector("ul.list");
+                favoriteList.addEventListener("click", async (event) => {
+                    const button = event.target.closest(".favorite-btn");
+                    if (button) {
+                        button.disabled = true;
+                        try{
+                            const facilityId = parseInt(button.getAttribute("data-id"));
+                            const currentFavoriteStatus = parseInt(button.getAttribute("data-favorite"));
+                            if (isNaN(currentFavoriteStatus)) {
+                                console.error("Invalid data-favorite value:", button.getAttribute("data-favorite"));
+                                return;
+                            }
+
+
+                            // 즐겨찾기 상태 토글
+                            await toggleFavorite(facilityId, currentFavoriteStatus);
+
+                            // UI 업데이트
+                            const updatedFavoriteStatus = await checkFavorite(facilityId);
+
+                            button.setAttribute("data-favorite", updatedFavoriteStatus);
+
+                            if (updatedFavoriteStatus === 0) {
+                                const liItem = event.target.closest("li"); // 버튼이 속한 li를 찾음
+                                if (liItem) {
+                                    liItem.remove(); // li 삭제
+                                }
+
+                                // 데이터 배열에서 삭제
+                                const indexToRemove = data.findIndex(item => item.id === facilityId);
+                                if (indexToRemove > -1) {
+                                    data.splice(indexToRemove, 1); // 배열에서 해당 아이템 삭제
+                                }
+
+
+                                // 데이터가 없으면 '저장된 즐겨찾기가 없습니다.' 메시지 표시
+                                if (data.length === 0) {
+                                    const noResultItem = document.createElement("li");
+                                    noResultItem.classList.add('no-result', 'border-top');
+                                    noResultItem.textContent = "저장된 즐겨찾기가 없습니다.";
+                                    favoriteList.appendChild(noResultItem);
+                                }
+
+                                // 현재 페이지가 데이터 크기를 초과하면 이전 페이지로 이동
+                                const totalPages = Math.ceil(data.length / itemsPerPage);
+                                if (currentPage > totalPages) {
+                                    currentPage = totalPages;
+                                }
+
+                                // 삭제 후 다시 렌더링
+                                await renderData(currentPage);
+                                if(data.length > itemsPerPage) {
+                                    const paginationElement = document.querySelector("#favorite .pagination");
+                                    const updatePagination = (newPage) => {
+                                        currentPage = newPage; // 페이지 변경
+                                        renderData(currentPage); // 데이터 렌더링
+                                        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                                    };
+
+                                    // 초기 렌더링 호출
+                                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+                                } else {
+                                    document.querySelector("#favorite .pagination").textContent = "";
+                                }
+                            }
+                        }  catch (error) {
+                            console.error("Error toggling favorite:", error);
+                        } finally {
+                            button.disabled = false; // Re-enable
+                        }
+
+
+                    }
+                });
+            }
+
+
+        } catch (error) {
+            console.error("AJAX 오류:", error);
         }
-
-
-    } catch (error) {
-        console.error("AJAX 오류:", error);
-    }
-});
-
-
-
-
-
-
-
-
-
-
+    });
+}
 
 
 
 /*리뷰*/
 const reviewTab = document.getElementById("review-tab");
-reviewTab.addEventListener("click", reviewClickFunction);
+if(reviewTab){
+    reviewTab.addEventListener("click", reviewClickFunction);
+}
 
 
 async function reviewClickFunction(){
@@ -905,122 +895,123 @@ document.addEventListener("DOMContentLoaded", function() {
 
 /*게시물 -커뮤니티*/
 const boardTab = document.getElementById("board-tab");
-boardTab.addEventListener("click", async function(){
+if(boardTab){
+    boardTab.addEventListener("click", async function(){
 
-    try {
-        const response = await fetch("/user/board");
-        if (!response.ok) {
-            throw new Error("서버 오류: " + response.status);
-        }
+        try {
+            const response = await fetch("/user/board");
+            if (!response.ok) {
+                throw new Error("서버 오류: " + response.status);
+            }
 
-        const data = await response.json();
-        console.log("받은 데이터:", data);
+            const data = await response.json();
+            console.log("받은 데이터:", data);
 
-        const cardContainer = document.querySelector("#posts .card-container");
-        cardContainer.textContent = "";
+            const cardContainer = document.querySelector("#posts .card-container");
+            cardContainer.textContent = "";
 
-        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
-        let currentPage = 1;
+            const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+            let currentPage = 1;
 
-        if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
-            const noResult = document.createElement("div");
-            noResult.classList.add('no-result', 'border-top');
-            noResult.textContent = "작성한 게시글이 없습니다.";
-            cardContainer.appendChild(noResult);
-        } else {
+            if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
+                const noResult = document.createElement("div");
+                noResult.classList.add('no-result', 'border-top');
+                noResult.textContent = "작성한 게시글이 없습니다.";
+                cardContainer.appendChild(noResult);
+            } else {
 
-            // 데이터 렌더링 함수
-            const renderData = async (page) => {
+                // 데이터 렌더링 함수
+                const renderData = async (page) => {
 
 
-                const cardContainer = document.querySelector("#posts .card-container");
-                cardContainer.textContent = "";
+                    const cardContainer = document.querySelector("#posts .card-container");
+                    cardContainer.textContent = "";
 
-                const startIndex = (page - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
 
-                /*console.log(data.pinnedNoticePosts?.length, data.pinnedGuidePosts?.length, data.generalPosts?.length)*/
-                /*const itemsToShow = data.generalPosts?.slice(startIndex, endIndex);*/
-                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+                    /*console.log(data.pinnedNoticePosts?.length, data.pinnedGuidePosts?.length, data.generalPosts?.length)*/
+                    /*const itemsToShow = data.generalPosts?.slice(startIndex, endIndex);*/
+                    const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
 
-           /*     const mergedPosts = [
-                    ...(data.pinnedNoticePosts || []),
-                    ...(data.pinnedGuidePosts || []),
-                    ...(data.generalPosts || []),
-                ];
+                    /*     const mergedPosts = [
+                             ...(data.pinnedNoticePosts || []),
+                             ...(data.pinnedGuidePosts || []),
+                             ...(data.generalPosts || []),
+                         ];
 
-                console.log("data.pinnedNoticePosts" + data.pinnedNoticePosts);
-                console.log("mergedPosts" + mergedPosts);
-                console.log("mergedPosts.pinnedNoticePosts" + mergedPosts.pinnedNoticePosts);*/
+                         console.log("data.pinnedNoticePosts" + data.pinnedNoticePosts);
+                         console.log("mergedPosts" + mergedPosts);
+                         console.log("mergedPosts.pinnedNoticePosts" + mergedPosts.pinnedNoticePosts);*/
 
-                // 현재 페이지에 맞는 데이터 추출
-                // const itemsToShow = mergedPosts.slice(startIndex, endIndex);
-                // console.log("itemsToshow " + itemsToShow);
+                    // 현재 페이지에 맞는 데이터 추출
+                    // const itemsToShow = mergedPosts.slice(startIndex, endIndex);
+                    // console.log("itemsToshow " + itemsToShow);
 
-               /* const table = document.createElement("table");
-                table.style.width = '100%';
-                table.style.borderCollapse = 'collapse';
-                let tableHtml = `
-                <thead>
-                    <tr>
-                        <th>카테고리</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>작성일</th>
-                    </tr>
-                </thead>
-                <tbody>`*/
+                    /* const table = document.createElement("table");
+                     table.style.width = '100%';
+                     table.style.borderCollapse = 'collapse';
+                     let tableHtml = `
+                     <thead>
+                         <tr>
+                             <th>카테고리</th>
+                             <th>제목</th>
+                             <th>작성자</th>
+                             <th>작성일</th>
+                         </tr>
+                     </thead>
+                     <tbody>`*/
 
-                /*공지 핀포스트*/
+                    /*공지 핀포스트*/
 
-              /*  if (itemsToShow.pinnedNoticePosts?.length > 0) {
-                    for (let item of itemsToShow.pinnedNoticePosts) {
-                        tableHtml += `
-                    <tr class="pinned-post">
-                        <td>${item.category}</td>
-                        <td>
-                            <a href="/community/${item.id}">
-                                <span>${item.title}</span>
-                                <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
-                            </a>
-                        </td>
-                        <td>${item.displayName}</td>
-                        <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
-                    </tr>
-                `
-                    }
-                }
+                    /*  if (itemsToShow.pinnedNoticePosts?.length > 0) {
+                          for (let item of itemsToShow.pinnedNoticePosts) {
+                              tableHtml += `
+                          <tr class="pinned-post">
+                              <td>${item.category}</td>
+                              <td>
+                                  <a href="/community/${item.id}">
+                                      <span>${item.title}</span>
+                                      <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                                  </a>
+                              </td>
+                              <td>${item.displayName}</td>
+                              <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                          </tr>
+                      `
+                          }
+                      }
 
-                /!* 가이드 핀포스트 *!/
-                if (itemsToShow.pinnedGuidePosts?.length > 0) {
-                    for (let item of itemsToShow.pinnedGuidePosts) {
-                        tableHtml += `
-                <tr class="pinned-post">
-                        <td>${item.category}</td>
-                        <td>
-                            <a href="/community/${item.id}">
-                                <span>${item.title}</span>
-                                <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
-                            </a>
-                        </td>
-                        <td>${item.displayName}</td>
-                        <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
-                    </tr>
-                `;
-                    }
-                }
+                      /!* 가이드 핀포스트 *!/
+                      if (itemsToShow.pinnedGuidePosts?.length > 0) {
+                          for (let item of itemsToShow.pinnedGuidePosts) {
+                              tableHtml += `
+                      <tr class="pinned-post">
+                              <td>${item.category}</td>
+                              <td>
+                                  <a href="/community/${item.id}">
+                                      <span>${item.title}</span>
+                                      <span class="comment-count">[<span>${item.commentsCount}</span>]</span>
+                                  </a>
+                              </td>
+                              <td>${item.displayName}</td>
+                              <td>${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</td>
+                          </tr>
+                      `;
+                          }
+                      }
 
-                tableHtml += `</tbody>`;
+                      tableHtml += `</tbody>`;
 
-                table.innerHTML = tableHtml;*/
+                      table.innerHTML = tableHtml;*/
 
-                const cardList = document.createElement("div");
-                cardList.classList.add('card-list');
-                let cardHtml = '';
+                    const cardList = document.createElement("div");
+                    cardList.classList.add('card-list');
+                    let cardHtml = '';
 
-                if (itemsToShow.length > 0) {
-                    for (let item of itemsToShow) {
-                        cardHtml += `
+                    if (itemsToShow.length > 0) {
+                        for (let item of itemsToShow) {
+                            cardHtml += `
                     <div class="card-item d-flex justify-content-between border-bottom">
                         <div class="">
                             <div class="card-title">
@@ -1044,93 +1035,96 @@ boardTab.addEventListener("click", async function(){
                         </div>
                     </div>
                 `
+                        }
                     }
+
+
+                    cardList.innerHTML = cardHtml;
+                    // cardContainer.appendChild(table);
+                    cardContainer.appendChild(cardList);
+                };
+
+                // 첫 페이지 렌더링
+                /*if ( (Array.isArray(data.generalPosts) && data.generalPosts.length > 0) ) await renderData(currentPage);*/
+                /*const totalPosts =
+                    (data.generalPosts?.length || 0) +
+                    (data.pinnedNoticePosts?.length || 0) +
+                    (data.pinnedGuidePosts?.length || 0)*/
+
+                if(Array.isArray(data)) await renderData(currentPage);
+
+                if (data.length > itemsPerPage) { // if (totalPosts > itemsPerPage) {
+                    const paginationElement = document.querySelector("#board .pagination");
+
+                    // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                    function updatePagination(newPage) {
+                        currentPage = newPage; // 페이지 변경
+                        renderData(currentPage); // 데이터 렌더링
+                        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    }
+
+                    // 초기 렌더링 호출
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+                } else {
+                    const paginationElement = document.querySelector("#board .pagination");
+                    paginationElement.textContent = "";
                 }
-
-
-                cardList.innerHTML = cardHtml;
-                // cardContainer.appendChild(table);
-                cardContainer.appendChild(cardList);
-            };
-
-            // 첫 페이지 렌더링
-            /*if ( (Array.isArray(data.generalPosts) && data.generalPosts.length > 0) ) await renderData(currentPage);*/
-            /*const totalPosts =
-                (data.generalPosts?.length || 0) +
-                (data.pinnedNoticePosts?.length || 0) +
-                (data.pinnedGuidePosts?.length || 0)*/
-
-            if(Array.isArray(data)) await renderData(currentPage);
-
-            if (data.length > itemsPerPage) { // if (totalPosts > itemsPerPage) {
-                const paginationElement = document.querySelector("#board .pagination");
-
-                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
-                function updatePagination(newPage) {
-                    currentPage = newPage; // 페이지 변경
-                    renderData(currentPage); // 데이터 렌더링
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
-                }
-
-                // 초기 렌더링 호출
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
-            } else {
-                const paginationElement = document.querySelector("#board .pagination");
-                paginationElement.textContent = "";
             }
+        }catch(e){
+            console.error("AJAX 오류:", e);
         }
-    }catch(e){
-        console.error("AJAX 오류:", e);
-    }
-});
+    });
+}
+
 
 
 /* 게시물- 크루 */
 const crewTab = document.getElementById("crew-post-tab");
-crewTab.addEventListener("click", async function(){
+if(crewTab){
+    crewTab.addEventListener("click", async function(){
 
 
-    try {
-        const response = await fetch("/user/crew");
-        if (!response.ok) {
-            throw new Error("서버 오류: " + response.status);
-        }
+        try {
+            const response = await fetch("/user/crew");
+            if (!response.ok) {
+                throw new Error("서버 오류: " + response.status);
+            }
 
-        const data = await response.json();
-        console.log("받은 데이터:", data);
+            const data = await response.json();
+            console.log("받은 데이터:", data);
 
-        const cardContainer = document.querySelector("#crewPosts .card-container");
-        cardContainer.textContent = "";
+            const cardContainer = document.querySelector("#crewPosts .card-container");
+            cardContainer.textContent = "";
 
-        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
-        let currentPage = 1;
+            const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+            let currentPage = 1;
 
-        if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
-            const noResult = document.createElement("div");
-            noResult.classList.add('no-result', 'border-top');
-            noResult.textContent = "작성한 게시글이 없습니다.";
-            cardContainer.appendChild(noResult);
-        } else {
+            if (data.length === 0 || data.message === "작성한 게시글이 없습니다.") {
+                const noResult = document.createElement("div");
+                noResult.classList.add('no-result', 'border-top');
+                noResult.textContent = "작성한 게시글이 없습니다.";
+                cardContainer.appendChild(noResult);
+            } else {
 
-            // 데이터 렌더링 함수
-            const renderData = async (page) => {
+                // 데이터 렌더링 함수
+                const renderData = async (page) => {
 
 
-                const cardContainer = document.querySelector("#crewPosts .card-container");
-                cardContainer.textContent = "";
+                    const cardContainer = document.querySelector("#crewPosts .card-container");
+                    cardContainer.textContent = "";
 
-                const startIndex = (page - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
 
-                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+                    const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
 
-                const cardList = document.createElement("div");
-                cardList.classList.add('card-list');
-                let cardHtml = '';
+                    const cardList = document.createElement("div");
+                    cardList.classList.add('card-list');
+                    let cardHtml = '';
 
-                if (itemsToShow.length > 0) {
-                    for (let item of itemsToShow) {
-                        cardHtml += `
+                    if (itemsToShow.length > 0) {
+                        for (let item of itemsToShow) {
+                            cardHtml += `
                             <div class="card-item d-flex justify-content-between border-bottom">
                                 <div class="">
                                     <div class="card-title">
@@ -1155,83 +1149,86 @@ crewTab.addEventListener("click", async function(){
                                 </div>
                             </div>
                         `
+                        }
                     }
-                }
 
 
-                cardList.innerHTML = cardHtml;
-                cardContainer.appendChild(cardList);
-            };
-
-            // 첫 렌더링
-            if(Array.isArray(data)) await renderData(currentPage);
-            // 페이지네이션
-            if (data.length > itemsPerPage) {
-                const paginationElement = document.querySelector("#crewPosts .pagination");
-
-                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
-                const updatePagination = (newPage) => {
-                    currentPage = newPage; // 페이지 변경
-                    renderData(currentPage); // 데이터 렌더링
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    cardList.innerHTML = cardHtml;
+                    cardContainer.appendChild(cardList);
                 };
 
-                // 초기 렌더링 호출
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
-            }else {
-                const paginationElement = document.querySelector("#crewPosts .pagination");
-                paginationElement.textContent = "";
-            }
-        }
-    }catch (e){
-        console.error("AJAX 오류:", e);
-    }
+                // 첫 렌더링
+                if(Array.isArray(data)) await renderData(currentPage);
+                // 페이지네이션
+                if (data.length > itemsPerPage) {
+                    const paginationElement = document.querySelector("#crewPosts .pagination");
 
-});
+                    // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                    const updatePagination = (newPage) => {
+                        currentPage = newPage; // 페이지 변경
+                        renderData(currentPage); // 데이터 렌더링
+                        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    };
+
+                    // 초기 렌더링 호출
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+                }else {
+                    const paginationElement = document.querySelector("#crewPosts .pagination");
+                    paginationElement.textContent = "";
+                }
+            }
+        }catch (e){
+            console.error("AJAX 오류:", e);
+        }
+
+    });
+}
+
 
 
 /* 댓글 - 커뮤니티 */
 const commentTab = document.getElementById("comments-tab");
-commentTab.addEventListener("click", async function() {
+if(commentTab){
+    commentTab.addEventListener("click", async function() {
 
-    console.log("댓글 탭 클릭!");
-    try {
-        const response = await fetch("/user/comments");
-        if (!response.ok) {
-            throw new Error("서버 오류: " + response.status);
-        }
-        const data = await response.json();
-        console.log("받은 데이터:", data);
+        console.log("댓글 탭 클릭!");
+        try {
+            const response = await fetch("/user/comments");
+            if (!response.ok) {
+                throw new Error("서버 오류: " + response.status);
+            }
+            const data = await response.json();
+            console.log("받은 데이터:", data);
 
-        const commentList = document.querySelector(".comment-list");
-        commentList.textContent = "";
+            const commentList = document.querySelector(".comment-list");
+            commentList.textContent = "";
 
-        const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
-        let currentPage = 1;
+            const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+            let currentPage = 1;
 
-        if(data.length === 0 || data.message === "작성한 댓글이 없습니다."){
-            const noResult = document.createElement("div");
-            noResult.classList.add('no-result', 'border-top');
-            noResult.textContent = "작성한 게시글이 없습니다.";
-            commentList.appendChild(noResult);
-        }else {
-            const renderData = async (page) => {
+            if(data.length === 0 || data.message === "작성한 댓글이 없습니다."){
+                const noResult = document.createElement("div");
+                noResult.classList.add('no-result', 'border-top');
+                noResult.textContent = "작성한 게시글이 없습니다.";
+                commentList.appendChild(noResult);
+            }else {
+                const renderData = async (page) => {
 
-                const commentList = document.querySelector(".comment-list");
-                commentList.textContent = "";
+                    const commentList = document.querySelector(".comment-list");
+                    commentList.textContent = "";
 
-                const startIndex = (page - 1) * itemsPerPage;
-                const endIndex = startIndex + itemsPerPage;
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
 
-                const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+                    const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
 
-                const comment = document.createElement("div");
-                comment.classList.add('comment-wrap');
-                let commentHtml = '';
+                    const comment = document.createElement("div");
+                    comment.classList.add('comment-wrap');
+                    let commentHtml = '';
 
-                if (itemsToShow.length > 0) {
-                    for (let item of itemsToShow) {
-                        commentHtml += `
+                    if (itemsToShow.length > 0) {
+                        for (let item of itemsToShow) {
+                            commentHtml += `
                             <!-- 댓글 작성자 프로필 -->
                             <div class="comment border-bottom">
                                 <div class="post-author d-flex align-items-center">
@@ -1249,39 +1246,41 @@ commentTab.addEventListener("click", async function() {
                                 <a href="/community/${item.postId}" class="comment-text">${item.content}</a>
                             </div>
                         `
+                        }
                     }
-                }
 
 
-                comment.innerHTML = commentHtml;
-                commentList.appendChild(comment);
-            };
-
-            // 첫 렌더링
-            if(Array.isArray(data)) await renderData(currentPage);
-            // 페이지네이션
-            if (data.length > itemsPerPage) {
-                const paginationElement = document.querySelector("#communityComments .pagination");
-
-                // 재귀적으로 호출하도록 함수 참조를 변수로 정의
-                const updatePagination = (newPage) => {
-                    currentPage = newPage; // 페이지 변경
-                    renderData(currentPage); // 데이터 렌더링
-                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    comment.innerHTML = commentHtml;
+                    commentList.appendChild(comment);
                 };
 
-                // 초기 렌더링 호출
-                renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
-            }else {
-                const paginationElement = document.querySelector("#communityComments .pagination");
-                paginationElement.textContent = "";
-            }
+                // 첫 렌더링
+                if(Array.isArray(data)) await renderData(currentPage);
+                // 페이지네이션
+                if (data.length > itemsPerPage) {
+                    const paginationElement = document.querySelector("#communityComments .pagination");
 
+                    // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                    const updatePagination = (newPage) => {
+                        currentPage = newPage; // 페이지 변경
+                        renderData(currentPage); // 데이터 렌더링
+                        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    };
+
+                    // 초기 렌더링 호출
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+                }else {
+                    const paginationElement = document.querySelector("#communityComments .pagination");
+                    paginationElement.textContent = "";
+                }
+
+            }
+        }catch(e){
+            console.error("AJAX 오류:", e);
         }
-    }catch(e){
-        console.error("AJAX 오류:", e);
-    }
-});
+    });
+}
+
 
 
 
