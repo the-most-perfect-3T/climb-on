@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @RestController
+@RequestMapping("events")
 public class EventController
 {
     @Autowired
@@ -26,7 +27,7 @@ public class EventController
 
     private int user;
 
-    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    @GetMapping
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
     {
         if(userDetails != null)
@@ -40,7 +41,7 @@ public class EventController
     }
 
     @GetMapping("/myCrew")
-    public ResponseEntity<?> getMyCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception //RequestParam으로 뭔가 해결해보자
+    public ResponseEntity<?> getMyCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception
     {
         // 수정 필요
         int userCode = userDetails.getLoginUserDTO().getId();
@@ -51,7 +52,7 @@ public class EventController
         return ResponseEntity.ok(crewEvents);
     }
 
-    @RequestMapping(value = "/events/crew", method = RequestMethod.GET)
+    @GetMapping("/crew")
     public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode)
     {
         List<EventDTO> crewEvents = eventService.getCrewEvents(1);
@@ -73,7 +74,7 @@ public class EventController
     }
 
     // 이벤트 저장
-    @RequestMapping(value = "/events/batch", method = RequestMethod.POST)
+    @PostMapping("/batch")
     public void addEvent(@RequestBody List<EventDTO> events) {
         if (events == null || events.size() == 0 || user == 0) {
             System.out.println("이벤트를 저장할 수 없습니다.");
@@ -91,7 +92,7 @@ public class EventController
         }
     }
 
-    @RequestMapping(value = "/events/modify", method = RequestMethod.POST)
+    @PostMapping("/modify")
     public void modifyEvent(@RequestBody EventDTO event)
     {
         if(event == null)
@@ -102,13 +103,13 @@ public class EventController
         eventService.modifyEvent(event);
     }
 
-    @RequestMapping(value = "/events/{id}", method = RequestMethod.POST)
+    @PostMapping("/{id}")
     public void deleteEvent(@PathVariable("id") int id)
     {
         eventService.deleteEvent(id);
     }
 
-    @RequestMapping(value = "/events/allevent", method = RequestMethod.GET)
+    @GetMapping("/allevent")
     public List<EventDTO> getAllCrewsEvents(ModelAndView mv)
     {
         List<EventDTO> allCrewEvents = eventService.getAllCrewsEvents();
