@@ -6,44 +6,60 @@ function setToMidnightKST(dateTime) {
     return date.toISOString().slice(0, 16);
 }
 
-async function showModal(eventData, calendar){
-    eventData = {
-        title: $("#title").val(),
-        start: $("#start").val(),
-        end: $("#end").val(),
-        backgroundColor: $("#color").val()
-    };
-    if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
-        alert("입력하지 않은 값이 있습니다.");
-    } else if (eventData.start > eventData.end) {
-        alert("시간을 잘못입력 하셨습니다.");
-    } else {
-        try {
-            const response = await fetch('/events/batch', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(eventData)
-            });
+// toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
+const offset = new Date().getTimezoneOffset() * 60000;
 
-            if (response.ok) {
-                await calendar.refetchEvents(); // Refresh events from the server
-                console.log(eventData);
-            } else {
-                throw new Error("이벤트 저장에 실패했습니다.");
+async function showModal(calendar){
+    $("#addButton").show();
+    $("#modifyButton").hide();
+    $("#deleteButton").hide();
+
+    $("#calendarModal").modal("show");
+    $("#title").val("");
+    $("#start").val(new Date(Date.now() - offset).toISOString().substring(0,16));
+    $("#end").val(new Date(Date.now() - offset).toISOString().substring(0,16));
+    $("#color").val("red");
+
+    //모달창 이벤트
+    $("#addButton").off("click").on("click", async function() {
+        let eventData = {
+            title: $("#title").val(),
+            start: $("#start").val(),
+            end: $("#end").val(),
+            backgroundColor: $("#color").val()
+        };
+
+        if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
+            alert("입력하지 않은 값이 있습니다.");
+        } else if (eventData.start > eventData.end) {
+            alert("시간을 잘못입력 하셨습니다.");
+        } else {
+            try {
+                const response = await fetch('/events/batch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(eventData)
+                });
+
+                if (response.ok) {
+                    await calendar.refetchEvents(); // Refresh events from the server
+                    console.log(eventData);
+                } else {
+                    throw new Error("이벤트 저장에 실패했습니다.");
+                }
+            } catch (error) {
+                alert(error.message);
             }
-        } catch (error) {
-            alert(error.message);
+            // 모달 창 초기화
+            $("#calendarModal").modal("hide");
+            $("#title").val("");
+            $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+            $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+            $("#color").val("red");
         }
-
-        // 모달 창 초기화
-        $("#calendarModal").modal("hide");
-        $("#title").val("");
-        $("#start").val(new Date(Date.now() - offset).toISOString().substring(0,16));
-        $("#end").val(new Date(Date.now() - offset).toISOString().substring(0,16));
-        $("#color").val("red");
-    }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -52,10 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let calendarCrewE2 = document.getElementById('crew-calendar-activity');
     let calendarMyE1 = document.getElementById('my-calendar');
 
-    let eventData;
     let isAdmin = false;
-    // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
-    const offset = new Date().getTimezoneOffset() * 60000;
 
     // 메인 캘린더
     if (calendarMainE1) {
@@ -140,20 +153,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                             })
                             mainCalendar.setOption('select', async function (arg) {
-                                $("#addButton").show();
-                                $("#modifyButton").hide();
-                                $("#deleteButton").hide();
-
-                                $("#calendarModal").modal("show");
-                                $("#title").val("");
-                                $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
-                                $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
-                                $("#color").val("red");
-
-                                $("#addButton").off("click").on("click", async function()
-                                {
-                                    await showModal(eventData, mainCalendar)
-                                });
+                                await showModal(mainCalendar)
                                 mainCalendar.unselect();
                             })
                         });
@@ -169,22 +169,8 @@ document.addEventListener('DOMContentLoaded', function () {
             customButtons: {
                 myCustomButton: {
                     text: '일정등록',
-                    click: function () {
-                        $("#addButton").show();
-                        $("#modifyButton").hide();
-                        $("#deleteButton").hide();
-
-                        $("#calendarModal").modal("show");
-                        $("#title").val("");
-                        $("#start").val(new Date(Date.now() - offset).toISOString().substring(0,16));
-                        $("#end").val(new Date(Date.now() - offset).toISOString().substring(0,16));
-                        $("#color").val("red");
-
-                        //모달창 이벤트
-                        $("#addButton").off("click").on("click", async function()
-                        {
-                            await showModal(eventData, mainCalendar)
-                        });
+                    click: async function () {
+                            await showModal(mainCalendar);
                     }
                 }
             }, // 얘도 관리자 권한
@@ -282,56 +268,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         //모달창 이벤트
                         $("#addButton").off("click").on("click", async function () {
-                            eventData = {
+                            let eventData = {
                                 title: $("#title").val(),
                                 start: $("#start").val(),
                                 end: $("#end").val(),
-                                color: $("#color").val()
+                                backgroundColor: $("#color").val()
                             };
-
-                            if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
-                                alert("입력하지 않은 값이 있습니다.");
-                            } else if (eventData.start > eventData.end) {
-                                alert("시간을 잘못입력 하셨습니다.");
-                            } else {
-                                // 캘린더 뷰에 데이터 저장
-                                crewCalendar.addEvent(eventData);
-
-                                let allEvents = crewCalendar.getEvents();
-                                let eventsData = allEvents.map(event => ({
-                                    title: event.title,
-                                    start: new Date(new Date(event.start).getTime() - offset).toISOString(),
-                                    end: event.end ? new Date(new Date(event.end).getTime() - offset).toISOString() : null,
-                                    backgroundColor: event.backgroundColor
-                                }));
-
-                                // 모든 이벤트 저장
-                                try {
-                                    const response = await fetch('/events/batch', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify(eventsData)
-                                    });
-                                    // Check if the response was successful
-                                    if (response.ok) {
-                                        //await calendar.refetchEvents(); // Refresh events from the server
-                                        //등록 완
-                                    } else {
-                                        throw new Error("이벤트 저장에 실패했습니다.");
-                                    }
-                                } catch (error) {
-                                    alert(error.message);
-                                }
-
-                                // 모달 창 초기화
-                                $("#calendarModal").modal("hide");
-                                $("#title").val("");
-                                $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 10));
-                                $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 10));
-                                $("#color").val("red");
-                            }
+                            await showModal(eventData, crewCalendar);
                         });
                     }
                 }
@@ -347,43 +290,26 @@ document.addEventListener('DOMContentLoaded', function () {
             selectable: false,
             selectMirror: true,
             select: async function (arg) {
-                const title = prompt('이벤트 이름을 등록해주세요!');
-                if (title) {
-                    crewCalendar.addEvent({
-                        title: title,
-                        start: arg.start,
-                        end: arg.end,
-                        backgroundColor: arg.backgroundColor
-                    })
+                $("#addButton").show();
+                $("#modifyButton").hide();
+                $("#deleteButton").hide();
 
-                    // 캘린 더 내 모든 이벤트 저장
-                    let allEvents = crewCalendar.getEvents();
-                    let eventsData = allEvents.map(event => ({
-                        title: event.title,
-                        start: new Date(new Date(event.start).getTime() - offset),
-                        end: event.end ? new Date(new Date(event.end).getTime() - offset) : null,
-                        backgroundColor: event.backgroundColor
-                    }));
+                $("#calendarModal").modal("show");
+                $("#title").val("");
+                $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+                $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+                $("#color").val("red");
 
-                    /**
-                     * @todo 저장 로직 수정해야 할 것 같음 중복체크랑 같이 테스트 하면서 손봐야함
-                     */
-                    try {
-                        const response = await fetch('/events/batch', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(eventsData)
-                        });
-                        // Check if the response was successful
-                        if (!response.ok) {
-                            throw new Error("이벤트 저장에 실패했습니다.");
-                        }
-                    } catch (error) {
-                        alert(error.message);
-                    }
-                }
+                $("#addButton").off("click").on("click", async function()
+                {
+                    const eventData = {
+                        title: $("#title").val(),
+                        start: $("#start").val(),
+                        end: $("#end").val(),
+                        backgroundColor: $("#color").val()
+                    };
+                    await showModal(eventData, crewCalendar)
+                });
                 crewCalendar.unselect();
             },
             eventClick: function (arg) {
@@ -545,56 +471,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         //모달창 이벤트
                         $("#addButton").off("click").on("click", async function () {
-                            eventData = {
+                            let eventData = {
                                 title: $("#title").val(),
                                 start: $("#start").val(),
                                 end: $("#end").val(),
                                 color: $("#color").val()
                             };
-
-                            if (eventData.title === "" || eventData.start === "" || eventData.end === "") {
-                                alert("입력하지 않은 값이 있습니다.");
-                            } else if (eventData.start > eventData.end) {
-                                alert("시간을 잘못입력 하셨습니다.");
-                            } else {
-                                // 캘린더 뷰에 데이터 저장
-                                crewCalendar.addEvent(eventData);
-
-                                let allEvents = crewCalendar.getEvents();
-                                let eventsData = allEvents.map(event => ({
-                                    title: event.title,
-                                    start: new Date(new Date(event.start).getTime() - offset).toISOString(),
-                                    end: event.end ? new Date(new Date(event.end).getTime() - offset).toISOString() : null,
-                                    backgroundColor: event.backgroundColor
-                                }));
-
-                                // 모든 이벤트 저장
-                                try {
-                                    const response = await fetch('/events/batch', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify(eventsData)
-                                    });
-                                    // Check if the response was successful
-                                    if (response.ok) {
-                                        //await calendar.refetchEvents(); // Refresh events from the server
-                                        //등록 완
-                                    } else {
-                                        throw new Error("이벤트 저장에 실패했습니다.");
-                                    }
-                                } catch (error) {
-                                    alert(error.message);
-                                }
-
-                                // 모달 창 초기화
-                                $("#calendarModal").modal("hide");
-                                $("#title").val("");
-                                $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 10));
-                                $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 10));
-                                $("#color").val("red");
-                            }
+                            await showModal(eventData, crewCalendar);
                         });
                     }
                 }
@@ -610,43 +493,26 @@ document.addEventListener('DOMContentLoaded', function () {
             selectable: false,
             selectMirror: true,
             select: async function (arg) {
-                const title = prompt('이벤트 이름을 등록해주세요!');
-                if (title) {
-                    crewCalendar.addEvent({
-                        title: title,
-                        start: arg.start,
-                        end: arg.end,
-                        backgroundColor: arg.backgroundColor
-                    })
+                $("#addButton").show();
+                $("#modifyButton").hide();
+                $("#deleteButton").hide();
 
-                    // 캘린 더 내 모든 이벤트 저장
-                    let allEvents = crewCalendar.getEvents();
-                    let eventsData = allEvents.map(event => ({
-                        title: event.title,
-                        start: new Date(new Date(event.start).getTime() - offset),
-                        end: event.end ? new Date(new Date(event.end).getTime() - offset) : null,
-                        backgroundColor: event.backgroundColor
-                    }));
+                $("#calendarModal").modal("show");
+                $("#title").val("");
+                $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+                $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+                $("#color").val("red");
 
-                    /**
-                     * @todo 저장 로직 수정해야 할 것 같음 중복체크랑 같이 테스트 하면서 손봐야함
-                     */
-                    try {
-                        const response = await fetch('/events/batch', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(eventsData)
-                        });
-                        // Check if the response was successful
-                        if (!response.ok) {
-                            throw new Error("이벤트 저장에 실패했습니다.");
-                        }
-                    } catch (error) {
-                        alert(error.message);
-                    }
-                }
+                $("#addButton").off("click").on("click", async function()
+                {
+                    let eventData = {
+                        title: $("#title").val(),
+                        start: $("#start").val(),
+                        end: $("#end").val(),
+                        backgroundColor: $("#color").val()
+                    };
+                    await showModal(eventData, crewCalendar)
+                });
                 crewCalendar.unselect();
             },
             eventClick: function (arg) {

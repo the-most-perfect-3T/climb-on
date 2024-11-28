@@ -25,6 +25,7 @@ public class EventController
 {
     @Autowired
     private EventService eventService;
+
     // 큰 대회 이벤트 가져옴
     @GetMapping
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
@@ -73,9 +74,7 @@ public class EventController
 
     // 이벤트 저장 로직
     @PostMapping("/batch")
-    public void addEvent(@RequestParam Integer crewCode, @RequestBody EventDTO event, @AuthenticationPrincipal AuthDetail userDetails, HttpServletRequest request) {
-        String url = request.getRequestURL().toString();
-        System.out.println("Current url: " + url);
+    public void addEvent(@RequestBody EventDTO event, @AuthenticationPrincipal AuthDetail userDetails) {
         if (event == null || userDetails == null) {
             System.out.println("이벤트를 저장할 수 없습니다.");
         }
@@ -83,9 +82,6 @@ public class EventController
             event.setUserCode(userDetails.getLoginUserDTO().getId());
             if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
                 event.setAdmin(true);
-            }
-            if(crewCode != null){
-                event.setCrewCode(crewCode);
             }
             if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode())) {
                 // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
