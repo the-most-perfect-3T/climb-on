@@ -68,6 +68,7 @@
 
     <select id="selectFiveCrews" parameterType="hashmap" resultMap="crew">
         SELECT
+            a.id,
             a.crew_name,
             a.img_url,
             a.description,

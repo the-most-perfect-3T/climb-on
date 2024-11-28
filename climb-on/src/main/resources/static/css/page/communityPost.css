@@ -92,7 +92,7 @@ h2 {
 
 
 .news-title {
-    font-size: 16px; /* 텍스트 크기 */
+    font-size: 13px; /* 텍스트 크기 */
     font-weight: bold;
     color: var(--black); /* 텍스트 색상 */
     text-decoration: none;
@@ -175,7 +175,7 @@ h2 {
     gap: 10px; /* 검색창과 버튼 사이 간격 */
 }
 
-.search-bar input[type="text"] {
+.search-bar input[type="search"] {
     border: 1px solid #ddd;
     border-radius: 20px;
     padding: 8px 15px;
@@ -288,6 +288,25 @@ h2 {
     font-weight: bold;
 }
 
+/*소식 진행중 뱃지*/
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    margin-right: 5px;
+}
+
+.badge-success {
+    background-color: var(--gray);
+}
+
 /* 카드 뷰 컨테이너 */
 .card-container {
     display: flex; /* 플렉스 레이아웃 */
@@ -297,7 +316,6 @@ h2 {
     padding: 0; /* 리스트 뷰와 동일하게 내부 여백 제거 */
     box-sizing: border-box; /* 패딩 포함한 폭 계산 */
 }
-
 
 /* 카드 뷰 개별 카드 */
 .card {
@@ -379,9 +397,21 @@ h2 {
 }
 
 .pinned-post {
-    background-color: #f9f9f9; /* 연한 회색 배경 */
-    border-left: 4px solid #ff9900; /* 왼쪽 테두리에 오렌지색 강조 */
+    background-color: #FAEFDD;
     font-weight: bold; /* 글씨를 굵게 */
+}
+
+.category-shape {
+    display: inline-block; /* 내부 텍스트를 중앙에 정렬 */
+    padding: 5px 15px; /* 도형 크기 조정 */
+    background-color: #FAE7C8; /* 도형 배경색 */
+    color: #333; /* 텍스트 색상 */
+    font-size: 14px; /* 글자 크기 */
+    font-weight: bold; /* 글씨 굵게 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+    border: 1px solid #FAE7C8; /* 테두리 색상 */
+    box-sizing: border-box; /* 패딩 포함하여 크기 계산 */
 }
 
 .pinned-post td {
@@ -442,46 +472,30 @@ h2 {
 
 .pagination i {
     display: flex;
-    width: 36px; /* 버튼 크기 */
+    width: 50px; /* 버튼 크기 */
     height: 36px;
     justify-content: center;
     align-items: center;
-    border: 1px solid var(--borderColor); /* 기본 테두리 */
     text-decoration: none;
-    color: var(--black); /* 기본 텍스트 색상 */
-    border-radius: 50px; /* 약간 둥근 모서리 */
+    color: #ffffff; /* 기본 텍스트 색상 */
     transition: background-color 0.2s ease, color 0.2s ease;
+    border: 1px solid var(--black);
+    border-radius: 50%;
+    background-color: var(--black);
 }
 
-
-/* 페이지네이션 링크 호버 효과 */
-.pagination a:hover {
-    background-color: #ffffff; /* 링크 버튼의 호버 배경색 */
-    color: var(--black); /* 링크 버튼의 호버 텍스트 색상 */
-    border-color: #ffffff; /* 링크 버튼의 호버 테두리 색상 */
+.pagination a.disabled i {
+    pointer-events: none; /* 클릭 비활성화 */
+    color: #ffffff; !important;/* 텍스트 색상 변경 */
+    border-color: #DEE2E6;
+    cursor: not-allowed; /* 비활성화 커서 */
+    border-radius: 50%;
+    background-color:#DEE2E6 !important;
 }
 
-/* 페이지네이션 아이콘 호버 효과 */
-.pagination i:hover {
-    background-color: var(--black); /* 아이콘 버튼의 호버 배경색 */
-    color: #ffffff; /* 아이콘 버튼의 호버 텍스트 색상 */
-    border-color: var(--black); /* 아이콘 버튼의 호버 테두리 색상 */
-}
 
 .pagination a.disabled {
-    pointer-events: none; /* 클릭 불가능 */
-    color: #aaa; /* 흐린 색상 */
-    border-color: #ddd; /* 흐린 테두리 */
-    background-color: #f5f5f5; /* 비활성화된 배경색 */
-    cursor: not-allowed; /* 마우스 커서 변경 */
-}
-
-.pagination i.disabled {
-    pointer-events: none;
-    color: #aaa;
-    border-color: #ddd;
-    background-color: #f5f5f5;
-    cursor: not-allowed;
+    pointer-events: none; /* 클릭 비활성화 */
 }
 
 

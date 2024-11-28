@@ -565,6 +565,18 @@
 .section-mypage #board .section00 .card-list .card-item .card-meta .icon-wrap span {
     margin-right: 10px;
 }
+.section-mypage #board .section00 .card-list .card-item .img-wrap {
+    width: 128px;
+    height: 128px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.section-mypage #board .section00 .card-list .card-item .img-wrap img {
+    width: 100%;
+}
 
 
 /*댓글 관리*/
@@ -620,7 +632,7 @@
 }
 
 .section-mypage #commentsTab .section00 .comment-list .comment-text {
-    margin-top: 25px;
+    margin-top: 20px;
     font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -628,4 +640,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     height: 38px;
+    /*overflow-y: auto;
+    display: block;
+    height: 55px;*/
 }

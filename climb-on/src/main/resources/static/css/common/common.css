@@ -312,6 +312,18 @@ button:disabled {
     #facilityModal .modal-body ul li .address {
         color: #fff;
     }
+    .section-mypage #commentsTab .section00 .comment-list .comment-wrap {
+        border-top-color: var(--bs-border-color);
+    }
+    .section-mypage #commentsTab .section00 .comment-list .author-info .meta-info{
+        color: #fff;
+    }
+    .section-mypage #board .section00 .card-list {
+        border-top-color: var(--bs-border-color);
+    }
+    .section-mypage #board .section00 .card-list .card-item .card-meta span.name {
+        color: var(--gray);
+    }
 }
 
 
@@ -326,4 +338,27 @@ button:disabled {
 .section-title {
     font-size: 24px;
     font-weight: 600;
+}
+
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--point) rgba(0,0,0,0);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 20px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--point);
+    border-radius: 100%;
+    border: none;
 }

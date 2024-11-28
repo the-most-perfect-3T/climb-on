@@ -181,10 +181,8 @@ public class CrewController {
     public ModelAndView crewList(ModelAndView mv) {
         // 총 크루수 조회
         int totalCount = crewService.countAllCrews();
-        System.out.println(totalCount);
         // 크루정보 조회 (5개만 보내준다)
         List<CrewDTO> crews = crewService.selectCrews();
-        System.out.println(crews);
 
         if(Objects.isNull(crews)){
             mv.addObject("message", "조회 가능한 크루가 없습니다.");

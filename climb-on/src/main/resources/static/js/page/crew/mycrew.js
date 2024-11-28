@@ -1,3 +1,7 @@
+// 백에서 넘어오는 크루코드 저장
+const crewCodeTag = document.getElementById('crewcode');
+const crewCode = crewCodeTag.getAttribute("data-crew-code");
+
 const test = [28, 30, 32]; // 리스트 저장
 // crew posts 에서 image가 포함되어 있는 애들을 어떻게 골라오지
 // 포함된 애들만 리스트에 저장해서 여기다가 출력
@@ -47,7 +51,7 @@ function populateEventList(eventData) {
 const memberTabBtn = document.getElementById("member-tab");
 memberTabBtn.addEventListener('click', async function() {
     try {
-        const response = await fetch("/mycrew/member");
+        const response = await fetch(`/mycrew/member/${crewCode}`);
         if (!response.ok) {
             throw new Error("서버 오류: " + response.status);
         }
@@ -62,12 +66,12 @@ memberTabBtn.addEventListener('click', async function() {
             <td class="member-row" >
               <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
                 <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
-                  <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100">
+                  <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100 userModalOpen" data-id=${member.id}>
                 </div>
               </div>          
             </td>
             <td>
-              <p class="mb-1 fw-bold">${member.nickname}</p>
+              <p class="mb-1 fw-bold userModalOpen" data-id="${member.id}">${member.nickname}</p>
             </td>   
             <td>
               <div class="badge rounded-pill" style="display: ${member.role == 'CAPTAIN'? "" : "none" }">크루장</div>
@@ -75,6 +79,7 @@ memberTabBtn.addEventListener('click', async function() {
             `
             memberListContainer.appendChild(memberTr);
         });
+        await openUserModal();
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
@@ -83,7 +88,7 @@ memberTabBtn.addEventListener('click', async function() {
 const albumTabBtn = document.getElementById("album-tab");
 albumTabBtn.addEventListener('click', async function() {
     try {
-        const response = await fetch("/mycrew/album");
+        const response = await fetch(`/mycrew/album/${crewCode}`);
         if (!response.ok) {
             throw new Error("서버 오류: " + response.status);
         }
@@ -99,7 +104,74 @@ albumTabBtn.addEventListener('click', async function() {
             `
             gridContainer.appendChild(gridItem);
         })
+
+        if(data.length === 0){
+            console.log(data.length);
+            const div = document.createElement('div');
+            div.innerText = "사진이 포함된 크루 게시글이 아직 없습니다.";
+            gridContainer.appendChild(div);
+        }
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
 });
+
+/* 타유저 프로필 모달 */
+
+async function openUserModal() {
+    const userModalOpen = document.querySelectorAll(".userModalOpen");
+    if(userModalOpen){
+        userModalOpen.forEach(function(el, i){
+            if(el.textContent === "익명"){
+                el.style.cursor = "default";
+            }
+            el.addEventListener("click", function(e){
+
+                const userId = parseInt(e.target.getAttribute("data-id"));
+                if (isNaN(userId)) {
+                    console.error("Invalid userId:", userId);
+                    return; // 유효하지 않은 경우 요청 중단
+                }
+                console.log("userId", userId);
+
+                fetch(`/user/${userId}`) // 서버의 요청 URL
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error: ${response.status}`);
+                        }
+                        return response.json(); // JSON 데이터를 기대
+                    })
+                    .then(data => {
+                        console.log("data", data);
+                        // 서버에서 받은 데이터로 모달 내용 채우기
+                        const userViewModal = document.getElementById("userViewModal");
+                        console.log(userViewModal.querySelector(".top .img-wrap img"));
+                        userViewModal.querySelector(".top .img-wrap img").setAttribute("src", data.user.profilePic);
+                        userViewModal.querySelector(".top .nickname").textContent = data.user.nickname;
+                        userViewModal.querySelector(".top .one-liner").textContent = data.user.oneLiner != null ? data.user.oneLiner : "한줄 소개가 없습니다.";
+                        userViewModal.querySelector(".middle .crew .cont").textContent = data.crewName != null ? data.crewName : "가입한 크루가 없습니다.";
+                        userViewModal.querySelector(".middle .home .cont").textContent = data.homeName != null ? data.homeName : "등록한 홈짐이 없습니다.";
+
+                        // 모달 띄우기
+                        const modal = new bootstrap.Modal(document.getElementById('userViewModal'));
+                        modal.show();
+                    })
+                    .catch(error => {
+                        console.error("에러 발생:", error);
+                    });
+            });
+        });
+
+    }
+}
+
+const crewApplyBtn = document.querySelector('.crew-join-apply');
+// 크루 가입신청 후
+
+/*crewApplyBtn.display*/
+
+
+
+
+
+/*========================크루 가입 모달========================*/

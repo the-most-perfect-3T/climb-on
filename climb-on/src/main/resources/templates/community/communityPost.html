@@ -13,9 +13,9 @@
 
      <div class="head-container">
     <!-- 소식 제목 -->
-    <h2>소식</h2>
+    <h2>진행중인 소식</h2>
         <!-- 더보기 버튼-->
-    <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
+    <button th:if="${moreOngoingPosts > 8}" onclick="window.location.href='/community?category=소식&dday=진행중&viewMode=' +viewMode" class="more-button">더보기 &gt;</button>
      </div>
 
     <div class="timeline-container">
@@ -24,6 +24,7 @@
             <div class="ongoing-news">
                 <div class="ongoing-news-container">
                     <!-- 각 게시글을 카드 형태로 나눔 -->
+                    <p th:if="${ongoingPosts == null or ongoingPosts.isEmpty()}">진행중인 소식이 없습니다</p>
                     <div th:each="post : ${ongoingPosts}" class="ongoing-news-item">
                         <div class="news-box">
                             <span class="status-label">진행중</span>
@@ -53,7 +54,7 @@
         <form action="/community" method="get" style="display:flex; align-items: center;">
         <input type="hidden" name="category" th:value="${category}"/>     <!--category와 searchKeyword를 함께 서버로 전송하여, 해당 카테고리의 검색 결과를 표시할 수 있게 했다-->
         <input type="hidden" name="viewMode" th:value="${viewMode}"/> <!--뷰모드 유지-->
-        <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
+        <input type="search" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
     </div>
@@ -106,29 +107,34 @@
             </tr>
             </thead>
             <tbody>
+
             <!-- 공지 핀포스트 -->
             <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                <td th:text="${post.category}">공지</td>
+                <td class="pincategory">
+                    <span class="category-shape" th:text="${post.category}"></span>
+                </td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">공지 게시글 제목</span>
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
 
             <!-- 가이드 핀포스트 -->
             <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
-                <td th:text="${post.category}">가이드</td>
+                <td class="pincategory">
+                    <span class="category-shape" th:text="${post.category}"></span>
+                </td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">가이드 게시글 제목</span>
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
 <!--            &lt;!&ndash; 공지 게시글 출력(핀 포스트) &ndash;&gt;  이렇게 하면 공지 카테고리 들어갔을 때 공지 핀포스트 다음에 일반공지게시글이 나옴 핀포스트 가이드는 나중에 나옴-->
@@ -162,14 +168,14 @@
                 <td th:text="${post.category}">카테고리</td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
+                        <span th:if="${post.dday != null and post.dday.equals('진행중')}" class = "badge badge-success">진행중</span>
                         <span th:text="${post.title}">게시글 제목 예시</span>
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
-
             </tbody>
         </table>
         </div>
@@ -190,26 +196,30 @@
 
                 <!-- 공지 핀포스트 -->
                 <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                    <td th:text="${post.category}">공지</td>
+                    <td class="pincategory">
+                        <span class="category-shape" th:text="${post.category}"></span>
+                    </td>
                     <td>
                         <a th:href="@{'/community/' + ${post.id}}">
                             <span th:text="${post.title}">공지 게시글 제목</span>
                             <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                         </a>
                     </td>
-                    <td th:text="${post.displayName}">작성자</td>
+                    <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                     <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                 </tr>
                 <!-- 가이드 핀포스트 -->
                 <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
-                    <td th:text="${post.category}">가이드</td>
+                    <td class="pincategory">
+                        <span class="category-shape" th:text="${post.category}"></span>
+                    </td>
                     <td>
                         <a th:href="@{'/community/' + ${post.id}}">
                             <span th:text="${post.title}">가이드 게시글 제목</span>
                             <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                         </a>
                     </td>
-                    <td th:text="${post.displayName}">작성자</td>
+                    <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                     <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                 </tr>
                 </tbody>
@@ -218,12 +228,13 @@
                 <div class="card-body">
                 <div class="card-title">
                     <a th:href="@{'/community/' + ${post.id}}">
-                        <span th:text="${post.title}">게시글 제목 예시</span>
+                        <span th:if="${post.dday != null and post.dday.equals('진행중')}" class ="badge badge-success">진행중</span>
+                        <span th:text="${post.title}">게시글 제목</span>
                     </a>
                 </div>
                 <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
                 <div class="card-meta">
-                    <span th:text="${post.displayName}">작성자</span>
+                    <span th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                     <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
                     <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
@@ -271,7 +282,7 @@
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
                         + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
                    th:classappend="${currentPage >= totalPages} ? 'disabled' : ''">
-                <i class="fa-solid fa-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
+                    <i class="fa-solid fa-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
             </li>
         </ul>
     </section>

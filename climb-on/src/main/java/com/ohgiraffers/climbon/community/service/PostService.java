@@ -21,7 +21,7 @@ public class PostService {
     @Autowired
     private PostDAO postDAO;
 
-    // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다.
+    // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다. 아까워서둠 버리는코드
     public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
 
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
@@ -87,6 +87,11 @@ public class PostService {
             // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
             String userNickname =  postDAO.getUserNicknameById(post.getUserId());
             post.setUserNickname(userNickname);
+
+            if ("소식".equals(post.getCategory())){
+                post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
+            }
+
             String htmlContent = post.getContent();
             String plainText = htmlContent.replaceAll("<[^>]*>", "");
             post.setContent(plainText);
@@ -245,8 +250,20 @@ public class PostService {
     }
 
     // 진행중 메소드
-    public List<PostDTO> getOngoingPosts() {
-        return postDAO.getPostsByPageAndCategoryAndSearch(0, 10, "소식", null, "latest", "진행중", true);
+    public Map<String, Object> getOngoingPosts() {
+
+        List<PostDTO> ongoingPosts = postDAO.getPostsByPageAndCategoryAndSearch(0, 100, "소식", null, "latest", "진행중", true);
+        int totalOngoingCount = ongoingPosts.size(); // 전체 진행 중 게시글 개수
+
+        // 최대 8개 반환
+        int ongoingPostsLimit = Math.min(8, ongoingPosts.size());
+        List<PostDTO> ongoingPostsLimited = ongoingPosts.subList(0, ongoingPostsLimit);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalOngoingCount", totalOngoingCount);
+        result.put("ongoingPostsLimited", ongoingPostsLimited);
+
+        return result;
     }
 
     public List<CommentDTO> getCommentsById(Integer id) {
