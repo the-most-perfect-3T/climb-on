@@ -27,7 +27,7 @@ public class EventController
     private EventService eventService;
 
     // 큰 대회 이벤트 가져옴
-    @GetMapping
+    @GetMapping("/main")
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
     {
         if(userDetails != null)

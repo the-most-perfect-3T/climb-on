@@ -4,6 +4,7 @@ public class CrewEventDTO
 {
     private int userCode;
     private int crewCode;
+    private int eventCode;
 
     public CrewEventDTO()
     {
@@ -13,6 +14,13 @@ public class CrewEventDTO
     {
         this.userCode = userCode;
         this.crewCode = crewCode;
+    }
+
+    public CrewEventDTO(int userCode, int crewCode, int eventCode)
+    {
+        this.userCode = userCode;
+        this.crewCode = crewCode;
+        this.eventCode = eventCode;
     }
 
     public int getUserCode()
