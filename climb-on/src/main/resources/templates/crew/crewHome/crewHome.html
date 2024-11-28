@@ -116,7 +116,7 @@
                                 <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                             </a>
                         </td>
-                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</td>
+                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}" class="userModalOpen" th:data-id="${post.isAnonymous? '' : post.userId}">작성자</td>
                         <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                     </tr>
 
@@ -129,7 +129,7 @@
                                 <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                             </a>
                         </td>
-                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}">작성자</td>
+                        <td th:text="${post.isAnonymous? '익명' : post.userNickname}" class="userModalOpen" th:data-id="${post.isAnonymous? '' : post.userId}">작성자</td>
                         <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                     </tr>
 

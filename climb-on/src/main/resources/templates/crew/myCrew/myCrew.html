@@ -34,7 +34,8 @@
             </div>
 
             <!--사이드 내용-->
-            <button class="crew-join-apply" th:if="${isMyCrew == false && haveCrew == false}">
+            <button class="crew-join-apply" type="button" data-bs-toggle="modal" data-bs-target="#crewApplyModal"
+                    th:if="${isMyCrew == false && haveCrew == false}">
                 <p>가입신청하기</p>
             </button>
         </aside>
@@ -67,6 +68,7 @@
                     </button>
                 </li>
             </ul>
+            <div style="display: none" id="crewcode" th:data-crew-code="${myCrew.id}"></div>
 
             <div class="tab-content">
                 <th:block th:replace="~{/crew/myCrew/tab/homeTab :: tabContFragment}"></th:block>
@@ -80,6 +82,8 @@
         <th:block th:replace="~{/calendar/calendarModal :: modalFragment }"></th:block>
 
     </div>
+
+    <th:block th:replace="~{crew/myCrew/crewApplyModal :: crewApplyModalFragment}"></th:block>
 
 </th:block>
 

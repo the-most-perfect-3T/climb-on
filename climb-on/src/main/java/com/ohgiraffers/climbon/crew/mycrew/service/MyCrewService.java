@@ -25,8 +25,8 @@ public class MyCrewService
         return myCrewMapper.getMyCrewById(myId);
     }
 
-    public List<CrewMembersDTO> getCrewMemberList(int key) {
-        return myCrewMapper.getCrewMemberList(key);
+    public List<CrewMembersDTO> getCrewMemberList(int crewCode) {
+        return myCrewMapper.getCrewMemberList(crewCode);
     }
 
     public List<String> getImgUrlList(Integer key) {

@@ -1,3 +1,7 @@
+// 백에서 넘어오는 크루코드 저장
+const crewCodeTag = document.getElementById('crewcode');
+const crewCode = crewCodeTag.getAttribute("data-crew-code");
+
 const test = [28, 30, 32]; // 리스트 저장
 // crew posts 에서 image가 포함되어 있는 애들을 어떻게 골라오지
 // 포함된 애들만 리스트에 저장해서 여기다가 출력
@@ -47,7 +51,7 @@ function populateEventList(eventData) {
 const memberTabBtn = document.getElementById("member-tab");
 memberTabBtn.addEventListener('click', async function() {
     try {
-        const response = await fetch("/mycrew/member");
+        const response = await fetch(`/mycrew/member/${crewCode}`);
         if (!response.ok) {
             throw new Error("서버 오류: " + response.status);
         }
@@ -62,12 +66,12 @@ memberTabBtn.addEventListener('click', async function() {
             <td class="member-row" >
               <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
                 <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
-                  <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100">
+                  <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100 userModalOpen" data-id=${member.id}>
                 </div>
               </div>          
             </td>
             <td>
-              <p class="mb-1 fw-bold">${member.nickname}</p>
+              <p class="mb-1 fw-bold userModalOpen" data-id="${member.id}">${member.nickname}</p>
             </td>   
             <td>
               <div class="badge rounded-pill" style="display: ${member.role == 'CAPTAIN'? "" : "none" }">크루장</div>
@@ -83,7 +87,7 @@ memberTabBtn.addEventListener('click', async function() {
 const albumTabBtn = document.getElementById("album-tab");
 albumTabBtn.addEventListener('click', async function() {
     try {
-        const response = await fetch("/mycrew/album");
+        const response = await fetch(`/mycrew/album/${crewCode}`);
         if (!response.ok) {
             throw new Error("서버 오류: " + response.status);
         }
@@ -99,7 +103,18 @@ albumTabBtn.addEventListener('click', async function() {
             `
             gridContainer.appendChild(gridItem);
         })
+
+        if(data.length === 0){
+            console.log(data.length);
+            const div = document.createElement('div');
+            div.innerText = "사진이 포함된 크루 게시글이 아직 없습니다.";
+            gridContainer.appendChild(div);
+        }
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
 });
+
+
+/*========================크루 가입 모달========================*/
+// 모달 open

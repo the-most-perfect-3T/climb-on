@@ -81,13 +81,13 @@
         FROM users u
         JOIN user_crew uc
         on u.id = uc.user_code
-        WHERE uc.crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
+        WHERE uc.crew_code = #{crewCode};
     </select>
 
     <select id="getImgUrlList" parameterType="int">
         SELECT img_url
         FROM crew_posts
-        WHERE crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
+        WHERE crew_code = #{crewCode};
     </select>
 
     <select id="getCrewInfoByCrewCode" parameterType="Integer" resultMap="crew">
