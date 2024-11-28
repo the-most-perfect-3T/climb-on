@@ -18,19 +18,19 @@
         <h2 th:text="${post.id != null ? '커뮤니티게시판 수정' : '커뮤니티게시판 글 쓰기'}"></h2>
       </div>
       <br/>
-      <form th:action="${post.id != null} ? '/community/' + ${post.id} + '/edit' : '/community/new'" method="post" id="writePostForm">
+      <form th:action="${post.id != null} ? '/community/' + ${post.id} + '/edit' : '/community/new'" method="post" id="writePostForm" onsubmit="return false;">
         <div class="input-wrap">
           <h4>카테고리</h4>
           <select class="form-select" aria-label="Default select example" name="category" onchange="toggleEventFields(this.value)" required>
             <option value="">카테고리를 선택해주세요.</option>
-            <option value="공지">공지</option>
-            <option value="가이드">가이드</option>
-            <option value="소식">소식</option>
+            <option value="공지" th:selected="${post.category == '공지'}">공지</option>
+            <option value="가이드" th:selected="${post.category == '가이드'}">가이드</option>
+            <option value="소식" th:selected="${post.category == '소식'}">소식</option>
           </select>
           <br/>
 
           <!-- 행사 날짜 입력 (소식 카테고리 선택 시에만 표시)-->
-          <div class="form-group" id="eventFields" style="display: none;">
+          <div class="form-group" id="eventFields" th:style="${post.category == '소식'} ? '' : 'display: none;'">
             <label for="eventStartDate">행사 시작일</label>
             <input type="date" id="eventStartDate" name="eventStartDate">
             <label for="eventEndDate">행사 종료일</label>
@@ -39,7 +39,7 @@
 
           <div class="mb-3">
             <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요." name="title" required>
+            <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요." name="title" th:value="${post.title}" required>
           </div>
           <div class="mb-3 form-group">
             <label for="editor" class="form-label">본문</label>
@@ -103,25 +103,57 @@
       document.addEventListener('DOMContentLoaded', function () {
           const role = '[[${role}]]'; /* 서버에서 현재 사용자의 역할을 전달 */
           const categorySelect = document.querySelector('select[name="category"]');
+          const titleInput = document.getElementById('title');
+          const eventStartDateInput = document.getElementById('eventStartDate');
+          const eventEndDateInput = document.getElementById('eventEndDate');
+
           if (role !== 'ADMIN') {
               categorySelect.querySelectorAll('option[value="공지"], option[value="가이드"]').forEach(option => {
                   option.disabled = true;
               });
           }
 
+          // 기존 게시글 내용 불러오기
+          const existingCategory = '[[${post.category}]]';
+          const existingTitle = '[[${post.title}]]';
+          const existingStartDate = '[[${post.eventStartDate}]]';
+          const existingEndDate = '[[${post.eventEndDate}]]';
           const existingContent = '[[${post.content}]]';
+
+          if (existingCategory) {
+              categorySelect.value = existingCategory;
+              toggleEventFields(existingCategory); // 카테고리에 따라 행사 필드 토글
+          }
+
+          if (existingTitle) {
+              titleInput.value = existingTitle;
+          }
+
+          if (existingStartDate){
+              eventStartDateInput.value = existingStartDate;
+          }
+
+          if (existingEndDate){
+              eventEndDateInput.value = existingEndDate;
+          }
+
           if (existingContent) {
               quill.root.innerHTML = existingContent; // Quill 에디터에 기존 내용 설정
           }
+
 
       });
 
     function toggleEventFields(category){
       const eventFields = document.getElementById('eventFields');
       if (category === '소식'){
-        eventFields.style.display = 'block';
+        if(eventFields.style.display !== 'block'){ // 이미 보이는 경우 다시 처리하지 않음 (두번 제출하게 하지 않기 위해 이렇게 처리)
+           eventFields.style.display = 'block';
+        }
       } else {
-        eventFields.style.display = 'none';
+        if(eventFields.style.display !== 'none'){ // 이미 숨겨진 경우 다시 처리하지 않음
+           eventFields.style.display = 'none';
+          }
       }
     }
 
@@ -180,18 +212,44 @@
         alertPlaceholder.append(wrapper);
     };
 
+    // 폼 제출 플래그 추가로 중복 방지
+    let isSubmitting = false;
+
     // 본문 내용검사후 통과 못하면 alert 적용
     document.getElementById('writePostForm').onsubmit = async function (event) {
         event.preventDefault();
+
+        if (isSubmitting){
+            return false; // 이미 제출 중이면 중단
+        }
+        isSubmitting = true;
 
         // html 태그 제거
         const cleanTxt = quill.root.innerHTML.replace(/<(?!img\s*\/?)[^>]+>/g, "");
         // 모든 공백 제거
         const resultTxt = cleanTxt.replace(/\s/g, '').trim();
+
+        // 카테고리 선택 검사
+        const category = document.querySelector('select[name="category"]').value;
+
+
+        // 소식 카테고리 선택 시 행사 날짜 입력 검사
+        if (category === '소식'){
+            const eventStartDate = document.getElementById('eventStartDate').value;
+            const eventEndDate = document.getElementById('eventEndDate').value;
+
+            if (!eventStartDate || !eventEndDate){
+                appendAlert("행사 날짜를 입력해주세요.", 'warning');
+                isSubmitting = false; // 제출 간으 상태로 초기화
+                return false;
+            }
+        }
+
         if (resultTxt.length === 0) {
             appendAlert("본문에 내용이 있어야 등록 가능합니다!", 'success');
             return false;
-        } else{
+        }
+
             const contentHTML = quill.root.innerHTML;
             const parser = new DOMParser();
             const doc = parser.parseFromString(contentHTML, 'text/html');
@@ -237,10 +295,14 @@
                 }
             }
 
-            hiddenContentInput.value = quill.root.innerHTML;
-            document.getElementById('writePostForm').submit();
-
-        }
+            // 폼 제출 로직
+            try {
+                hiddenContentInput.value = quill.root.innerHTML;
+                document.getElementById('writePostForm').submit();
+            } catch (error) {
+                console.error("폼 제출 중 오류:", error);
+                isSubmitting = false; // 오류시 플래그 초기화
+            }
     };
 
 
