@@ -35,8 +35,9 @@
 
             <!--사이드 내용-->
             <button class="crew-join-apply" type="button" data-bs-toggle="modal" data-bs-target="#crewApplyModal"
-                    th:if="${isMyCrew == false && haveCrew == false}">
-                <p>가입신청하기</p>
+                    th:if="${isMyCrew == false && haveCrew == false}"
+                    th:disabled="${waitingForApproval}" >
+                <p th:text="${waitingForApproval? '가입승인 대기중' : '가입신청하기'}">가입신청하기</p>
             </button>
         </aside>
 
@@ -64,6 +65,11 @@
                 </li>
                 <li role="presentation">
                     <button id="member-tab"  data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false">
+                        <div class="position-relative">
+                            <th:block th:unless="${newCrewApplyInfoList == null or #lists.isEmpty(newCrewApplyInfoList)}">
+                                <span th:text="${newCrewApplyInfoList.size()}" class="notice-count position-absolute">1</span>
+                            </th:block>
+                        </div>
                         <span>멤버</span>
                     </button>
                 </li>

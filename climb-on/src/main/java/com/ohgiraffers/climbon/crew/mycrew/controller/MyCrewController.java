@@ -4,6 +4,7 @@ import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
@@ -51,11 +52,16 @@ public class MyCrewController
                     int memberCount = myCrewService.getMemberCount(myCrew.getId());
                     boolean isMyCrew = true;
                     boolean haveCrew = true;
+                    boolean waitingForApproval = false;
 
-                    //role이 CAPTAIN일시 db 조회추가
+                    //role이 CAPTAIN일시 크루 가입신청이 있는지 확인
+                    if(userCrewDTO.getRole().equals(CrewRole.CAPTAIN)){
+                        List<CrewApplyWithUserInfoDTO> crewApplyWithUserInfoDTO = myCrewService.getNewCrewApplyContentByCrewCode(myCrew.getId());
+                        mv.addObject("newCrewApplyInfoList", crewApplyWithUserInfoDTO);
+                    }
 
-                    /////////////////////
-
+                    mv.addObject("crewRole", userCrewDTO.getRole());
+                    mv.addObject("waitingForApproval", waitingForApproval);
                     mv.addObject("isMyCrew", isMyCrew);
                     mv.addObject("haveCrew", haveCrew);
                     mv.addObject("memberCount", memberCount);
@@ -90,12 +96,19 @@ public class MyCrewController
                 if (Objects.isNull(userCrewDTO) || userCrewDTO.getCrewCode() != crewCode) {
                     boolean isMyCrew = false;
                     boolean haveCrew = true;
+                    boolean waitingForApproval = false;
+                    CrewApplyDTO crewApplyDTO = myCrewService.getCrewApplyContent(myId);
+                    if(!Objects.isNull(crewApplyDTO) && crewApplyDTO.getIsPermission()){
+                        waitingForApproval = true;
+                    }
                     if (Objects.isNull(userCrewDTO)) {
                         haveCrew = false;
                     }
                     CrewDTO crewInfo = myCrewService.getCrewInfoByCrewCode(crewCode);
                     int memberCount = myCrewService.getMemberCount(crewInfo.getId());
 
+
+                    mv.addObject("waitingForApproval", waitingForApproval);
                     mv.addObject("memberCount", memberCount);
                     mv.addObject("myCrew", crewInfo);
                     mv.addObject("isMyCrew", isMyCrew);
