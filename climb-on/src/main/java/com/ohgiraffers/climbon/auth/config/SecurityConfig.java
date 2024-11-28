@@ -66,7 +66,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(auth -> {
             auth.requestMatchers("/auth/login", "/auth/signup", "/auth/fail", "/", "/auth/checkUserId", "/auth/checkName", "/error/**",
-                    "/search", "/facilities/**", "/community", "/crew/*", "/events/**", "/api/posts/recent/paginated", "/api/posts/popular", "/Review/**", "/facilityImg/**").permitAll();
+                    "/search", "/facilities/**", "/community", "/crew/*", "/events", "/api/posts/recent/paginated", "/api/posts/popular", "/Review/**", "/facilityImg/**", "/user/**").permitAll();
             /*auth.requestMatchers("/admin/*").hasAnyAuthority(UserRole.ADMIN.getRole());
             auth.requestMatchers("/user/*").hasAnyAuthority(UserRole.USER.getRole());*/
             auth.anyRequest().authenticated();

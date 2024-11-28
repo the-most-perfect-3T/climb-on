@@ -914,7 +914,7 @@ boardTab.addEventListener("click", async function(){
         }
 
         const data = await response.json();
-        /*console.log("받은 데이터:", data);*/
+        console.log("받은 데이터:", data);
 
         const cardContainer = document.querySelector("#posts .card-container");
         cardContainer.textContent = "";
@@ -1282,4 +1282,6 @@ commentTab.addEventListener("click", async function() {
         console.error("AJAX 오류:", e);
     }
 });
+
+
 
