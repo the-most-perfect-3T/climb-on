@@ -13,9 +13,9 @@
 
      <div class="head-container">
     <!-- 소식 제목 -->
-    <h2>소식</h2>
+    <h2>진행중인 소식</h2>
         <!-- 더보기 버튼-->
-    <button onclick="window.location.href='/community?category=소식'" class="more-button">더보기 &gt;</button>
+    <button th:if="${moreOngoingPosts > 8}" onclick="window.location.href='/community?category=소식&dday=진행중&viewMode=' +viewMode" class="more-button">더보기 &gt;</button>
      </div>
 
     <div class="timeline-container">
@@ -107,29 +107,30 @@
             </tr>
             </thead>
             <tbody>
+
             <!-- 공지 핀포스트 -->
             <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                <td th:text="${post.category}">공지</td>
+                <td th:text="${post.category}" class="pincategory">공지</td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">공지 게시글 제목</span>
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
 
             <!-- 가이드 핀포스트 -->
             <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
-                <td th:text="${post.category}">가이드</td>
+                <td th:text="${post.category}" class="pincategory">가이드</td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">가이드 게시글 제목</span>
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
 <!--            &lt;!&ndash; 공지 게시글 출력(핀 포스트) &ndash;&gt;  이렇게 하면 공지 카테고리 들어갔을 때 공지 핀포스트 다음에 일반공지게시글이 나옴 핀포스트 가이드는 나중에 나옴-->
@@ -163,11 +164,12 @@
                 <td th:text="${post.category}">카테고리</td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
+                        <span th:if="${post.dday != null and post.dday.equals('진행중')}" class = "badge badge-success">진행중</span>
                         <span th:text="${post.title}">게시글 제목 예시</span>
                         <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                     </a>
                 </td>
-                <td th:text="${post.displayName}">작성자</td>
+                <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
             </tbody>
@@ -190,26 +192,26 @@
 
                 <!-- 공지 핀포스트 -->
                 <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                    <td th:text="${post.category}">공지</td>
+                    <td th:text="${post.category}" class="pincategory">공지</td>
                     <td>
                         <a th:href="@{'/community/' + ${post.id}}">
                             <span th:text="${post.title}">공지 게시글 제목</span>
                             <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                         </a>
                     </td>
-                    <td th:text="${post.displayName}">작성자</td>
+                    <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                     <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                 </tr>
                 <!-- 가이드 핀포스트 -->
                 <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
-                    <td th:text="${post.category}">가이드</td>
+                    <td th:text="${post.category}" class="pincategory">가이드</td>
                     <td>
                         <a th:href="@{'/community/' + ${post.id}}">
                             <span th:text="${post.title}">가이드 게시글 제목</span>
                             <span class="comment-count">[<span th:text="${post.commentsCount}">0</span>]</span>
                         </a>
                     </td>
-                    <td th:text="${post.displayName}">작성자</td>
+                    <td th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</td>
                     <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
                 </tr>
                 </tbody>
@@ -218,12 +220,13 @@
                 <div class="card-body">
                 <div class="card-title">
                     <a th:href="@{'/community/' + ${post.id}}">
-                        <span th:text="${post.title}">게시글 제목 예시</span>
+                        <span th:if="${post.dday != null and post.dday.equals('진행중')}" class ="badge badge-success">진행중</span>
+                        <span th:text="${post.title}">게시글 제목</span>
                     </a>
                 </div>
                 <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
                 <div class="card-meta">
-                    <span th:text="${post.displayName}">작성자</span>
+                    <span th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자</span>
                     <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                     <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
                     <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>

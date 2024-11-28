@@ -464,6 +464,7 @@ function loadReviews(facilityId) {
 
                 // 각 리뷰 내용 동적으로 생성하여 추가
                 for (const Reviews of data) {
+                    console.log(Reviews)
                     let Reviews2 = await getReview(Reviews.id);
                     const isFavorite = await reviewcheckFavorite(Reviews.id || defaultId);
                     console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
@@ -475,7 +476,8 @@ function loadReviews(facilityId) {
                     item.innerHTML = `
                     <div class="review-detail">
                         <div class="review-detail-nickname">
-                            <p>${Reviews.userNickname}</p>
+                        
+                            <p class="userModalOpen" data-id="${Reviews.reviewerId}">${Reviews.userNickname}</p>
                             <span class="review-time">${timeText}</span>   
                                 <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
                                     <button class="menu-buttonreview" ><i class="fa-solid fa-bars"></i></button>

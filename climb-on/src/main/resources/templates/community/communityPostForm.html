@@ -141,7 +141,6 @@
               quill.root.innerHTML = existingContent; // Quill 에디터에 기존 내용 설정
           }
 
-
       });
 
     function toggleEventFields(category){
@@ -255,6 +254,7 @@
             const doc = parser.parseFromString(contentHTML, 'text/html');
             const imgTags = Array.from(doc.getElementsByTagName('img'));
 
+            try{
             const remainingFiles = [];
             const formData = new FormData();
 
@@ -268,7 +268,6 @@
             });
 
             if(remainingFiles.length > 0){
-                try {
                     const response = await fetch('/community/file/upload', {
                         method: 'POST',
                         body: formData,
@@ -280,6 +279,7 @@
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
+
                     const data = await response.json();
                     console.log('File uploaded successfully:', data);
                     hiddenImgUrlInput.value = data;
@@ -287,13 +287,13 @@
                         img.src = data[index];
                     });
                     quill.root.innerHTML = doc.body.innerHTML;
-
+                    }
                 } catch(err) {
                     console.error('Upload failed:', err);
                     appendAlert("이미지 업로드 중 문제가 발생했습니다.", 'error');
+                    isSubmitting = false;
                     return false;
                 }
-            }
 
             // 폼 제출 로직
             try {
@@ -304,7 +304,6 @@
                 isSubmitting = false; // 오류시 플래그 초기화
             }
     };
-
 
 
     // 이미지 업로드시 text Editor 에 띄워주고 form submit시 업로드 준비
