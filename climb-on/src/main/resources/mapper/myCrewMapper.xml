@@ -102,6 +102,28 @@
         WHERE crew_code = #{crewCode}
     </select>
 
+    <select id="getHowToJoinCrew" parameterType="int" resultType="boolean">
+        SELECT is_permission
+        FROM crews
+        WHERE id = #{crewCode}
+    </select>
+
+    <insert id="applyForCrew" parameterType="com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO">
+        INSERT INTO crew_apply(user_code, crew_code, content, is_approval, is_permission)
+        VALUES(
+        #{userCode},
+        #{crewCode},
+        #{content},
+        #{isApproval},
+        #{isPermission}
+        )
+    </insert>
+
+    <insert id="crewMemberInsert" parameterType="com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO">
+        INSERT INTO user_crew (user_code, crew_code, role)
+        VALUES (#{userCode}, #{crewCode}, #{role})
+    </insert>
+
 
 
 </mapper>

@@ -15,9 +15,9 @@
                 <!-- Modal Body -->
                 <div class="modal-body">
                     <h1 class="w-100 text-center fw-bold mb-1">함께 성장하는 크루 커뮤니티</h1>
-                    <p class="w-100 text-center text-muted mb-4">cl'mon에서 함께할 크루에 가입 해주세요!</p>
+                    <p class="w-100 text-center text-muted mb-4">cli'mon에서 함께할 크루에 가입 해주세요!</p>
 
-                    <form action="/crew/crewApply" method="post" id="crewApplyForm">
+                    <form th:action="@{/crew/myCrew/crewApply/{crewCode}(crewCode=${myCrew.id})}" method="post" id="crewApplyForm">
 
                         <!-- 크루 정보 -->
                         <div class="mb-4">
@@ -41,7 +41,7 @@
                             <label for="description" class="form-label fw-bold">
                                 <span class="text-danger">*</span>크루 소개글
                             </label>
-                            <textarea id="description" name="description" class="form-control" rows="3" placeholder="내용을 입력해주세요 (최대 160자)" maxlength="160" required></textarea>
+                            <textarea id="description" name="content" class="form-control" rows="3" placeholder="내용을 입력해주세요 (최대 160자)" maxlength="160" required></textarea>
                             <small class="form-text text-muted"> <small id="crewIntroCount"></small> /160</small>
                         </div>
 

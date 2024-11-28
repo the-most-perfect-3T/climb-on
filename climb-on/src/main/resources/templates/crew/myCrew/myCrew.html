@@ -100,5 +100,12 @@
             alert(message);
         }
     </script>
+
+    <script th:inline="javascript">
+        const alertMessage = [[${alertMessage}]];
+        if(alertMessage){
+            alert(alertMessage);
+        }
+    </script>
 </th:block>
 </html>
