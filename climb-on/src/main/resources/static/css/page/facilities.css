@@ -63,7 +63,7 @@
 .content .offcanvas {
     position: relative;
     transform: translateX(0);
-    visibility: visible;
+    visibility: hidden;
     height: 100%;
     width: 320px;
 }
@@ -563,16 +563,16 @@ body .btn-fmodal {
 }
 
 .review-detail-nickname{
-    display: flex;
+    display: inline-flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 }
 .review-detail-nickname p{
     padding-left: 10px;
 }
 .review-time{
-    padding-left: 10px;
-    font-size: 13px;
+    padding-left: 5px;
+    font-size: 9px;
     opacity: 70%;
 }
 .review-detail-nickname span{
@@ -586,8 +586,8 @@ body .btn-fmodal {
 .review-text{
     margin:10px;
     font-size: 14px;
-    text-align: center;
-    padding-left: 10px;
+    text-align: left;
+
 }
 .review-text-fav{
     text-align: right;
@@ -612,7 +612,7 @@ body .btn-fmodal {
     border: none;
     cursor: pointer;
     color: #888;
-    padding-right: 10px;
+    margin-left: 175px;
 }
 
 /* dropdown 메뉴 스타일 */
@@ -653,9 +653,62 @@ body .btn-fmodal {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-left: 10px;
 }
 .fa-bars {
      font-weight: 900;
      opacity: 50%;
      font-size: 18px;
  }
+/* 공통 스켈레톤 스타일 */
+.skeleton-loader {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.skeleton-item {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-item:nth-child(1) {
+    width: 70%;
+}
+
+.skeleton-item:nth-child(2) {
+    width: 50%;
+}
+
+.skeleton-item:nth-child(3) {
+    width: 100%;
+}
+
+/* 이미지 스켈레톤 */
+.img-skeleton {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 8px;
+}
+
+#facilitymainImg {
+    display: none; /* 초기에는 숨김 */
+    width: 100%;
+    height: auto; /* 이미지의 원본 비율 유지 */
+}
+
+/* 애니메이션 */
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}

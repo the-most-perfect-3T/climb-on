@@ -8,7 +8,12 @@ window.onload = async function() {
 function showSuggestions() {
     const name = document.getElementById('codeInput').value;
     const suggestionsDiv = document.getElementById('suggestions');
-
+    suggestionsDiv.innerHTML = `
+        <div class="skeleton-loader"></div>
+        <div class="skeleton-loader"></div>
+        <div class="skeleton-loader"></div>
+    `;
+    suggestionsDiv.style.display = 'block';
     if (name) {
         fetch(`/facilities/suggestions?code=${encodeURIComponent(name)}`) // 패치요청 responseEntity 로 jason 받음
             .then(response => {                         // encodeURIComponent 안전하게하는것
@@ -22,12 +27,12 @@ function showSuggestions() {
                 suggestionsDiv.textContent = ''; // 이전 추천 결과 초기화
                 if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
                     data.forEach(facilities => {
-                        console.log(facilities.facilityName + "데이터가있음?"); // 각 메뉴 확인
+
                         const item = document.createElement('div');
                         item.className = 'suggestion-item';
                         item.textContent = facilities.facilityName; // 메뉴 코드 표시
                         item.onclick = () => selectSuggestion(facilities.facilityName);// 클릭 시 선택
-                        console.log(facilities.facilityName);
+
                         suggestionsDiv.appendChild(item);
                     });
                     suggestionsDiv.style.display = 'block'; // 추천 결과 표시
@@ -39,14 +44,15 @@ function showSuggestions() {
                 console.error('AJAX 오류:', error);
                 suggestionsDiv.style.display = 'none'; // 오류 발생 시 숨김
             });
-    } else {
+
+    }
+    else {
         suggestionsDiv.textContent = '';
         suggestionsDiv.style.display = 'none'; // 입력이 없을 경우 숨김
     }
 }
 
 function selectSuggestion(facilities) {
-    console.log(facilities);
     document.getElementById('codeInput').value = facilities; // 입력창에 선택한 코드 삽입
     document.getElementById('suggestions').style.display = 'none'; // 추천 결과 숨김
 }
@@ -134,12 +140,13 @@ function loadKakaoMap(facilities) {
         level: 3
     };
     map = new kakao.maps.Map(container, options);
-
+    console.log("Kakao map is loaded!");
+    showOffcanvas();
     // 시설마다 마커 추가
     // facilities는 loadKakaoApi 호출 시 전달해야 함
     facilities.forEach(facility => {
         const markerPosition = new kakao.maps.LatLng(facility.latitude, facility.longitude);
-        console.log(facility)
+
         const facilityMarker = new kakao.maps.Marker({
             position: markerPosition,  // 마커 위치 설정
             map: map  // 지도에 마커 추가
@@ -175,8 +182,10 @@ function loadKakaoMap(facilities) {
             currentMarker = marker;
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
-        //
+
+
             setTimeout(function() {
+
                 showFacilityDetails(facility)
             }, 300);  // 지도 이동 및 확대/축소가 끝난 후 800ms 후에 표시
 
@@ -317,7 +326,7 @@ const detailsContainer = document.getElementById('facilityDetailsContainer');
 
         // console.log(isFavorite)
         const facilityDetailsHTML = `
- <div class="facility-details">
+        <div class="facility-details">
         <div class="facility-details-top">
         <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
        <div class="nameAndStart">
@@ -385,7 +394,7 @@ function loadReviews(facilityId) {
     if (reviewSummary) {
         reviewSummary.remove();  // reviewSummary 삭제
     }
-
+    showSkeletonLoader();
     fetch(`/Review/Reviews?code=${facilityId}`, {
         method: 'GET',
         headers: {
@@ -398,11 +407,12 @@ function loadReviews(facilityId) {
             }
 
             return response.json();
+
         })
 
         .then(async data => {
             // 데이터를 받아와서 리뷰가 존재하는 경우에만 처리
-
+            hideSkeletonLoader();
             if (1) {
                 // 기존 내용 갱신 (기존 html이 있으면 그 내용 추가)
                 let Reviews22 = await getUserId();
@@ -453,6 +463,7 @@ function loadReviews(facilityId) {
                     <div class="review-detail">
                         <div class="review-detail-nickname">
                             <p>${Reviews.userNickname}</p>
+                            <span class="review-time">${timeText}</span>   
                                 <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
                                     <button class="menu-buttonreview" ><i class="fa-solid fa-bars"></i></button>
                                     <div class="dropdown-menureview">
@@ -465,7 +476,7 @@ function loadReviews(facilityId) {
                         </div>
                         
                         <div class="time-rating">
-                             <span class="review-time">${timeText}</span>   
+      
                             <div class="review-rating">
                                 <div class="reviewstars-container" id="reviewstars-${Reviews.id}"></div>
                             </div>
@@ -600,7 +611,7 @@ async function reviewupdateFavoriteOnServer(id, addFavorite) {
         facilityId: id,
         isFavorite: addFavorite,  // 즐겨찾기 추가 여부
     };
-
+    showSkeletonLoader();
     const response = await fetch(url, {
         method: 'POST',  // POST 메소드로 요청
         headers: {
@@ -608,7 +619,7 @@ async function reviewupdateFavoriteOnServer(id, addFavorite) {
         },
         body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
     });
-
+    hideSkeletonLoader();
     return response;
 }
 
@@ -700,9 +711,11 @@ async function getIsFavorite(id) {
 
 
 async function loadImage(facilityId){
+
+
     const url = `/facilityImg/getImage?facilityId=${facilityId}`;
 
-
+    showSkeletonLoader();
 
     const response = await fetch(url, {
         method: 'GET',
@@ -713,7 +726,7 @@ async function loadImage(facilityId){
     });
 
     const imagePath = await response.json();// 서버에서 경로를 텍스트로 받음
-
+    hideSkeletonLoader();
     // 이미지 경로를 사용해 이미지를 HTML에 표시
     const imgElement = document.getElementById('facilityImg');
 
@@ -879,7 +892,7 @@ document.addEventListener("DOMContentLoaded", function() {
             id : id
 
         };
-
+        showSkeletonLoader();
 
         await fetch(url, {
             method: 'POST',  // POST 메소드로 요청
@@ -887,7 +900,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 'Content-Type': 'application/json',  // JSON 형식으로 전송
             },
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
+
         });
+        hideSkeletonLoader();
         document.getElementById('reviewId').value = null;
         document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //폼보내고 초기화
         await loadReviews(currentfacility.id);
@@ -899,10 +914,11 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 async function getReview(id) {
+    showSkeletonLoader();
     const response = await fetch(`/Review/getReview?id=${id}`);
     const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
     console.log(review);
-
+    hideSkeletonLoader();
 /*
 
     const reviewActions = document.querySelector(`#review-actions-${id}`);
@@ -1105,5 +1121,116 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+});
+
+// 스켈레톤 로딩 표시
+function showSkeletonLoader() {
+    const skeleton = document.createElement('div');
+    skeleton.className = 'skeleton-loader';
+    skeleton.innerHTML = '<div class="skeleton-item"></div>'.repeat(3); // 반복되는 스켈레톤 항목
+    detailsContainer.appendChild(skeleton);
+}
+
+// 스켈레톤 로딩 제거
+function hideSkeletonLoader() {
+    const skeleton = detailsContainer.querySelector('.skeleton-loader');
+    if (skeleton) skeleton.remove();
+}
+
+
+
+
+
+// DOM이 완전히 로드된 후 실행
+document.addEventListener("DOMContentLoaded", function () {
+    // 기존 이미지에 대해 처리
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (img.complete) {
+            // 이미지가 이미 로드된 경우
+            handleImageLoad({ target: img });
+        } else {
+            // 새로 로드되는 경우
+            img.addEventListener('load', handleImageLoad);
+        }
+
+        // 로드 실패 처리
+        img.addEventListener('error', () => {
+            console.error(`Failed to load image: ${img.src}`);
+        });
+    });
+
+    // 동적으로 추가된 이미지에 대한 처리
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+                if (node.tagName === 'IMG') {
+                    if (node.complete) {
+                        handleImageLoad({ target: node });
+                    } else {
+                        node.addEventListener('load', handleImageLoad);
+                    }
+
+                    // 로드 실패 처리
+                    node.addEventListener('error', () => {
+                        console.error(`Failed to load image: ${node.src}`);
+                    });
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+
+// 이미지 로드 핸들러
+function handleImageLoad(event) {
+    const image = event.target; // 이벤트의 대상이 되는 이미지
+
+
+    // 부모 요소에서 skeleton-item을 찾고 숨김
+    const skeleton = image.parentElement.querySelector('.skeleton-item');
+    if (skeleton) {
+        skeleton.style.display = 'none';
+    }
+
+    // 이미지 표시
+    image.style.display = 'block';
+}
+
+
+
+
+
+// offcanvas를 보이게 하는 함수
+function showOffcanvas() {
+    const offcanvas = document.querySelector('.content .offcanvas');
+
+    // 로딩이 완료되었을 때
+    offcanvas.style.visibility = 'visible';  // 보이게 설정
+    offcanvas.style.transform = 'translateX(0)';  // 왼쪽으로 슬라이드
+}
+
+// MutationObserver 설정
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+            // 맵이 로드된 후 추가되는 요소를 감지
+            if (node.nodeType === 1 && node.matches('#map')) {
+                // #map 요소가 DOM에 추가되었을 때 offcanvas를 표시
+                showOffcanvas();
+            }
+        });
+    });
+});
+
+// body나 특정 영역에서 새로운 요소가 추가되는지 감지
+observer.observe(document.body, { childList: true, subtree: true });
+
+
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
 });
 

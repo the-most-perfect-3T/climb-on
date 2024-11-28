@@ -26,18 +26,18 @@
                 <div class="button-container-facility">
 
                     <div class="img-wrap">
-                        <img src="/images/outdoor_mountain.png" loading="lazy" class="fcategory_button" onclick="resetForm()" alt="전체조회">
+                        <img src="/images/outdoor_mountain.png" class="fcategory_button" onclick="resetForm()" alt="전체조회">
                     </div>
 
                     <div class="img-wrap">
-                        <img src="/images/outdoor_mountain.png" loading="lazy" class="fcategory_button" onclick="handleCategorySubmit(1)" alt="볼더링">
+                        <img src="/images/outdoor_mountain.png" class="fcategory_button" onclick="handleCategorySubmit(1)" alt="볼더링">
                     </div>
                     <div class="img-wrap">
-                <img src="/images/lead_climbing.svg" loading="lazy" class="fcategory_button"
+                <img src="/images/lead_climbing.svg" class="fcategory_button"
                      onclick="handleCategorySubmit(2)" alt="리드"  width="50" height="50">
                         </div>
                     <div class="img-wrap">
-                <img src="/images/outdoor_mountain.png" loading="lazy" class="fcategory_button" onclick="handleCategorySubmit(3)" alt="자연">
+                <img src="/images/outdoor_mountain.png" class="fcategory_button" onclick="handleCategorySubmit(3)" alt="자연">
                     </div>
                 </div>
                 <div class="offcanvas-body">
@@ -45,6 +45,11 @@
                     <!--검색기능-->
 
                     <div th:if="${facilitiesList != null}">
+                        <div id="skeleton-loader" class="skeleton-loader" style="display: none;">
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                            <div class="skeleton-item"></div>
+                        </div>
                         <table id="facilitiestb">
                             <tbody>
                             <tr th:each="facility : ${facilitiesList}" th:onclick="'showFacilityId(' + ${facility.id} + ')'">
@@ -52,11 +57,15 @@
                                 <div class="facility-info">
 
                                     <div>
-                                    <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
+
+                                        <div class="facility-name" th:text="${facility.facilityName}">시설명</div>
+
                                     <div class="facility-address" th:text="${facility.address}">주소</div>
                                     </div>
                                     <div class="img-wrap">
-                                        <img id="facilitymainImg" class="facility-details-content" th:src="@{${facility.imageUrl}}" alt="">
+                                        <div class="skeleton-item"></div>
+                                        <img id="facilitymainImg" class="facility-details-content" th:src="@{${facility.imageUrl}}" alt=""
+                                             data-action="handleImageLoad">
                                     </div>
                                     </div>
                                 </td>
@@ -105,27 +114,34 @@
               loadKakaoMap(facilities);
             }
             //th 쓰는 함수
-           async function showFacilityId(id){
-               // const facility = JSON.parse(facilityJson);
-                await fetch(`/facilities/facility/${id}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`네트워크 응답에 문제가 있습니다. 상태 코드: ${response.status}`);
-                        }
-                        return response.json(); // JSON 형식으로 응답을 파싱
-                    })
-                    .then(data => {
-                        console.log("시설 상세 정보:", data);
-                        // 데이터 받아온 후, showFacility 호출
-                        showFacility(data);
-                    })
-                    .catch(error => {
-                        console.error('시설 정보 로드 실패:', error);
-                        // 에러가 발생한 경우, 적절히 사용자에게 알림 처리
-                        alert("시설 정보를 불러오는 데 실패했습니다12312312.");
-                    });
+            async function showFacilityId(id) {
+                const facilityDetailsContainer = document.getElementById("facilityDetailsContainer");
 
+                // 기존 내용 비우고 스켈레톤 로더 추가
+                facilityDetailsContainer.innerHTML = `
+                    <div class="skeleton-loader">
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                        <div class="skeleton-item"></div>
+                          <div class="img-skeleton"></div>
+                    </div>`;
+
+                try {
+                    const response = await fetch(`/facilities/facility/${id}`);
+                    if (!response.ok) throw new Error(`네트워크 오류: ${response.status}`);
+                    const data = await response.json();
+
+                    // 데이터 로드 후 UI 업데이트
+                    showFacility(data);
+                } catch (error) {
+                    console.error("시설 상세 정보 로드 실패:", error);
+                    alert("시설 정보를 불러오는 데 실패했습니다.");
+                } finally {
+                    // 스켈레톤 로더 제거
+                    facilityDetailsContainer.innerHTML = '';
+                }
             }
+
         </script>
 
 
