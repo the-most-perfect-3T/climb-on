@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.crew.mycrew.dao;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
@@ -16,7 +17,17 @@ public interface MyCrewMapper
 
     CrewDTO getMyCrewById(int myId);
 
-    List<CrewMembersDTO> getCrewMemberList(int key);
+    List<CrewMembersDTO> getCrewMemberList(int crewCode);
 
     List<String> getImgUrlList(Integer key);
+
+    CrewDTO getCrewInfoByCrewCode(Integer crewCode);
+
+    int getMemberCount(int crewCode);
+
+    int applyForCrew(CrewApplyDTO crewApplication);
+
+    boolean getHowToJoinCrew(int crewCode);
+
+    int crewMemberInsert(UserCrewDTO newMember);
 }
