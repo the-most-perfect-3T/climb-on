@@ -110,7 +110,9 @@
 
             <!-- 공지 핀포스트 -->
             <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                <td th:text="${post.category}" class="pincategory">공지</td>
+                <td class="pincategory">
+                    <span class="category-shape" th:text="${post.category}"></span>
+                </td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">공지 게시글 제목</span>
@@ -123,7 +125,9 @@
 
             <!-- 가이드 핀포스트 -->
             <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
-                <td th:text="${post.category}" class="pincategory">가이드</td>
+                <td class="pincategory">
+                    <span class="category-shape" th:text="${post.category}"></span>
+                </td>
                 <td>
                     <a th:href="@{'/community/' + ${post.id}}">
                         <span th:text="${post.title}">가이드 게시글 제목</span>
@@ -192,7 +196,9 @@
 
                 <!-- 공지 핀포스트 -->
                 <tr th:each="post : ${pinnedNoticePosts}" class="pinned-post">
-                    <td th:text="${post.category}" class="pincategory">공지</td>
+                    <td class="pincategory">
+                        <span class="category-shape" th:text="${post.category}"></span>
+                    </td>
                     <td>
                         <a th:href="@{'/community/' + ${post.id}}">
                             <span th:text="${post.title}">공지 게시글 제목</span>
@@ -204,7 +210,9 @@
                 </tr>
                 <!-- 가이드 핀포스트 -->
                 <tr th:each="post : ${pinnedGuidePosts}" class="pinned-post">
-                    <td th:text="${post.category}" class="pincategory">가이드</td>
+                    <td class="pincategory">
+                        <span class="category-shape" th:text="${post.category}"></span>
+                    </td>
                     <td>
                         <a th:href="@{'/community/' + ${post.id}}">
                             <span th:text="${post.title}">가이드 게시글 제목</span>
