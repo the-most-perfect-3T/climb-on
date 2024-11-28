@@ -166,7 +166,7 @@ div#facilityDetailsContainer {
     width: 300px;
     height: 100%;
     background-color: #fff;
-    overflow-y: auto;
+    overflow-y: scroll !important; /* ensures scrolling is possible */
     z-index: 1;
     visibility: hidden; /* 기본적으로 요소가 보이지 않도록 설정 */
     box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
@@ -182,7 +182,7 @@ div#facilityDetailsContainer.visible {
 }
 
 div#facilityDetailsContainer::-webkit-scrollbar {
-    width: 0px; /* 스크롤바를 안 보이게 함 */
+    width: 0px !important;
     background: transparent; /* 배경을 투명으로 설정 */
 }
 div#facilityDetailsContainer::-webkit-scrollbar-thumb {
