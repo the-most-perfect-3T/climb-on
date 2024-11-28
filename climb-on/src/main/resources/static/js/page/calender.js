@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const crewCode = response.crewCode;
                     console.log("your crew code: " + crewCode);
                     if (crewCode) {
-                        fetch(`/myCrew?crewCode=${crewCode}`, {
+                        fetch(`/events/myCrew?crewCode=${crewCode}`, {
                             method: 'GET',
                         })
                             .then(response => {
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             });
                         // 달력에 뿌려줄 데이터 가져와야 대용
                         // const crewPage = document.getElementById('crewPage');
-                        // crewPage.href = `/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
+                        // crewPage.href = `/events/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
                         // crewPage.textContent = `Access Your Team (${crewCode})`;
 
                         crewCalendar.batchRendering(function () {
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const crewCode = response.crewCode;
                     console.log("your crew code: " + crewCode);
                     if (crewCode) {
-                        fetch(`/myCrew?crewCode=${crewCode}`, {
+                        fetch(`/events/myCrew?crewCode=${crewCode}`, {
                             method: 'GET',
                         })
                             .then(response => {
@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             });
                         // 달력에 뿌려줄 데이터 가져와야 대용
                         // const crewPage = document.getElementById('crewPage');
-                        // crewPage.href = `/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
+                        // crewPage.href = `/events/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
                         // crewPage.textContent = `Access Your Team (${crewCode})`;
 
                         crewCalendar.batchRendering(function () {
