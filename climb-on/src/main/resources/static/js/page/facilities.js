@@ -454,7 +454,7 @@ function loadReviews(facilityId) {
                         <div class="review-detail-nickname">
                             <p>${Reviews.userNickname}</p>
                                 <div class="review-actions" id="review-actions" style="display: ${Reviews2.user ? 'block' : 'none'};">
-                                    <button class="menu-buttonreview" onclick="toggleDropdown()" ><i class="fa-solid fa-bars"></i></button>
+                                    <button class="menu-buttonreview" ><i class="fa-solid fa-bars"></i></button>
                                     <div class="dropdown-menureview">
                                         <button class="edit-review-btn" onclick="editReview(${Reviews.id})">수정</button>    
                                         <button class="delete-btn" onclick="confirmDelete(${Reviews.id})">삭제</button>
@@ -473,7 +473,7 @@ function loadReviews(facilityId) {
                         <p class="review-text">${Reviews.comment || '댓글이 없습니다'}</p>
                         <div class="review-text-fav">
                             <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
-                                ${isFavorite ?? false ?   '<i class="fa-heart fa-solid""></i>':'<i class="fa-heart fa-regular"></i>'}
+                                ${isFavorite ?? false ?'<i class="fa-heart fa-solid"></i>':'<i class="fa-heart fa-regular"></i>'}
                             </button>
                         </div>          
                     </div>
@@ -587,7 +587,7 @@ async function reviewshowButton(id, isFavorite ) {
 
     const button = document.getElementById(`reviewfavorite-btn-${id}`);
     if (button) {
-        button.innerHTML = isFavorite ? '<i class="fa-solid fa-heart"></i>':'<i class="fa-heart fa-regular"></i>' ;
+        button.innerHTML = isFavorite ? '<i class="fa-solid fa-heart"></i>':'<i class="fa-heart fa-regular"></i>';
 
         // 버튼의 클릭 이벤트 업데이트 (옵션)
         button.setAttribute('onclick', `reviewtoggleFavorite(${id}, ${isFavorite})`);
@@ -1107,16 +1107,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function toggleDropdown() {
-    var dropdown = document.querySelector('.dropdown-menureview');
-    // 이미 열린 상태라면 숨기고, 닫힌 상태라면 열기
-    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
-    // 애니메이션 효과를 위한 상태 변경
-    if (dropdown.style.display === 'block') {
-        dropdown.style.opacity = 1;
-        dropdown.style.transform = 'translateX(0)';
-    } else {
-        dropdown.style.opacity = 0;
-        dropdown.style.transform = 'translateX(10px)';
-    }
-}
