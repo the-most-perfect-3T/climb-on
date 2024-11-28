@@ -15,6 +15,7 @@ import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.facilities.dto.ReviewDTO;
 import com.ohgiraffers.climbon.facilities.service.FacilitiesService;
 import com.ohgiraffers.climbon.facilities.service.ReviewService;
+import com.ohgiraffers.climbon.user.dto.UserDTO;
 import com.ohgiraffers.climbon.user.service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,6 @@ public class UserRestController {
     public ResponseEntity<Object> registFacility(@AuthenticationPrincipal AuthDetail userDetails,
                                                  @RequestBody Map<String, String> requestBody){
 
-        System.out.println("요청오나?");
 
         // 로그인 정보 없으면
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
@@ -193,7 +193,7 @@ public class UserRestController {
 
         // 일반 포스트
         List<PostDTO> generalPosts = postsWithPinned.get("generalPosts");
-        System.out.println("generalPosts = " + generalPosts);
+//        System.out.println("generalPosts = " + generalPosts);
         if(generalPosts != null || !generalPosts.isEmpty()) {
             Iterator<PostDTO> iterator = generalPosts.iterator();
             while (iterator.hasNext()) {
@@ -204,8 +204,8 @@ public class UserRestController {
             }
         }
 
-        System.out.println("generalPosts = " + generalPosts);
-        System.out.println("generalPosts = " + generalPosts.size());
+        /*System.out.println("generalPosts = " + generalPosts);
+        System.out.println("generalPosts = " + generalPosts.size());*/
 
 
         if(generalPosts.isEmpty()){
@@ -280,7 +280,7 @@ public class UserRestController {
             return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
         }
         Integer id = userDetails.getLoginUserDTO().getId();
-        System.out.println("id = " + id);
+        /*System.out.println("id = " + id);*/
 
         // 댓글 목록 가져오기
         List<CommentDTO> comments = postService.getCommentsById(id);
@@ -298,6 +298,43 @@ public class UserRestController {
         }
 
         return ResponseEntity.ok(comments);
+    }
+
+
+    /*@GetMapping("crewComments")
+    public ResponseEntity<Object> getCrewComments(@AuthenticationPrincipal AuthDetail userDetails){
+
+        // 유저 아이디
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            return ResponseEntity.status(401).body(Map.of("message", "로그인이 필요합니다."));
+        }
+        Integer id = userDetails.getLoginUserDTO().getId();
+        System.out.println("id = " + id);
+
+    }*/
+
+    @GetMapping("/{userId}")
+    @ResponseBody
+    public ResponseEntity<Object> getUserModal(@PathVariable("userId") Integer userId){
+
+        System.out.println("요청받음");
+        UserDTO user = userService.findByKey(userId);
+        System.out.println("user = " + user);
+
+        if(user == null){
+            ResponseEntity.ok(Map.of("message", "해당 내용이 없습니다."));
+        }
+
+        String crewName = userService.findCrewName(userId);
+        String homeName = userService.findHomeName(userId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", user);
+        response.put("crewName", crewName);
+        response.put("homeName", homeName);
+
+
+        return ResponseEntity.ok(response);
     }
 
 }
