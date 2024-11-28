@@ -246,7 +246,14 @@ public class PostService {
 
     // 진행중 메소드
     public List<PostDTO> getOngoingPosts() {
-        return postDAO.getPostsByPageAndCategoryAndSearch(0, 10, "소식", null, "latest", "진행중", true);
+
+        List<PostDTO> ongoingPosts = postDAO.getPostsByPageAndCategoryAndSearch(0, 10, "소식", null, "latest", "진행중", true);
+
+        // 최대 8개 반환
+        int ongoingPostsLimit = Math.min(8, ongoingPosts.size());
+        List<PostDTO> ongoingPostsLimited = ongoingPosts.subList(0, ongoingPostsLimit);
+
+        return ongoingPostsLimited;
     }
 
     public List<CommentDTO> getCommentsById(Integer id) {
