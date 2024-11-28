@@ -21,36 +21,36 @@ public class PostService {
     @Autowired
     private PostDAO postDAO;
 
-    // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다.
-    public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
-
-        int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
-
-        // 1. 공지 게시글 (2개 고정)
-        List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
-
-        // 2. 가이드 게시글 (1개 고정)
-        List<PostDTO> guidePosts = postDAO.getFixedPostsByCategory("가이드", 1);
-
-        // 3. 일반 게시글 (페이징 적용)
-        List<PostDTO> posts = postDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, dday, status);    // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
-
-        // 소식 카테고리의 게시글에 대해 D-Day 계산
-        for (PostDTO post : posts){
-            if ("소식".equals(post.getCategory())){
-                post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
-            }
-        }
-
-        //4. 게시글 합치기
-        List<PostDTO> allPosts = new ArrayList<>();
-        allPosts.addAll(noticePosts);
-        allPosts.addAll(guidePosts);
-        allPosts.addAll(posts);
-
-//        System.out.println(dday); dday 들어오는지 확인용 출력
-        return allPosts;
-    }
+//    // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다. 아까워서둠 버리는코드
+//    public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
+//
+//        int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
+//
+//        // 1. 공지 게시글 (2개 고정)
+//        List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
+//
+//        // 2. 가이드 게시글 (1개 고정)
+//        List<PostDTO> guidePosts = postDAO.getFixedPostsByCategory("가이드", 1);
+//
+//        // 3. 일반 게시글 (페이징 적용)
+//        List<PostDTO> posts = postDAO.getPostsByPageAndCategoryAndSearch(offset, pageSize, category, searchKeyword, sort, dday, status);    // 해당 페이지의 게시글을 가져오기 위해 offset 값을 계산하고, 이를 기반으로 DAO에서 데이터 가져옴. ,searchKeyword 파라미터 추가
+//
+//        // 소식 카테고리의 게시글에 대해 D-Day 계산
+//        for (PostDTO post : posts){
+//            if ("소식".equals(post.getCategory())){
+//                post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
+//            }
+//        }
+//
+//        //4. 게시글 합치기
+//        List<PostDTO> allPosts = new ArrayList<>();
+//        allPosts.addAll(noticePosts);
+//        allPosts.addAll(guidePosts);
+//        allPosts.addAll(posts);
+//
+////        System.out.println(dday); dday 들어오는지 확인용 출력
+//        return allPosts;
+//    }
 
     public Map<String, List<PostDTO>> getPostsWithPinned(
             int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
@@ -87,6 +87,11 @@ public class PostService {
             // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
             String userNickname =  postDAO.getUserNicknameById(post.getUserId());
             post.setUserNickname(userNickname);
+
+            if ("소식".equals(post.getCategory())){
+                post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
+            }
+
             String htmlContent = post.getContent();
             String plainText = htmlContent.replaceAll("<[^>]*>", "");
             post.setContent(plainText);
@@ -245,15 +250,20 @@ public class PostService {
     }
 
     // 진행중 메소드
-    public List<PostDTO> getOngoingPosts() {
+    public Map<String, Object> getOngoingPosts() {
 
-        List<PostDTO> ongoingPosts = postDAO.getPostsByPageAndCategoryAndSearch(0, 10, "소식", null, "latest", "진행중", true);
+        List<PostDTO> ongoingPosts = postDAO.getPostsByPageAndCategoryAndSearch(0, 100, "소식", null, "latest", "진행중", true);
+        int totalOngoingCount = ongoingPosts.size(); // 전체 진행 중 게시글 개수
 
         // 최대 8개 반환
         int ongoingPostsLimit = Math.min(8, ongoingPosts.size());
         List<PostDTO> ongoingPostsLimited = ongoingPosts.subList(0, ongoingPostsLimit);
 
-        return ongoingPostsLimited;
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalOngoingCount", totalOngoingCount);
+        result.put("ongoingPostsLimited", ongoingPostsLimited);
+
+        return result;
     }
 
     public List<CommentDTO> getCommentsById(Integer id) {

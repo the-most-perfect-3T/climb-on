@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
@@ -37,20 +36,30 @@ public class PostController {
 
         int pageSize = 15;
 
-        // 일반 게시글
-        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+        // '진행중' 상태로 필터링
+        if ("소식".equals(category) && "진행중".equals(dday)){
+            category = "소식";
+            status = true; // 진행 중
+            dday = "진행중";
+        }
+
+//        // 일반 게시글 (처음에 이걸로 짰다가 안되서 다른걸 썼다.) (필요없는 코드인데 아까워서 둠)
+//        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+
+//        for (PostDTO post : posts) {
+//            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+//            String userNickname =  postService.getUserNicknameById(post.getUserId());
+//            post.setUserNickname(userNickname);
+//        }
 
         // '진행 중' 게시글만 가져오기
-        List<PostDTO> ongoingPosts = postService.getOngoingPosts();
+        Map<String, Object> ongoingPostsData = postService.getOngoingPosts();
+        List<PostDTO> ongoingPostsLimited = (List<PostDTO>) ongoingPostsData.get("ongoingPostsLimited");
+        int totalOngoingCount = (int) ongoingPostsData.get("totalOngoingCount");
 
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
-        for (PostDTO post : posts) {
-            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
-            String userNickname =  postService.getUserNicknameById(post.getUserId());
-            post.setUserNickname(userNickname);
-        }
 
         // '전체' 카테고리를 처리
         if ("전체".equals(category)) {
@@ -60,12 +69,17 @@ public class PostController {
         Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(
                 page, pageSize, category, searchKeyword, sort, dday, status);
 
-        model.addAttribute("ongoingPosts", ongoingPosts); // 진행 중 게시글 전달
+        for (PostDTO post : postsWithPinned.get("generalPosts")){
+            System.out.println(post.getDday());
+        }
+
+        model.addAttribute("ongoingPosts", ongoingPostsLimited); // 진행 중 게시글 8개까지만 전달
+        model.addAttribute("moreOngoingPosts", totalOngoingCount); // 진행 중 게시글 8개이상
         model.addAttribute("pinnedNoticePosts", postsWithPinned.get("pinnedNoticePosts"));
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
-//        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//      model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("category", category != null ? category : "전체");
