@@ -61,9 +61,12 @@
                                 </div>
                                 <span class="badge rounded-pill" th:if="${crew.recruitingStatus == true}">모집중</span>
                             </td>
-                            <td >
+
+                            <td>
+                                <a th:href="@{/crew/myCrew/{id}(id=${crew.id})}">
                                 <p class="mb-1 fw-bold" th:text="${crew.crewName}"></p>
                                 <small class="text-muted" th:text="${crew.activeArea}"></small>
+                                </a>
                             </td>
                             <td class="description" th:text="${crew.description}"></td>
                         </tr>

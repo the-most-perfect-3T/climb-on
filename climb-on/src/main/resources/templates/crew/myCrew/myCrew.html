@@ -34,7 +34,7 @@
             </div>
 
             <!--사이드 내용-->
-            <button class="crew-join-apply" style="display: none">
+            <button class="crew-join-apply" th:if="${isMyCrew == false && haveCrew == false}">
                 <p>가입신청하기</p>
             </button>
         </aside>

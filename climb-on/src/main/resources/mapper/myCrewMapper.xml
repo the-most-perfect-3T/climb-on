@@ -90,6 +90,18 @@
         WHERE crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
     </select>
 
+    <select id="getCrewInfoByCrewCode" parameterType="Integer" resultMap="crew">
+        SELECT *
+        FROM crews
+        WHERE id = #{crewCode}
+    </select>
+
+    <select id="getMemberCount" parameterType="int">
+        SELECT count(user_code)
+        FROM user_crew
+        WHERE crew_code = #{crewCode}
+    </select>
+
 
 
 </mapper>

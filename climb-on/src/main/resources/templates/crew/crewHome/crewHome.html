@@ -24,12 +24,14 @@
 
         <section class="crewlist-container">
             <div th:each="crew : ${crews}" class="crew-item text-center" style="width: 144px;">
+                <a th:href="@{/crew/myCrew/{id}(id=${crew.id})}">
                 <div class="position-relative" style="width: 100%; height: 144px;">
                     <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
                         <img th:src="${crew.imgUrl}" alt="/images/logo.svg" class="w-100">
                     </div>
                 </div>
                 <span th:text="${crew.crewName}" class="crew-name">크루명</span>
+                </a>
             </div>
         </section>
 

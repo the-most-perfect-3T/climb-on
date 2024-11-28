@@ -32,4 +32,12 @@ public class MyCrewService
     public List<String> getImgUrlList(Integer key) {
         return myCrewMapper.getImgUrlList(key);
     }
+
+    public CrewDTO getCrewInfoByCrewCode(Integer crewCode) {
+        return myCrewMapper.getCrewInfoByCrewCode(crewCode);
+    }
+
+    public int getMemberCount(int crewCode) {
+        return myCrewMapper.getMemberCount(crewCode);
+    }
 }

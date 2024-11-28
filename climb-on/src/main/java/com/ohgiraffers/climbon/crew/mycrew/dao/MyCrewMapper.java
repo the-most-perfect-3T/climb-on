@@ -19,4 +19,8 @@ public interface MyCrewMapper
     List<CrewMembersDTO> getCrewMemberList(int key);
 
     List<String> getImgUrlList(Integer key);
+
+    CrewDTO getCrewInfoByCrewCode(Integer crewCode);
+
+    int getMemberCount(int crewCode);
 }
