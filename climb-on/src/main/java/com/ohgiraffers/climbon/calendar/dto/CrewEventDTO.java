@@ -42,4 +42,14 @@ public class CrewEventDTO
     {
         this.crewCode = crewCode;
     }
+
+    public int getEventCode()
+    {
+        return eventCode;
+    }
+
+    public void setEventCode(int eventCode)
+    {
+        this.eventCode = eventCode;
+    }
 }

@@ -32,7 +32,7 @@ function populateEventList(eventData) {
                             <p class="crew-event-title">${event.title}</p>
                           </div>
                           <div class="crew-event-right">
-                            <button class="participate-btn">
+                            <button class="participate-btn" id="crewParticipateButton">
                               <i class="fa-solid fa-child-reaching"></i><br/>
                               <span> 참여 + </span> <!-- 참여 눌렀을 때 링크테이블에 추가-->
                             </button>

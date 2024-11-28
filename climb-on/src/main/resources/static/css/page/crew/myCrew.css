@@ -152,7 +152,6 @@
     align-items: center;
     height: 154px;
     background-color: #fdf7ed;
-    border-radius: 10px;
 }
 
 .crew-activity-event-item .crew-event-info {
@@ -189,12 +188,13 @@
 .crew-activity-event-item .crew-event-right{
     flex: 1;
     text-align: right;
+    height: 100%;
 }
 
 .crew-activity-event-item .participate-btn{
     background-color: #FAEFDD;
-    width: 145px;
-    height: 154px;
+    width: 115px;
+    height: 100%;
     cursor: pointer;
     transition: background-color 0.3s;
 }
