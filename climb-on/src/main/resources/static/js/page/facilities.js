@@ -262,6 +262,7 @@ function showFacility(facility) {
     currentMarker = marker;
     setTimeout(function() {
         showFacilityDetails(facility)
+
     }, 300);
 }
 // 카카오 지도 API 스크립트 로드
@@ -429,7 +430,7 @@ function loadReviews(facilityId) {
                 let Reviews22 = await getUserId();
                 console.log(Reviews22);
                 const reviewSummary = `
-                <div class="facilityReviews">
+                <div class="facilityReviews" id="facilityReviews">
                 <div class="item2">
                   <div class="item4">
                     <span class="review-sum">리뷰 : <i style="color: #FF7F27">${data.length}</i></span>
@@ -474,7 +475,7 @@ function loadReviews(facilityId) {
                     item.className = 'Review-item';
                     // 리뷰 내용 구성
                     item.innerHTML = `
-                    <div class="review-detail">
+                    <div class="review-detail" id="review-detail">
                         <div class="review-detail-nickname">
                         
                             <p class="userModalOpen" data-id="${Reviews.reviewerId}">${Reviews.userNickname}</p>
@@ -508,13 +509,17 @@ function loadReviews(facilityId) {
 
                     const starContainer = document.getElementById(`reviewstars-${Reviews.id}`);
                     starContainer.innerHTML = renderStars(Reviews.rating); // 해당 리뷰의 별을 표시
+
                 }
+                    userMondalOpen();
+                    console.log("되나요");
             }
-                }
+        }
         })
         .catch(error => {
             console.error('Error:', error);
         });
+
 
 }
 
@@ -1253,8 +1258,57 @@ observer.observe(document.body, { childList: true, subtree: true });
 
 
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true
-});
+
+function userMondalOpen() {
+    const userModalOpen = document.querySelectorAll(".userModalOpen");
+    if(userModalOpen){
+        userModalOpen.forEach(function(el, i){
+
+            console.log("el", el);
+
+            if(el.textContent === "익명"){
+                el.style.cursor = "default";
+            }
+            el.addEventListener("click", function(e){
+
+                console.log("e", e.target);
+                const userId = parseInt(e.target.getAttribute("data-id"));
+                console.log("userId", userId);
+
+                if (isNaN(userId)) {
+                    console.error("Invalid userId:", userId);
+                    return; // 유효하지 않은 경우 요청 중단
+                }
+                console.log("userId", userId);
+
+                fetch(`/user/${userId}`) // 서버의 요청 URL
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Error: ${response.status}`);
+                        }
+                        return response.json(); // JSON 데이터를 기대
+                    })
+                    .then(data => {
+                        console.log("data", data);
+                        // 서버에서 받은 데이터로 모달 내용 채우기
+                        const userViewModal = document.getElementById("userViewModal");
+                        console.log(userViewModal.querySelector(".top .img-wrap img"));
+                        userViewModal.querySelector(".top .img-wrap img").setAttribute("src", data.user.profilePic);
+                        userViewModal.querySelector(".top .nickname").textContent = data.user.nickname;
+                        userViewModal.querySelector(".top .one-liner").textContent = data.user.oneLiner != null ? data.user.oneLiner : "한줄 소개가 없습니다.";
+                        userViewModal.querySelector(".middle .crew .cont").textContent = data.crewName != null ? data.crewName : "가입한 크루가 없습니다.";
+                        userViewModal.querySelector(".middle .home .cont").textContent = data.homeName != null ? data.homeName : "등록한 홈짐이 없습니다.";
+
+                        // 모달 띄우기
+                        const modal = new bootstrap.Modal(document.getElementById('userViewModal'));
+                        modal.show();
+                    })
+                    .catch(error => {
+                        console.error("에러 발생:", error);
+                    });
+            });
+        });
+
+    }
+}
 
