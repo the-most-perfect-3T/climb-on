@@ -26,6 +26,18 @@
                                 <span>내 프로필</span>
                             </button>
                         </li>
+                        <li role="presentation">
+                            <button id="board-tab" data-bs-toggle="tab" data-bs-target="#board" type="button" role="tab" aria-controls="board" aria-selected="false">
+                                <i class="fas fa-file-alt"></i>
+                                <span>게시물 관리</span>
+                            </button>
+                        </li>
+                        <li role="presentation">
+                            <button id="comments-tab" data-bs-toggle="tab" data-bs-target="#commentsTab" type="button" role="tab" aria-controls="comment" aria-selected="false">
+                                <i class="fas fa-comment-dots"></i>
+                                <span>댓글 관리</span>
+                            </button>
+                        </li>
                         <th:block sec:authorize="hasAnyAuthority('USER')">
                             <li role="presentation">
                                 <button id="review-tab"  data-bs-toggle="tab" data-bs-target="#review" type="button" role="tab" aria-controls="review" aria-selected="false">
@@ -34,18 +46,7 @@
                                 </button>
                             </li>
                         </th:block>
-                        <li role="presentation">
-                            <button id="comments-tab" data-bs-toggle="tab" data-bs-target="#commentsTab" type="button" role="tab" aria-controls="comment" aria-selected="false">
-                                <i class="fas fa-comment-dots"></i>
-                                <span>댓글 관리</span>
-                            </button>
-                        </li>
-                        <li role="presentation">
-                            <button id="board-tab" data-bs-toggle="tab" data-bs-target="#board" type="button" role="tab" aria-controls="board" aria-selected="false">
-                                <i class="fas fa-file-alt"></i>
-                                <span>게시물 관리</span>
-                            </button>
-                        </li>
+
                         <th:block sec:authorize="hasAnyAuthority('USER')">
                             <li role="presentation">
                                 <button id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite" type="button" role="tab" aria-controls="favorite" aria-selected="false">
