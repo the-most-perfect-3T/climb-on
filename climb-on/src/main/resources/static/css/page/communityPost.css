@@ -443,20 +443,29 @@ h2 {
 .pagination i {
     display: flex;
     width: 50px; /* 버튼 크기 */
-    height: 50px;
+    height: 36px;
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    color: var(--black); /* 기본 텍스트 색상 */
+    color: #ffffff; /* 기본 텍스트 색상 */
     transition: background-color 0.2s ease, color 0.2s ease;
+    border: 1px solid var(--black);
+    border-radius: 50%;
+    background-color: var(--black);
+}
+
+.pagination a.disabled i {
+    pointer-events: none; /* 클릭 비활성화 */
+    color: #ffffff; !important;/* 텍스트 색상 변경 */
+    border-color: #DEE2E6;
+    cursor: not-allowed; /* 비활성화 커서 */
+    border-radius: 50%;
+    background-color:#DEE2E6 !important;
 }
 
 
-.pagination i.disabled {
-    pointer-events: none;
-    color: #ffffff;
-    background-color: #ffffff;
-    cursor: not-allowed;
+.pagination a.disabled {
+    pointer-events: none; /* 클릭 비활성화 */
 }
 
 

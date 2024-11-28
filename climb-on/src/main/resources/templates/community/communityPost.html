@@ -248,7 +248,7 @@
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
                         + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
                 th:classappend="${currentPage <= 1} ? 'disabled' : ''">
-                <i class="fa-solid fa-circle-chevron-left"></i></a>
+                <i class="fa-solid fa-chevron-left"></i></a>
             </li>  <!--currentPage에 따라 이전 페이지링크가 표시--> <!-- 페이지네이션이 되도 링크 생성 할 때 현재 URL에 포함된 category, searchKeyword, sort 등의 파라미터를 함께 전달하여 커뮤니티게시판의 기존 기능 유지-->
             <!-- 페이지 번호 링크 -->
             <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조--> <!--첫번째 인자가 null인 경우 두번째 인수 반환-->
@@ -271,7 +271,7 @@
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
                         + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
                    th:classappend="${currentPage >= totalPages} ? 'disabled' : ''">
-                    <i class="fa-solid fa-circle-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
+                    <i class="fa-solid fa-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
             </li>
         </ul>
     </section>
