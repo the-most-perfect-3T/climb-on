@@ -26,6 +26,8 @@ public class EventController
     @Autowired
     private EventService eventService;
 
+    private int userCrewCode = 0;
+
     // 큰 대회 이벤트 가져옴
     @GetMapping("/main")
     public List<EventDTO> getPublicEvents(@AuthenticationPrincipal AuthDetail userDetails)
@@ -41,21 +43,25 @@ public class EventController
 
     // 마이크루 이벤트
     @GetMapping("/myCrew")
-    public ResponseEntity<?> getMyCrewEvents(@RequestParam Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception
+    public ResponseEntity<?> getMyCrewEvents(@RequestParam("crewCode") Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception
     {
         // 수정 필요
         int userCode = userDetails.getLoginUserDTO().getId();
         if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님");
         }
+        userCrewCode = crewCode;
         List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);
         return ResponseEntity.ok(crewEvents);
     }
 
     @GetMapping("/crew")
-    public ResponseEntity<?> getCrewEvents(@RequestParam Integer crewCode)
+    public ResponseEntity<?> getCrewEvents(@RequestParam("crewCode")Integer crewCode)
     {
-        List<EventDTO> crewEvents = eventService.getCrewEvents(1);
+        List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);
+        if(crewEvents.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(crewEvents);
     }
 
@@ -77,25 +83,25 @@ public class EventController
     public void addEvent(@RequestBody EventDTO event, @AuthenticationPrincipal AuthDetail userDetails) {
         if (event == null || userDetails == null) {
             System.out.println("이벤트를 저장할 수 없습니다.");
+            return;
         }
-        else {
-            event.setUserCode(userDetails.getLoginUserDTO().getId());
-            if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
-                event.setAdmin(true);
-            }
-            if (eventService.checkDuplicate(event.getTitle(), event.getStart(), event.getEnd(), event.getUserCode())) {
-                // 매개변수로 넘긴 조건들이 일치하는 데이터가 있는지 count로 반환. 0보다 크면 true
-                System.out.println("이벤트에 중복 있는 것 같애 괜찮아?");
-            }
-            eventService.addEvent(event);
+
+        event.setUserCode(userDetails.getLoginUserDTO().getId());
+        if(userDetails.getLoginUserDTO().getUserRole()== UserRole.ADMIN) {
+            event.setAdmin(true);
         }
+        if(userCrewCode != 0)
+        {
+            event.setCrewCode(userCrewCode);
+        }
+
+        eventService.addEvent(event);
     }
 
     @PostMapping("/modify")
     public void modifyEvent(@RequestBody EventDTO event)
     {
-        if(event == null)
-        {
+        if(event == null) {
             System.out.println("이벤트를 수정할 수 없음: null");
         }
 
@@ -109,7 +115,7 @@ public class EventController
     }
 
     @GetMapping("/allevent")
-    public List<EventDTO> getAllCrewsEvents(ModelAndView mv)
+    public List<EventDTO> getAllCrewsEvents()
     {
         List<EventDTO> allCrewEvents = eventService.getAllCrewsEvents();
         System.out.println("allCrewEvents.isEmpty(): " + allCrewEvents.isEmpty());

@@ -23,4 +23,9 @@ public class MainService
     {
         return mainMapper.getPopularPosts();
     }
+
+    public List<PostDTO> getNotificationPosts()
+    {
+        return mainMapper.getNotificationPosts();
+    }
 }

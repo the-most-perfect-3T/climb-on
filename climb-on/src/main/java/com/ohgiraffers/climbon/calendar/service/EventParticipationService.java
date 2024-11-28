@@ -12,8 +12,8 @@ public class EventParticipationService
     private EventParticipationMapper eventParticipationMapper;
 
 
-    public void participateCrewEvents(int crewCode, int userCode, int eventCode)
+    public void participateCrewEvents(int userCode, int crewCode, int eventCode)
     {
-        eventParticipationMapper.participateCrewEvents(new CrewEventDTO(crewCode, userCode, eventCode));
+        eventParticipationMapper.participateCrewEvents(new CrewEventDTO(userCode, crewCode, eventCode));
     }
 }

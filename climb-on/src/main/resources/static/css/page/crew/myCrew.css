@@ -3,11 +3,16 @@
 .crew-main{
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
 }
+.inner .tab-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
 /* 사이드 */
 .crew-aside{
     position: relative;
     width: 270px;
-    height: 850px;
+    height: calc(100% - 88px);
     margin-top: 98px;
     background-color: #fff;
     text-align: center;
@@ -150,7 +155,7 @@
 .crew-activity-event-item {
     display: flex;
     align-items: center;
-    height: 154px;
+    height: 110px;
     background-color: #fdf7ed;
 }
 

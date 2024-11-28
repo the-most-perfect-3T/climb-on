@@ -8,6 +8,7 @@ function setToMidnightKST(dateTime) {
 
 // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
 const offset = new Date().getTimezoneOffset() * 60000;
+let events = null;
 
 async function showModal(calendar){
     $("#addButton").show();
@@ -45,6 +46,7 @@ async function showModal(calendar){
 
                 if (response.ok) {
                     await calendar.refetchEvents(); // Refresh events from the server
+                    events = eventData;
                     console.log(eventData);
                 } else {
                     throw new Error("이벤트 저장에 실패했습니다.");
@@ -220,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 return response.json();
                             })
                             .then(data => {
-                                console.log(data);  // 이벤트 데이터 제발 잘 부러오라고
+                                console.log(data);
                                 crewCalendar.addEventSource(data)
 
                             })
@@ -350,21 +352,16 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             editable: false,
             dayMaxEvents: true, // allow "more" link when too many events
-            events: '/events?type=crew'
+            events: '/events/myCrew'
         });
         crewCalendar.render();
 
         $('.crew-tab-nav li').click(function () {
             if (crewCalendar) {
                 crewCalendar.updateSize();
-                crewCalendar.refetchEvents();
+                //crewCalendar.refetchEvents();
             }
         });
-
-        if (typeof crewCalendar !== 'undefined') {
-            crewCalendar.refetchEvents();
-        }
-
 
     }
     if (calendarCrewE2) {
@@ -380,22 +377,23 @@ document.addEventListener('DOMContentLoaded', function () {
                             method: 'GET',
                         })
                             .then(response => {
-                                if (!response.ok) throw new Error('크루 이벤트 불러오기에 실패하다 ... ');
+                                if (!response.ok)
+                                {
+                                    console.log(response);
+                                    throw new Error('크루 이벤트 불러오기에 실패하다 ... ');
+                                }
+
                                 return response.json();
                             })
                             .then(data => {
-                                console.log(data);  // 이벤트 데이터 제발 잘 부러오라고
-                                eventData = data;
+                                console.log(data);
+                                events = data;
                                 crewCalendar.addEventSource(data)
 
                             })
                             .catch(error => {
                                 console.error('Error:', error);
                             });
-                        // 달력에 뿌려줄 데이터 가져와야 대용
-                        // const crewPage = document.getElementById('crewPage');
-                        // crewPage.href = `/events/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
-                        // crewPage.textContent = `Access Your Team (${crewCode})`;
 
                         crewCalendar.batchRendering(function () {
                             crewCalendar.setOption('headerToolbar', {
@@ -515,22 +513,17 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             editable: false,
             dayMaxEvents: true, // allow "more" link when too many events
-            events: '/events?type=crew'
+            events: '/events/myCrew'
         });
         crewCalendar.render();
 
         $('.crew-tab-nav li').click(function () {
             if (crewCalendar) {
-                populateEventList(eventData);
+                populateEventList(events);
                 crewCalendar.updateSize();
-                crewCalendar.refetchEvents();
+                //crewCalendar.refetchEvents();
             }
         });
-
-        if (typeof crewCalendar !== 'undefined') {
-            crewCalendar.refetchEvents();
-        }
-
     }
 
     // 개인 캘린더
@@ -625,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             editable: true,
             dayMaxEvents: true,
-            events: '/events?type=private'
+            events: '/events/mypage'
         });
         privateCalendar.render();
     }

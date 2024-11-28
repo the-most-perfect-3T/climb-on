@@ -27,4 +27,11 @@
         FROM community_comments
         WHERE post_id = #{id};
     </select>
+
+    <select id="getNotificationPosts" resultType="String">
+        SELECT title
+        FROM community_posts
+        WHERE category LIKE "%소식%"
+        ORDER BY event_end_date ASC LIMIT 6;
+    </select>
 </mapper>

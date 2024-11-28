@@ -10,4 +10,6 @@ public interface MainMapper
 {
     List<PostDTO> getRecentPosts();
     List<PostDTO> getPopularPosts();
+
+    List<PostDTO> getNotificationPosts();
 }

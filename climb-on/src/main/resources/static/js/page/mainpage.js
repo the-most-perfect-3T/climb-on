@@ -1,3 +1,24 @@
+const loadNotificationPosts = () =>
+{
+    fetch(`/api/posts/notification`)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`${response.status} 에러가 발생했습니다`);
+            }
+            return response.json();
+        })
+        .then(posts => {
+            console.log(posts);
+            const notificationContainer = document.getElementById('notifiEventList');
+            posts.forEach(post=>{
+                const listItem = document.createElement('li');
+                listItem.textContent = post;
+                notificationContainer.appendChild(listItem);
+            });
+        })
+        .catch(error => console.log(error.message));
+}
+
 const loadRecentPosts = (offset =0, category = "") =>
 {
     fetch(`/api/posts/recent/paginated`)
@@ -44,6 +65,12 @@ const loadPopularPosts = () =>
             });
         })
         .catch(error => console.log(error.message));
+}
+
+const loadFacilityInfo = () =>
+{
+    //fetch(`api/posts/facilities`) .then(res=>{if(res.ok){console.log(res.json();}
+    // facility_name, image_url from facilities
 }
 
 document.getElementById('category-tabs').addEventListener('click', (event) => {
@@ -114,10 +141,9 @@ async function updateUserRole(newRole) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
-
-
 }
 
 loadRecentPosts();
 loadPopularPosts();
+loadNotificationPosts();
 showSlides(slideIndex);

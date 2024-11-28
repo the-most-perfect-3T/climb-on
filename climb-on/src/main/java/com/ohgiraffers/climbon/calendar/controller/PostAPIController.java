@@ -30,4 +30,10 @@ public class PostAPIController
         // 포스트 인기순으로 (likes 내림차순)
         return mainService.getPopularPosts();
     }
+
+    @GetMapping("/notification")
+    public List<PostDTO> getNotificationPosts()
+    {
+        return mainService.getNotificationPosts();
+    }
 }
