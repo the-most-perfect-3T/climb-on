@@ -80,10 +80,16 @@
                 </div>
             </div>
 
+            <div id="loadingSpinner" class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+
+
 
             <div th:replace ="~{/facilities/map :: mapFragment}" ></div>
-
+            <div class="facility-detail333" id="facility-detail333">
             <div class="facilityDetails" id="facilityDetailsContainer"></div>
+            </div>
            <!--<div class="facilityDetails" id="reviewContainer"></div>-->
         </div>
             <div th:replace="~{/facilities/facilitymodal :: facilityModalFragment}"></div>
@@ -117,14 +123,11 @@
             async function showFacilityId(id) {
                 const facilityDetailsContainer = document.getElementById("facilityDetailsContainer");
 
-                // 기존 내용 비우고 스켈레톤 로더 추가
-                facilityDetailsContainer.innerHTML = `
-                    <div class="skeleton-loader">
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                        <div class="skeleton-item"></div>
-                          <div class="img-skeleton"></div>
-                    </div>`;
+
+
+                // 부드럽게 출력하기 위해 visibility를 hidden으로 설정
+                facilityDetailsContainer.classList.remove('visible');
+                facilityDetailsContainer.style.visibility = 'hidden';
 
                 try {
                     const response = await fetch(`/facilities/facility/${id}`);
@@ -133,6 +136,11 @@
 
                     // 데이터 로드 후 UI 업데이트
                     showFacility(data);
+
+
+                    setTimeout(() => {
+                        facilityDetailsContainer.classList.add('visible');  // visible 클래스를 추가하여 애니메이션 효과 시작
+                    }, 500); // 50ms 정도 대기 후 애니메이션 시작
                 } catch (error) {
                     console.error("시설 상세 정보 로드 실패:", error);
                     alert("시설 정보를 불러오는 데 실패했습니다.");

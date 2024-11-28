@@ -24,6 +24,7 @@
             <div class="ongoing-news">
                 <div class="ongoing-news-container">
                     <!-- 각 게시글을 카드 형태로 나눔 -->
+                    <p th:if="${ongoingPosts == null or ongoingPosts.isEmpty()}">진행중인 소식이 없습니다</p>
                     <div th:each="post : ${ongoingPosts}" class="ongoing-news-item">
                         <div class="news-box">
                             <span class="status-label">진행중</span>
@@ -53,7 +54,7 @@
         <form action="/community" method="get" style="display:flex; align-items: center;">
         <input type="hidden" name="category" th:value="${category}"/>     <!--category와 searchKeyword를 함께 서버로 전송하여, 해당 카테고리의 검색 결과를 표시할 수 있게 했다-->
         <input type="hidden" name="viewMode" th:value="${viewMode}"/> <!--뷰모드 유지-->
-        <input type="text" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
+        <input type="search" name="searchKeyword" placeholder="커뮤니티 내에서 검색" minlength="2" th:value = "${searchKeyword}"/> <!--minlength="2" 와 required를 사용하여 최소 2글자 이상 입력하게 설정-->
         <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
     </div>
@@ -169,7 +170,6 @@
                 <td th:text="${post.displayName}">작성자</td>
                 <td th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</td>
             </tr>
-
             </tbody>
         </table>
         </div>
@@ -271,7 +271,7 @@
                         + '&sort=' + ${#strings.defaultString(sort, 'latest')}
                         + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
                    th:classappend="${currentPage >= totalPages} ? 'disabled' : ''">
-                <i class="fa-solid fa-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
+                    <i class="fa-solid fa-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
             </li>
         </ul>
     </section>

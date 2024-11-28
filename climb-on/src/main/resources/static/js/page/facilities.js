@@ -5,14 +5,18 @@ window.onload = async function() {
 
 }*/
 //검색*/
+
+/*document.addEventListener('DOMContentLoaded', async () => {
+    // DOMContentLoaded 이벤트가 발생하면, getFacilityDetails로부터 시설 정보를 받아옴
+    const facility = await getFacilityDetails();  // 서버에서 시설 정보 받기
+    await showFacilityDetails(facility);  // 받은 시설 정보를 보여줌
+
+});*/
+
 function showSuggestions() {
     const name = document.getElementById('codeInput').value;
     const suggestionsDiv = document.getElementById('suggestions');
-    suggestionsDiv.innerHTML = `
-        <div class="skeleton-loader"></div>
-        <div class="skeleton-loader"></div>
-        <div class="skeleton-loader"></div>
-    `;
+
     suggestionsDiv.style.display = 'block';
     if (name) {
         fetch(`/facilities/suggestions?code=${encodeURIComponent(name)}`) // 패치요청 responseEntity 로 jason 받음
@@ -64,12 +68,6 @@ document.addEventListener("DOMContentLoaded", function() {
     const searchForm = document.getElementById('searchForm');
     searchForm.addEventListener('submit', handleSubmit);
     const favoriteButton = document.getElementById('favorite-btn-${facility.id}');
-    favoriteButton.addEventListener('click', function(event) {
-        // isFavorite 값을 서버나 초기 데이터에서 받아옵니다.
-        const isFavorite =
-            toggleFavorite(event, facility.id, isFavorite);
-    });
-
 
 
 
@@ -128,7 +126,14 @@ let selectedPosition = {lat: 37.4988635, lng: 127.0266457}; // 초기 위치
 
 // 카카오 지도 API 로드 함수
 function loadKakaoMap(facilities) {
+
+
     const {kakao} = window;
+
+    // 지도 로딩 중 애니메이션 표시
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    loadingSpinner.style.display = 'block'; // 로딩 스피너 보이기
+
 
     // 지도와 마커 생성
     const latitude = facilities[0]?.latitude || selectedPosition.lat;
@@ -137,11 +142,14 @@ function loadKakaoMap(facilities) {
     const container = document.getElementById('map');
     const options = {
         center: new kakao.maps.LatLng(latitude, longitude),
-        level: 3
+        level: 8
     };
     map = new kakao.maps.Map(container, options);
     console.log("Kakao map is loaded!");
+
     showOffcanvas();
+
+
     // 시설마다 마커 추가
     // facilities는 loadKakaoApi 호출 시 전달해야 함
     facilities.forEach(facility => {
@@ -182,23 +190,27 @@ function loadKakaoMap(facilities) {
             currentMarker = marker;
             // 시설 정보와 관련된 로직을 추가적으로 넣을 수 있음
             // 예를 들어, 시설에 대한 세부사항을 보여주는 함수 호출
+            facilityDetailsContainer.classList.remove('visible');
+            facilityDetailsContainer.style.visibility = 'hidden';
+            showFacility(facility);
 
 
-            setTimeout(function() {
+            setTimeout(() => {
+                facilityDetailsContainer.classList.add('visible');  // visible 클래스를 추가하여 애니메이션 효과 시작
+            }, 500); // 50ms 정도 대기 후 애니메이션 시작
 
-                showFacilityDetails(facility)
-            }, 300);  // 지도 이동 및 확대/축소가 끝난 후 800ms 후에 표시
 
 
         });
         kakao.maps.event.addListener(map, 'click', function () {
 
-            facilityDetailsContainer.style.display = 'none';
-
-
-
+            facilityDetailsContainer.classList.remove('visible');
+            facilityDetailsContainer.style.visibility = 'hidden';
 
         });
+
+
+     //
     });
 
 /*    // 초기 마커 설정
@@ -312,53 +324,52 @@ let globalDettails;
 const detailsContainer = document.getElementById('facilityDetailsContainer');
 
 
+const detailsContainerContainer = document.getElementById('facility-detail333');
 
-    async function showFacilityDetails(facility) {
+async function showFacilityDetails(facility) {
 
-        // facility 객체의 값을 조건에 맞게 출력
-        if (facility != null) {
-            facilityDetailsContainer.style.display = 'block';
-        }
-        let isFavorite;
+    // facility 객체의 값을 조건에 맞게 출력
+    if (facility != null) {
+        setTimeout(() => {
+            facilityDetailsContainer.classList.add('visible');
+        }, 50); // 50ms 정도 대기 후 애니메이션 시작
+    }
+    let isFavorite;
 
-        isFavorite = await checkFavorite(facility.id);
+    isFavorite = await checkFavorite(facility.id);
 
-
-        // console.log(isFavorite)
-        const facilityDetailsHTML = `
+    // facilityDetailsHTML 내에 로딩 스피너와 세부 정보를 함께 포함
+    const facilityDetailsHTML = `
         <div class="facility-details">
-        <div class="facility-details-top">
-        <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
-       <div class="nameAndStart">
-        <h3>${facility.facilityName || '정보 없음'}</h3>
-        <div className ="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
-        ${isFavorite ?? false ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
-          </div>
-          </div>
-       </div>
-       <h4><strong>기본정보</strong></h4>
-        <p>주소: ${facility.address || '정보 없음'}</p>
-        <p>전화번호: ${facility.contact || '정보 없음'}</p>
-        <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
-        <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
+
+            <div class="facility-details-top">
+                <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
+                <div class="nameAndStart">
+                    <h3>${facility.facilityName || '정보 없음'}</h3>
+                    <div class="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
+                        ${isFavorite ? '<i class="fa-bookmark fa-solid"></i>' : '<i class="fa fa-bookmark-o"></i>'}
+                    </div>
+                </div>
+            </div>
+            <h4><strong>기본정보</strong></h4>
+            <p>주소: ${facility.address || '정보 없음'}</p>
+            <p>전화번호: ${facility.contact || '정보 없음'}</p>
+            <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
+            <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
         </div>
     `;
-        // facilityDetailsContainer에 세부 정보를 삽입
 
-        globalDettails = facilityDetailsHTML;
-        detailsContainer.innerHTML = facilityDetailsHTML;
+    // facilityDetailsContainer에 세부 정보를 삽입
+    globalDettails = facilityDetailsHTML;
+    detailsContainer.innerHTML = facilityDetailsHTML;
+    // loadReviews와 loadImage가 완료된 후
+    await loadReviews(facility.id);
+    await loadImage(facility.id);
 
 
-        // 리뷰가 로드되지 않았다면 리뷰를 로드하고 상태를 기록
 
 
-        await loadReviews(facility.id);
-
-        await loadImage(facility.id);
-
-        currentfacility = facility;
-        // 시설 정보 갱신 후, 리뷰가 로드되었음을 표시
-
+    currentfacility = facility;
 }
 
 function renderStars(averageRating) {
@@ -418,6 +429,7 @@ function loadReviews(facilityId) {
                 let Reviews22 = await getUserId();
                 console.log(Reviews22);
                 const reviewSummary = `
+                <div class="facilityReviews">
                 <div class="item2">
                   <div class="item4">
                     <span class="review-sum">리뷰 : <i style="color: #FF7F27">${data.length}</i></span>
@@ -435,6 +447,7 @@ function loadReviews(facilityId) {
                     style="display:  ${Reviews22 === undefined || Reviews22 === 0 ? 'none' : 'block'}" >작성</i>
                   </div>
                     <br>
+                </div>
                 </div>
             `;
 
@@ -715,7 +728,7 @@ async function loadImage(facilityId){
 
     const url = `/facilityImg/getImage?facilityId=${facilityId}`;
 
-    showSkeletonLoader();
+
 
     const response = await fetch(url, {
         method: 'GET',
@@ -726,17 +739,19 @@ async function loadImage(facilityId){
     });
 
     const imagePath = await response.json();// 서버에서 경로를 텍스트로 받음
-    hideSkeletonLoader();
+
     // 이미지 경로를 사용해 이미지를 HTML에 표시
     const imgElement = document.getElementById('facilityImg');
 
 if(Array.isArray(imagePath) && imagePath.length) {
     console.log("imagePath" + imagePath[0].filePath);
     imgElement.src = imagePath[0].filePath;
+
 }
 
 else
     imgElement.src = "/images/default.jpg";
+
 }
 
 
@@ -1195,6 +1210,7 @@ function handleImageLoad(event) {
     }
 
     // 이미지 표시
+
     image.style.display = 'block';
 }
 
@@ -1204,11 +1220,17 @@ function handleImageLoad(event) {
 
 // offcanvas를 보이게 하는 함수
 function showOffcanvas() {
+
     const offcanvas = document.querySelector('.content .offcanvas');
 
     // 로딩이 완료되었을 때
+
     offcanvas.style.visibility = 'visible';  // 보이게 설정
     offcanvas.style.transform = 'translateX(0)';  // 왼쪽으로 슬라이드
+
+    setTimeout(() => {
+        loadingSpinner.style.display = 'none'; // 애니메이션 숨기기
+    }, 500);  // 애니메이션이 끝날 때까지 약간의 시간 지연
 }
 
 // MutationObserver 설정
