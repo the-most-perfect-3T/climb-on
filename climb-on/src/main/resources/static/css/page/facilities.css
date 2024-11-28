@@ -63,7 +63,7 @@
 .content .offcanvas {
     position: relative;
     transform: translateX(0);
-    visibility: visible;
+    visibility: hidden;
     height: 100%;
     width: 320px;
 }
@@ -159,19 +159,30 @@
 }
 /*디테일*/
 div#facilityDetailsContainer {
+    opacity: 0;
     position: absolute;
     top: 0;
     left: 340px;
     width: 300px;
     height: 100%;
     background-color: #fff;
-    overflow-y: auto;       /* 세로 스크롤을 자동으로 표시 */
+    overflow-y: scroll !important; /* ensures scrolling is possible */
     z-index: 1;
-    display: none; /* 처음에는 숨겨져 있습니다 */
+    visibility: hidden; /* 기본적으로 요소가 보이지 않도록 설정 */
     box-shadow: 0 0px 8px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease, visibility 0s 0.5s, transform 0.5s ease; /* transition 설정 */
+    transform: translateX(-100%); /* 처음에는 화면 밖으로 위치시킴 */
 }
+
+div#facilityDetailsContainer.visible {
+    opacity: 1; /* visible 클래스가 적용되면 opacity가 1로 */
+    visibility: visible; /* visible로 설정하여 보이게 */
+    transform: translateX(0); /* 슬라이드 애니메이션을 통해 보이게 */
+    transition: opacity 1s ease, visibility 0s 0s, transform 0.5s ease; /* 애니메이션이 끝나면 바로 visible */
+}
+
 div#facilityDetailsContainer::-webkit-scrollbar {
-    width: 0px; /* 스크롤바를 안 보이게 함 */
+    width: 0px !important;
     background: transparent; /* 배경을 투명으로 설정 */
 }
 div#facilityDetailsContainer::-webkit-scrollbar-thumb {
@@ -392,9 +403,13 @@ textarea#comment {
     position: relative;
 }
 .button-container-facility {
-    display: flex;            /* flexbox로 요소를 나란히 배치 */
-    justify-content: space-around;  /* 요소들 사이 간격을 고르게 배치 */
-    align-items: center;      /* 세로 중앙 정렬 */
+
+        width: 300px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
+
 }
 .review-guide {
     font-size: 12px;
@@ -558,21 +573,21 @@ body .btn-fmodal {
 .review-detail{
     margin-top: 10px;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-
+    position: relative;
 
 }
 
 .review-detail-nickname{
-    display: flex;
+    display: inline-flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 }
 .review-detail-nickname p{
     padding-left: 10px;
 }
 .review-time{
-    padding-left: 10px;
-    font-size: 13px;
+    padding-left: 5px;
+    font-size: 9px;
     opacity: 70%;
 }
 .review-detail-nickname span{
@@ -586,8 +601,8 @@ body .btn-fmodal {
 .review-text{
     margin:10px;
     font-size: 14px;
-    text-align: center;
-    padding-left: 10px;
+    text-align: left;
+
 }
 .review-text-fav{
     text-align: right;
@@ -608,19 +623,17 @@ body .btn-fmodal {
 }
 /* 기본 review-actions 스타일 */
 .review-actions {
-    position: relative;
     background: none;
     border: none;
-    opacity: 60%;
     cursor: pointer;
     color: #888;
-    margin-right: 12px;
+    margin-left: 175px;
 }
 
 /* dropdown 메뉴 스타일 */
 .dropdown-menureview {
-    display: block;
-    position: sticky;
+    display: none;
+    position: absolute;
     top: 25px;
     right: 0;
     background: white;
@@ -628,22 +641,14 @@ body .btn-fmodal {
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 10;
+    opacity: 60%;
     padding: 3px 8px;
     font-size: 12px;
 
-    /* 숨김 상태 */
-    opacity: 0;
-    transform: translateX(0%);
-    pointer-events: none;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+
 }
 
-/* 열림 상태 */
-.dropdown-menureview.open {
-    opacity: 1;
-    transform: translateX(-100%);
-    pointer-events: auto;
-}
+
 
 /* dropdown 항목 버튼 스타일 */
 .dropdown-menureview button,
@@ -658,14 +663,103 @@ body .btn-fmodal {
     display: block; /* hover 상태에서 dropdown 메뉴 보이게 */
 }
 
-/* .comment-actions-menu가 상위 div가 되었다면 해당 스타일 추가 */
-.comment-actions-menu {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
+
 .time-rating{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-left: 10px;
+}
+.fa-bars {
+     font-weight: 900;
+     opacity: 50%;
+     font-size: 18px;
+ }
+/* 공통 스켈레톤 스타일 */
+.skeleton-loader {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.skeleton-item {
+    height: 20px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeleton-item:nth-child(1) {
+    width: 70%;
+}
+
+.skeleton-item:nth-child(2) {
+    width: 50%;
+}
+
+.skeleton-item:nth-child(3) {
+    width: 100%;
+}
+
+/* 이미지 스켈레톤 */
+.img-skeleton {
+    width: 100%;
+    height: 150px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 8px;
+}
+
+#facilitymainImg {
+    display: none; /* 초기에는 숨김 */
+    width: 100%;
+    height: auto; /* 이미지의 원본 비율 유지 */
+}
+
+/* 애니메이션 */
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* 로딩 스피너 스타일 */
+.loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: block;  /* 기본적으로 숨김 처리 */
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #000;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+.facility-detail333{
+    opacity: 1;
+}
+.facility-detail333.visible{
+
+    opacity: 1;
+    transform: translateY(0);
+    display: block; /* 보이도록 설정 */
+
 }
