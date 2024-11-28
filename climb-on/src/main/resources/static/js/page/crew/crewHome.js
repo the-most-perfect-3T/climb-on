@@ -170,7 +170,6 @@ async function loadPost(){
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('이벤트 데이터를 불러오는 중 문제가 발생했습니다.');
     }
 }
 

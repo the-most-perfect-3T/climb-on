@@ -175,7 +175,7 @@ h2 {
     gap: 10px; /* 검색창과 버튼 사이 간격 */
 }
 
-.search-bar input[type="text"] {
+.search-bar input[type="search"] {
     border: 1px solid #ddd;
     border-radius: 20px;
     padding: 8px 15px;
@@ -442,46 +442,30 @@ h2 {
 
 .pagination i {
     display: flex;
-    width: 36px; /* 버튼 크기 */
+    width: 50px; /* 버튼 크기 */
     height: 36px;
     justify-content: center;
     align-items: center;
-    border: 1px solid var(--borderColor); /* 기본 테두리 */
     text-decoration: none;
-    color: var(--black); /* 기본 텍스트 색상 */
-    border-radius: 50px; /* 약간 둥근 모서리 */
+    color: #ffffff; /* 기본 텍스트 색상 */
     transition: background-color 0.2s ease, color 0.2s ease;
+    border: 1px solid var(--black);
+    border-radius: 50%;
+    background-color: var(--black);
 }
 
-
-/* 페이지네이션 링크 호버 효과 */
-.pagination a:hover {
-    background-color: #ffffff; /* 링크 버튼의 호버 배경색 */
-    color: var(--black); /* 링크 버튼의 호버 텍스트 색상 */
-    border-color: #ffffff; /* 링크 버튼의 호버 테두리 색상 */
+.pagination a.disabled i {
+    pointer-events: none; /* 클릭 비활성화 */
+    color: #ffffff; !important;/* 텍스트 색상 변경 */
+    border-color: #DEE2E6;
+    cursor: not-allowed; /* 비활성화 커서 */
+    border-radius: 50%;
+    background-color:#DEE2E6 !important;
 }
 
-/* 페이지네이션 아이콘 호버 효과 */
-.pagination i:hover {
-    background-color: var(--black); /* 아이콘 버튼의 호버 배경색 */
-    color: #ffffff; /* 아이콘 버튼의 호버 텍스트 색상 */
-    border-color: var(--black); /* 아이콘 버튼의 호버 테두리 색상 */
-}
 
 .pagination a.disabled {
-    pointer-events: none; /* 클릭 불가능 */
-    color: #aaa; /* 흐린 색상 */
-    border-color: #ddd; /* 흐린 테두리 */
-    background-color: #f5f5f5; /* 비활성화된 배경색 */
-    cursor: not-allowed; /* 마우스 커서 변경 */
-}
-
-.pagination i.disabled {
-    pointer-events: none;
-    color: #aaa;
-    border-color: #ddd;
-    background-color: #f5f5f5;
-    cursor: not-allowed;
+    pointer-events: none; /* 클릭 비활성화 */
 }
 
 
