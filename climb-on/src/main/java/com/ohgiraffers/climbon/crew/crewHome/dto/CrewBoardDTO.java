@@ -1,6 +1,9 @@
 package com.ohgiraffers.climbon.crew.crewHome.dto;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class CrewBoardDTO {
 
@@ -11,8 +14,8 @@ public class CrewBoardDTO {
     private String title;
     private String content;
     private String imgUrl;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private int viewCount;
     private int likeCount;
     private boolean isAnonymous;
@@ -21,7 +24,7 @@ public class CrewBoardDTO {
     public CrewBoardDTO() {
     }
 
-    public CrewBoardDTO(int id, int crewCode, int userId, String category, String title, String content, String imgUrl, Date createdAt, Date updatedAt, int viewCount, int likeCount, boolean isAnonymous, int status) {
+    public CrewBoardDTO(int id, int crewCode, int userId, String category, String title, String content, String imgUrl, LocalDateTime createdAt, LocalDateTime updatedAt, int viewCount, int likeCount, boolean isAnonymous, int status) {
         this.id = id;
         this.crewCode = crewCode;
         this.userId = userId;
@@ -35,6 +38,59 @@ public class CrewBoardDTO {
         this.likeCount = likeCount;
         this.isAnonymous = isAnonymous;
         this.status = status;
+    }
+
+    // 작성일을 포맷팅해서 반환하는 메소드 : createdAt 필드가 오늘 날짜인 경우 몇시 몇분 형식으로 반환, 오늘날짜가 아닌경우 년/월/일 형식으로 반환 // 1,2,3일전은 하루전, 이틀전, 3일전으로 나타낼 수 있게 추가
+    public String getFormattedCreatedAt() {
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        long daysAgo = ChronoUnit.DAYS.between(createdAt.toLocalDate(), now.toLocalDate());
+
+        if (daysAgo == 0){
+            // 오늘 작성된 경우 시간만 표시
+            return createdAt.format(timeFormatter);
+        } else if (daysAgo == 1){
+            return "하루전";
+        } else if (daysAgo == 2){
+            return "이틀전";
+        } else if (daysAgo ==3 ){
+            return "3일전";
+        } else {
+            // 3일 이상 지난 경우 날짜 형식으로 표시
+            return createdAt.format(dateFormatter);
+        }
+    }
+
+    public String getFormattedUpdatedAt() {
+
+        // 이부분에 null체크 필요함
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy.MM.dd.");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        if(updatedAt!=null)
+        {
+            long daysAgo = ChronoUnit.DAYS.between(updatedAt.toLocalDate(), now.toLocalDate());
+
+            if (daysAgo == 0){
+                // 오늘 작성된 경우 시간만 표시
+                return updatedAt.format(timeFormatter);
+            } else if (daysAgo == 1){
+                return "하루전";
+            } else if (daysAgo == 2){
+                return "이틀전";
+            } else if (daysAgo ==3 ){
+                return "3일전";
+            } else {
+                // 3일 이상 지난 경우 날짜 형식으로 표시
+                return updatedAt.format(dateFormatter);
+            }
+        }
+
+        return "";
     }
 
 
@@ -102,19 +158,19 @@ public class CrewBoardDTO {
         this.content = content;
     }
 
-    public Date getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 

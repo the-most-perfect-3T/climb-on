@@ -34,9 +34,23 @@
         <result property="likeCount" column="like_count"/>
         <result property="isAnonymous" column="is_anonymous"/>
         <result property="status" column="status"/>
-        <result property="userNickName" column="nickname"/>
+        <result property="userNickname" column="nickname"/>
         <result property="userProfilePic" column="profile_pic"/>
         <result property="commentsCount" column="comments_count"/>
+    </resultMap>
+
+    <resultMap id="crewCommentResultMap" type="com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="status" column="status"/>
+
+        <result property="userId" column="user_id"/>
+        <result property="userNickname" column="nickname"/>
+        <result property="userProfilePic" column="profile_pic"/>
     </resultMap>
 
     <!-- 카테고리 필터 & 페이징 처리 & 검색 & 작성자 정보 & 댓글 & 댓글 개수 & 조회수 게시글 목록 조회 -->
@@ -126,6 +140,14 @@
         )
     </insert>
 
+    <select id="getJustAddedPostById" parameterType="int">
+        SELECT id
+        FROM crew_posts
+        WHERE user_id = #{id}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
     <select id="selectLastPost" resultMap="crewBoard">
         SELECT * FROM crew_posts
         ORDER BY id DESC
@@ -154,6 +176,74 @@
         updated_at = DEFAULT,
         is_anonymous = #{isAnonymous}
         WHERE id = #{id};
+    </update>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViewCount" parameterType="int">
+        UPDATE crew_posts
+        SET view_count = view_count + 1
+        WHERE id = #{postId}
+    </update>
+
+    <!-- 특정 게시글 조회 (id로 조회), 작성자 정보 포함 -->
+    <select id="getPostById" resultMap="crewPost">
+        SELECT p.id, p.crew_code, p.user_id, u.nickname, p.title, p.content, p.created_at, p.updated_at, p.view_count, p.is_anonymous, p.like_count, p.img_url, p.category, p.status
+        , (SELECT COUNT(*) FROM crew_comments WHERE post_id = p.id AND status = 1) AS comments_count  <!--댓글 수 계산하는 서브쿼리-->
+        FROM crew_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id = #{postId} AND p.status = true
+    </select>
+
+    <!-- 특정 게시글의 댓글 목록 조회-->
+    <select id="getCommentsByPostId" resultMap="crewCommentResultMap">
+        SELECT
+            c.*,
+            u.*
+        FROM crew_comments c
+        JOIN users u
+        on c.user_id = u.id
+        WHERE c.post_id = #{postId} AND c.status = 1
+        ORDER BY c.created_at DESC
+    </select>
+
+    <!-- 이전 게시글 -->
+    <select id="getPreviousPost" resultMap="crewPost">
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM crew_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id &lt; #{postId} AND p.status = 1  <!-- &lt; -> < (부등호)라는뜻-->
+        ORDER BY p.id DESC
+        LIMIT 1
+    </select>
+
+    <!-- 다음 게시글 -->
+    <select id="getNextPost" resultMap="crewPost">
+        SELECT p.*, u.nickname, u.profile_pic
+        FROM crew_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.id &gt; #{postId} AND p.status = 1  <!-- &gt; -> > (부등호)라는 뜻-->
+        ORDER BY p.id ASC
+        LIMIT 1
+    </select>
+
+    <!-- 댓글 추가 -->
+    <insert id="insertComment" parameterType="com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO">
+        INSERT INTO crew_comments (post_id, user_id, content, created_at, status)
+        VALUES (#{postId}, #{userId}, #{content}, NOW(), #{status})
+    </insert>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO">
+        UPDATE crew_comments
+        SET post_id = #{postId}, user_id = #{userId}, content = #{content}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 댓글 삭제(비활성화) -->
+    <update id="deleteComment" parameterType="com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO">
+        UPDATE crew_comments
+        SET status = 0
+        WHERE id = #{id}
     </update>
 
 </mapper>

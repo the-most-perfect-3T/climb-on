@@ -11,7 +11,7 @@ function navigateWithViewMode(event, page){
     urlParams.set('category', currentCategory); //카테고리 설정
     urlParams.set('viewMode', currentViewMode); //뷰모드 설정
     // 선택된 뷰 모드를 URL에 추가하여 페이지 이동
-    window.location.href = `/community?${urlParams.toString()}`;
+    window.location.href = `/crew/home?${urlParams.toString()}`;
 }
 
 // 페이지가 로드될 때 URL에서 정렬 상태와 뷰 모드 상태를 추출하여 버튼 텍스트 업데이트

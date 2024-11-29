@@ -220,6 +220,7 @@ public class PostController {
     @PostMapping("/{id}/edit")
     public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous){
         post.setId(id);
+        System.out.println(post);
         post.setAnonymous(isAnonymous);  // 수정 폼에도 따로 html에서의 isAnonymous값을 가져와야 하므로 여기서 set을 해준다! 다른 PostDTO들은 ModelAttribute로 받음
         postService.updatePost(post);
         return "redirect:/community/" + id;

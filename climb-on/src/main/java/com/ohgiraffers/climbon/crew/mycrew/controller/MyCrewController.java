@@ -46,7 +46,6 @@ public class MyCrewController
                     redirectAttributes.addFlashAttribute("alertMessage", "크루에 가입되어 있지 않습니다.");
                     mv.setViewName("redirect:/crew/crewlist");
                     return mv;
-
                 }else { // 크루원 일시
                     CrewDTO myCrew = myCrewService.getMyCrewById(myId);
                     int memberCount = myCrewService.getMemberCount(myCrew.getId());
@@ -58,6 +57,7 @@ public class MyCrewController
                     if(userCrewDTO.getRole().equals(CrewRole.CAPTAIN)){
                         List<CrewApplyWithUserInfoDTO> crewApplyWithUserInfoDTO = myCrewService.getNewCrewApplyContentByCrewCode(myCrew.getId());
                         mv.addObject("newCrewApplyInfoList", crewApplyWithUserInfoDTO);
+                        System.out.println(crewApplyWithUserInfoDTO);
                     }
 
                     mv.addObject("crewRole", userCrewDTO.getRole());
