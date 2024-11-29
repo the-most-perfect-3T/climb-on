@@ -27,21 +27,16 @@ public class MyCrewRestController {
     private MyCrewService myCrewService;
 
 
-    @GetMapping("/member")
-    public ResponseEntity<Object> showMemberList(@AuthenticationPrincipal AuthDetail userDetails) {
-        // 유저 pk
-        Integer key = userDetails.getLoginUserDTO().getId();
-        List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(key);
+    @GetMapping("/member/{crewCode}")
+    public ResponseEntity<Object> showMemberList(@PathVariable("crewCode") int crewCode, @AuthenticationPrincipal AuthDetail userDetails) {
+        List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(crewCode);
         return ResponseEntity.ok(memberList);
     }
 
-    @GetMapping("/album")
-    public ResponseEntity<Object> showAlbum(@AuthenticationPrincipal AuthDetail userDetails) {
-        // 유저 pk
-        Integer key = userDetails.getLoginUserDTO().getId();
-
+    @GetMapping("/album/{crewCode}")
+    public ResponseEntity<Object> showAlbum(@PathVariable("crewCode") int crewCode, @AuthenticationPrincipal AuthDetail userDetails) {
         // 크루멤버들이 쓴 게시글의 imgUrl 컬럼(null 포합)
-        List<String> imgUrlList = myCrewService.getImgUrlList(key);
+        List<String> imgUrlList = myCrewService.getImgUrlList(crewCode);
 
         // list 정리를 쉽게 해주는 stream API
         // null 값 필터, split, 빈 값("") 제거, 다시 리스트로 반환
