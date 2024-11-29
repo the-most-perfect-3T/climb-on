@@ -106,24 +106,24 @@ public class SecurityConfig {
                             HttpEntity<String> entity = new HttpEntity<>(headers);
 
                             // 카카오와 함께 로그아웃 호출
-                            /*String url = "https://kauth.kakao.com/oauth/logout";
-                            String requestLogout = url + "?client_id=" + kakaoClientId + "&logout_redirect_uri=" + kakaoLogoutRedirectUri;*/
+                            String url = "https://kauth.kakao.com/oauth/logout";
+                            String requestLogout = url + "?client_id=" + kakaoClientId + "&logout_redirect_uri=" + kakaoLogoutRedirectUri;
 
                             try {
                                 ResponseEntity<String> responseEntity = restTemplate.postForEntity(url1, entity, String.class);
 
                                 // 카카오 로그아웃 성공 여부 확인
                                 if (responseEntity.getStatusCode().is2xxSuccessful()) {
-                                    /*response.sendRedirect(requestLogout);*/
+                                    response.sendRedirect(requestLogout);
                                     System.out.println("카카오 로그아웃 성공");
                                 } else {
                                     System.out.println("카카오 로그아웃 실패: " + responseEntity.getStatusCode());
                                     throw new RuntimeException("카카오 로그아웃 실패: 상태 코드 " + responseEntity.getStatusCode());
                                 }
-                            } /*catch (IOException e) {
+                            } catch (IOException e) {
                                 System.out.println("카카오 로그아웃 실패: " + e.getMessage());
                                 throw new RuntimeException("카카오 로그아웃 중 IOException 발생: " + e.getMessage(), e);
-                            }*/catch(Exception e){
+                            } catch(Exception e){
                                 e.printStackTrace();
                             }
                             authDetail.setAccessToken(null);

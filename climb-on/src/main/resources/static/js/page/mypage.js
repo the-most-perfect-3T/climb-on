@@ -1206,10 +1206,10 @@ if(commentTab){
             const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
             let currentPage = 1;
 
-            if(data.length === 0 || data.message === "작성한 댓글이 없습니다."){
+            if(data.length === 0 || data.comments === "작성한 댓글이 없습니다."){
                 const noResult = document.createElement("div");
                 noResult.classList.add('no-result', 'border-top');
-                noResult.textContent = "작성한 게시글이 없습니다.";
+                noResult.textContent = "작성한 댓글이 없습니다.";
                 commentList.appendChild(noResult);
             }else {
                 const renderData = async (page) => {
