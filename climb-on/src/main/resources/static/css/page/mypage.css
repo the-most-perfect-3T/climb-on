@@ -622,6 +622,9 @@
     justify-content: center;
     margin-right: 15px;
 }
+.section-mypage #commentsTab .section00 .comment-list .img-wrap img {
+    width: 100%;
+}
 .section-mypage #commentsTab .section00 .comment-list .author-info .author-name {
     font-weight: 600;
 }
