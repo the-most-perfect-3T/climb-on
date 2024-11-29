@@ -69,9 +69,34 @@ const loadPopularPosts = () =>
 
 const loadFacilityInfo = () =>
 {
-    //fetch(`api/posts/facilities`) .then(res=>{if(res.ok){console.log(res.json();}
-    // facility_name, image_url from facilities
-}
+    fetch('/api/posts/facilities')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`${response.status} 에러가 발생했습니다`);
+            }
+            return response.json();
+        })
+        .then(facilities => {
+            const facilityList = document.getElementById('recommendedFacility');
+            facilityList.innerHTML = '';
+            facilities.forEach(facility => {
+                const facilityItem = document.createElement('div');
+                facilityItem.className = 'facility-item';
+                facilityItem.style.backgroundImage = `url(${facility.imageUrl})`;
+
+                facilityItem.innerHTML = `
+                    <span class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        <span>4.5</span>
+                    </span>
+                    <p>${facility.facilityName}</p>
+                `;
+                //                        rating 가져와서 ${facility.rating}
+                facilityList.appendChild(facilityItem);
+            });
+        })
+        .catch(error => console.log(error.message));  // 핸들 에러
+};
 
 document.getElementById('category-tabs').addEventListener('click', (event) => {
     if (event.target.tagName === 'BUTTON') {
@@ -146,4 +171,5 @@ async function updateUserRole(newRole) {
 loadRecentPosts();
 loadPopularPosts();
 loadNotificationPosts();
+loadFacilityInfo();
 showSlides(slideIndex);

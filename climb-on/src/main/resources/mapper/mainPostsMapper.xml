@@ -10,6 +10,21 @@
         <result property="createdAt" column="CREATED_AT"/>
     </resultMap>
 
+    <resultMap id="FacilityResultMap" type="com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO">
+        <id property="id" column="id" />
+        <result property="facilityName" column="facility_name" />
+        <result property="address" column="address" />
+        <result property="contact" column="contact" />
+        <result property="openingTime" column="opening_time" />
+        <result property="categoryId" column="category_id" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="isFavorite" column="isFavorite"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="facilityType" column="facility_type"
+                typeHandler="com.ohgiraffers.climbon.facilities.handler.FacilityTypeTypeHandler"/><!--이넘핸들러주소를써야함-->
+    </resultMap>
+
     <select id="getRecentPosts" resultMap="mainResult">
         SELECT *
         FROM community_posts
@@ -34,4 +49,11 @@
         WHERE category LIKE "%소식%"
         ORDER BY event_end_date ASC LIMIT 6;
     </select>
+
+    <select id="getFacilityInfo" resultMap="FacilityResultMap">
+        SELECT *
+        FROM facilities;
+    </select>
+
+<!--    <select id="getFacilitiyRating" resultType=""-->
 </mapper>
