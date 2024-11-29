@@ -11,7 +11,7 @@
     <div class="inner">
     <!-- 이벤트 타임라인 --> <!--timeline 섹션에 링크 추가하여 D-Day 상태에 따라 소식 게시글을 필터링-->
 
-     <div class="head-container">
+    <div class="head-container">
     <!-- 소식 제목 -->
     <h2>진행중인 소식</h2>
         <!-- 더보기 버튼-->
@@ -178,6 +178,7 @@
             </tr>
             </tbody>
         </table>
+            <p th:if="${generalPosts == null or generalPosts.isEmpty()}" class="no-post">등록된 게시글이 없습니다</p>
         </div>
 
         <!-- 카드 뷰 형식 -->
@@ -245,6 +246,7 @@
                     <img th:src="${post.imageUrl}" alt="Thumbnail" class="thumbnail">
                 </div>
         </div>
+            <p th:if="${generalPosts == null or generalPosts.isEmpty()}" class="no-post">등록된 게시글이 없습니다</p>
     </div>
    </div>
 
@@ -262,7 +264,7 @@
                 <i class="fa-solid fa-chevron-left"></i></a>
             </li>  <!--currentPage에 따라 이전 페이지링크가 표시--> <!-- 페이지네이션이 되도 링크 생성 할 때 현재 URL에 포함된 category, searchKeyword, sort 등의 파라미터를 함께 전달하여 커뮤니티게시판의 기존 기능 유지-->
             <!-- 페이지 번호 링크 -->
-            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조--> <!--첫번째 인자가 null인 경우 두번째 인수 반환-->
+            <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}" th:if="${pageNum > 0}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조--> <!--첫번째 인자가 null인 경우 두번째 인수 반환-->
                 <a th:href="@{'/community?page=' + ${pageNum}
                         + '&category=' + ${#strings.defaultString(category, '전체')}
                         + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}

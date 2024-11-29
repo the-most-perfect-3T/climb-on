@@ -24,7 +24,7 @@
             <div style="background: url('/images/banner3.png') no-repeat center / cover; height: 621px;">
 <!--            <img src="/images/banner3.png" style="height: 621px" alt="배너3"/>-->
             </div>
-        </div>
+        </div> n
         <div class="btn-wrapper">
             <div class="inner">
                 <a class="btn prev-btn" onclick="plusSlides(-1)">&#10094;</a>
@@ -52,13 +52,8 @@
                     <section class="main-events-section">
                         <div class="main-event-list">
                             <h5>대회 안내</h5>
-                            <ul>
+                            <ul class="notification-list" id="notifiEventList">
                                 <!--추후 처리 post category에서 어떻게 나뉘는지 더 생각해보고 ...-->
-                                <li>2024 여기에 이벤트 뿌려줘야 함</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li>
                             </ul>
                         </div>
                     </section>
@@ -69,21 +64,10 @@
 
                 <div class="featured-locations">
                     <h3>오늘의 암장</h3>
-                    <div class="facility-list">
+                    <div class="facility-list" id="recommendedFacility">
                     <!--시설 이미지 백그라운드로 !-->
                     <!--<div class="facility-list" style="background-image: url('')">-->
-                        <div class="facility-item">
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.5</span>
-                            <p>더클라임 클라이밍 짐앤샵 신림점</p>
-                        </div>
-                        <div class="facility-item">
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.5</span>
-                            <p>뚝섬한강공원 인공암벽장</p>
-                        </div>
-                        <div class="facility-item">
-                            <span class="rating"><i class="fa-solid fa-star"></i> 4.5</span>
-                            <p>하이미디어학원</p>
-                        </div>
+
                     </div>
                 </div>
 
@@ -110,7 +94,7 @@
                                <!-- 최근 포스트 6개 여기-->
                                </tbody>
                            </table>
-                           <button class="btn-more-posts">게시글 더 보기</button>
+                           <button class="btn-more-posts" onclick="window.location.href='/community'">게시글 더 보기</button>
                        </div>
 
                        <div class="popular-posts">

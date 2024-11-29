@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.climbon.calendar.dao.EventParticipationMapper">
+    <resultMap id="insertCrewEventResult" type="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
+        <id property="crewCode" column="crew_code"/>
+        <result property="eventCode" column="event_code"/>
+        <result property="userCode" column="user_code"/>
+    </resultMap>
+
+    <insert id="participateCrewEvents" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
+        INSERT INTO crew_gathering_events (crew_code, user_code, event_code)
+                VALUES (#{crewCode}, #{userCode}, #{eventCode});
+    </insert>
+</mapper>

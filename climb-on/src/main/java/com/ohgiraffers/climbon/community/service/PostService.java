@@ -26,6 +26,10 @@ public class PostService {
 
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
 
+        if (offset <= 0) {
+            offset = 1;
+        }
+
         // 1. 공지 게시글 (2개 고정)
         List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
 
@@ -55,6 +59,9 @@ public class PostService {
     public Map<String, List<PostDTO>> getPostsWithPinned(
             int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
         int offset = (page - 1) * pageSize;
+        if (offset <= 0) {
+            offset = 1;
+        }
 
         Map<String, List<PostDTO>> result = new HashMap<>();
 
