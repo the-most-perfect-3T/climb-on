@@ -2,6 +2,7 @@ package com.ohgiraffers.climbon.crew.mycrew.dao;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
@@ -30,4 +31,8 @@ public interface MyCrewMapper
     boolean getHowToJoinCrew(int crewCode);
 
     int crewMemberInsert(UserCrewDTO newMember);
+
+    CrewApplyDTO getCrewApplyContent(int myId);
+
+    List<CrewApplyWithUserInfoDTO> getNewCrewApplyContentByCrewCode(int crewCode);
 }
