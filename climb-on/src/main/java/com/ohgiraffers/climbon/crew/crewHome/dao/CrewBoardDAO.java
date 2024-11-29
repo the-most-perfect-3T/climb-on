@@ -81,4 +81,5 @@ public interface CrewBoardDAO {
     @Insert("INSERT INTO user_post_heart (post_code2, user_code, category) VALUES (#{postId}, #{userId}, 2)")
     void addLike(int postId, Integer userId);
 
+    List<CrewCommentDTO> getCommentsById(Integer id);
 }

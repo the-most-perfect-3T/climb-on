@@ -9,6 +9,7 @@ import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.community.service.PostService;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewBoardService;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
@@ -310,6 +311,16 @@ public class UserRestController {
         }
         Integer id = userDetails.getLoginUserDTO().getId();
         System.out.println("id = " + id);
+
+        List<CrewCommentDTO> comments = crewBoardService.getCommentsById(id); // 댓글 목록 가져오기
+
+        System.out.println("comments = " + comments);
+
+        if(comments.isEmpty() || comments == null){
+            return ResponseEntity.ok(Map.of("comments", "작성한 댓글이 없습니다."));
+        }
+
+        return ResponseEntity.ok(comments);
 
     }
 

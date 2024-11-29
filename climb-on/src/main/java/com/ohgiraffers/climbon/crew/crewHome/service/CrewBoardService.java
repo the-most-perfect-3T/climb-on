@@ -188,5 +188,9 @@ public class CrewBoardService {
         return crewBoardDAO.hasUserLikedPost(postId, userId);
     }
 
+    public List<CrewCommentDTO> getCommentsById(Integer id) {
+        List<CrewCommentDTO> crewCommentDTOList = crewBoardDAO.getCommentsById(id);
+        return crewCommentDTOList;
+    }
 }
 
