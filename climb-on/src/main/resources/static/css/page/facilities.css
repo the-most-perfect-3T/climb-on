@@ -632,6 +632,8 @@ body .btn-fmodal {
     text-align: right;
     margin: 10px;
     padding-bottom: 5px;
+    padding-left: 263px;
+    display: inline-block;
 }
 
 .fa-heart.fa-solid{
@@ -787,4 +789,7 @@ body .btn-fmodal {
     transform: translateY(0);
     display: block; /* 보이도록 설정 */
 
+}
+.reviewfavorite-btn{
+    position: absolute;
 }
