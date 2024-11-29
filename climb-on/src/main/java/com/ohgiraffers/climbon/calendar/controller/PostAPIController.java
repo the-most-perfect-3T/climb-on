@@ -2,10 +2,12 @@ package com.ohgiraffers.climbon.calendar.controller;
 
 import com.ohgiraffers.climbon.calendar.service.MainService;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -29,5 +31,17 @@ public class PostAPIController
     {
         // 포스트 인기순으로 (likes 내림차순)
         return mainService.getPopularPosts();
+    }
+
+    @GetMapping("/notification")
+    public List<PostDTO> getNotificationPosts()
+    {
+        return mainService.getNotificationPosts();
+    }
+
+    @GetMapping("/facilities")
+    public List<FacilitiesDTO> getFacilityInfo(ModelAndView mv)
+    {
+        return mainService.getFacilityInfo();
     }
 }

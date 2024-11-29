@@ -55,4 +55,6 @@ public interface UserMapper {
     List<NoticeDTO> selectUserNotice(Integer id);
 
     int updateFacility(UserDTO user);
+
+    /*int findCrewCodeById(Integer );*/
 }

@@ -1,34 +1,34 @@
 package com.ohgiraffers.climbon.calendar.dto;
 
-import java.sql.Date;
-
 public class EventDTO
 {
     private int id;
     private String title;
     private int userCode;
     private int crewCode;
-    private boolean role;
+    private boolean isAdmin;
     private String start;
     private String end;
     private String description;
     private String backgroundColor;
+    private boolean isAllDay;
 
     public EventDTO()
     {
     }
 
-    public EventDTO(int id, String title, int userCode, int crewCode, boolean role, String start, String end, String description, String backgroundColor)
+    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, boolean isAllDay)
     {
         this.id = id;
         this.title = title;
         this.userCode = userCode;
         this.crewCode = crewCode;
-        this.role = role;
+        this.isAdmin = isAdmin;
         this.start = start;
         this.end = end;
         this.description = description;
         this.backgroundColor = backgroundColor;
+        this.isAllDay = isAllDay;
     }
 
     public int getId()
@@ -71,20 +71,15 @@ public class EventDTO
         this.crewCode = crewCode;
     }
 
-    public boolean isRole()
+    public boolean isAdmin()
     {
-        return role;
+        return isAdmin;
     }
 
-    public boolean getRole()
+    public boolean setAdmin(boolean isAdmin)
     {
-        return role;
-    }
-
-    public boolean setRole(boolean role)
-    {
-        this.role = role;
-        return role;
+        this.isAdmin = isAdmin;
+        return isAdmin;
     }
 
     public String getStart()
@@ -125,5 +120,15 @@ public class EventDTO
     public void setBackgroundColor(String backgroundColor)
     {
         this.backgroundColor = backgroundColor;
+    }
+
+    public boolean isAllDay()
+    {
+        return isAllDay;
+    }
+
+    public void setAllDay(boolean allDay)
+    {
+        isAllDay = allDay;
     }
 }

@@ -305,6 +305,14 @@ h2 {
 
 .badge-success {
     background-color: var(--gray);
+    text-align: center;
+}
+
+.no-post {
+    display: flex;
+    align-items: center;
+    margin-top : 30px;
+    justify-content: center;
 }
 
 /* 카드 뷰 컨테이너 */
@@ -505,9 +513,3 @@ h2 {
     font-weight: bold; /* 글가 굵기 설정*/
 }
 
-footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.8em;
-    color: #aaa;
-}
