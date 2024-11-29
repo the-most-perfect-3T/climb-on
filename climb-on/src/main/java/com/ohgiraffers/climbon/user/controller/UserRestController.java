@@ -301,7 +301,7 @@ public class UserRestController {
     }
 
 
-    @GetMapping("crewComments")
+    /*@GetMapping("crewComments")
     public ResponseEntity<Object> getCrewComments(@AuthenticationPrincipal AuthDetail userDetails){
 
         // 유저 아이디
@@ -311,7 +311,7 @@ public class UserRestController {
         Integer id = userDetails.getLoginUserDTO().getId();
         System.out.println("id = " + id);
 
-    }
+    }*/
 
     @GetMapping("/{userId}")
     @ResponseBody
