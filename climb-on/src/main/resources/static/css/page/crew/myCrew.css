@@ -3,11 +3,16 @@
 .crew-main{
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
 }
+.inner .tab-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
 /* 사이드 */
 .crew-aside{
     position: relative;
     width: 270px;
-    height: 850px;
+    height: calc(100% - 88px);
     margin-top: 98px;
     background-color: #fff;
     text-align: center;
@@ -83,6 +88,10 @@
     font-weight: 700;
 }
 
+.crew-join-apply:disabled {
+    background-color: var(--gray);
+}
+
 
 .crew-main{
     margin-left: 80px;
@@ -105,6 +114,20 @@
 
 .crew-tab-nav li button.active span {
     color: #222222;
+}
+
+.notice-count {
+    top: 0;
+    right: 10px;
+    font-size: 8px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    background: var(--point);
+    line-height: 12px;
 }
 
 /* 마이크루 메인 */
@@ -150,9 +173,8 @@
 .crew-activity-event-item {
     display: flex;
     align-items: center;
-    height: 154px;
+    height: 110px;
     background-color: #fdf7ed;
-    border-radius: 10px;
 }
 
 .crew-activity-event-item .crew-event-info {
@@ -189,12 +211,13 @@
 .crew-activity-event-item .crew-event-right{
     flex: 1;
     text-align: right;
+    height: 100%;
 }
 
 .crew-activity-event-item .participate-btn{
     background-color: #FAEFDD;
-    width: 145px;
-    height: 154px;
+    width: 115px;
+    height: 100%;
     cursor: pointer;
     transition: background-color 0.3s;
 }

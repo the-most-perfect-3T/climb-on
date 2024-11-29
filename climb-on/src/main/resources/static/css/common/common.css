@@ -324,6 +324,18 @@ button:disabled {
     .section-mypage #board .section00 .card-list .card-item .card-meta span.name {
         color: var(--gray);
     }
+    .main-content h4, .main-content h3 {
+        color: #fff;
+    }
+    .main-event-container .main-event-list {
+        background: var(--bs-body-bg);
+    }
+    .community-container .community-posts-list .nav li button {
+        color: #fff;
+    }
+    .community-container .popular-list li {
+        color: #fff;
+    }
 }
 
 

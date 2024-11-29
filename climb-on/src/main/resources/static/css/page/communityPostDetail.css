@@ -323,6 +323,7 @@
     padding: 3px 8px; /* 내부 여백을 줄여 크기를 축소 */
     gap: 10px;
     font-size: 14px; /* 글자 크기 조정 */
+    width: 80px; /* 메뉴 전체 폭 조정 */
 }
 
 .dropdown-menu button,
