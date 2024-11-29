@@ -69,9 +69,6 @@ public class PostController {
         Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(
                 page, pageSize, category, searchKeyword, sort, dday, status);
 
-        for (PostDTO post : postsWithPinned.get("generalPosts")){
-            System.out.println(post.getDday());
-        }
 
         model.addAttribute("ongoingPosts", ongoingPostsLimited); // 진행 중 게시글 8개까지만 전달
         model.addAttribute("moreOngoingPosts", totalOngoingCount); // 진행 중 게시글 8개이상
