@@ -251,7 +251,7 @@ public class UserController {
 
         try {
             profilePic.transferTo(new File(filePath + "/" + savedName));
-            String newFileName = "/img/profile/" + savedName;
+            String newFileName = "/images/profile/" + savedName;
 
             Integer key = userDetails.getLoginUserDTO().getId();
             int result = userService.updateProfile(newFileName, key);
@@ -405,7 +405,7 @@ public class UserController {
 
         try {
             businessFile.transferTo(new File(filePath + "/" + savedName));
-            String newFileName = "/img/business/" + savedName;
+            String newFileName = "/images/business/" + savedName;
 
 
             // 비즈니스 전환신청 테이블에 추가
