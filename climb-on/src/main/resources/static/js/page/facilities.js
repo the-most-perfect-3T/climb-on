@@ -504,6 +504,7 @@ function loadReviews(facilityId) {
                             <div className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
                                 ${isFavorite ?? false ?'<i class="fa-heart fa-solid"></i>':'<i class="fa-heart fa-regular"></i>'}
                             </div>
+                            
                         </div>          
                     </div>
                 `;
