@@ -116,18 +116,13 @@
     color: #222222;
 }
 
-.notice-count {
-    top: 0;
-    right: 10px;
-    font-size: 8px;
-    font-weight: 600;
+.crew-tab-nav li button .rounded-circle {
+    background-color: var(--point);
     color: #fff;
-    display: block;
-    width: 12px;
-    height: 12px;
-    border-radius: 100%;
-    background: var(--point);
-    line-height: 12px;
+}
+
+.crew-tab-nav li button.active .rounded-circle {
+    color: #fff;
 }
 
 /* 마이크루 메인 */

@@ -63,7 +63,7 @@ memberTabBtn.addEventListener('click', async function() {
             const memberTr = document.createElement('tr');
             memberTr.classList.add('border-bottom');
             memberTr.innerHTML = `
-            <td class="member-row" >
+            <td class="member-row">
               <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
                 <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
                   <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100 userModalOpen" data-id=${member.id}>
