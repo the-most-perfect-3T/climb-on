@@ -88,6 +88,10 @@
     font-weight: 700;
 }
 
+.crew-join-apply:disabled {
+    background-color: var(--gray);
+}
+
 
 .crew-main{
     margin-left: 80px;
@@ -110,6 +114,20 @@
 
 .crew-tab-nav li button.active span {
     color: #222222;
+}
+
+.notice-count {
+    top: 0;
+    right: 10px;
+    font-size: 8px;
+    font-weight: 600;
+    color: #fff;
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 100%;
+    background: var(--point);
+    line-height: 12px;
 }
 
 /* 마이크루 메인 */

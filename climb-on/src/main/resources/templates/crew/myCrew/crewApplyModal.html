@@ -1,0 +1,63 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="crewApplyModalFragment">
+    <div class="modal fade" id="crewApplyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="crewApplyModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-width">
+            <div class="modal-content p-4">
+                <!-- Modal Header -->
+                <div class="modal-header border-0">
+                    <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <h1 class="w-100 text-center fw-bold mb-1">함께 성장하는 크루 커뮤니티</h1>
+                    <p class="w-100 text-center text-muted mb-4">cli'mon에서 함께할 크루에 가입 해주세요!</p>
+
+                    <form th:action="@{/crew/myCrew/crewApply/{crewCode}(crewCode=${myCrew.id})}" method="post" id="crewApplyForm">
+
+                        <!-- 크루 정보 -->
+                        <div class="mb-4">
+                            <div></div>
+                            <div>
+                                <div>크루명</div>
+                                <div>크루소개글</div>
+                                <div>활동지역</div>
+                                <div>회원수</div>
+                            </div>
+                        </div>
+
+                        <!-- 가입안내 -->
+                        <div></div>
+
+                        <!-- 가입 신청시 적어야 할 내용 안내 -->
+                        <div></div>
+
+                        <!-- 크루 소개글 Input -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">
+                                <span class="text-danger">*</span>크루 소개글
+                            </label>
+                            <textarea id="description" name="content" class="form-control" rows="3" placeholder="내용을 입력해주세요 (최대 160자)" maxlength="160" required></textarea>
+                            <small class="form-text text-muted"> <small id="crewIntroCount"></small> /160</small>
+                        </div>
+
+
+                        <div class="modal-footer justify-content-center border-0">
+                            <button type="submit" class="btn btn-orange px-5 py-2">등록하기</button>
+                        </div>
+                        <button type="reset" id="resetBtn" style="display: none"></button>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+
+</html>

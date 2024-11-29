@@ -92,7 +92,7 @@ h2 {
 
 
 .news-title {
-    font-size: 16px; /* 텍스트 크기 */
+    font-size: 13px; /* 텍스트 크기 */
     font-weight: bold;
     color: var(--black); /* 텍스트 색상 */
     text-decoration: none;
@@ -305,6 +305,14 @@ h2 {
 
 .badge-success {
     background-color: var(--gray);
+    text-align: center;
+}
+
+.no-post {
+    display: flex;
+    align-items: center;
+    margin-top : 30px;
+    justify-content: center;
 }
 
 /* 카드 뷰 컨테이너 */
@@ -397,9 +405,21 @@ h2 {
 }
 
 .pinned-post {
-    background-color: var(--beige);
-    border-left: 4px solid #ff9900; /* 왼쪽 테두리에 오렌지색 강조 */
+    background-color: #FAEFDD;
     font-weight: bold; /* 글씨를 굵게 */
+}
+
+.category-shape {
+    display: inline-block; /* 내부 텍스트를 중앙에 정렬 */
+    padding: 5px 15px; /* 도형 크기 조정 */
+    background-color: #FAE7C8; /* 도형 배경색 */
+    color: #333; /* 텍스트 색상 */
+    font-size: 14px; /* 글자 크기 */
+    font-weight: bold; /* 글씨 굵게 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    border-radius: 10px; /* 모서리를 둥글게 */
+    border: 1px solid #FAE7C8; /* 테두리 색상 */
+    box-sizing: border-box; /* 패딩 포함하여 크기 계산 */
 }
 
 .pinned-post td {
@@ -493,9 +513,3 @@ h2 {
     font-weight: bold; /* 글가 굵기 설정*/
 }
 
-footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 0.8em;
-    color: #aaa;
-}

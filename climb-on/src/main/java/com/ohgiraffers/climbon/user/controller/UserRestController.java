@@ -131,14 +131,14 @@ public class UserRestController {
         System.out.println("pageSize = " + pageSize);
 
         // 일반 게시글
-        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+        /*List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);*/
 
         /*int totalPages = (int) Math.ceil((double) totalPosts / pageSize);*/
 
-        for (PostDTO post : posts) {
+        /*for (PostDTO post : posts) {
             String userNickname =  postService.getUserNicknameById(post.getUserId());
             post.setUserNickname(userNickname);
-        }
+        }*/
 
 
         Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(

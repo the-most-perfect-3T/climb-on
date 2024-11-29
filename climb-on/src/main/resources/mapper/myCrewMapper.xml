@@ -58,6 +58,34 @@
         <result property="role" column="role"/>
     </resultMap>
 
+    <resultMap id="crewApply" type="com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO">
+        <result property="userCode" column="user_code"/>
+        <result property="crewCode" column="crew_code"/>
+        <result property="content" column="content"/>
+        <result property="isApproval" column="is_approval"/>
+        <result property="isPermission" column="is_permission"/>
+    </resultMap>
+
+    <resultMap id="crewApplyWithUserInfo" type="com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO">
+        <result property="userCode" column="user_code"/>
+        <result property="crewCode" column="crew_code"/>
+        <result property="content" column="content"/>
+        <result property="isApproval" column="is_approval"/>
+        <result property="isPermission" column="is_permission"/>
+
+        <result property="userId" column="USER_ID"/>
+        <result property="nickname" column="NICKNAME"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="userRole" column="USER_ROLE"/>
+        <result property="profilePic" column="PROFILE_PIC"/>
+        <result property="oneLiner" column="ONE_LINER"/>
+        <result property="facilityCode" column="FACILITY_CODE"/>
+        <result property="status" column="STATUS"/>
+        <result property="isBusiness" column="IS_BUSINESS"/>
+        <result property="createdAt" column="CREATED_AT"/>
+        <result property="inactiveAt" column="INACTIVE_AT"/>
+    </resultMap>
+
     <select id="getMyCrewCodeAndRole" parameterType="int" resultMap="userCrew">
         SELECT *
         FROM user_crew
@@ -81,15 +109,66 @@
         FROM users u
         JOIN user_crew uc
         on u.id = uc.user_code
-        WHERE uc.crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
+        WHERE uc.crew_code = #{crewCode};
     </select>
 
     <select id="getImgUrlList" parameterType="int">
         SELECT img_url
         FROM crew_posts
-        WHERE crew_code = (SELECT crew_code FROM user_crew WHERE user_code = #{key});
+        WHERE crew_code = #{crewCode};
     </select>
 
+    <select id="getCrewInfoByCrewCode" parameterType="Integer" resultMap="crew">
+        SELECT *
+        FROM crews
+        WHERE id = #{crewCode}
+    </select>
+
+    <select id="getMemberCount" parameterType="int">
+        SELECT count(user_code)
+        FROM user_crew
+        WHERE crew_code = #{crewCode}
+    </select>
+
+    <select id="getHowToJoinCrew" parameterType="int" resultType="boolean">
+        SELECT is_permission
+        FROM crews
+        WHERE id = #{crewCode}
+    </select>
+
+    <insert id="applyForCrew" parameterType="com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO">
+        INSERT INTO crew_apply(user_code, crew_code, content, is_approval, is_permission)
+        VALUES(
+        #{userCode},
+        #{crewCode},
+        #{content},
+        #{isApproval},
+        #{isPermission}
+        )
+    </insert>
+
+    <insert id="crewMemberInsert" parameterType="com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO">
+        INSERT INTO user_crew (user_code, crew_code, role)
+        VALUES (#{userCode}, #{crewCode}, #{role})
+    </insert>
+
+    <select id="getCrewApplyContent" resultMap="crewApply" parameterType="int">
+        SELECT *
+        FROM crew_apply
+        WHERE user_code = #{myId}
+        AND is_approval = 0
+    </select>
+
+    <select id="getNewCrewApplyContentByCrewCode" parameterType="int" resultMap="crewApplyWithUserInfo">
+        SELECT
+            ca.*,
+            u.*
+        FROM crew_apply ca
+        JOIN users u
+        on ca.user_code = u.id
+        WHERE ca.crew_code = #{crewCode}
+        AND ca.is_approval = 0
+    </select>
 
 
 </mapper>
