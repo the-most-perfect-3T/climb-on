@@ -1200,21 +1200,21 @@ if(commentTab){
             const data = await response.json();
             console.log("받은 데이터:", data);
 
-            const commentList = document.querySelector(".comment-list");
+            const commentList = document.querySelector("#communityComments .comment-list");
             commentList.textContent = "";
 
             const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
             let currentPage = 1;
 
-            if(data.length === 0 || data.message === "작성한 댓글이 없습니다."){
+            if(data.length === 0 || data.comments === "작성한 댓글이 없습니다."){
                 const noResult = document.createElement("div");
                 noResult.classList.add('no-result', 'border-top');
-                noResult.textContent = "작성한 게시글이 없습니다.";
+                noResult.textContent = "작성한 댓글이 없습니다.";
                 commentList.appendChild(noResult);
             }else {
                 const renderData = async (page) => {
 
-                    const commentList = document.querySelector(".comment-list");
+                    const commentList = document.querySelector("#communityComments .comment-list");
                     commentList.textContent = "";
 
                     const startIndex = (page - 1) * itemsPerPage;
@@ -1282,5 +1282,100 @@ if(commentTab){
 }
 
 
+
+/* 댓글 - 크루 */
+const crewCommentTab = document.getElementById("crew-comments-tab");
+if(crewCommentTab){
+    commentTab.addEventListener("click", async function() {
+
+        console.log("댓글 탭 클릭!");
+        try {
+            const response = await fetch("/user/crewComments");
+            if (!response.ok) {
+                throw new Error("서버 오류: " + response.status);
+            }
+            const data = await response.json();
+            console.log("받은 데이터:", data);
+
+            const commentList = document.querySelector("#crewComments .comment-list");
+            commentList.textContent = "";
+
+            const itemsPerPage = 3; // 한 페이지에 표시할 아이템 수
+            let currentPage = 1;
+
+            if(data.length === 0 || data.comments === "작성한 댓글이 없습니다."){
+                const noResult = document.createElement("div");
+                noResult.classList.add('no-result', 'border-top');
+                noResult.textContent = "작성한 댓글이 없습니다.";
+                commentList.appendChild(noResult);
+            }else {
+                const renderData = async (page) => {
+
+                    const commentList = document.querySelector("#crewComments .comment-list");
+                    commentList.textContent = "";
+
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = startIndex + itemsPerPage;
+
+                    const itemsToShow = data.slice(startIndex, endIndex); // 일반 게시물만 !
+
+                    const comment = document.createElement("div");
+                    comment.classList.add('comment-wrap');
+                    let commentHtml = '';
+
+                    if (itemsToShow.length > 0) {
+                        for (let item of itemsToShow) {
+                            commentHtml += `
+                            <!-- 댓글 작성자 프로필 -->
+                            <div class="comment border-bottom">
+                                <div class="post-author d-flex align-items-center">
+                                    <div class="img-wrap">                                   
+                                        <img src="${item.userProfilePic}" alt="프로필 이미지"/>
+                                    </div>
+                                    <div class="author-info">
+                                        <!-- 댓글 본문 -->
+                                        <span class="author-name">${item.userNickname}</span>
+                                        <div class="meta-info">
+                                            <span class="post-date">${item.updatedAt != null ? item.formattedUpdatedAt : item.formattedCreatedAt}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="/community/${item.postId}" class="comment-text">${item.content}</a>
+                            </div>
+                        `
+                        }
+                    }
+
+
+                    comment.innerHTML = commentHtml;
+                    commentList.appendChild(comment);
+                };
+
+                // 첫 렌더링
+                if(Array.isArray(data)) await renderData(currentPage);
+                // 페이지네이션
+                if (data.length > itemsPerPage) {
+                    const paginationElement = document.querySelector("#crewComments .pagination");
+
+                    // 재귀적으로 호출하도록 함수 참조를 변수로 정의
+                    const updatePagination = (newPage) => {
+                        currentPage = newPage; // 페이지 변경
+                        renderData(currentPage); // 데이터 렌더링
+                        renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination); // 페이지네이션 다시 렌더링
+                    };
+
+                    // 초기 렌더링 호출
+                    renderPagination(paginationElement, data.length, itemsPerPage, currentPage, updatePagination);
+                }else {
+                    const paginationElement = document.querySelector("#crewComments .pagination");
+                    paginationElement.textContent = "";
+                }
+
+            }
+        }catch(e){
+            console.error("AJAX 오류:", e);
+        }
+    });
+}
 
 

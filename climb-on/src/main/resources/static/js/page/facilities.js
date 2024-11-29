@@ -27,7 +27,7 @@ function showSuggestions() {
                 return response.json();
             })
             .then(data => {
-                console.log(data); // 데이터 구조 확인
+
                 suggestionsDiv.textContent = ''; // 이전 추천 결과 초기화
                 if (data && data.length > 0) {  // data가 존재하고, 그 길이가 0보다 클 경우
                     data.forEach(facilities => {
@@ -105,7 +105,7 @@ function handleCategorySubmit(categoryId) {
 
     // sessionStorage에서 'searchCode' 값을 가져오기
     const facilityName = sessionStorage.getItem('searchCode');
-    console.log(facilityName)
+
     // 'searchCode'가 존재하면, 이를 'code'라는 이름으로 폼에 추가
     if (facilityName) {
         const codeInput = document.createElement('input');
@@ -145,7 +145,7 @@ function loadKakaoMap(facilities) {
         level: 8
     };
     map = new kakao.maps.Map(container, options);
-    console.log("Kakao map is loaded!");
+
 
     showOffcanvas();
 
@@ -311,12 +311,12 @@ let currentfacility = null;
 
 async function checkFavorite(id) {
     let isFavorite = await getIsFavorite(id);
-    console.log(isFavorite)// 비동기 함수의 실행 결과를 기다림
+
     return isFavorite;
 }
 async function reviewcheckFavorite(id) {
     let isFavorite = await reviewgetIsFavorite(id);
-    console.log(isFavorite)// 비동기 함수의 실행 결과를 기다림
+
     return isFavorite;
 }
 
@@ -406,7 +406,7 @@ function loadReviews(facilityId) {
     if (reviewSummary) {
         reviewSummary.remove();  // reviewSummary 삭제
     }
-    showSkeletonLoader();
+
     fetch(`/Review/Reviews?code=${facilityId}`, {
         method: 'GET',
         headers: {
@@ -424,11 +424,13 @@ function loadReviews(facilityId) {
 
         .then(async data => {
             // 데이터를 받아와서 리뷰가 존재하는 경우에만 처리
-            hideSkeletonLoader();
+
+
+
             if (1) {
                 // 기존 내용 갱신 (기존 html이 있으면 그 내용 추가)
                 let Reviews22 = await getUserId();
-                console.log(Reviews22);
+
                 const reviewSummary = `
                 <div class="facilityReviews" id="facilityReviews">
                 <div class="item2">
@@ -465,10 +467,10 @@ function loadReviews(facilityId) {
 
                 // 각 리뷰 내용 동적으로 생성하여 추가
                 for (const Reviews of data) {
-                    console.log(Reviews)
+
                     let Reviews2 = await getReview(Reviews.id);
                     const isFavorite = await reviewcheckFavorite(Reviews.id || defaultId);
-                    console.log(Reviews.createdAt + " 데이터가 있음?"); // 각 메뉴 확인
+
                     const item = document.createElement('div');
                     const reviewDate = new Date(Reviews.createdAt);
                     const timeText = timeAgo(reviewDate);
@@ -499,9 +501,10 @@ function loadReviews(facilityId) {
                         </div>
                         <p class="review-text">${Reviews.comment || '댓글이 없습니다'}</p>
                         <div class="review-text-fav">
-                            <button className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
+                            <div className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
                                 ${isFavorite ?? false ?'<i class="fa-heart fa-solid"></i>':'<i class="fa-heart fa-regular"></i>'}
-                            </button>
+                            </div>
+                            
                         </div>          
                     </div>
                 `;
@@ -512,7 +515,7 @@ function loadReviews(facilityId) {
 
                 }
                     userMondalOpen();
-                    console.log("되나요");
+
             }
         }
         })
@@ -529,9 +532,7 @@ function loadReviews(facilityId) {
 function timeAgo(date) {
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
-    console.log(now)
-    console.log(date)
-    console.log(diffInSeconds)
+
     const minutes = Math.floor(diffInSeconds / 60);
     const hours = Math.floor(diffInSeconds / 3600);
     const days = Math.floor(diffInSeconds / (3600 * 24));
@@ -631,7 +632,7 @@ async function reviewupdateFavoriteOnServer(id, addFavorite) {
         facilityId: id,
         isFavorite: addFavorite,  // 즐겨찾기 추가 여부
     };
-    showSkeletonLoader();
+
     const response = await fetch(url, {
         method: 'POST',  // POST 메소드로 요청
         headers: {
@@ -639,7 +640,7 @@ async function reviewupdateFavoriteOnServer(id, addFavorite) {
         },
         body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
     });
-    hideSkeletonLoader();
+
     return response;
 }
 
@@ -663,9 +664,9 @@ async function updateFavoriteOnServer(id, addFavorite) {
     return response;
 }
 async function reviewgetIsFavorite(id) {
-    console.log(id);
+
     const validId = id || 0; // 기본값을 0으로 설정 (기본값을 다른 값으로 설정할 수도 있습니다)
-    console.log(validId);
+
 
     try {
         const response = await fetch(`/Review/getIsFavorite?id=${validId}`, {
@@ -680,7 +681,7 @@ async function reviewgetIsFavorite(id) {
         }
 
         const data = await response.json();
-        console.log(data);// JSON 데이터를 파싱
+
         if (data !== null && data !== undefined) {
             return data;  // 데이터를 반환
         } else {
@@ -699,7 +700,7 @@ async function reviewgetIsFavorite(id) {
 
 async function getIsFavorite(id) {
     try {
-        console.log("뭐가문제야" + id);
+
         const validId = id || 0; // 기본값을 0으로 설정 (기본값을 다른 값으로 설정할 수도 있습니다)
         const response = await fetch(`/facilities/getIsFavorite?id=${validId}`, {
             method: 'POST',
@@ -713,7 +714,7 @@ async function getIsFavorite(id) {
         }
 
         const data = await response.json();
-        console.log(data);// JSON 데이터를 파싱
+
         if (data !== null && data !== undefined) {
             return data;  // 데이터를 반환
         } else {
@@ -751,7 +752,7 @@ async function loadImage(facilityId){
     const imgElement = document.getElementById('facilityImg');
 
 if(Array.isArray(imagePath) && imagePath.length) {
-    console.log("imagePath" + imagePath[0].filePath);
+
     imgElement.src = imagePath[0].filePath;
 
 }
@@ -805,7 +806,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("facilityId").value = "";
         document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //닫힐때 초기화
         resetStars();
-        console.log("모달이 닫혔습니다. 데이터 초기화 완료!");
+
     });
 
     // 별 초기화 함수
@@ -849,15 +850,15 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         if (allGray) {
-            console.log("모든 별이 회색입니다.");
+
             alert("평점을 선택해 주세요!");
             return;
         }
-        console.log("dsds"+rating);
+
         rating = Number(rating); // 다시 숫자로 변환
         if(rating === 0 || rating===""){
             rating = document.getElementById("ratingValue").value;
-            console.log("뭐지" + rating)
+
             if (rating === 0 || rating ==="") {
                 alert("평점을 선택해 주세요!");
                 return;
@@ -871,9 +872,9 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("ratingValue").value = rating;
 // 모든 별 요소를 선택
 
-            console.log("입력했을때" + rating)
+
             if (rating === 0 || rating ==="") {
-                console.log("입력했을때안했을때"+ value)
+
 
                 alert("평점을 선택해 주세요!");
                 return;
@@ -892,18 +893,6 @@ document.addEventListener("DOMContentLoaded", function() {
         let id = document.getElementById('reviewId').value;
         document.getElementById('facilityId').value = currentfacility.id;
 
-        // 폼 제출이 문제없이 진행됨
-        console.log("리뷰 데이터:", {
-            rating: rating,
-            comment: comment,
-            facilityId: currentfacility.id,
-            id : id
-
-
-        });
-
-
-
 
 
         const url = '/Review/reviewInsert';
@@ -914,7 +903,7 @@ document.addEventListener("DOMContentLoaded", function() {
             id : id
 
         };
-        showSkeletonLoader();
+
 
         await fetch(url, {
             method: 'POST',  // POST 메소드로 요청
@@ -924,7 +913,7 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(data),  // 데이터를 JSON 형식으로 변환하여 전송
 
         });
-        hideSkeletonLoader();
+
         document.getElementById('reviewId').value = null;
         document.getElementById('exampleModalLabel').innerHTML = "리뷰 작성";  //폼보내고 초기화
         await loadReviews(currentfacility.id);
@@ -936,11 +925,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 async function getReview(id) {
-    showSkeletonLoader();
+
     const response = await fetch(`/Review/getReview?id=${id}`);
     const review = await response.json();  // 리뷰 데이터를 JSON으로 파싱
-    console.log(review);
-    hideSkeletonLoader();
+
+
+
+
 /*
 
     const reviewActions = document.querySelector(`#review-actions-${id}`);
@@ -1004,7 +995,7 @@ async function editReview(id){
 // 리뷰 데이터를 모달에 로드하는 함수
 function loadReviewData(review) {
 
-    console.log(review);
+
     // review.rating 값을 숨겨진 input에 설정
     document.getElementById('ratingValue').setAttribute('value', review.rating);
     document.getElementById('exampleModalLabel').innerHTML = "리뷰 수정"; //함수들어오면 수정
@@ -1014,7 +1005,7 @@ function loadReviewData(review) {
     document.getElementById('comment').value = review.comment;
 
     document.getElementById("reviewId").value = review.id;
-    console.log(review.id);
+
 
 // 평점에 맞는 별 표시
     document.querySelectorAll('#rating .star').forEach(star => {
@@ -1038,7 +1029,7 @@ function loadReviewData(review) {
 async function getUserId(){
     const response = await fetch(`/facilities/userId`);
     const Id = await response.json();  // 리뷰 데이터를 JSON으로 파싱
-    console.log((Id));
+
     return Id;
 
 }
@@ -1264,22 +1255,22 @@ function userMondalOpen() {
     if(userModalOpen){
         userModalOpen.forEach(function(el, i){
 
-            console.log("el", el);
+
 
             if(el.textContent === "익명"){
                 el.style.cursor = "default";
             }
             el.addEventListener("click", function(e){
 
-                console.log("e", e.target);
+
                 const userId = parseInt(e.target.getAttribute("data-id"));
-                console.log("userId", userId);
+
 
                 if (isNaN(userId)) {
                     console.error("Invalid userId:", userId);
                     return; // 유효하지 않은 경우 요청 중단
                 }
-                console.log("userId", userId);
+
 
                 fetch(`/user/${userId}`) // 서버의 요청 URL
                     .then(response => {
@@ -1289,10 +1280,10 @@ function userMondalOpen() {
                         return response.json(); // JSON 데이터를 기대
                     })
                     .then(data => {
-                        console.log("data", data);
+
                         // 서버에서 받은 데이터로 모달 내용 채우기
                         const userViewModal = document.getElementById("userViewModal");
-                        console.log(userViewModal.querySelector(".top .img-wrap img"));
+
                         userViewModal.querySelector(".top .img-wrap img").setAttribute("src", data.user.profilePic);
                         userViewModal.querySelector(".top .nickname").textContent = data.user.nickname;
                         userViewModal.querySelector(".top .one-liner").textContent = data.user.oneLiner != null ? data.user.oneLiner : "한줄 소개가 없습니다.";

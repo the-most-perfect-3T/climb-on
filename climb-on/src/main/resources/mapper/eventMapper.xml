@@ -13,7 +13,8 @@
         <result property="backgroundColor" column="COLOR"/>
         <result property="userCode" column="USER_CODE"/>
         <result property="crewCode" column="CREW_CODE"/>
-        <result property="role" column="IS_ADMIN"/>
+        <result property="isAdmin" column="IS_ADMIN"/>
+        <result property="isAllDay" column="ALL_DAY"/>
     </resultMap>
 
     <resultMap id="crewEventResult" type="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
@@ -39,12 +40,12 @@
     <select id="getMainEvents" parameterType="boolean" resultMap="eventResult">
         SELECT *
         FROM calendar_events
-        WHERE is_admin = #{role};
+        WHERE is_admin = #{isAdmin};
     </select>
 
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
-        INSERT INTO calendar_events (title, user_code, crew_code, is_admin, start_datetime, end_datetime, description, color)
-        VALUES(#{title}, #{userCode}, #{crewCode}, #{role}, #{start}, #{end}, #{description}, #{backgroundColor});
+        INSERT INTO calendar_events (title, user_code, crew_code, is_admin, start_datetime, end_datetime, description, color, all_day)
+        VALUES(#{title}, #{userCode}, #{crewCode}, #{isAdmin}, #{start}, #{end}, #{description}, #{backgroundColor}, #{isAllDay});
     </insert>
 
     <select id="checkDuplicate" resultType="Integer">
@@ -55,7 +56,7 @@
 
     <update id="modifyEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         UPDATE calendar_events
-        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, description = #{description}, color = #{backgroundColor}
+        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, description = #{description}, color = #{backgroundColor}, #{isAllDay}
         WHERE event_id = #{id};
     </update>
 
@@ -82,4 +83,9 @@
         FROM calendar_events
         WHERE crew_code IS NOT NULL;
     </select>
+    
+<!--    <insert id="insertUserInCrewEvents">-->
+<!--        INSERT INTO user_crew-->
+<!--        VALUES(#{user_code}, -->
+<!--    </insert>-->
 </mapper>

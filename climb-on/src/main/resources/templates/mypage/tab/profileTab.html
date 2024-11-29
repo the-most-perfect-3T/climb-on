@@ -48,7 +48,7 @@
                 <th:block sec:authorize="hasAnyAuthority('USER')">
                     <section class="section section01 border-bottom d-flex">
                         <!--해당 크루 페이지로 이동 ! - 링크 바꿔야함 -->
-                        <a th:href="${crewName != null ? '#' : '/crew/home'}" class="move-wrap border-end">
+                        <a th:href="${crewName != null ? '/crew/myCrew' : '/crew/home'}" class="move-wrap border-end">
                             <div>
                                 <span class="title">크루</span>
                                 <span class="name" th:text="${crewName != null ? crewName : '가입된 크루가 없습니다.'}"></span>
@@ -69,7 +69,7 @@
                     <h2 class="section-title">일정 관리</h2>
                     <!--<p class="testOpenModal" th:id="${#authentication.principal.loginUserDTO.id}">테스트!!</p>-->
                     <div class="calendar-wrap">
-                        <div id="calendar"></div>
+                        <div id="my-calendar"></div>
                     </div>
                 </section>
             </div>

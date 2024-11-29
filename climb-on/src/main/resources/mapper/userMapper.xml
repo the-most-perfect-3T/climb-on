@@ -34,6 +34,13 @@
          WHERE ID = #{id}
     </select>
 
+    <!--<select id="findCrewCodeById" parameterType="int" resultType="int">
+        SELECT
+            crew_code
+          FROM user_crew
+         WHERE user_code = #{id}
+    </select>-->
+
     <select id="findCrewName"  parameterType="int" resultType="String">
         SELECT
             b.CREW_NAME
