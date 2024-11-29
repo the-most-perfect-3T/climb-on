@@ -5,6 +5,8 @@ import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import com.ohgiraffers.climbon.search.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,15 +71,18 @@ public class SearchController {
         return "search/searchForm";
     }
 
-    @GetMapping("/more-facilities")
+    @GetMapping("/loadMorePosts")
     @ResponseBody
-    public List<FacilitiesDTO> loadMoreFacilities(@RequestParam String keyword, @RequestParam int offset, @RequestParam int limit) {
-        return searchService.loadMoreFacilities(keyword, offset, limit);
+    public ResponseEntity<?> loadMorePosts(
+            @RequestParam("currentCount") int currentCount,
+            @RequestParam("limit") int limit,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        // 추가 데이터를 가져오는 로직
+        List<PostDTO> additionalPosts = searchService.loadMoreCommunityPosts(keyword, currentCount, limit);
+        if (additionalPosts.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No more posts available.");
+        }
+        return ResponseEntity.ok(additionalPosts);
     }
 
-    @GetMapping("/more-posts")
-    @ResponseBody
-    public List<PostDTO> loadMorePosts(@RequestParam String keyword, @RequestParam int offset, @RequestParam int limit) {
-        return searchService.loadMorePosts(keyword, offset, limit);
-    }
 }
