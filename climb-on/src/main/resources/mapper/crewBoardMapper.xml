@@ -206,6 +206,17 @@
         ORDER BY c.created_at DESC
     </select>
 
+    <select id="getCommentsById" resultMap="crewCommentResultMap">
+        SELECT
+            c.*,
+            u.*
+          FROM crew_comments c
+          JOIN users u
+            on c.user_id = u.id
+         WHERE c.user_id = #{id} AND c.status = 1
+         ORDER BY c.created_at DESC
+    </select>
+
     <!-- 이전 게시글 -->
     <select id="getPreviousPost" resultMap="crewPost">
         SELECT p.*, u.nickname, u.profile_pic

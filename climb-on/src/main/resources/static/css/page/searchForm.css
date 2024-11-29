@@ -1,3 +1,7 @@
+.input.search-input{
+    border:none;
+}
+
 .headcontainer{
     text-align: center;
     padding: 40px 20px;
@@ -27,6 +31,7 @@
     margin-top : 20px;
     font-size: 16px;
 }
+
 
 .head-search-form i{
     color: var(--point);

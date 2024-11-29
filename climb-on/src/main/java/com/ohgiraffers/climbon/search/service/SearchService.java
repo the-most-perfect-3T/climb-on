@@ -58,18 +58,16 @@ public class SearchService {
         return result;
     }
 
-    public List<FacilitiesDTO> loadMoreFacilities(String keyword, int offset, int limit){
-        List<FacilitiesDTO> facilities = searchDAO.searchFacilities(keyword);
-        int startIndex = Math.min(offset, facilities.size());
-        int endIndex = Math.min(offset + limit, facilities.size());
-        return facilities.subList(startIndex, endIndex);
-    }
+    public List<PostDTO> loadMoreCommunityPosts(String keyword, int currentCount, int limit) {
+        // 현재 개수와 limit에 맞게 데이터를 반환
 
-    public List<PostDTO> loadMorePosts(String keyword, int offset, int limit){
-        List<PostDTO> communityPosts = searchDAO.searchCommunityPosts(keyword);
-        int startIndex = Math.min(offset, communityPosts.size());
-        int endIndex = Math.min(offset + limit, communityPosts.size());
-        return communityPosts.subList(startIndex, endIndex);
+        List<PostDTO> posts = searchDAO.searchCommunityPostsPaged(keyword, currentCount, limit);
+        System.out.println("Service layer fetched posts: " + posts);
+        System.out.println(keyword);
+        System.out.println(currentCount);
+        System.out.println(limit);
+
+        return searchDAO.searchCommunityPostsPaged(keyword, currentCount, limit);
     }
 
     public String getUserNicknameById(Integer userId) {
