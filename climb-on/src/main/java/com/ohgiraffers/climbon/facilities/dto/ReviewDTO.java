@@ -12,7 +12,6 @@ public class ReviewDTO {
     private int rating;
     private String comment;
     private LocalDateTime createdAt;
-
     private String userNickname;
     private int likeCount;
     private float averageRating;

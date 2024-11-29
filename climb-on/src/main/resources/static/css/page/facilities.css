@@ -254,7 +254,7 @@ p {
     position: relative;
 }
 .img-wrap {
-    width: 50px;
+    width: 40px;
     height: 50px;
     border-radius: 100%;
     overflow: hidden;
@@ -399,7 +399,6 @@ textarea#comment {
 }
 .fcategory_button {
     width: 100%;
-    background-color: #f79256;
     position: relative;
 }
 .button-container-facility {
@@ -408,9 +407,34 @@ textarea#comment {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
+    padding-top: var(--bs-offcanvas-padding-y);
+    padding-right: var(--bs-offcanvas-padding-x);
+    padding-bottom: 0;
+    padding-left: var(--bs-offcanvas-padding-x);
 
 }
+
+.button-text{
+    font-size: 12px;
+    width: 300px;
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.button-text p:nth-of-type(1) {
+    margin-left: 27px;
+}
+.button-text p:nth-of-type(2) {
+    margin-left: 27px;
+}
+.button-text p:nth-of-type(3) {
+    margin-left: 40px;
+}
+.button-text p:nth-of-type(4) {
+    margin-left: 44px;
+}
+
+
 .review-guide {
     font-size: 12px;
     text-align: center; /* 텍스트를 가운데 정렬 */
