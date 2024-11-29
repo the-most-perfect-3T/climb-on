@@ -89,7 +89,7 @@
                 <div class="author-info">
             <!-- 댓글 본문 -->
                     <div class="author-name">
-                    <span th:text="${comment.userNickname}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">댓글 작성자</span>
+                    <span th:text="${comment.userNickname}" th:data-id="${comment.userId}" class="userModalOpen">댓글 작성자</span>
                     </div>
                     <div class="meta-info">
                     <span class="post-date" th:text="${comment.updatedAt != null ? comment.formattedUpdatedAt : comment.formattedCreatedAt}">작성일</span>
@@ -107,7 +107,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
             <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
                 <!-- 수정 폼 (기본적으로 숨김)-->

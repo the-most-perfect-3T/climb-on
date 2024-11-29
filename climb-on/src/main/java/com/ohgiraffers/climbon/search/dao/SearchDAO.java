@@ -34,4 +34,28 @@ public interface SearchDAO {
     })
     List<CrewDTO> searchCrewNames(@Param("keyword") String keyword);
 
+    // 더보기(페이징처리)를 위한 쿼리
+    @Select("SELECT * FROM community_posts " +
+            "WHERE title LIKE CONCAT('%', #{keyword}, '%') " +
+            "OR content LIKE CONCAT('%', #{keyword}, '%') " +
+            "LIMIT #{currentCount}, #{limit}")
+    @Results(id = "postResultMap", value = {
+            @Result(column = "id", property = "id"),
+            @Result(column = "user_id", property = "userId"),
+            @Result(column = "title", property = "title"),
+            @Result(column = "content", property = "content"),
+            @Result(column = "category", property = "category"),
+            @Result(column = "created_at", property = "createdAt", javaType = java.time.LocalDateTime.class),
+            @Result(column = "updated_at", property = "updatedAt", javaType = java.time.LocalDateTime.class),
+            @Result(column = "view_count", property = "viewCount"),
+            @Result(column = "img_url", property = "imageUrl"),
+            @Result(column = "is_anonymous", property = "isAnonymous"),
+            @Result(column = "like_count", property = "heartsCount"),
+            @Result(column = "status", property = "status"),
+            @Result(column = "event_start_date", property = "eventStartDate"),
+            @Result(column = "event_end_date", property = "eventEndDate")
+    })
+
+    List<PostDTO> searchCommunityPostsPaged(@Param("keyword") String keyword, @Param("currentCount") int currentCount, @Param("limit") int limit);
+
 }

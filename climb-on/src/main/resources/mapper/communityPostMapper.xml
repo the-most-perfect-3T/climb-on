@@ -184,8 +184,8 @@
     <!-- 게시글 수정 -->
     <update id="updatePost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
         UPDATE community_posts
-        SET title = #{title}, content = #{content}, view_count = #{viewCount}, is_anonymous = #{isAnonymous},
-        like_count = #{heartsCount}, img_url = #{imageUrl}, category = #{category}, status = #{status} ,updated_at = NOW()
+        SET title = #{title}, content = #{content}, is_anonymous = #{isAnonymous}
+        , img_url = #{imageUrl}, category = #{category}, status = #{status} ,updated_at = NOW()
         <if test="category == '소식'">
             , event_start_date = #{eventStartDate},
             event_end_date = #{eventEndDate}
