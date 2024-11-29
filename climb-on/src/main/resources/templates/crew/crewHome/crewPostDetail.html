@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/page/crew/crewPostDetail.css}">
+</th:block>
+
+
+<th:block layout:fragment="containerFragment">
+    <div class="inner">
+
+        <!-- 게시글 제목 및 작성자 정보 -->
+        <div class="post-header">
+            <h1 class="post-title" th:text="${post.title}">게시글 제목 예시</h1>
+            <div class="post-info">
+                <div class="post-author">
+                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <div class="author-info">
+                        <div class="author-name">
+                            <span th:text="${post.isAnonymous? '익명' : post.userNickname}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자 닉네임</span>
+                        </div>
+                        <div class="meta-info">
+                            <span class="post-date" th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
+                            <span class="views">조회</span><span th:text="${post.viewCount}">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-actions" th:if="${post.userId == currentUserId}">  <!-- 수정 , 삭제 버튼을 현재 사용자가 작성자인 경우에만 표시하도록 조건 추가-->
+                    <button th:onclick="|window.location.href='/crew/updatepost/${post.id}'|">수정</button>
+                    <form th:action="@{'/community/'  + ${post.id} + '/delete'}" method="post" style="display:inline;">
+                        <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- 게시글 내용 -->
+        <div class="post-content">
+            <p th:utext="${post.content}">게시글 내용 예시</p>
+        </div>
+
+        <!-- 하위 컨텐츠 컨테이너 -->
+        <div class="bottom-container">
+            <!-- 좋아요 및 댓글 수 -->
+            <div class="post-interactions">
+                <!-- 좋아요 버튼 -->                            <!-- data-post-id="${post.id}"  게시글 ID를 데이터 속성에 바인딩,  data-liked="${post.isLiked}" 서버에서 현재 사용자가 좋아요 했는지 여부 전달 -->
+                <div class="like-comment-wrapper">
+                    <button class="heart-button"
+                            th:attr="data-post-id=${post.id},
+                data-liked=${post.isLiked}"> <!-- isLiked 값을  data-liked 속성으로 전달하고, 좋아요 여부에 따라 하트 아이콘을 변경-->
+                        <i class="fa-regular fa-heart" th:classappend="${post.isLiked} ? 'fa-solid' : ''"></i><span class="like">좋아요</span>   <!--th:classappend를 사용해 isLiked 값에 따라 fa-solid 클래스를 추가하여 하트 아이콘을 채운다-->
+                    </button>
+                    <div class="comments-wrapper">
+                        <i class="fa-regular fa-comment-dots"></i><span class="comments-count">댓글 <span th:text="${post.commentsCount}">0</span></span>
+                    </div>
+                </div>
+                <div class="share-button-container">
+                    <button class="share-button" onclick="copyPostUrl()"><i class="fa-solid fa-share-nodes"></i><span class="share">공유하기</span></button>
+                </div>
+            </div>
+
+            <!-- 댓글 작성 -->
+            <div class="comment-section">
+                <form th:action="@{'/crew/post/' + ${post.id} + '/comment'}" method="post" class="comment-form">
+                    <div class="textarea-wrapper">
+                        <textarea name="content" placeholder="댓글을 입력해주세요(500자 이내)" maxlength="500" required></textarea>
+                    </div>
+                    <div class="button-wrapper">
+                        <button class="submit-comment">작성</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 댓글 목록 -->
+            <div class="comment-list">
+                <div class="comment" th:each="comment : ${comments}" th:attr="data-comment-id=${comment.id}">
+                    <!-- 댓글 작성자 프로필 -->
+                    <div class="comment-header">
+                        <div class="post-author">
+                            <img th:src="${comment.userProfilePic}" th:data-id="${comment.userId}" class="userModalOpen" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                            <div class="author-info">
+                                <!-- 댓글 본문 -->
+                                <div class="author-name">
+                                    <span th:text="${comment.userNickname}" th:data-id="${comment.userId}" class="userModalOpen">댓글 작성자</span>
+                                </div>
+                                <div class="meta-info">
+                                    <span class="post-date" th:text="${comment.updatedAt != null ? comment.formattedUpdatedAt : comment.formattedCreatedAt}">작성일</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 댓글 수정/삭제 메뉴 버튼 -->
+                        <div class="comment-actions-menu" th:if="${comment.userId == currentUserId}">
+                            <button class="menu-button"><i class="fa-solid fa-ellipsis-vertical"></i></i></button>
+                            <div class="dropdown-menu">
+                                <button class="edit-button" data-comment-id="${comment.id}">수정</button>
+                                <form th:action="@{'/crew/post/' + ${post.id} + '/comment/' + ${comment.id} + '/delete'}" method="post">
+                                    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
+                    <!-- 수정 폼 (기본적으로 숨김)-->
+                    <div class="comment-edit-form" style="display: none;">
+                        <form th:action="@{'/crew/post/' + ${post.id} + '/comment/' + ${comment.id} + '/edit'}" method="post">
+                            <textarea name="content" th:text="${comment.content}" placeholder="댓글을 입력해주세요" required></textarea>
+                            <button type="submit" class="save-edit-button">저장</button>
+                            <button type="button" class="cancel-edit-button">취소</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prev-next-container">
+                <!-- 이전글 -->
+                <div class="prev-next-item">
+                    <span class="prev-next-label">이전글</span>
+                    <span class="prev-next-title">
+                <a href="#" th:if="${previousPost != null}" th:href="@{'/crew/post/' + ${previousPost.id}}" th:text="${previousPost.title}"></a>
+                <span th:if="${previousPost == null}" class="prev-next-disabled">이전 글이 없습니다.</span>
+            </span>
+                </div>
+
+                <!-- 다음글 -->
+                <div class="prev-next-item">
+                    <span class="prev-next-label">다음글</span>
+                    <span class="prev-next-title">
+                <a href="#" th:if="${nextPost != null}" th:href="@{'/crew/post/' + ${nextPost.id}}" th:text="${nextPost.title}"></a>
+                <span th:if="${nextPost == null}" class="prev-next-disabled">다음 글이 없습니다.</span>
+            </span>
+                </div>
+            </div>
+            <!-- 목록으로 돌아가기 버튼 -->
+            <div class="back-button">
+                <button onclick="window.location.href='/crew/home'">목록</button>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+
+
+<th:block layout:fragment="javascript">
+    <script th:src="@{/js/page/crew/crewPostDetail.js}"></script>
+
+</th:block>
+
+</html>

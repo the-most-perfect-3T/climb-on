@@ -4,6 +4,7 @@ import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dao.CrewBoardDAO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,37 +110,83 @@ public class CrewBoardService {
         return result;
     }
 
-
     // 카테고리 필터링을 적용하여 총 게시글 수를 반환한다.
     public int getTotalPostCount(String category, String searchKeyword) {
         return crewBoardDAO.getTotalPostCount(category, searchKeyword); // 전체 게시글 수를 가져오는 메소드
     }
 
-    /*public CrewPostDTO getPostById(Integer id, Integer userId) {
-        crewBoardDAO.incrementViewCount(id); // 조회시 조회수 증가
-        CrewPostDTO post = crewBoardDAO.getPostById(id); // 게시글 가져오기
-
-        // 현재 사용자의 좋아요 여부 설정
-        boolean isLiked = crewBoardDAO.isPostLikedByUser(id, userId);
-        post.setLiked(isLiked);
-
-        return post;
-    }*/
 
     public String getUserNicknameById(Integer userId) {
         return crewBoardDAO.getUserNicknameById(userId);
     }
 
-    /*public PostDTO getPostById(Integer id, Integer userId) {
+    public CrewPostDTO getPostById(Integer postId, Integer userId) {
+        crewBoardDAO.incrementViewCount(postId); // 조회시 조회수 증가
+        CrewPostDTO post = crewBoardDAO.getPostById(postId); // 게시글 가져오기
+
+        // 현재 사용자의 좋아요 여부 설정
+        boolean isLiked = crewBoardDAO.isPostLikedByUser(postId, userId);
+        post.setLiked(isLiked);
+
+        return post;
     }
 
-    public List<CommentDTO> getCommentsByPostId(Integer id) {
+    public String getUserProfilePicById(Integer userId) {
+        return crewBoardDAO.getUserProfilePicById(userId);
     }
 
-    public PostDTO getPreviousPost(Integer id) {
+    // 댓글 조회
+    public List<CrewCommentDTO> getCommentsByPostId(Integer postId) {
+        return crewBoardDAO.getCommentsByPostId(postId);
     }
 
-    public PostDTO getNextPost(Integer id) {
-    }*/
+
+    public CrewPostDTO getPreviousPost(Integer postId) {
+        return crewBoardDAO.getPreviousPost(postId);
+    }
+
+    public CrewPostDTO getNextPost(Integer postId) {
+        return crewBoardDAO.getNextPost(postId);
+    }
+
+
+    public int insertComment(CrewCommentDTO comment) {
+        return crewBoardDAO.insertComment(comment);
+    }
+
+    public int updateComment(CrewCommentDTO comment) {
+        return crewBoardDAO.updateComment(comment);
+    }
+
+    public int deleteComment(CrewCommentDTO comment) {
+        return crewBoardDAO.deleteComment(comment);
+    }
+
+    public int getJustAddedPostById(int id) {
+        return crewBoardDAO.getJustAddedPostById(id);
+    }
+
+    public void toggleLike(int postId, Integer userId) {
+        if (hasUserLikedPost(postId, userId)) {
+            crewBoardDAO.removeLike(postId, userId); // 좋아요 취소
+            decrementHearts(postId); // 좋아요 수 감소
+        } else {
+            crewBoardDAO.addLike(postId, userId); // 좋아요 추가
+            incrementHearts(postId); // 좋아요 수 증가
+        }
+    }
+
+    public void incrementHearts(int postId) {
+        crewBoardDAO.incrementHearts(postId);
+    }
+
+    public void decrementHearts(int postId) {
+        crewBoardDAO.decrementHearts(postId);
+    }
+
+    public boolean hasUserLikedPost(int postId, int userId) {
+        return crewBoardDAO.hasUserLikedPost(postId, userId);
+    }
+
 }
 

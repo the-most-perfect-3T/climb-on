@@ -24,7 +24,6 @@ const imageFileMap = new Map();
 const hiddenImgUrlInput = document.getElementById("hidden_imgURL_input");
 
 
-
 // textEditor 는 div에 구현되어 form 태그에 속해 있어도 submit 시 dto에 담기지 않는다.
 // textEditor 에 기입되는 내용물 hidden input 으로 전달
 // input 태그에 전달된 내용물이 form submit 시 같이 dto 에 담겨 넘어간다.

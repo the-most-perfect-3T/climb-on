@@ -3,12 +3,10 @@ package com.ohgiraffers.climbon.crew.crewHome.controller;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
-import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
-import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
-import com.ohgiraffers.climbon.crew.crewHome.dto.CrewListWithCount;
-import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.*;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewBoardService;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewService;
+import com.ohgiraffers.climbon.user.service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +31,8 @@ public class CrewController {
 
     @Autowired
     CrewService crewService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/home")
     public ModelAndView getAllPosts(@RequestParam(defaultValue = "1") int page, @RequestParam(required = false) String category,
@@ -76,30 +76,105 @@ public class CrewController {
     }
 
     // 특정 게시글 상세 페이지
-    /*@GetMapping("/{id}")
-    public String getPostById(@PathVariable("id") Integer id, ModelAndView mv, Principal principal, @AuthenticationPrincipal AuthDetail userDetails){
-        // previousPost 와 nextPost 정보를 추가로 조회
-        Integer userId = userDetails.getLoginUserDTO().getId(); // 현재 사용자 ID 가져오기
-        PostDTO post = crewBoardService.getPostById(id, userId); // 좋아요 여부 포함
+    @GetMapping("/post/{postId}")
+    public ModelAndView getPostById(@PathVariable("postId") Integer postId, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails){// previousPost 와 nextPost 정보를 추가로 조회
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            mv.addObject("message", "크루 게시글은 해당 크루멤버만 조회 가능합니다.  \n로그인해주세요.");
+            mv.setViewName("/auth/login");
+        }
+        else{
+            Integer userId = userDetails.getLoginUserDTO().getId(); // 현재 사용자 ID 가져오기
+            CrewPostDTO post = crewBoardService.getPostById(postId, userId); // 좋아요 여부 포함
 
-        String userNickname =  userDetails.getLoginUserDTO().getNickname();
-        post.setUserNickname(userNickname);
 
-        List<CommentDTO> comments = crewBoardService.getCommentsByPostId(id); // 댓글 목록 가져오기
-        for (CommentDTO comment : comments) {
-            comment.setUserNickname(userNickname);
+            String userProfilePic = crewBoardService.getUserProfilePicById(post.getUserId());
+            post.setUserProfilePic(userProfilePic);
+
+            List<CrewCommentDTO> comments = crewBoardService.getCommentsByPostId(postId); // 댓글 목록 가져오기
+
+
+            // 이전,다음 게시글 정보 가져온다.
+            CrewPostDTO previousPost = crewBoardService.getPreviousPost(postId); // 이전 게시글
+            CrewPostDTO nextPost = crewBoardService.getNextPost(postId); // 다음 게시글
+            mv.addObject("post", post);
+            mv.addObject("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
+            mv.addObject("nextPost", nextPost);
+            mv.addObject("comments", comments);
+            mv.addObject("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로그인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
+            mv.setViewName("crew/crewHome/crewPostDetail");
+        }
+        return mv;
+    }
+
+    // 댓글 작성 처리
+    @PostMapping("/post/{postId}/comment")
+    public ModelAndView addComment(@PathVariable("postId") Integer postId, @RequestParam String content, @AuthenticationPrincipal AuthDetail userDetails, ModelAndView mv){
+
+        // 댓글 글자 수 제한 확인
+        if (content.length() > 500) {
+            throw new IllegalArgumentException("댓글은 500자를 초과할 수 없습니다.");
         }
 
-        // postService의 메소드를 사용하여 이전,다음 게시글 정보 가져온다.
-        PostDTO previousPost = crewBoardService.getPreviousPost(id); // 이전 게시글
-        PostDTO nextPost = crewBoardService.getNextPost(id); // 다음 게시글
-        mv.addObject("post", post);
-        mv.addObject("previousPost", previousPost);
-        mv.addObject("nextPost", nextPost);
-        mv.addObject("comments", comments);
-        mv.addObject("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로그인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
-        return "community/communityPostDetail"; // 상세보기용 communityPostDetail.html 템플릿 반환
-    }*/
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            mv.addObject("message", "크루 게시글에 댓글 작성은 해당 크루멤버만 가능합니다.  \n로그인해주세요.");
+            mv.setViewName("/auth/login");
+        }
+        else{
+            // 1. 로그인된 사용자의 user_id(고유키) 가져오기
+            Integer userId = userDetails.getLoginUserDTO().getId();
+
+            CrewCommentDTO comment = new CrewCommentDTO();
+            comment.setPostId(postId);
+            comment.setUserId(userId);
+            comment.setContent(content);
+            int result = crewBoardService.insertComment(comment);
+
+            mv.setViewName("redirect:/crew/post/" + postId);
+        }
+        return mv;
+    }
+
+    // 댓글 수정
+    @PostMapping("/post/{postId}/comment/{commentId}/edit")
+    public ModelAndView modifyComment(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @ModelAttribute CrewCommentDTO comment, @AuthenticationPrincipal AuthDetail userDetails, ModelAndView mv){
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            mv.addObject("message", "크루 게시글에 댓글 수정은 해당 크루멤버만 가능합니다.  \n로그인해주세요.");
+            mv.setViewName("/auth/login");
+        }
+        else{
+            Integer userId = userDetails.getLoginUserDTO().getId();
+            comment.setUserId(userId);
+            comment.setId(commentId);
+            comment.setUpdatedAt(java.time.LocalDateTime.now());
+            int result = crewBoardService.updateComment(comment);
+            mv.setViewName("redirect:/crew/post/" + postId);
+        }
+        return mv;
+    }
+
+    // 댓글 삭제
+    @PostMapping("/post/{postId}/comment/{commentId}/delete")
+    public ModelAndView deleteComment(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @ModelAttribute CrewCommentDTO comment, @AuthenticationPrincipal AuthDetail userDetails, ModelAndView mv){
+        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
+            mv.addObject("message", "크루 게시글에 댓글 삭제는 해당 크루멤버만 가능합니다.  \n로그인해주세요.");
+            mv.setViewName("/auth/login");
+        }
+        else{
+            comment.setId(commentId);
+            int result = crewBoardService.deleteComment(comment);
+            mv.setViewName("redirect:/crew/post/" + postId);
+        }
+        return mv;
+    }
+
+    // 좋아요(하트) 증가 API (컨트롤러에서 AJAX 요청을 받아 좋아요 증가 처리)
+    @PostMapping("/{postId}/heart")
+    public ResponseEntity<String> toggleHeart(@PathVariable("postId") int postId, @AuthenticationPrincipal AuthDetail userDetails) {
+        Integer userId = userDetails.getLoginUserDTO().getId();
+        crewBoardService.toggleLike(postId, userId); // 좋아요 추가/취소 처리
+        return ResponseEntity.ok("Heart toggled");
+    }
+
 
     // 크루게시판 글 작성 (권한 확인)
     @GetMapping("/writepost")
@@ -110,6 +185,7 @@ public class CrewController {
             if(Objects.isNull(crewService.hasCrew(userDetails.getLoginUserDTO().getId()))){
                 mv.setViewName("redirect:/crew/crewlist");
             }else {
+                mv.addObject("role", userDetails.getLoginUserDTO().getUserRole());
                 mv.addObject("nickname", userDetails.getLoginUserDTO().getNickname());
                 mv.setViewName("crew/crewBoardWritePost");
             }
@@ -143,18 +219,17 @@ public class CrewController {
         if (result == 0) {
             String message = "등록 실패";
         }
-
-        return "redirect:/crew/home";
+        int postId = crewBoardService.getJustAddedPostById(id);
+        return "redirect:/crew/post/" + postId;
     }
 
-
-
-
     @GetMapping("/updatepost/{id}")
-    public ModelAndView updatePost(@PathVariable int id, ModelAndView mv) {
+    public ModelAndView updatePost(@PathVariable int id, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
         CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
         System.out.println(crewBoardDTO);
         mv.addObject("crewBoardDTO", crewBoardDTO);
+        mv.addObject("role", userDetails.getLoginUserDTO().getUserRole());
+        mv.addObject("nickname", userDetails.getLoginUserDTO().getNickname());
         mv.setViewName("crew/crewBoardUpdatePost");
         return mv;
     }
@@ -163,17 +238,8 @@ public class CrewController {
     public String updatePost(@PathVariable int id, CrewBoardDTO crewBoardDTO, ModelAndView mv) {
         crewBoardDTO.setId(id);
         int result = crewBoardService.updatePostById(crewBoardDTO);
-        return "redirect:/crew/updatedpost?id=" + id;
+        return "redirect:/crew/post/" + id;
     }
-
-    @GetMapping("/updatedpost")
-    public ModelAndView updatedpost(@RequestParam int id, ModelAndView mv) {
-        CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
-        mv.addObject("boardDTO", crewBoardDTO);
-        mv.setViewName("crew/crewBoardList");
-        return mv;
-    }
-
 
 
 
