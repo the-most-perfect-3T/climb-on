@@ -66,9 +66,6 @@
                 <li role="presentation">
                     <button class="position-relative" id="member-tab"  data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false">
                         <div class="position-relative">
-                            <!--<th:block th:unless="${newCrewApplyInfoList == null or #lists.isEmpty(newCrewApplyInfoList)}">
-                                <span th:text="${newCrewApplyInfoList.size()}" class="notice-count position-absolute rounded-circle">1</span>
-                            </th:block>-->
                         </div>
                         <span>
                             멤버
@@ -97,6 +94,7 @@
     </div>
 
     <th:block th:replace="~{crew/myCrew/crewApplyModal :: crewApplyModalFragment}"></th:block>
+    <th:block th:replace="~{crew/myCrew/crewApplyConfirmModal :: crewApplyConfirmModalFragment}"></th:block>
 
 </th:block>
 

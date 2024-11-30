@@ -54,13 +54,74 @@ memberTabBtn.addEventListener('click', async function() {
             throw new Error("서버 오류: " + response.status);
         }
         const data = await response.json();
+
         const memberListContainer = document.getElementById("memberList-container");
         memberListContainer.innerHTML = "";
 
-        data.forEach((member) => {
+        if(data.crewApplys != null){
+            data.crewApplys.forEach((newApply) => {
             const memberTr = document.createElement('tr');
             memberTr.classList.add('border-bottom');
             memberTr.innerHTML = `
+            <td class="member-row">
+              <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
+                <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                  <img src="${newApply.profilePic}" alt="/images/logo.svg" class="w-100 userModalOpen" data-id=${newApply.userCode}>
+                </div>
+              </div>          
+            </td>
+            <td>
+              <p class="mb-1 fw-bold userModalOpen" data-id="${newApply.userCode}">${newApply.nickname}</p>
+            </td>   
+            <td>
+              <div class="badge rounded-pill">NEW</div>
+            </td>
+            <td>
+              <div class="text-center">
+                <button type="button" class="btn px-4 py-2 fw-bold" id="crew-apply-confirm" 
+                style="display: ${newApply.isPermission === false? "" : "none"}"
+                data-bs-toggle="modal" data-bs-target="#crewApplyConfirmModal" data-id="${newApply.userCode}">
+                가입확인
+                </button>
+                <button type="button" class="btn px-5 py-2 fw-bold" id="crew-apply-confirm-modal-open" 
+                style="display: ${newApply.isPermission === true? "" : "none"}"
+                data-id="${newApply.userCode}">
+                가입승인/거절
+                </button>
+              </div>
+            </td>                     
+            `
+                memberListContainer.appendChild(memberTr);
+            });
+
+            data.memberList.forEach((member) => {
+                const memberTr = document.createElement('tr');
+                memberTr.classList.add('border-bottom');
+                memberTr.innerHTML = `
+            <td class="member-row">
+              <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
+                <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                  <img src="${member.profilePic}" alt="/images/logo.svg" class="w-100 userModalOpen" data-id=${member.id}>
+                </div>
+              </div>          
+            </td>
+            <td>
+              <p class="mb-1 fw-bold userModalOpen" data-id="${member.id}">${member.nickname}</p>
+            </td>   
+            <td>
+              <div class="badge rounded-pill" style="display: ${member.role === 'CAPTAIN'? "" : "none" }">크루장</div>
+            </td>                     
+            `
+                memberListContainer.appendChild(memberTr);
+            });
+            await openUserModal();
+            await openCrewApplyConfirmModal();
+        }
+        else{
+            data.forEach((member) => {
+                const memberTr = document.createElement('tr');
+                memberTr.classList.add('border-bottom');
+                memberTr.innerHTML = `
             <td class="member-row">
               <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
                 <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
@@ -75,9 +136,10 @@ memberTabBtn.addEventListener('click', async function() {
               <div class="badge rounded-pill" style="display: ${member.role == 'CAPTAIN'? "" : "none" }">크루장</div>
             </td>                     
             `
-            memberListContainer.appendChild(memberTr);
-        });
-        await openUserModal();
+                memberListContainer.appendChild(memberTr);
+            });
+            await openUserModal();
+        }
     } catch (error) {
         console.error("AJAX 오류:", error);
     }
@@ -152,7 +214,6 @@ function setParticipateBtnEvent (){
 }
 
 /* 타유저 프로필 모달 */
-
 async function openUserModal() {
     const userModalOpen = document.querySelectorAll(".userModalOpen");
     if(userModalOpen){
@@ -167,7 +228,6 @@ async function openUserModal() {
                     console.error("Invalid userId:", userId);
                     return; // 유효하지 않은 경우 요청 중단
                 }
-                console.log("userId", userId);
 
                 fetch(`/user/${userId}`) // 서버의 요청 URL
                     .then(response => {
@@ -177,10 +237,8 @@ async function openUserModal() {
                         return response.json(); // JSON 데이터를 기대
                     })
                     .then(data => {
-                        console.log("data", data);
                         // 서버에서 받은 데이터로 모달 내용 채우기
                         const userViewModal = document.getElementById("userViewModal");
-                        console.log(userViewModal.querySelector(".top .img-wrap img"));
                         userViewModal.querySelector(".top .img-wrap img").setAttribute("src", data.user.profilePic);
                         userViewModal.querySelector(".top .nickname").textContent = data.user.nickname;
                         userViewModal.querySelector(".top .one-liner").textContent = data.user.oneLiner != null ? data.user.oneLiner : "한줄 소개가 없습니다.";
@@ -262,3 +320,32 @@ const crewApplyBtn = document.querySelector('.crew-join-apply');
 
 /*========================크루 가입 모달========================*/
 
+/*========================크루 가입 확인 모달========================*/
+async function openCrewApplyConfirmModal() {
+    const crewApplyConfirmModalOpen = document.getElementById("crew-apply-confirm-modal-open");
+    crewApplyConfirmModalOpen.addEventListener("click", function (e){
+        const userId = parseInt(e.target.getAttribute("data-id"));
+        fetch(`/mycrew/member/newApply/${userId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                return response.json(); // JSON 데이터를 기대
+            })
+            .then(data => {
+                const crewApplyConfirmModal = document.getElementById("crew-apply-confirm-modal");
+                crewApplyConfirmModal.querySelector(".modal-body .left .name").textContent = data.nickname;
+                crewApplyConfirmModal.querySelector(".modal-body .crewApplyContent").textContent = data.content;
+                crewApplyConfirmModal.querySelector(".modal-body #input").value = data.userCode;
+                console.log(data.userCode);
+                console.log(data.nickname);
+                console.log(data.content);
+                const modal = new bootstrap.Modal(document.getElementById('crew-apply-confirm-modal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error("에러 발생:", error);
+            });
+    })
+
+}
