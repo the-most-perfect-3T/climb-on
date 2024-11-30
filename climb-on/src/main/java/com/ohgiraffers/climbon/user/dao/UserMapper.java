@@ -46,7 +46,7 @@ public interface UserMapper {
 
     List<NoticeDTO> selectBusinessNotice(Integer id);
 
-    int deleteUserNotice(int userCode);
+    int deleteUserNotice(int userCode, int category);
 
     int deleteBusinessNotice(int userCode);
 
@@ -55,6 +55,7 @@ public interface UserMapper {
     List<NoticeDTO> selectUserNotice(Integer id);
 
     int updateFacility(UserDTO user);
+
 
     /*int findCrewCodeById(Integer );*/
 }
