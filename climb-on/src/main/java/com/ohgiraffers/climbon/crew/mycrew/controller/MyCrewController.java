@@ -181,27 +181,37 @@ public class MyCrewController
         System.out.println(userCode);
         System.out.println(isApproval);
 
+        String alertMessage = "크루 가입 신청을 거절 하였습니다.";
+        // 크루코드 찾기
         CrewApplyDTO crewApplyDTO = myCrewService.getCrewApplyContent(userCode);
         int crewCode = crewApplyDTO.getCrewCode();
-        // 크루 신청 결과 업데이트(승인/거절)
-        int updateResult = myCrewService.updateCrewApplyResult(userCode, isApproval);
-        // user_notice에 넣어줄 알림 카테고리
-        int category = 3;
-        String alertMessage = "크루 가입 신청을 거절 하였습니다.";
+        if(isApproval == 1 || isApproval == 2){
+            // 크루 신청 결과 업데이트(승인/거절)
+            int updateResult = myCrewService.updateCrewApplyResult(userCode, isApproval);
+            // user_notice에 넣어줄 알림 카테고리
+            int category = 3;
 
-        // user_crew insert(크루 가입)
-        if(isApproval == 2){
-            category = 2;
-            UserCrewDTO newMember = new UserCrewDTO();
-            newMember.setUserCode(userCode);
-            newMember.setCrewCode(crewCode);
-            newMember.setRole(CrewRole.MEMBER);
-            myCrewService.crewMemberInsert(newMember);
-            alertMessage = "크루 가입 신청을 승인 하였습니다.";
+            // user_crew insert(크루 가입)
+            if(isApproval == 2){
+                category = 2;
+                UserCrewDTO newMember = new UserCrewDTO();
+                newMember.setUserCode(userCode);
+                newMember.setCrewCode(crewCode);
+                newMember.setRole(CrewRole.MEMBER);
+                myCrewService.crewMemberInsert(newMember);
+                alertMessage = "크루 가입 신청을 승인 하였습니다.";
+            }
+            // 유저 알림
+            myCrewService.alertUser(userCode, category);
+            redirectAttributes.addFlashAttribute("alertMessage", alertMessage);
         }
-        // 유저 알림
-        myCrewService.alertUser(userCode, category);
-        redirectAttributes.addFlashAttribute("alertMessage", alertMessage);
+        else if(isApproval == 3){
+            int approved = 2;
+            int updateResult = myCrewService.updateCrewApplyResult(userCode, approved);
+            alertMessage = "크루 가입이 확인 되었습니다.";
+            redirectAttributes.addFlashAttribute("alertMessage", alertMessage);
+        }
+
         mv.setViewName("redirect:/crew/myCrew/" + crewCode);
         return mv;
     }

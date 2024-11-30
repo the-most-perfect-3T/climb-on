@@ -6,6 +6,9 @@ import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.*;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewBoardService;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewService;
+import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
+import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
 import com.ohgiraffers.climbon.user.service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,10 @@ public class CrewController {
 
     @Autowired
     CrewService crewService;
+
+    @Autowired
+    MyCrewService myCrewService;
+
     @Autowired
     private UserService userService;
 
@@ -185,7 +192,12 @@ public class CrewController {
             if(Objects.isNull(crewService.hasCrew(userDetails.getLoginUserDTO().getId()))){
                 mv.setViewName("redirect:/crew/crewlist");
             }else {
+                UserCrewDTO userCrewDTO = myCrewService.getMyCrewCodeAndRole(userDetails.getLoginUserDTO().getId());
+                CrewRole role = userCrewDTO.getRole();
+                String crewRole = role.getRole();
+
                 mv.addObject("role", userDetails.getLoginUserDTO().getUserRole());
+                mv.addObject("crewRole", crewRole);
                 mv.addObject("nickname", userDetails.getLoginUserDTO().getNickname());
                 mv.setViewName("crew/crewBoardWritePost");
             }
@@ -226,7 +238,11 @@ public class CrewController {
     @GetMapping("/updatepost/{id}")
     public ModelAndView updatePost(@PathVariable int id, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
         CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
-        System.out.println(crewBoardDTO);
+        UserCrewDTO userCrewDTO = myCrewService.getMyCrewCodeAndRole(userDetails.getLoginUserDTO().getId());
+        CrewRole role = userCrewDTO.getRole();
+        String crewRole = role.getRole();
+
+        mv.addObject("crewRole", crewRole);
         mv.addObject("crewBoardDTO", crewBoardDTO);
         mv.addObject("role", userDetails.getLoginUserDTO().getUserRole());
         mv.addObject("nickname", userDetails.getLoginUserDTO().getNickname());
