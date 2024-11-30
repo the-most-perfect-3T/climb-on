@@ -16,13 +16,12 @@ const quill = new Quill('#editor', {
 
 const content = document.getElementById('hiddenContent').value;
 quill.clipboard.dangerouslyPasteHTML(content);
-
+//
 
 // file upload 시에 필요한 객체 미리 생성
 
 const imageFileMap = new Map();
 const hiddenImgUrlInput = document.getElementById("hidden_imgURL_input");
-
 
 
 // textEditor 는 div에 구현되어 form 태그에 속해 있어도 submit 시 dto에 담기지 않는다.

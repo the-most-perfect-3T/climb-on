@@ -194,6 +194,7 @@
     color: var(--darkGray);
 }
 
+
 /* 댓글 작성 */
 .comment-section {
     margin-top: 20px;
@@ -225,6 +226,7 @@
     display: flex;
     justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
 }
+
 
 .submit-comment {
     padding: 8px 40px;

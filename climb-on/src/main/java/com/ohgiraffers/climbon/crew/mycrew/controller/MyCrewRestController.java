@@ -3,6 +3,8 @@ package com.ohgiraffers.climbon.crew.mycrew.controller;
 import com.ohgiraffers.climbon.auth.model.AuthDetail;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
@@ -31,6 +33,13 @@ public class MyCrewRestController {
     @GetMapping("/member/{crewCode}")
     public ResponseEntity<Object> showMemberList(@PathVariable("crewCode") int crewCode, @AuthenticationPrincipal AuthDetail userDetails) {
         List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(crewCode);
+
+        /*//role이 CAPTAIN일시 크루 가입신청이 있는지 확인
+        if(userCrewDTO.getRole().equals(CrewRole.CAPTAIN)){
+            List<CrewApplyWithUserInfoDTO> crewApplyWithUserInfoDTO = myCrewService.getNewCrewApplyContentByCrewCode(myCrew.getId());
+            mv.addObject("newCrewApplyInfoList", crewApplyWithUserInfoDTO);
+            System.out.println(crewApplyWithUserInfoDTO);
+        }*/
         return ResponseEntity.ok(memberList);
     }
 

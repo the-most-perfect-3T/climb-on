@@ -287,6 +287,9 @@ public class UserService {
         return result;
     }
 
-
-
+    /**크루코드 가져오기*/
+    /*public int findCrewCodeById(Integer key) {
+        int crewCode = userMapper.findCrewCodeById(key);
+        return crewCode;
+    }*/
 }

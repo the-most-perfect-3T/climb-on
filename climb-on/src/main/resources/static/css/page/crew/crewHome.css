@@ -155,7 +155,7 @@ h2 {
     gap: 10px; /* 검색창과 버튼 사이 간격 */
 }
 
-.search-bar input[type="text"] {
+.search-bar input[type="search"] {
     border: 1px solid #ddd;
     border-radius: 20px;
     padding: 8px 15px;
@@ -420,39 +420,72 @@ h2 {
 }
 
 
-/* 페이지네이션 스타일 */
+/* 페이지네이션 전체 스타일 */
 .pagination {
     display: flex;
     justify-content: center;
-    align-items: center; /* 수직 중앙 정렬 */
+    align-items: center;
+    gap: 10px;
     margin-top: 20px;
     padding: 20px 0;
 }
 
+/* 페이지네이션 리스트 */
 .pagination ul {
     list-style: none;
     display: flex;
-    gap: 10px;
+    gap: 5px; /* 버튼 간격 조정 */
     padding: 0;
 }
 
+/* 페이지네이션 링크 버튼 스타일 */
 .pagination a {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; /* 버튼 크기 */
+    height: 36px;
+    border: none;
     text-decoration: none;
-    color: #333;
-    border-radius: 5px; /* 페이지네이션 버튼에 둥근 모서리 추가 */
-    transition: background-color 0.2s;
+    color: var(--black); /* 기본 텍스트 색상 */
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.pagination a:hover {
-    background-color: #f1f1f1;
+.pagination i {
+    display: flex;
+    width: 50px; /* 버튼 크기 */
+    height: 36px;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #ffffff; /* 기본 텍스트 색상 */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border: 1px solid var(--black);
+    border-radius: 50%;
+    background-color: var(--black);
 }
 
+.pagination a.disabled i {
+    pointer-events: none; /* 클릭 비활성화 */
+    color: #ffffff; !important;/* 텍스트 색상 변경 */
+    border-color: #DEE2E6;
+    cursor: not-allowed; /* 비활성화 커서 */
+    border-radius: 50%;
+    background-color:#DEE2E6 !important;
+}
+
+
+.pagination a.disabled {
+    pointer-events: none; /* 클릭 비활성화 */
+}
+
+
+
+/* 활성화된 페이지 버튼 스타일 */
 .pagination .active {
-    background-color: var(--point);
-    color: white;
+    font-weight: bold; /* 글가 굵기 설정*/
 }
+
 
 footer {
     text-align: center;

@@ -60,7 +60,6 @@ public class PostController {
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
 
-
         // '전체' 카테고리를 처리
         if ("전체".equals(category)) {
             category = null; // null로 설정하여 MyBatis에서 필터 무시
@@ -129,7 +128,7 @@ public class PostController {
         PostDTO post = new PostDTO();
         post.setCategory(category);
         model.addAttribute("role", userRole); // 역할을 모델에 추가
-        model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
+        model.addAttribute("post", post); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
         // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
         return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
     }
@@ -220,6 +219,7 @@ public class PostController {
     @PostMapping("/{id}/edit")
     public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous){
         post.setId(id);
+        System.out.println(post);
         post.setAnonymous(isAnonymous);  // 수정 폼에도 따로 html에서의 isAnonymous값을 가져와야 하므로 여기서 set을 해준다! 다른 PostDTO들은 ModelAttribute로 받음
         postService.updatePost(post);
         return "redirect:/community/" + id;
@@ -230,6 +230,8 @@ public class PostController {
     public String modifyPostForm(@PathVariable Integer id, Model model, Principal principal){
         Integer userId = postService.getUserIdByUserName(principal.getName());
         PostDTO post = postService.getPostById(id, userId);
+        String userRole = postService.getUserRoleById(userId);
+        model.addAttribute("role", userRole); // 역할을 모델에 추가
         model.addAttribute("post", post); // 가져온 PostDTO 객체를 "post"라는 이름으로 뷰에 전달 (그래서 게시글페이지에서 PostDTO 들의 필드값들을 볼 수 있다.)
         return "community/communityPostForm"; // 수정용 폼으로 반환
     }
@@ -254,7 +256,7 @@ public class PostController {
         Integer userId = postService.getUserIdByUserName(principal.getName());
 
         // 2. user_id로 users 테이블의 닉네임 갖오기
-        String userNickname = postService.getUserNicknameById(userId); // userId를 가져오는 메소드
+//        String userNickname = postService.getUserNicknameById(userId); // userId를 가져오는 메소드
 
         CommentDTO comment = new CommentDTO();
         comment.setPostId(postId);
@@ -262,7 +264,7 @@ public class PostController {
         comment.setContent(content);
 
         // 4. 모델에 닉네임 추가 (ex: 페이지 리다이렉트 전 표시)
-        model.addAttribute("userNickname", userNickname);
+//        model.addAttribute("userNickname", userNickname);
 
         postService.insertComment(comment); // 댓글 추가
         return "redirect:/community/" + postId;
