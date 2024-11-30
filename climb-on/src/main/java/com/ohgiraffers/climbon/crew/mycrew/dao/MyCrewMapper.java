@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.crew.mycrew.dao;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
@@ -41,4 +42,6 @@ public interface MyCrewMapper
     int updateCrewApplyResult(int userCode, int isApproval);
 
     void alertUser(int userCode, int category);
+
+    List<CrewPostDTO> getCrewPostsList(int crewCode);
 }
