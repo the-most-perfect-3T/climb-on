@@ -319,6 +319,53 @@
     border-bottom: none;
 }
 
+/* 승인/거절 모달*/
+.custom-confirm-modal-width {
+    max-width: 700px;
+    width: 100%;
+}
+
+.applicantName {
+    font-size: 20px;
+}
+
+.applicantName .name {
+    font-weight: bold;
+}
+
+.modal-body .crewApplyContent {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.modal-body form .d-flex {
+    justify-content: space-between;
+}
+
+.modal-body .btn-approval {
+    background-color: var(--point);
+    color: white;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.modal-body .btn-refusal {
+    background-color: var(--gray);
+    color: white;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.modal-body .btn-confirm {
+    background-color: var(--point);
+    color: white;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+}
+
 
 /* 가입 모달 */
 .custom-modal-width {
@@ -355,6 +402,7 @@
 .modal-body .middle .middle-left {
     align-self: center;
     text-align: center;
+    margin-left: 25px;
 }
 
 .modal-body .middle .middle-left .position-relative {
@@ -410,7 +458,6 @@
     margin-bottom: 40px;
 }
 
-  
 /* 크루 소식 */
 #crew-posts-container .post-container{
     height: 100%;
@@ -461,7 +508,7 @@
 }
 
 #crew-posts-container .post-container .post-footer .fa-solid,
-#crew-posts-container .post-container .post-footer .fa-regular{
+#crew-posts-container .post-container .post-footer .fa-regular {
     color: var(--point);
     font-size: 14px;
 }
