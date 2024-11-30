@@ -4,7 +4,7 @@
 }
 
 .bottom-container{
-    margin: 30px;
+    margin: 30px 50px;
 }
 
 /* 게시글 제목 및 작성자 정보 */
@@ -12,7 +12,8 @@
     display: flex;
     flex-direction: column; /* 제목과 나머지 정보를 세로로 배치 */
     border-bottom: 2px solid var(--borderColor);
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
+    padding: 0 50px 30px 50px;
     margin-bottom: 10px;
 }
 
@@ -90,7 +91,8 @@
 .event-period {
     font-size: 12px;
     color: #666;
-    padding-bottom : 10px;
+    /*padding-bottom : 10px;*/
+    padding: 0 50px 10px 50px;
     border-bottom: 1px solid var(--borderColor);
 }
 
@@ -102,10 +104,11 @@
 
 /* 게시글 내용 */
 .post-content {
-    margin-top: 30px;
+    margin-top: 60px;
     line-height: 1.6;
     border-bottom: 1px solid var(--borderColor);
-    padding-bottom: 30px;
+    /*padding-bottom: 30px;*/
+    padding: 0 50px 60px 50px;
 }
 
 .post-content .post-image img {
@@ -126,7 +129,6 @@
     justify-content: space-between; /* 왼쪽 정렬 */
     align-items: center;
     gap: 15px; /* 아이템 간 간격 */
-    padding-top: 10px;
     color : var(--darkGray);
 }
 
@@ -238,7 +240,6 @@
 /* 댓글 목록 전체 스타일 */
 .comment-list {
     margin-top: 20px;
-    border-top: 1px solid var(--borderColor);
     padding-top: 15px;
 }
 
@@ -247,9 +248,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     border-bottom: 1px solid var(--borderColor);
-    padding-bottom: 15px;
+
+    padding: 15px;
     position: relative; /* 햄버거 메뉴 위치를 위한 설정 */
 }
 
@@ -376,12 +378,13 @@
 
 /* 목록으로 돌아가기 버튼 */
 .back-button {
-    margin-top: 25px; /* 이전글/다음글과의 간격 줄이기 */
+    margin-top: 40px; /* 이전글/다음글과의 간격 줄이기 */
     text-align: center;
-    padding: 10px 0; /* 내부 간격 최소화 */
 }
 
 .back-button button {
+    width: 140px;
+    height: 50px;
     padding: 10px 20px;
     font-size: 1em;
     color: white;
@@ -403,7 +406,7 @@
     align-items: center;
     font-size: 14px;
     color: #333;
-    padding: 10px 0; /* 위아래 여백 */
+    padding: 15px; /* 위아래 여백 */
     border-bottom: 1px solid var(--borderColor); /* 항목 간 구분선 */
 }
 
