@@ -536,22 +536,4 @@ public class UserController {
     }
 
 
-/*    @GetMapping("board")
-    public ModelAndView selectBoardList(ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
-        // 로그인 정보 없으면
-        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
-            mv.addObject("message", "로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
-            mv.setViewName("/auth/login");
-            return mv;
-        }
-
-        // 유저 pk
-        Integer key = userDetails.getLoginUserDTO().getId();
-
-        List<PostDTO> boardList = userService.selectBoardList(key);
-        mv.addObject("generalPosts", boardList);
-        mv.addObject("board", "board request");
-        mv.setViewName("mypage/home");
-        return mv;
-    }*/
 }

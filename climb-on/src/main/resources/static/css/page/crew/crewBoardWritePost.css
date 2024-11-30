@@ -77,7 +77,7 @@
 }
 
 /* Buttons styling */
-.btn {
+.button {
     padding: 0.8rem 2rem;
     font-size: 1rem;
     border-radius: 5px;
@@ -94,13 +94,6 @@
     color: var(--black);
 }
 
-.btn:hover {
-    background-color: #b54a02;
-}
-
-.btn:active {
-    background-color: #993d00;
-}
 
 
 .section .inner .content .form .input-wrap .alert {
