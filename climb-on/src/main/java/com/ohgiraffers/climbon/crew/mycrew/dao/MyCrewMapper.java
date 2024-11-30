@@ -37,5 +37,11 @@ public interface MyCrewMapper
 
     List<CrewApplyWithUserInfoDTO> getNewCrewApplyContentByCrewCode(int crewCode);
 
+    CrewApplyWithUserInfoDTO getCrewApplyWithUserInfo(int userId);
+
+    int updateCrewApplyResult(int userCode, int isApproval);
+
+    void alertUser(int userCode, int category);
+
     List<CrewPostDTO> getCrewPostsList(int crewCode);
 }

@@ -586,7 +586,7 @@ footer {
 .crew-home-events-shower .crew-activity-event-item .crew-event-crewname {
     margin: 0;
     font-size: 16px;
-    color: var(--subColor2);
+    color: var(--darkGray);
     padding: 0 40px;
 }
 

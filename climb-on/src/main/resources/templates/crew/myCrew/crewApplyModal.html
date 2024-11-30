@@ -6,48 +6,57 @@
 <th:block th:fragment="crewApplyModalFragment">
     <div class="modal fade" id="crewApplyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="crewApplyModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered custom-modal-width">
-            <div class="modal-content p-4">
+            <div class="modal-content">
                 <!-- Modal Header -->
-                <div class="modal-header border-0">
+                <div class="modal-header border-0 mb-5">
                     <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <!-- Modal Body -->
-                <div class="modal-body">
-                    <h1 class="w-100 text-center fw-bold mb-1">함께 성장하는 크루 커뮤니티</h1>
-                    <p class="w-100 text-center text-muted mb-4">cli'mon에서 함께할 크루에 가입 해주세요!</p>
+                <div class="modal-body" style="width: 100%; padding: 0">
+                    <div class="top border-bottom">
+                        <h1 class="w-100 text-center fw-bold mb-1">함께 성장하는 크루 커뮤니티</h1>
+                        <p class="w-100 text-center text-muted mb-5">cli'mon에서 함께할 크루에 가입 해주세요!</p>
+                    </div>
+
+                    <div class="middle block1 border-bottom d-flex">
+                        <div class="middle-left">
+                            <div class="position-relative">
+                                <div class="img-wrap d-flex align-items-center justify-content-center">
+                                    <img th:src="${myCrew.imgUrl}" alt="/images/logo.svg" class="w-100">
+                                </div>
+                            </div>
+                            <span class="badge rounded-pill" th:if="${myCrew.recruitingStatus == true}">모집중</span>
+                            <span class="badge rounded-pill" th:text="${myCrew.permissionToJoin == true}? '가입 승인시 가입' : '신청시 바로 가입'">가입방식</span>
+                        </div>
+                        <div class="middle-right">
+                            <div class="crew-name" th:text="${myCrew.crewName}"></div>
+                            <div class="crew-descriptionInfo" th:text="${myCrew.description}"></div>
+                            <div class="crew-active-area" th:text="${myCrew.activeArea}"></div>
+                            <div class="crew-membercount" th:text="|회원 ${memberCount}명|"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="middle block2 border-bottom">
+                        <th:block th:switch="${myCrew.permissionToJoin}">
+                            <p th:case="true">본 크루는 가입 신청 후 크루장의 승인 후 가입이 완료됩니다. <br>아래 안내에 따라 가입 신청 폼을 작성해 주세요.</p>
+                            <p th:case="false">본 크루는 가입 신청시 바로 가입이 완료됩니다. <br>아래 안내에 따라 가입 신청 폼을 작성해 주세요.</p>
+                        </th:block>
+                    </div>
 
                     <form th:action="@{/crew/myCrew/crewApply/{crewCode}(crewCode=${myCrew.id})}" method="post" id="crewApplyForm">
 
-                        <!-- 크루 정보 -->
-                        <div class="mb-4">
-                            <div></div>
-                            <div>
-                                <div>크루명</div>
-                                <div>크루소개글</div>
-                                <div>활동지역</div>
-                                <div>회원수</div>
-                            </div>
+                        <div class="block3">
+                            <div class="fw-bold" th:text="|${myCrew.crewName} 크루 가입신청시 적어야 할 내용|"></div>
+                            <p class="text-muted">ex. 이름을 말해주세요. 나이를 적어주세요. 클라이밍 경력을 적어주세요.</p>
+<!--                            <small class="form-text text-muted"> <small id="crewIntroCount"></small> /160</small>-->
                         </div>
-
-                        <!-- 가입안내 -->
-                        <div></div>
-
-                        <!-- 가입 신청시 적어야 할 내용 안내 -->
-                        <div></div>
-
-                        <!-- 크루 소개글 Input -->
-                        <div class="mb-3">
-                            <label for="description" class="form-label fw-bold">
-                                <span class="text-danger">*</span>크루 소개글
-                            </label>
-                            <textarea id="description" name="content" class="form-control" rows="3" placeholder="내용을 입력해주세요 (최대 160자)" maxlength="160" required></textarea>
-                            <small class="form-text text-muted"> <small id="crewIntroCount"></small> /160</small>
-                        </div>
+                        <textarea id="crewApplyContentInput" name="content" class="form-control" rows="3" placeholder="내용을 입력해주세요 (최대 160자)" maxlength="160" required></textarea>
 
 
                         <div class="modal-footer justify-content-center border-0">
-                            <button type="submit" class="btn btn-orange px-5 py-2">등록하기</button>
+                            <button type="submit" class="btn px-5 py-2">가입신청</button>
                         </div>
                         <button type="reset" id="resetBtn" style="display: none"></button>
 

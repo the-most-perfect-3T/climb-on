@@ -51,7 +51,7 @@
 }
 
 .main-content h3{
-    color: #343A40;
+    color: var(--gray);
     font-size: 24px;
     font-weight: 700;
     text-align: center;
@@ -97,7 +97,7 @@
 }
 
 .main-event-container .main-event-list h5{
-    color: #222222;
+    color: var(--black);
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
@@ -253,10 +253,6 @@
 .community-container .popular-posts h5{
     font-weight: 600;
     margin-bottom: 30px;
-}
-
-.community-container .popular-list {
-    padding-left: 20px;
 }
 
 .community-container .popular-list ol{
