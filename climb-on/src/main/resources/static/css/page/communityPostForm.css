@@ -5,9 +5,8 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+.ql-editor.ql-blank p{
+    color: #fff;
 }
 
 .container {
@@ -72,8 +71,4 @@ h1 {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.form-actions button[type="button"] {
-    background-color: #aaa;
 }

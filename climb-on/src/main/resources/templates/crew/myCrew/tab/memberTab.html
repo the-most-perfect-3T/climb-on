@@ -5,7 +5,18 @@
 
 <th:block th:fragment="tabContFragment">
   <div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab">
-    멤버
+    <div class="container-list py-4">
+      <table class="table align-middle">
+        <thead class="d-none">
+          <th>크루 이미지, 모집여부</th>
+          <th>크루명, 활동지역</th>
+          <th>크루 소개글</th>
+        </thead>
+        <tbody id="memberList-container">
+
+        </tbody>
+      </table>
+    </div>
   </div>
 </th:block>
 </html>

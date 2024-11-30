@@ -6,8 +6,6 @@
     <link rel="stylesheet" th:href="@{/css/page/searchForm.css}">
 </th:block>
 
-
-
 <th:block layout:fragment="containerFragment">
     <div class="inner">
         <div class="headcontainer">
@@ -15,7 +13,7 @@
 
         <!-- 검색어 입력 폼 -->
         <form action="/search" method="get" class="head-search-form">
-            <input type="text" name="keyword" placeholder="검색어를 입력하세요" minlength="2" required
+            <input type="search" name="keyword" placeholder="검색어를 입력하세요" minlength="2" required
                    th:value="${keyword}" class="search-input">
             <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
@@ -24,56 +22,125 @@
         <!-- 검색 결과 영역 -->
         <div class="search-results">
         <!-- 크루 결과 -->
-        <section class="result-section">
+        <section class="result-crew">
             <h2>크루
             <span class="crewCount" th:text="${crewCount}">0</span>
+            <p class="slash" th:if="${crewCount == 0}">|</p>
+            <p class="no-result" th:if="${crewCount == 0}">검색 결과가 없습니다.</p>
             </h2>
-            <p class="no-result" th:if="${crewCount == 0}">결과가 없습니다.</p>
             <div class="crew-results" th:if="${crewCount > 0}">
-            <div th:each="crew : ${crewNames}">
-                <p th:text="${crew.crewName}"></p>
-                <div class="crew-thumbnail">
-
+            <div class="crew-item" th:each="crew : ${limitedCrewNames}">
+                <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                    <img th:src="${crew.imgUrl}" alt="/images/logo.svg" class="w-100">
                 </div>
-                <p class="crew-name" th:text="${crew.crewName}"></p>
+                <p th:text="${crew.crewName}"></p>
             </div>
             </div>
         </section>
 
         <!-- 시설 결과 -->
-        <section>
+        <section class="result-facility">
             <h2>운동시설
-            <span class="facilityCount" th:text="${facilitiesCount}">0</span>
+            <span class="facilityCount" th:text="${facilitiesCount != null ? facilitiesCount : 0}">0</span>
+            <p class="slash" th:if="${facilities.size()} == 0">|</p>
+            <p class="no-result" th:if="${facilities.size()} == 0">검색 결과가 없습니다.</p>
             </h2>
-            <p class="no-result" th:if="${facilitiesCount} == 0">결과가 없습니다.</p>
             <div class="facility-results" th:if="${facilitiesCount > 0}">
-            <div th:each="facility : ${limitedCommunityfacilities}">
-                <p th:text="${facility.facilityName} + ' - ' + ${facility.address}"></p>
+            <div th:each="facility : ${limitedfacilities}" class="facility-item">
+                <h3 th:text="${facility.facilityName}">시설이름</h3>
+                <p th:text="${facility.address}">시설 주소</p>
             </div>
             </div>
+            <button id="more-btn-facilities">더보기</button>
         </section>
 
         <!-- 게시글 결과 -->
-        <section class="result-section">
+        <section class="result-post">
             <h2>게시물
-            <span class="communityPostCount" th:text="${communityPostCount}">0</span>
+            <span class="communityPostCount" th:text="${communityPostCount != null ? communityPostCount : 0}">0</span>
+            <p class="slash" th:if="${communityPosts.size()} == 0">|</p>
+            <p class="no-result" th:if="${communityPosts.size()} == 0">검색 결과가 없습니다.</p>
             </h2>
-            <p class="no-result" th:if="${communityPosts.size()} == 0">결과가 없습니다.</p>
-            <div class="post-results" th:if="${communityPostCount > 0}">
-            <div th:each="post : ${communityPosts}">
-                <p th:utext="${post.title}"></p>
-                <p th:utext="${post.content}"></p>
+            <div th:each="post : ${limitedCommunityPosts}" class="card d-flex flex-row">
+                <div class="card-body">
+                    <div class="card-title">
+                        <a th:href="@{'/community/' + ${post.id}}">
+                            <span th:text="${post.title}">게시글 제목 예시</span>
+                        </a>
+                    </div>
+                    <div class="card-content line-clamp" th:text="${post.content}">게시글 내용 요약</div>
+                    <div class="card-meta">
+                        <span th:text="${post.displayName}">작성자</span>
+                        <span th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
+                        <i class="fa-solid fa-eye"></i><span th:text="${post.viewCount}">0</span>
+                        <i class="fa-regular fa-heart"></i><span th:text="${post.heartsCount}">0</span>
+                        <i class="fa-regular fa-comment-dots"></i><span th:text="${post.commentsCount}">0</span>
+                    </div>
+                </div>
+                <div class="thumbnail-wrapper" th:if="${post.imageUrl != null and post.imageUrl.length() > 0}">
+                    <img th:src="${post.imageUrl != null ? post.imageUrl : ''}" alt="Thumbnail" class="thumbnail">
+                </div>
             </div>
-            </div>
+            <button id="more-btn-post" onclick="loadMorePosts()">더보기</button>
         </section>
     </div>
     </div>
 
-
 </th:block>
 
+<th:block layout:fragment="javascript" th:inline="javascript">
+    <script>
+        let currentPostCount = 2; // 초기 개수
+        const maxPostCount = 5; // 최대 개수
+        const keyword = '[[${keyword}]]'; // Thymeleaf에서 검색어 가져오기
 
-<th:block layout:fragment="javascript">
+        function loadMorePosts() {
+            if (currentPostCount >= maxPostCount) {
+                alert("더 이상 데이터를 로드할 수 없습니다.");
+                return;
+            }
 
+            fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        // HTTP 상태 코드가 200이 아닌 경우 처리
+                        return response.text().then(text => {
+                            throw new Error(text || '데이터를 불러오는 중 오류가 발생했습니다.');
+                        });
+                    }
+                    return response.json(); // 성공하면 JSON 데이터를 반환
+                })
+                .then(data => {
+                    const postsContainer = document.querySelector(".result-post");
+                    if (data.length === 0) {
+                        alert("더 이상 로드할 게시물이 없습니다.");
+                        return;
+                    }
+                    data.forEach(post => {
+                        const postElement = `
+                        <div class="card d-flex flex-row">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <a href="/community/${post.id}">
+                                        <span>${post.title}</span>
+                                    </a>
+                                </div>
+                                <div class="card-content">${post.content}</div>
+                                <div class="card-meta">
+                                    <span>${post.displayName}</span>
+                                    <span>${post.updatedAt || post.createdAt}</span>
+                                </div>
+                            </div>
+                        </div>`;
+                        postsContainer.insertAdjacentHTML("beforeend", postElement);
+                    });
+                    currentPostCount += data.length;
+                })
+                .catch(error => {
+                    console.error('Error loading more posts:', error);
+                    alert(error.message); // 사용자에게 오류 메시지 표시
+                });
+        }
+    </script>
 </th:block>
 </html>

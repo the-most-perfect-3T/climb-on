@@ -31,6 +31,10 @@ public class ReviewsController {
     @GetMapping("/getReview")
     public ResponseEntity<ReviewDTO> getReviewById(@RequestParam Integer id, @AuthenticationPrincipal AuthDetail userDetails) {
         ReviewDTO review = reviewService.getReviewById(id);
+
+        if(userDetails == null || userDetails.getLoginUserDTO().getId() == null) {
+            return ResponseEntity.ok(review);
+        }
         Integer userId = userDetails.getLoginUserDTO().getId();
         Integer userorigin = review.getReviewerId();
         review.setUser(Objects.equals(userId, userorigin));
@@ -40,8 +44,19 @@ public class ReviewsController {
 
     @PostMapping("/getIsFavorite")
     public ResponseEntity<Integer> getIsFavorite(@RequestParam int id, @AuthenticationPrincipal AuthDetail userDetails) {
-        Integer userId = userDetails.getLoginUserDTO().getId();
-        Integer result = reviewService.getIsFavorite(id, userId);
+        Integer userId;
+        Integer result;
+        if(userDetails == null || userDetails.getLoginUserDTO().getId() == null) {
+            result = 0;
+        }
+        else{
+         userId = userDetails.getLoginUserDTO().getId();
+
+
+
+            result = reviewService.getIsFavorite(id, userId);
+        }
+
         System.out.println("여기맞지? = " + result);
         return ResponseEntity.ok(result);
     }
@@ -75,6 +90,9 @@ public class ReviewsController {
         } else{
             result = reviewService.reviewInsert(reviewDTO, userId);
         }
+        System.out.println("userId = " + userId);
+        System.out.println("result = " + result);
+        System.out.println(reviewDTO);
 
         // 리뷰 저장 후, 리뷰 목록 페이지로 리다이렉트
         return ResponseEntity.ok(result);

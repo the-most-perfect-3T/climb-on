@@ -26,6 +26,7 @@ public class EventService
 
     public boolean isUserInCrew(CrewEventDTO crewEventDTO) throws Exception
     {
+        System.out.println(crewEventDTO.getUserCode());
         int result = eventMapper.isUserInCrew(crewEventDTO);
         System.out.println("EventService isUserInTeam? : " + result);
         return result > 0 ? true : false;
@@ -66,4 +67,8 @@ public class EventService
         return eventMapper.getMainEvents(role);
     }
 
+    public List<EventDTO> getAllCrewsEvents()
+    {
+        return eventMapper.getAllCrewsEvents();
+    }
 }

@@ -45,13 +45,13 @@
 .main-content{
     flex-direction: column;
     justify-content: center;
-
+    padding-bottom: 150px;
     margin-top: 124px;
-    padding: 20px;
+    /*padding: 20px;*/
 }
 
 .main-content h3{
-    color: #343A40;
+    color: var(--gray);
     font-size: 24px;
     font-weight: 700;
     text-align: center;
@@ -77,13 +77,13 @@
     display: flex;
     width: 1106px;
     height: 700px;
-
+    justify-content: space-between;
     align-items: center;
     margin: 0 auto;
 }
 
 .main-event-container .main-events-section{
-    margin: 10px;
+    /*margin: 10px;*/
     width: 25%;
     height: 100%;
 }
@@ -91,16 +91,20 @@
 .main-event-container .main-event-list {
     background-color: #fff;
     height: 700px;
-    padding: 32px;
+    padding: 50px 32px;
     border: 1px solid #ddd;
     border-radius: 8px;
 }
 
 .main-event-container .main-event-list h5{
-    color: #222222;
+    color: var(--black);
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
+}
+
+.main-event-container .main-event-list li{
+    cursor: pointer;
 }
 
 .main-event-container .calendar-section {
@@ -125,13 +129,44 @@
     height: 500px;
 }
 
-.featured-locations .facility-item{
+.featured-locations .facility-item {
+    cursor: pointer;
     margin-right: 13px;
     width: 360px;
     height: 100%;
     background-color: #DEE2E6;
     border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px 23px 44px 12px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+.featured-locations .facility-item .rating {
+    color: #fff;
+    background: var(--point);
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.25);
+    padding: 5px 10px;
+    width: fit-content;
+}
+.featured-locations .facility-item .rating i {
+    margin-right: 5px;
+}
+.featured-locations .facility-item p {
+    text-align: right;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(72,60,51,0.5);
+    word-break: keep-all;
+}
+
+
 
 /* 커뮤니티 게시판 */
 .community-container{
@@ -142,42 +177,101 @@
     display: flex;
     margin: 28px auto auto;
     width: 1106px;
-    height: 500px;
+    /*height: 500px;*/
 }
 
 .community-container .community-posts-list{
     width: 832px;
-    height: 100%;
+    /*height: 100%;*/
     margin-right: 16px;
     border: 1px solid #DEE2E6;
     border-radius: 6px;
     padding: 58px;
 }
-
-.community-container #recent-posts{
-    width: 716px;
+.community-container .community-posts-list .nav {
+    margin-bottom: 20px;
+    border: none;
+}
+.community-container .community-posts-list .nav li {
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 10px;
+    padding: 10px 15px;
+}
+.community-container .community-posts-list .nav li button.active{
+    color: var(--point);
+    font-weight: 700;
+}
+.community-container .community-posts-list .nav li button {
+    padding: 0;
+    border: none;
+    color: var(--darkGray);
+}
+.community-container table {
+    width: 100%;
+    margin-bottom: 40px;
+}
+.community-container #recent-posts {
+    width: 100%;
+}
+.community-container #recent-posts td:first-of-type{
+    width: 9%;
+    color: #F6B321;
+    font-weight: 600;
+    text-align: center;
+}
+.community-container #recent-posts td:last-of-type{
+    padding-left: 20px;
+    padding-right: 10px;
+}
+.community-container #recent-posts td {
+    cursor: pointer;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--borderColor);
+    font-size: 14px;
 }
 
 .community-container .btn-more-posts{
     width: 717px;
-    height: 62px;
+    /*height: 62px;*/
+    padding: 15px 0;
     background-color: #FAEFDD;
-
-    font-size: 18px;
-    font-weight: 700;
+    border-radius: 6px;
+    /*font-size: 18px;*/
+    /*font-weight: 700;*/
+    font-weight: 600;
+    color: var(--darkGray);
 }
 
 .community-container .popular-posts{
     width: 258px;
-    height: 100%;
+    /*height: 100%;*/
     border: 1px solid #DEE2E6;
     border-radius: 6px;
-
-    padding-top: 52px;
-    padding-bottom: 52px;
-    padding-left: 30px;
+    padding: 52px 30px;
+}
+.community-container .popular-posts h5{
+    font-weight: 600;
+    margin-bottom: 30px;
 }
 
-.community-container .popular-lists{
-    display: flex;
+.community-container .popular-list ol{
+    counter-reset: item;
+    list-style-type: none;
+}
+
+.community-container .popular-list li {
+    display: block;
+}
+.community-container .popular-list li:before{
+    padding-left: 15px;
+    font-size: 14px;
+    color: var(--darkGray);
+}
+
+.community-container .popular-list li::marker {
+    font-weight: 600;
+}
+.community-container .popular-list li+ li {
+    margin-top: 10px;
 }

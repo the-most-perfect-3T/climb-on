@@ -124,6 +124,173 @@ button:disabled {
             }
         }
     }
+
+    .ongoing-news-item {
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .status-label{
+        color: #fff;
+    }
+
+    .more-button{
+        color: #fff;
+    }
+
+    .pinned-post{
+        color: #fff;
+        background-color: var(--darkBgBlack);
+        border-color: var(--darkBorderColor);
+    }
+
+    /* 다크 모드에서 sort-button 스타일 */
+    .dropdown .sort-button {
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    /* 다크 모드에서 pagination 스타일 */
+    .pagination a, .pagination i {
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .pagination a:hover, .pagination i:hover {
+        background-color: #fff;
+        color: #000;
+    }
+
+    input::placeholder{
+        color: #fff;
+    }
+
+    .category-buttons{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .author-name{
+        color: #fff;
+    }
+
+    .meta-info{
+        color: #fff;
+    }
+
+    .post-header{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .post-content{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .post-content p{
+        color: #fff;
+    }
+
+    #anonymous.form-check-input {
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor); /* 토글 상태에서도 텍스트 색상 유지 */
+    }
+
+    .card-body{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .card-title span{
+        color: #fff;
+    }
+
+    .card-content.line-clamp{
+        color: #fff;
+    }
+
+    .card-meta{
+        color: #fff;
+    }
+
+    .like{
+        color: #fff;
+    }
+
+    .comments-count{
+        color: #fff;
+    }
+
+    .share{
+        color: #fff;
+    }
+
+    textarea::placeholder{
+        color: #fff;
+    }
+
+    .prev-next-label{
+        color: #fff;
+    }
+
+    .prev-next-disabled{
+        color: #fff;
+    }
+
+    .headcontainer{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .slash{
+        color: #fff;
+    }
+
+    .no-result{
+        color: #fff;
+    }
+
+    .result-post h2{
+        color: #fff;
+    }
+
+    .result-facility h2{
+        color: #fff;
+    }
+
+    .result-crew h2{
+        color: #fff;
+    }
+
+    .crew-item p{
+        color: #fff;
+    }
+
+    .facility-item p{
+        color: #fff;
+    }
+
+    .search-input{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
+    .head-search-form{
+        background-color: var(--darkBgBlack);
+        color: #fff;
+        border-color: var(--darkBorderColor);
+    }
+
     .input-wrap-btn button {
         color: var(--black);
     }
@@ -145,6 +312,34 @@ button:disabled {
     #facilityModal .modal-body ul li .address {
         color: #fff;
     }
+    .section-mypage #commentsTab .section00 .comment-list .comment-wrap {
+        border-top-color: var(--bs-border-color);
+    }
+    .section-mypage #commentsTab .section00 .comment-list .author-info .meta-info{
+        color: #fff;
+    }
+    .section-mypage #board .section00 .card-list {
+        border-top-color: var(--bs-border-color);
+    }
+    .section-mypage #board .section00 .card-list .card-item .card-meta span.name {
+        color: var(--gray);
+    }
+    .main-content h4, .main-content h3 {
+        color: #fff;
+    }
+    .main-event-container .main-event-list {
+        background: var(--bs-body-bg);
+    }
+    .community-container .community-posts-list .nav li button {
+        color: #fff;
+    }
+    .community-container .popular-list li {
+        color: #fff;
+    }
+
+    .crew-tab-nav button.active span{
+        color: var(--point);
+    }
 }
 
 
@@ -153,9 +348,33 @@ button:disabled {
 /* content */
 .content {
     padding-top: var(--headerHeight);
+    min-width: 1440px;
 }
 
 .section-title {
     font-size: 24px;
     font-weight: 600;
+}
+
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--point) rgba(0,0,0,0);
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 20px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--point);
+    border-radius: 100%;
+    border: none;
 }

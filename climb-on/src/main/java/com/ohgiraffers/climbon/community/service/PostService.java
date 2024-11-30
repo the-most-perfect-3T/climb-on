@@ -3,6 +3,7 @@ package com.ohgiraffers.climbon.community.service;
 import com.ohgiraffers.climbon.community.dao.PostDAO;
 import com.ohgiraffers.climbon.community.dto.CommentDTO;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +12,7 @@ import javax.xml.stream.events.Comment;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -23,11 +21,14 @@ public class PostService {
     @Autowired
     private PostDAO postDAO;
 
-    // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다.
+    // 페이지와 카테고리에 따라 필터링된 게시글 목록을 가져온다. 아까워서둠 버리는코드
     public List<PostDTO> getPostsByPageAndCategoryAndSearch(int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
 
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
 
+        if (offset <= 0) {
+            offset = 1;
+        }
 
         // 1. 공지 게시글 (2개 고정)
         List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
@@ -44,6 +45,7 @@ public class PostService {
                 post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
             }
         }
+
         //4. 게시글 합치기
         List<PostDTO> allPosts = new ArrayList<>();
         allPosts.addAll(noticePosts);
@@ -57,6 +59,9 @@ public class PostService {
     public Map<String, List<PostDTO>> getPostsWithPinned(
             int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
         int offset = (page - 1) * pageSize;
+        if (offset <= 0) {
+            offset = 1;
+        }
 
         Map<String, List<PostDTO>> result = new HashMap<>();
 
@@ -89,6 +94,23 @@ public class PostService {
             // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
             String userNickname =  postDAO.getUserNicknameById(post.getUserId());
             post.setUserNickname(userNickname);
+
+            if ("소식".equals(post.getCategory())){
+                post.setDday(calculateDday(post.getEventStartDate(), post.getEventEndDate())); // D-Day 설정
+            }
+
+            String htmlContent = post.getContent();
+            String plainText = htmlContent.replaceAll("<[^>]*>", "");
+            post.setContent(plainText);
+
+            String images = post.getImageUrl();
+            String firstImage;
+            if(!Objects.isNull(images)){
+                firstImage = images.split(",")[0];
+            }else{
+                firstImage = "";
+            }
+            post.setImageUrl(firstImage);
         }
 
         return result;
@@ -141,12 +163,6 @@ public class PostService {
     }
 
     public void updatePost(PostDTO post) {
-        // 수정 시 이미지 URL이 존재하지 않을 경우 기존 값을 유지
-        PostDTO existingPost = postDAO.getPostById(post.getId());
-        if (post.getImageUrl() == null || post.getImageUrl().isEmpty()){
-            post.setImageUrl(existingPost.getImageUrl());
-        }
-
         postDAO.updatePost(post);
     }
 
@@ -222,5 +238,27 @@ public class PostService {
 
     public String getUserProfilePicById(Integer userId) {
         return postDAO.getUserProfilePicById(userId);
+    }
+
+    // 진행중 메소드
+    public Map<String, Object> getOngoingPosts() {
+
+        List<PostDTO> ongoingPosts = postDAO.getPostsByPageAndCategoryAndSearch(0, 100, "소식", null, "latest", "진행중", true);
+        int totalOngoingCount = ongoingPosts.size(); // 전체 진행 중 게시글 개수
+
+        // 최대 8개 반환
+        int ongoingPostsLimit = Math.min(8, ongoingPosts.size());
+        List<PostDTO> ongoingPostsLimited = ongoingPosts.subList(0, ongoingPostsLimit);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalOngoingCount", totalOngoingCount);
+        result.put("ongoingPostsLimited", ongoingPostsLimited);
+
+        return result;
+    }
+
+    public List<CommentDTO> getCommentsById(Integer id) {
+        List<CommentDTO> commentList = postDAO.getCommentsById(id);
+        return commentList;
     }
 }

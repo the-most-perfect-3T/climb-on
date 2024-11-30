@@ -15,15 +15,29 @@
     <div class="inner d-flex">
         <aside class="crew-aside">
             <div class="crew-info">
-                <div class="crew-profile-img"></div>
-                <h3>크루명</h3>
-                <span>멤버 n명</span>
+                <div class="crew-profile-img-wrapper">
+                    <img th:src="${myCrew.imgUrl}" alt="Thumbnail" class="thumbnail">
+                </div>
+                <div class="crewname-sns-container d-flex">
+                    <h3 th:text="${myCrew.crewName}">크루명</h3>
+                    <th:block th:if="${myCrew.crewSns != null && myCrew.crewSns.length() > 0}">
+                        <a th:href="|https://www.instagram.com/${myCrew.crewSns}/|" target="_blank">
+                            <img src="/images/instagram.png" alt="no insta?" class="insta-img">
+                        </a>
+                    </th:block>
+                </div>
+                <div class="crew-member-count-recruit-status-container">
+                    <span th:text="|회원 ${memberCount}명|">멤버 n명</span>
+                    <span class="badge rounded-pill" th:if="${myCrew.recruitingStatus == true}">모집중</span>
+                </div>
+                <div class="crew-description" th:text="${myCrew.description}">크루 소개글</div>
             </div>
 
             <!--사이드 내용-->
-
-            <button class="crew-join-apply">
-                <p>가입신청하기</p>
+            <button class="crew-join-apply" type="button" data-bs-toggle="modal" data-bs-target="#crewApplyModal"
+                    th:if="${isMyCrew == false && haveCrew == false}"
+                    th:disabled="${waitingForApproval}" >
+                <p th:text="${waitingForApproval? '가입승인 대기중' : '가입신청하기'}">가입신청하기</p>
             </button>
         </aside>
 
@@ -50,11 +64,21 @@
                     </button>
                 </li>
                 <li role="presentation">
-                    <button id="member-tab"  data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false">
-                        <span>멤버</span>
+                    <button class="position-relative" id="member-tab"  data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false">
+                        <div class="position-relative">
+                        </div>
+                        <span>
+                            멤버
+                        </span>
+                        <th:block th:unless="${newCrewApplyInfoList == null or #lists.isEmpty(newCrewApplyInfoList)}">
+                            <span th:text="${newCrewApplyInfoList.size()}" class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle">
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </th:block>
                     </button>
                 </li>
             </ul>
+            <div style="display: none" id="crewcode" th:data-crew-code="${myCrew.id}"></div>
 
             <div class="tab-content">
                 <th:block th:replace="~{/crew/myCrew/tab/homeTab :: tabContFragment}"></th:block>
@@ -69,6 +93,9 @@
 
     </div>
 
+    <th:block th:replace="~{crew/myCrew/crewApplyModal :: crewApplyModalFragment}"></th:block>
+    <th:block th:replace="~{crew/myCrew/crewApplyConfirmModal :: crewApplyConfirmModalFragment}"></th:block>
+
 </th:block>
 
 
@@ -82,6 +109,13 @@
         const message = [[${message}]];
         if(message){
             alert(message);
+        }
+    </script>
+
+    <script th:inline="javascript">
+        const alertMessage = [[${alertMessage}]];
+        if(alertMessage){
+            alert(alertMessage);
         }
     </script>
 </th:block>

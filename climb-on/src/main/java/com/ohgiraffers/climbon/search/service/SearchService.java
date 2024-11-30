@@ -19,6 +19,9 @@ public class SearchService {
     @Autowired
     private SearchDAO searchDAO;
 
+    @Autowired
+    private PostDAO postDAO;
+
 
     public Map<String, Object> searchAll(String keyword){
         // 커뮤니티 게시글 검색
@@ -30,6 +33,10 @@ public class SearchService {
         // 크루 검색
         List<CrewDTO> crewNames = searchDAO.searchCrewNames(keyword);
 
+        // 크루 제한 설정 (최대 5개만 반환)
+        int crewLimit = Math.min(5, crewNames.size());
+        List<CrewDTO> crewLimited = crewNames.subList(0, crewLimit);
+
         // 시설 제한 설정 (최대 3개만 반환)
         int facilitiesLimit = Math.min(3, facilities.size());
         List<FacilitiesDTO> facilitiesLimited = facilities.subList(0, facilitiesLimit);
@@ -38,16 +45,33 @@ public class SearchService {
         int postLimit = Math.min(2, communityPosts.size());
         List<PostDTO> limitedPosts = communityPosts.subList(0, postLimit);
 
-
         // 결과를 Map으로 묶어서 반환
         Map<String, Object> result = new HashMap<>();
         result.put("communityPosts", communityPosts); // 전체 게시글
         result.put("facilities", facilities);
         result.put("crewNames", crewNames);
-        result.put("limitedPosts", limitedPosts);  // 제한된 게시글
-        result.put("facilitiesLimited", facilitiesLimited);
+        // 제한된 게시글
+        result.put("limitedCrewNames", crewLimited);
+        result.put("limitedCommunityPosts", limitedPosts);
+        result.put("limitedfacilities", facilitiesLimited);
 
         return result;
+    }
+
+    public List<PostDTO> loadMoreCommunityPosts(String keyword, int currentCount, int limit) {
+        // 현재 개수와 limit에 맞게 데이터를 반환
+
+        List<PostDTO> posts = searchDAO.searchCommunityPostsPaged(keyword, currentCount, limit);
+        System.out.println("Service layer fetched posts: " + posts);
+        System.out.println(keyword);
+        System.out.println(currentCount);
+        System.out.println(limit);
+
+        return searchDAO.searchCommunityPostsPaged(keyword, currentCount, limit);
+    }
+
+    public String getUserNicknameById(Integer userId) {
+        return postDAO.getUserNicknameById(userId);
     }
 
 }

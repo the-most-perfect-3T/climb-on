@@ -35,12 +35,12 @@
     </div>
 
         <div class="inner">
-            <div class="role-test-convenient">
-                <!--유저 권한 별 테스트 위한 버튼-->
-                <button onclick="updateUserRole('ADMIN')">관리자</button>
-                <button onclick="updateUserRole('USER')">유저r</button>
-                <button onclick="updateUserRole('BUSINESS')">비즈니스</button>
-            </div>
+<!--            <div class="role-test-convenient">-->
+<!--                &lt;!&ndash;유저 권한 별 테스트 위한 버튼&ndash;&gt;-->
+<!--                <button onclick="updateUserRole('ADMIN')">관리자</button>-->
+<!--                <button onclick="updateUserRole('USER')">유저r</button>-->
+<!--                <button onclick="updateUserRole('BUSINESS')">비즈니스</button>-->
+<!--            </div>-->
 
             <div class="main-content">
 
@@ -52,13 +52,8 @@
                     <section class="main-events-section">
                         <div class="main-event-list">
                             <h5>대회 안내</h5>
-                            <ul>
+                            <ul class="notification-list" id="notifiEventList">
                                 <!--추후 처리 post category에서 어떻게 나뉘는지 더 생각해보고 ...-->
-                                <li>2024 여기에 이벤트 뿌려줘야 함</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li><hr/>
-                                <li>2024 스포츠 클라이밍 동호인 대회</li>
                             </ul>
                         </div>
                     </section>
@@ -69,19 +64,10 @@
 
                 <div class="featured-locations">
                     <h3>오늘의 암장</h3>
-                    <div class="facility-list">
-                        <div class="facility-item">
-                            <span class="rating"> 4.5</span>
-                            <p>더클라임 클라이밍 짐앤샵 신림점</p>
-                        </div>
-                        <div class="facility-item">
-                            <span class="rating"> 4.5</span>
-                            <p>뚝섬한강공원 인공암벽장</p>
-                        </div>
-                        <div class="facility-item">
-                            <span class="rating"> 4.5</span>
-                            <p>하이미디어학원</p>
-                        </div>
+                    <div class="facility-list" id="recommendedFacility">
+                    <!--시설 이미지 백그라운드로 !-->
+                    <!--<div class="facility-list" style="background-image: url('')">-->
+
                     </div>
                 </div>
 
@@ -108,15 +94,15 @@
                                <!-- 최근 포스트 6개 여기-->
                                </tbody>
                            </table>
-                           <button class="btn-more-posts">게시글 더 보기</button>
+                           <button class="btn-more-posts" onclick="window.location.href='/community'">게시글 더 보기</button>
                        </div>
 
-                       <div class="popular-posts">
+                       <ol class="popular-posts">
                            <h5>인기게시글</h5>
-                           <ol class="popular-list" id="popular-posts">
+                           <div class="popular-list" id="popular-posts">
                                <!-- 인기게시글 10개 여기 -->
-                           </ol>
-                       </div>
+                           </div>
+                       </ol>
                    </div>
                </div>
 

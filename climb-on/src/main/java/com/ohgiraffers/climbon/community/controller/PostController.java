@@ -12,14 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("/community")
@@ -38,17 +36,29 @@ public class PostController {
 
         int pageSize = 15;
 
-        // 일반 게시글
-        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+        // '진행중' 상태로 필터링
+        if ("소식".equals(category) && "진행중".equals(dday)){
+            category = "소식";
+            status = true; // 진행 중
+            dday = "진행중";
+        }
+
+//        // 일반 게시글 (처음에 이걸로 짰다가 안되서 다른걸 썼다.) (필요없는 코드인데 아까워서 둠)
+//        List<PostDTO> posts = postService.getPostsByPageAndCategoryAndSearch(page, pageSize, category, searchKeyword, sort, dday, status);
+
+//        for (PostDTO post : posts) {
+//            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
+//            String userNickname =  postService.getUserNicknameById(post.getUserId());
+//            post.setUserNickname(userNickname);
+//        }
+
+        // '진행 중' 게시글만 가져오기
+        Map<String, Object> ongoingPostsData = postService.getOngoingPosts();
+        List<PostDTO> ongoingPostsLimited = (List<PostDTO>) ongoingPostsData.get("ongoingPostsLimited");
+        int totalOngoingCount = (int) ongoingPostsData.get("totalOngoingCount");
 
         int totalPosts = postService.getTotalPostCount(category, searchKeyword); // 전체 게시글 수   //전체 게시글 수를 가져와 페이지수를 계산
         int totalPages = (int) Math.ceil((double) totalPosts / pageSize); // 전체 페이지 수 계산  //ceil 함수는 올림을 해줌
-
-        for (PostDTO post : posts) {
-            // 각 게시글의 userId를 사용해 닉네임 조회 후 설정
-            String userNickname =  postService.getUserNicknameById(post.getUserId());
-            post.setUserNickname(userNickname);
-        }
 
         // '전체' 카테고리를 처리
         if ("전체".equals(category)) {
@@ -58,11 +68,14 @@ public class PostController {
         Map<String, List<PostDTO>> postsWithPinned = postService.getPostsWithPinned(
                 page, pageSize, category, searchKeyword, sort, dday, status);
 
+
+        model.addAttribute("ongoingPosts", ongoingPostsLimited); // 진행 중 게시글 8개까지만 전달
+        model.addAttribute("moreOngoingPosts", totalOngoingCount); // 진행 중 게시글 8개이상
         model.addAttribute("pinnedNoticePosts", postsWithPinned.get("pinnedNoticePosts"));
         model.addAttribute("pinnedGuidePosts", postsWithPinned.get("pinnedGuidePosts"));
         model.addAttribute("generalPosts", postsWithPinned.get("generalPosts"));
 
-//        model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
+//      model.addAttribute("posts", posts);  // 뷰에 데이터 전달  (키, 객체)  //Thymeleaf는 ${키}로 입력하고 객체를 받음
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("category", category != null ? category : "전체");
@@ -86,11 +99,10 @@ public class PostController {
         String userProfilePic = postService.getUserProfilePicById(post.getUserId());
         post.setUserProfilePic(userProfilePic);
 
-        String commentUserNickname = postService.getUserNicknameById(userId);
-        String commentUserProfilePic = postService.getUserProfilePicById(userId);
-
         List<CommentDTO> comments = postService.getCommentsByPostId(id); // 댓글 목록 가져오기
         for (CommentDTO comment : comments) {
+            String commentUserNickname = postService.getUserNicknameById(comment.getUserId());
+            String commentUserProfilePic = postService.getUserProfilePicById(comment.getUserId());
             comment.setUserNickname(commentUserNickname);
             comment.setUserProfilePic(commentUserProfilePic);
         }
@@ -115,9 +127,9 @@ public class PostController {
         String userRole = postService.getUserRoleById(userId);
         PostDTO post = new PostDTO();
         post.setCategory(category);
-         model.addAttribute("role", userRole); // 역할을 모델에 추가
-         model.addAttribute("post", new PostDTO()); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
-            // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
+        model.addAttribute("role", userRole); // 역할을 모델에 추가
+        model.addAttribute("post", post); // 빈 PostDTO 객체 전달 // 이렇게 하면 post 객체에 category를 설정했지만, 모델에 post 대신 새로 생성된 빈 PostDTO 객체를 전달하고 있다.
+        // id를 null 값을 주기 위해 DTO에 자료형을 int 대신 integer를 썼다!
         return "community/communityPostForm"; // communityPostForm.html 템플릿 반환
     }
 
@@ -155,7 +167,6 @@ public class PostController {
         if (userNickname == null){
             throw new IllegalArgumentException("User Nickname not found for ID: " + userId);
         }
-
 
         // PostDTO에 userId와 nickname 설정
         post.setUserId(userId);      //Principal 객체를 통해 현재 로그인한 사용자의 ID 또는 username을 쉽게 가져올 수 있다. ※대신에 principal.getName은 로그인한 이메일주소(유저아이디)만 가져올 수 있다! ,로그인한 사용자에게만 특정 데이터를 보여주거나, 해당 사용자가 작성한 게시글 등을 처리할 수 있다. (이 객체는 세션 내에서 관리되기 때문에, 사용자 정보를 안전하게 다룰 수 있다.)
@@ -204,11 +215,11 @@ public class PostController {
 //        return "redirect:/community"; // 작성 후 게시글 목록으로 리다이렉트
 //    }
 
-
     // 게시글 수정 처리
     @PostMapping("/{id}/edit")
-    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous, Principal principal){
+    public String updatePost(@PathVariable Integer id, @ModelAttribute PostDTO post, @RequestParam("isAnonymous") boolean isAnonymous){
         post.setId(id);
+        System.out.println(post);
         post.setAnonymous(isAnonymous);  // 수정 폼에도 따로 html에서의 isAnonymous값을 가져와야 하므로 여기서 set을 해준다! 다른 PostDTO들은 ModelAttribute로 받음
         postService.updatePost(post);
         return "redirect:/community/" + id;
@@ -219,6 +230,8 @@ public class PostController {
     public String modifyPostForm(@PathVariable Integer id, Model model, Principal principal){
         Integer userId = postService.getUserIdByUserName(principal.getName());
         PostDTO post = postService.getPostById(id, userId);
+        String userRole = postService.getUserRoleById(userId);
+        model.addAttribute("role", userRole); // 역할을 모델에 추가
         model.addAttribute("post", post); // 가져온 PostDTO 객체를 "post"라는 이름으로 뷰에 전달 (그래서 게시글페이지에서 PostDTO 들의 필드값들을 볼 수 있다.)
         return "community/communityPostForm"; // 수정용 폼으로 반환
     }
@@ -234,11 +247,16 @@ public class PostController {
     @PostMapping("/{id}/comment")
     public String addComment(@PathVariable("id") Integer postId, @RequestParam String content, Principal principal, Model model){
 
+        // 댓글 글자 수 제한 확인
+        if (content.length() > 500) {
+            throw new IllegalArgumentException("댓글은 500자를 초과할 수 없습니다.");
+        }
+
         // 1. 로그인된 사용자의 user_id(고유키) 가져오기
         Integer userId = postService.getUserIdByUserName(principal.getName());
 
         // 2. user_id로 users 테이블의 닉네임 갖오기
-        String userNickname = postService.getUserNicknameById(userId); // userId를 가져오는 메소드
+//        String userNickname = postService.getUserNicknameById(userId); // userId를 가져오는 메소드
 
         CommentDTO comment = new CommentDTO();
         comment.setPostId(postId);
@@ -246,7 +264,7 @@ public class PostController {
         comment.setContent(content);
 
         // 4. 모델에 닉네임 추가 (ex: 페이지 리다이렉트 전 표시)
-        model.addAttribute("userNickname", userNickname);
+//        model.addAttribute("userNickname", userNickname);
 
         postService.insertComment(comment); // 댓글 추가
         return "redirect:/community/" + postId;

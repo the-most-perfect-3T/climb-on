@@ -2,9 +2,11 @@ package com.ohgiraffers.climbon.calendar.service;
 
 import com.ohgiraffers.climbon.calendar.dao.MainMapper;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
+import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,5 +24,31 @@ public class MainService
     public List<PostDTO> getPopularPosts()
     {
         return mainMapper.getPopularPosts();
+    }
+
+    public List<PostDTO> getNotificationPosts()
+    {
+        return mainMapper.getNotificationPosts();
+    }
+
+    public List<FacilitiesDTO> getFacilityInfo()
+    {
+        List<FacilitiesDTO> allFacilities = mainMapper.getFacilityInfo();
+        List<FacilitiesDTO> recommendedFacilities = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            int randNum = (int)(Math.random() * allFacilities.size());
+            recommendedFacilities.add(allFacilities.get(randNum));
+        }
+        return recommendedFacilities;
+    }
+
+    public List<PostDTO> getRecentPostsByCategory(String category)
+    {
+        return mainMapper.getRecentPostsByCategory(category);
+    }
+
+    public float getFacilityRate(Integer id)
+    {
+        return mainMapper.getFacilityRate(id);
     }
 }

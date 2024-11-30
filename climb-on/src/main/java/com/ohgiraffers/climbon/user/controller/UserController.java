@@ -17,10 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -64,6 +61,7 @@ public class UserController {
 
         // 유저 pk
         Integer key = userDetails.getLoginUserDTO().getId();
+
 
         // 유저 pk 로 정보 전체 가져오기
         UserDTO user = userService.findByKey(key);
@@ -174,6 +172,8 @@ public class UserController {
         }
 
 
+        /*int crewCode = userService.findCrewCodeById(key);
+        mv.addObject("crewCode", crewCode);*/
 
 
         populateUserData(mv, key);
@@ -253,7 +253,7 @@ public class UserController {
 
         try {
             profilePic.transferTo(new File(filePath + "/" + savedName));
-            String newFileName = "/img/profile/" + savedName;
+            String newFileName = "/images/profile/" + savedName;
 
             Integer key = userDetails.getLoginUserDTO().getId();
             int result = userService.updateProfile(newFileName, key);
@@ -407,7 +407,7 @@ public class UserController {
 
         try {
             businessFile.transferTo(new File(filePath + "/" + savedName));
-            String newFileName = "/img/business/" + savedName;
+            String newFileName = "/images/business/" + savedName;
 
 
             // 비즈니스 전환신청 테이블에 추가
@@ -536,22 +536,4 @@ public class UserController {
     }
 
 
-/*    @GetMapping("board")
-    public ModelAndView selectBoardList(ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
-        // 로그인 정보 없으면
-        if (userDetails == null || userDetails.getLoginUserDTO() == null) {
-            mv.addObject("message", "로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
-            mv.setViewName("/auth/login");
-            return mv;
-        }
-
-        // 유저 pk
-        Integer key = userDetails.getLoginUserDTO().getId();
-
-        List<PostDTO> boardList = userService.selectBoardList(key);
-        mv.addObject("generalPosts", boardList);
-        mv.addObject("board", "board request");
-        mv.setViewName("mypage/home");
-        return mv;
-    }*/
 }

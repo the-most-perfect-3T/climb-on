@@ -6,20 +6,43 @@
     <resultMap id="mainResult" type="com.ohgiraffers.climbon.community.dto.PostDTO">
         <id property="id" column="ID"/>
         <result property="title" column="TITLE"/>
-        <result property="heartsCount" column="HEARTS_COUNT"/>
+        <result property="heartsCount" column="LIKE_COUNT"/>
         <result property="createdAt" column="CREATED_AT"/>
+        <result property="category" column="CATEGORY"/>
     </resultMap>
 
-    <select id="getRecentPosts" resultMap="mainResult">
+    <resultMap id="FacilityResultMap" type="com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO">
+        <id property="id" column="id" />
+        <result property="facilityName" column="facility_name" />
+        <result property="address" column="address" />
+        <result property="contact" column="contact" />
+        <result property="openingTime" column="opening_time" />
+        <result property="categoryId" column="category_id" />
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude" />
+        <result property="isFavorite" column="isFavorite"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="facilityType" column="facility_type"
+                typeHandler="com.ohgiraffers.climbon.facilities.handler.FacilityTypeTypeHandler"/><!--이넘핸들러주소를써야함-->
+    </resultMap>
+
+    <select id="getRecentPosts" parameterType="String" resultMap="mainResult">
         SELECT *
         FROM community_posts
+        ORDER BY created_at DESC LIMIT 6;
+    </select>
+
+    <select id="getRecentPostsByCategory" resultMap="mainResult">
+        SELECT *
+        FROM community_posts
+        WHERE category = #{value}
         ORDER BY created_at DESC LIMIT 6;
     </select>
 
     <select id="getPopularPosts" resultMap="mainResult">
         SELECT *
         FROM community_posts
-        ORDER BY hearts_count DESC LIMIT 10;
+        ORDER BY like_count DESC LIMIT 10;
     </select>
 
     <select id="getCommentsCount" parameterType="int" resultType="Integer">
@@ -27,4 +50,23 @@
         FROM community_comments
         WHERE post_id = #{id};
     </select>
+
+    <select id="getNotificationPosts" resultMap="mainResult">
+        SELECT *
+        FROM community_posts
+        WHERE category LIKE "%소식%"
+        ORDER BY event_end_date ASC LIMIT 6;
+    </select>
+
+    <select id="getFacilityInfo" resultMap="FacilityResultMap">
+        SELECT *
+        FROM facilities;
+    </select>
+
+    <select id="getFacilityRate" parameterType="Integer" resultType="float">
+        SELECT AVG(rating)
+        FROM reviews
+        WHERE facility_id = #{value};
+    </select>
+<!--    <select id="getFacilitiyRating" resultType=""-->
 </mapper>

@@ -18,7 +18,9 @@
         <div class="post-author">
             <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
             <div class="author-info">
-                <span class="author-name" th:text="${post.displayName}">작성자 닉네임</span>
+                <div class="author-name">
+                <span th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자 닉네임</span>
+                </div>
                 <div class="meta-info">
                 <span class="post-date" th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                 <span class="views">조회</span><span th:text="${post.viewCount}">0</span>
@@ -69,7 +71,7 @@
     <div class="comment-section">
         <form th:action="@{'/community/' + ${post.id} + '/comment'}" method="post" class="comment-form">
             <div class="textarea-wrapper">
-        <textarea name="content" placeholder="댓글을 입력해주세요" required></textarea>
+        <textarea name="content" placeholder="댓글을 입력해주세요(500자 이내)" maxlength="500" required></textarea>
             </div>
             <div class="button-wrapper">
         <button class="submit-comment">작성</button>
@@ -86,7 +88,9 @@
                 <img th:src="${comment.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
                 <div class="author-info">
             <!-- 댓글 본문 -->
-                    <span class="author-name" th:text="${comment.userNickname}">댓글 작성자</span>
+                    <div class="author-name">
+                    <span th:text="${comment.userNickname}" th:data-id="${comment.userId}" class="userModalOpen">댓글 작성자</span>
+                    </div>
                     <div class="meta-info">
                     <span class="post-date" th:text="${comment.updatedAt != null ? comment.formattedUpdatedAt : comment.formattedCreatedAt}">작성일</span>
                     </div>
@@ -103,7 +107,6 @@
                         </form>
                     </div>
                 </div>
-
             </div>
             <p class="comment-text" th:text="${comment.content}">댓글 내용</p>
                 <!-- 수정 폼 (기본적으로 숨김)-->

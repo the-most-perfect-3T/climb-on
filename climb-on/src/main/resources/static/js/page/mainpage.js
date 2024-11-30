@@ -1,3 +1,26 @@
+const loadNotificationPosts = () =>
+{
+    fetch(`/api/posts/notification`)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`${response.status} 에러가 발생했습니다`);
+            }
+            return response.json();
+        })
+        .then(posts => {
+            const notificationContainer = document.getElementById('notifiEventList');
+            posts.forEach(post=>{
+                const listItem = document.createElement('li');
+                listItem.textContent = post.title;
+                listItem.addEventListener("click", (e) => {
+                    window.location.href = `/community/${post.id}`;
+                })
+                notificationContainer.appendChild(listItem);
+            });
+        })
+        .catch(error => console.log(error.message));
+}
+
 const loadRecentPosts = (offset =0, category = "") =>
 {
     fetch(`/api/posts/recent/paginated`)
@@ -19,6 +42,9 @@ const loadRecentPosts = (offset =0, category = "") =>
                             <td>${post.category}</td>
                             <td>${post.title}</td>
                         `;
+                row.addEventListener("click", (e) => {
+                    window.location.href = `/community/${post.id}`;
+                })
                 recentPostsContainer.appendChild(row);
             });
         })
@@ -30,27 +56,64 @@ const loadPopularPosts = () =>
     fetch(`/api/posts/popular`)
         .then(response => {
             if(!response.ok) {
+                console.log(response.json());
                 throw new Error(`${response.status} 에러가 발생했습니다`);
             }
             return response.json();
         })
         .then(posts => {
             const popularPostsContainer = document.getElementById('popular-posts');
-            posts.forEach(post => {
+
+            for (let i = 0; i < posts.length; i++) {
                 const listItem = document.createElement('li');
-                listItem.textContent = post.title;
+                listItem.textContent = (i+1) + "　" + posts[i].title;
+                listItem.addEventListener("click", (e) => {
+                    window.location.href = `/community/${posts[i].id}`;
+                })
                 popularPostsContainer.appendChild(listItem);
-            });
+            }
         })
         .catch(error => console.log(error.message));
 }
 
+const loadFacilityInfo = async () => {
+
+    const facilityInfo = await fetch('/api/posts/facilities')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`${response.status} 에러가 발생했습니다`);
+            }
+            return response.json();
+        })
+        .then(async facilities => {
+            const facilityList = document.getElementById('recommendedFacility');
+            facilityList.innerHTML = '';
+            for (const facility of facilities) {
+                const facilityItem = document.createElement('div');
+                facilityItem.className = 'facility-item';
+                facilityItem.style.backgroundImage = `url(${facility.imageUrl})`;
+                facilityItem.innerHTML = `
+                    <span class="rating">
+                        <i class="fa-solid fa-star"></i>
+                        <span>${await getFacility(facility.id)}</span>
+                    </span>
+                    <p>${facility.facilityName}</p>
+                `;
+                facilityItem.addEventListener("click", (e) => {
+                    window.location.href = `facilities/select`;
+                })
+                //                        rating 가져와서 ${facility.rating}
+                facilityList.appendChild(facilityItem);
+            }
+        })
+        .catch(error => console.log(error.message));  // 핸들 에러
+};
+
 document.getElementById('category-tabs').addEventListener('click', (event) => {
     if (event.target.tagName === 'BUTTON') {
         const selectedCategory = event.target.getAttribute('data-category');
-        currentCategory = selectedCategory; // 현재 카테고리를 선택한 카테고리로 설정
         const offset = 0;
-        loadRecentPosts(offset, currentCategory);
+        loadRecentPosts(offset, selectedCategory);
 
         // Update active tab styling
         document.querySelectorAll('#category-tabs .nav-link').forEach(tab => {
@@ -113,10 +176,18 @@ async function updateUserRole(newRole) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
+}
 
-
+async function getFacility(id) {
+    const test = await fetch(`/api/posts/rate/${id}`).then(response => {
+        return response.text()
+    });
+    console.log(test);
+    return test;
 }
 
 loadRecentPosts();
 loadPopularPosts();
+loadNotificationPosts();
+loadFacilityInfo();
 showSlides(slideIndex);

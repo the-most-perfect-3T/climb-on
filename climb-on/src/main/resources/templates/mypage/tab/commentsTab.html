@@ -1,0 +1,40 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="tabContFragment">
+    <div class="tab-pane fade" id="commentsTab" role="tabpanel" aria-labelledby="comments-tab">
+        <section class="section section00">
+            <h2 class="section-title">댓글 관리</h2>
+
+            <ul role="tablist" class="d-flex">
+                <li role="presentation">
+                    <button class="active border" id="community-comments-tab" data-bs-toggle="tab" data-bs-target="#communityComments" type="button" role="tab" aria-controls="communityComments" aria-selected="true">커뮤니티</button>
+                </li>
+                <li role="presentation">
+                    <button id="crew-comments-tab" class="border" data-bs-toggle="tab" data-bs-target="#crewComments" type="button" role="tab" aria-controls="crewComments" aria-selected="false">크루</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="communityComments" role="tabpanel" aria-labelledby="community-comments-tab">
+                    <div class="comment-list">
+
+                    </div>
+                    <ul class="pagination"></ul>
+                </div>
+
+
+
+                <div class="tab-pane fade" id="crewComments" role="tabpanel" aria-labelledby="crew-comments-tab">
+                    <div class="comment-list">
+
+                    </div>
+                    <ul class="pagination"></ul>
+                </div>
+            </div>
+        </section>
+    </div>
+</th:block>
+</html>

@@ -2,10 +2,9 @@ package com.ohgiraffers.climbon.crew.crewHome.dao;
 
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewCommentDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -39,4 +38,48 @@ public interface CrewBoardDAO {
     //전체 게시글 수를 반환하여 페이지 수 계산에 사용된다. //검색어 추가
     int getTotalPostCount(@Param("category") String category, @Param("searchKeyword") String searchKeyword);
 
+    @Select("SELECT crew_name FROM crews WHERE id = #{crewCode}")
+    String getCrewNameByCrewCode(Integer crewCode);
+
+    void incrementViewCount(Integer postId);
+
+    CrewPostDTO getPostById(Integer postId);
+
+    @Select("SELECT COUNT(*) > 0 FROM user_post_heart WHERE post_code2 = #{postId} AND user_code = #{userId}") //매퍼대신 여기에 쿼리문 작성
+    boolean isPostLikedByUser(@Param("postId") Integer postId, @Param("userId") Integer userId);
+
+    @Select("SELECT profile_pic FROM users WHERE id = #{userId}")
+    String getUserProfilePicById(Integer userId);
+
+
+    List<CrewCommentDTO> getCommentsByPostId(Integer postId);
+
+    CrewPostDTO getPreviousPost(@Param("postId") Integer postId);
+
+    CrewPostDTO getNextPost(@Param("postId") Integer postId);
+
+    int insertComment(CrewCommentDTO comment);
+
+    int updateComment(CrewCommentDTO comment);
+
+    int deleteComment(CrewCommentDTO comment);
+
+    int getJustAddedPostById(int id);
+
+    @Select("SELECT COUNT(*) FROM user_post_heart WHERE post_code2 = #{postId} AND user_code = #{userId}")
+    boolean hasUserLikedPost(@Param("postId") int postId, @Param("userId") int userId);
+
+    @Update("UPDATE crew_posts SET like_count = like_count + 1 WHERE id = #{postId}")
+    void incrementHearts(@Param("postId") int postId);
+
+    @Update("UPDATE crew_posts SET like_count = like_count - 1 WHERE id = #{postId}")
+    void decrementHearts(@Param("postId") int postId);
+
+    @Delete("DELETE FROM user_post_heart WHERE post_code2 = #{postId} AND user_code = #{userId}")
+    void removeLike(int postId, Integer userId);
+
+    @Insert("INSERT INTO user_post_heart (post_code2, user_code, category) VALUES (#{postId}, #{userId}, 2)")
+    void addLike(int postId, Integer userId);
+
+    List<CrewCommentDTO> getCommentsById(Integer id);
 }

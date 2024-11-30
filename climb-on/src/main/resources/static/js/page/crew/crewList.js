@@ -9,6 +9,7 @@ let currentPage = 1;
 const filterAreas = [];
 let currentContext;
 
+
 // 지역 필터 버튼 클릭시(모달에서의 이벤트는 맨밑에서 관리, 등록,리스트 어디서 눌렀는지에 따라 이벤트 분리)
 areasFilterBtn.addEventListener('click', function () {
     secondModal.show();
@@ -17,7 +18,7 @@ areasFilterBtn.addEventListener('click', function () {
     secondModal.backdrop = true;
 });
 
-// 어디서 모달을 불러왔는지 저장
+// 어디서 모달을 불러왔는지 저장(지역선택 모달을 crewList 페이지와 crewRegister 페이지 두 곳에서 불러오기 때문)
 triggers.forEach(trigger => {
     trigger.addEventListener('click', () => {
         currentContext = trigger.dataset.context;
@@ -50,65 +51,28 @@ async function loadCrews(page) {
         if(count !== null){
             document.querySelector('.count-number').textContent = `${count} 개`;
         }
-
         currentPage++;
 
         crewList.forEach((crew) => {
             const tr = document.createElement('tr');
             tr.classList.add('border-bottom');
-
-            const tdImage = document.createElement('td');
-            tdImage.style.width = '15%';
-            tdImage.style.flexShrink = '0';
-            tdImage.classList.add('d-flex', 'flex-column', 'gap-2');
-
-            const imgWrapper = document.createElement('div');
-            imgWrapper.classList.add('position-relative', 'align-items-center');
-            imgWrapper.style.width = '60px';
-            imgWrapper.style.height = '60px';
-
-            const imgWrap = document.createElement('div');
-            imgWrap.classList.add('img-wrap', 'd-flex', 'align-items-center', 'justify-content-center');
-            imgWrap.style.width = '100%';
-            imgWrap.style.height = '100%';
-
-            const img = document.createElement('img');
-            img.src = crew.imgUrl || '/images/logo.svg';
-            img.classList.add('w-100');
-            imgWrap.appendChild(img);
-            imgWrapper.appendChild(imgWrap);
-            tdImage.appendChild(imgWrapper);
-
-            if (crew.recruitingStatus) {
-                const badge = document.createElement('span');
-                badge.classList.add('badge', 'rounded-pill');
-                badge.textContent = '모집중';
-                tdImage.appendChild(badge);
-            }
-            tr.appendChild(tdImage);
-
-            const tdCrewInfo = document.createElement('td');
-            tdCrewInfo.style.width = '30%';
-
-            const crewName = document.createElement('p');
-            crewName.classList.add('mb-1', 'fw-bold');
-            crewName.textContent = crew.crewName;
-
-            const crewArea = document.createElement('small');
-            crewArea.classList.add('text-muted');
-            crewArea.textContent = crew.activeArea;
-
-            tdCrewInfo.appendChild(crewName);
-            tdCrewInfo.appendChild(crewArea);
-            tr.appendChild(tdCrewInfo);
-
-            const tdDescription = document.createElement('td');
-            tdDescription.classList.add('description');
-            tdDescription.style.width = '70%';
-            tdDescription.textContent = crew.description;
-
-            tr.appendChild(tdDescription);
-
+            tr.innerHTML = `
+            <td class="d-flex flex-column gap-2" >
+                <div class="position-relative align-items-center" style="width: 60px; height: 60px;">
+                    <div class="img-wrap d-flex align-items-center justify-content-center" style="width: 100%; height: 100%">
+                        <img src="${crew.imgUrl}" alt="/images/logo.svg" class="w-100">
+                    </div>
+                </div>
+                <span class="badge rounded-pill" style="display: ${crew.recruitingStatus == true? "" : "none"}">모집중</span>
+            </td>
+            <td>
+                <a href="/crew/myCrew/${crew.id}">
+                    <p class="mb-1 fw-bold">${crew.crewName}</p>
+                    <small class="text-muted">${crew.activeArea}</small>
+                </a>
+            </td>
+            <td class="description">${crew.description}</td>
+            `
             crewListContainer.appendChild(tr);
         });
         if(crewList.length < 5) {
@@ -123,6 +87,30 @@ async function loadCrews(page) {
         alert("크루 리스트를 불러오는중 문제가 발생했습니다.")
     }
 }
+
+document.getElementById("registerCrewModalBtn").addEventListener('click', async (event) => {
+    event.preventDefault();
+
+    try {
+        const response = await fetch('/crew/checkHasCrew')
+        if(!response.ok){
+            throw new Error("서버에러");
+        }
+        const message = await response.text();
+        if(message.includes("로그인")){
+            window.location.href = "auth/login";
+        }
+        else if(message.includes("소속된 크루X")){
+            firstModal.show();
+        }
+        else if(message.includes("okay")){
+            alert("소속된 크루가 없어야 크루 등록이 가능합니다. \n1인 1크루 원칙!");
+        }
+    }catch (error){
+        console.error(error);
+        alert(error);
+    }
+});
 
 
 

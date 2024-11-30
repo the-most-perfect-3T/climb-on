@@ -12,10 +12,10 @@ public class Webconfig implements WebMvcConfigurer {
 
         String commonPath = "file:///C:/climbon/";
 
-        registry.addResourceHandler("/img/profile/**")
+        registry.addResourceHandler("/images/profile/**")
                 .addResourceLocations(commonPath + "profile/");
 
-        registry.addResourceHandler("/img/business/**")
+        registry.addResourceHandler("/images/business/**")
                 .addResourceLocations(commonPath + "business/");
 
         registry.addResourceHandler("/images/crewPic/**")
