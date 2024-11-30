@@ -301,7 +301,12 @@ function resetForm() {
     // 검색 입력 필드를 0으로 설정
     // 입력 필드에서 코드 값을 가져옴
     const searchCode = document.getElementById('codeInput').value;
+    document.getElementById("img-wrap0").addEventListener("click", function () {
+        const button = this;
 
+        // active 클래스 추가
+        button.classList.add("active");
+    })
     // sessionStorage에 코드 값 저장
     sessionStorage.setItem('searchCode', searchCode);
     // 폼 제출

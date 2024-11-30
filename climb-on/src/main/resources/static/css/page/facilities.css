@@ -112,6 +112,7 @@
     position: absolute; /* 위치 조정 */
     background: white; /* 배경색을 흰색으로 설정 */
     z-index: 1000;
+    margin-left: 10px;
 }
 
 .suggestion-item {
@@ -261,6 +262,15 @@ p {
     display: flex;
     align-items: center;
     justify-content: flex-start; /* 자식 요소를 왼쪽 정렬 */
+}
+
+.img-wrap:hover{
+    background-color: rgba(247, 146, 86, 0.42);
+    opacity: 80%;
+}
+.img-wrap:active{
+    background-color: rgba(247, 146, 86, 0.42);
+    opacity: 80%;
 }
 /* 평점 별 기본 스타일 */
 .rating {
@@ -413,7 +423,14 @@ textarea#comment {
     padding-left: var(--bs-offcanvas-padding-x);
 
 }
+.button-container-facility.img-wrap:hover{
 
+}
+.button-container-facility.img-wrap:active{
+    background-color: var(--point);
+    color: white;
+    border-color: var(--point);
+}
 .button-text{
     font-size: 12px;
     width: 300px;
