@@ -63,5 +63,10 @@
         FROM facilities;
     </select>
 
+    <select id="getFacilityRate" parameterType="Integer" resultType="float">
+        SELECT AVG(rating)
+        FROM reviews
+        WHERE facility_id = #{value};
+    </select>
 <!--    <select id="getFacilitiyRating" resultType=""-->
 </mapper>

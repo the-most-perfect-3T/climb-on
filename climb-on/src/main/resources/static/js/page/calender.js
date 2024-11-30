@@ -223,8 +223,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             })
                             .then(data => {
                                 console.log(data);
-                                crewCalendar.addEventSource(data)
-
+                                crewCalendar.addEventSource(data);
+                                popluateMainEventInMycrewHome(data);
                             })
                             .catch(error => {
                                 console.error('Error:', error);

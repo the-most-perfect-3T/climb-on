@@ -17,4 +17,6 @@ public interface MainMapper
     List<FacilitiesDTO> getFacilityInfo();
 
     List<PostDTO> getRecentPostsByCategory(String category);
+
+    float getFacilityRate(Integer id);
 }

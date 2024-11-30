@@ -336,6 +336,10 @@ button:disabled {
     .community-container .popular-list li {
         color: #fff;
     }
+
+    .crew-tab-nav button.active span{
+        color: var(--point);
+    }
 }
 
 

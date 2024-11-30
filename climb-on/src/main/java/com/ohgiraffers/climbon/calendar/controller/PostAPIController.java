@@ -5,11 +5,9 @@ import com.ohgiraffers.climbon.calendar.service.MainService;
 import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.facilities.dto.FacilitiesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -66,5 +64,11 @@ public class PostAPIController
             mv.setViewName("redirect:/error/500");
             return mv;
         }
+    }
+
+    @GetMapping("/rate/{id}")
+    public ResponseEntity<Object> getFacilityRate(@PathVariable(name = "id") Integer id){
+        float result = mainService.getFacilityRate(id);
+        return ResponseEntity.ok(result);
     }
 }

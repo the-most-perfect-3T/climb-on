@@ -2,23 +2,18 @@
 const crewCodeTag = document.getElementById('crewcode');
 const crewCode = crewCodeTag.getAttribute("data-crew-code");
 
-// 가져온 이벤트 활동 페이지에 뿌려주는 로직
-function populateEventList(eventData) {
-    const eventListContainer = document.getElementById('crew-activity-event-list');
-    eventListContainer.innerHTML = '';
-
-    eventData.forEach(event => {
-        const eventItem = document.createElement('div');
-        eventItem.className = 'crew-activity-event-item';
-        eventItem.innerHTML = `
+function createEventInfo(eventContainer, event) {
+    const eventItem = document.createElement('div');
+    eventItem.className = 'crew-activity-event-item';
+    eventItem.innerHTML = `
                                        <div class="crew-event-info">
                             <span class="crew-event-status-tag">예정</span>
                             <div class="crew-event-details">
                                 <p class="crew-event-date">${new Date(event.start).toLocaleDateString()} · ${new Date(event.start).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit'
-        })}</p>
-                                <p class="crew-event-location">서울숲클라이밍 종로점</p>
+        hour: '2-digit',
+        minute: '2-digit'
+    })}</p>
+                                <p class="crew-event-location">${event.location}</p>
                             </div>
                           </div>
                           <div class="crew-event-center">
@@ -32,7 +27,21 @@ function populateEventList(eventData) {
                           </div>
 
         `;
-        eventListContainer.appendChild(eventItem);
+    eventContainer.appendChild(eventItem);
+}
+function popluateMainEventInMycrewHome(eventData){
+    const mainEventContainer = document.getElementById("crewRecentEvent");
+    mainEventContainer.innerHTML = '';
+    createEventInfo(mainEventContainer, eventData[0]);
+    setParticipateBtnEvent();
+}
+// 가져온 이벤트 활동 페이지에 뿌려주는 로직
+function populateEventList(eventData) {
+    const eventListContainer = document.getElementById('crew-activity-event-list');
+    eventListContainer.innerHTML = '';
+
+    eventData.forEach(event => {
+        createEventInfo(eventListContainer, event)
     })
     setParticipateBtnEvent();
 }
@@ -210,7 +219,7 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
                         <div class="profile-picture" style="background-image: ${post.userProfilePic}"></div>
                         <div class="post-info">
                             <h3 class="author-name">${post.nickname}</h3>
-                            <p class="post-time">${post.createdAt}</p>
+                            <p class="post-time">${(post.createdAt).split("T",1)}</p>
                         </div>
                     </div>
                     <div class="post-content">
@@ -220,9 +229,18 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
                         </div>
                     </div>
                     <div class="post-footer">
-                        <button class="like-button">좋아요</button>
-                        <span class="comments-count">댓글 2</span>
-                        <button class="share-button">공유하기</button>
+                        <button class="like-button">
+                            <i class="fa-regular fa-heart"></i>
+                            좋아요
+                        </button>
+                        <button class="comments-count">
+                            <i class="fa-solid fa-comment-dots"></i>
+                            댓글 ${post.commentsCount}
+                        </button>
+                        <button class="share-button">
+                            <i class="fa-solid fa-share-nodes"></i>
+                            공유하기
+                        </button>
                     </div>
             `
             crewPostsContainer.appendChild(postItem);
