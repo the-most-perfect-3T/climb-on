@@ -1,13 +1,5 @@
 @charset "utf-8";
 
-.crew-main{
-    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
-}
-.inner .tab-content {
-    height: 100%;
-    overflow-y: auto;
-}
-
 /* 사이드 */
 .crew-aside{
     position: relative;
@@ -93,12 +85,20 @@
     background-color: var(--gray);
 }
 
+/* 마이 크루 메인 */
 
 .crew-main{
+    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
     margin-left: 80px;
     margin-top: 56px;
     padding: 0;
 }
+
+.inner .tab-content {
+    height: 100%;
+    overflow-y: auto;
+}
+
 .crew-tab-nav {
     display: flex;
     list-style: none;
@@ -114,7 +114,7 @@
 }
 
 .crew-tab-nav li button.active span {
-    color: #222222;
+    color: var(--black);
 }
 
 .crew-tab-nav li button .rounded-circle {
@@ -142,8 +142,8 @@
 }
 
 .crew-notification .crew-notification-tag {
-    background-color: #FF7F27;
-    color: white;
+    background-color: var(--point);
+    color: #fff;
     padding: 5px 10px;
     border-radius: 50px;
     font-size: 16px;
@@ -154,23 +154,26 @@
 .crew-notification .crew-notification-text {
     font-size: 16px;
     font-weight: 500;
-    color: #343A40;
+    color: var(--gray);
 }
 
 .crew-limit-access{
     width: 870px;
     height: 46px;
-    background-color: #FAEFDD;
+    background-color: var(--beige);
     padding: 12px 23px;
     margin: 10px 0 10px 0;
 }
 
 /* 크루 활동 이벤트 */
+#crew-activity-event-list{
+    margin-top: 25px;
+}
 .crew-activity-event-item {
     display: flex;
     align-items: center;
     height: 110px;
-    background-color: #fdf7ed;
+    background-color: var(--beige);
 }
 
 .crew-activity-event-item .crew-event-info {
@@ -181,8 +184,8 @@
 }
 
 .crew-activity-event-item .crew-event-info .crew-event-status-tag {
-    background-color: #ff8040; /* Orange badge color */
-    color: white;
+    background-color: var(--point);
+    color: #fff;
     font-size: 16px;
     font-weight: 600;
     text-align: center;
@@ -194,6 +197,7 @@
 .crew-activity-event-item .crew-event-details{
     font-size: 16px;
     font-weight: 400;
+    color: var(--black);
 }
 
 .crew-activity-event-item .crew-event-center {
@@ -211,7 +215,8 @@
 }
 
 .crew-activity-event-item .participate-btn{
-    background-color: #FAEFDD;
+    background-color: var(--beige);
+    color: var(--black);
     width: 115px;
     height: 100%;
     cursor: pointer;
@@ -223,7 +228,7 @@
 }
 
 .crew-activity-event-item .participate-btn .fa-solid{
-    color: #FF7F27;
+    color: var(--point);
     font-size: 32px;
 }
 
@@ -249,7 +254,7 @@
 }
 
 .grid-item {
-    background-color: #ff7f2a;
+    background-color: var(--point);
     position: relative;
     padding-top: 100%;
     overflow: hidden;
@@ -313,6 +318,7 @@
 .table>:not(caption)>*>*{
     border-bottom: none;
 }
+
 
 /* 가입 모달 */
 .custom-modal-width {
@@ -402,4 +408,59 @@
     color: white;
     margin-top: 40px;
     margin-bottom: 40px;
+
+  
+/* 크루 소식 */
+#crew-posts-container .post-container{
+    height: 100%;
+    padding: 25px;
+}
+
+#crew-posts-container .post-container .post-header{
+    display: flex;
+    align-items: center;
+}
+
+#crew-posts-container .post-container .post-header .profile-picture {
+    width: 50px;
+    height: 50px;
+    background-color: var(--point);
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+#crew-posts-container .post-container .post-header .post-info{
+    display: flex;
+    flex-direction: column;
+}
+
+#crew-posts-container .post-container .post-content {
+    margin-top: 15px;
+}
+
+#crew-posts-container .post-container .post-content .post-text{
+    color: var(--black);
+    font-size: 14px;
+}
+
+#crew-posts-container .post-container .post-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    align-items: center;
+}
+
+#crew-posts-container .post-container .post-footer .like-button,
+#crew-posts-container .post-container .post-footer .comments-count,
+#crew-posts-container .post-container .post-footer .share-button {
+    color: var(--gray);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#crew-posts-container .post-container .post-footer .fa-solid,
+#crew-posts-container .post-container .post-footer .fa-regular{
+    color: var(--point);
+    font-size: 14px;
 }

@@ -2,12 +2,8 @@
 
 :root {
     --fc-button-active-bg-color: transparent;
-
     --fc-event-bg-color: #FAEFDD;
     --fc-event-border-color: #222;
-    --mainColor1: #FF7F27;
-    --subColor1: #FAEFDD;
-    --subColor2: #343A40;
 }
 
 .calendar-modal .modal-header{
@@ -19,7 +15,15 @@
 }
 
 .calendar-modal .modal-body{
-    font-size: 16px;
+    font-size: 14px;
+    color: var(--darkGray);
+}
+
+.calendar-modal .modal-body input,
+.calendar-modal .modal-body select
+{
+    margin: 3px;
+    border: 1px solid var(--gray);
 }
 
 .calendar-modal .modal-footer .btn{
@@ -27,8 +31,8 @@
     font-size: 14px;
     font-weight: 600;
     padding: 0 20px;
-    color: var(--subColor2);
-    background-color:  var(--subColor1);
+    color: var(--darkBorderColor);
+    background-color:  var(--beige);
     border: 0;
     align-items: center;
     justify-content: center;
@@ -40,7 +44,7 @@
 
 .calendar-modal .modal-footer .btn-danger{
     color: #fff;
-    background-color:  var(--mainColor1);
+    background-color:  var(--point);
 }
 
 .calendar-modal .btn-close{
@@ -82,15 +86,15 @@
 }
 
 .fc-day-sun a { /* 일요일 컬러 */
-    color: var(--mainColor1);
+    color: var(--point);
 }
 
 .fc-day-sat a { /* 토요일 컬러 */
-    color: var(--subColor2);
+    color: var(--darkGray);
 }
 
 .fc .fc-button {
-    background-color: rgb(217, 119, 6);
+    background-color: var(--point);
 
     font-size: 14px;
     font-weight: 500;
@@ -100,7 +104,7 @@
 
 .fc .fc-button:hover {
     background-color: transparent;
-    color: var(--subColor2);
+    color: var(--darkGray);
 }
 
 /* 포커스된 상태 테두리 없앰 */
@@ -111,7 +115,7 @@
 
 /* today 버튼 - 이번 달에 위치할 때 */
 .fc .fc-today-button:disabled {
-    background-color: #EAB77B;
+    background-color: var(--beige);
     color: #fff;
 }
 
@@ -121,5 +125,8 @@
 
 .fc .fc-event-title{
     font-size: 12px;
-    color: #fff;
+}
+
+.fc .fc-h-event{
+    border: 0;
 }

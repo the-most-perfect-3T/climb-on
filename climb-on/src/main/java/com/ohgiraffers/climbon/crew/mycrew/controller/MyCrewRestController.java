@@ -6,6 +6,7 @@ import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMemberListWithCrewApplyList;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
@@ -69,5 +70,10 @@ public class MyCrewRestController {
         return ResponseEntity.ok(imgList);
     }
 
-
+    @GetMapping("/posts/{crewCode}")
+    public ResponseEntity<Object> showPosts(@PathVariable("crewCode") int crewCode)
+    {
+        List<CrewPostDTO> postList = myCrewService.getCrewPostsList(crewCode);
+        return ResponseEntity.ok(postList);
+    }
 }

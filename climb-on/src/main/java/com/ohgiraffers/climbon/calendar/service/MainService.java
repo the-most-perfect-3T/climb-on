@@ -41,4 +41,14 @@ public class MainService
         }
         return recommendedFacilities;
     }
+
+    public List<PostDTO> getRecentPostsByCategory(String category)
+    {
+        return mainMapper.getRecentPostsByCategory(category);
+    }
+
+    public float getFacilityRate(Integer id)
+    {
+        return mainMapper.getFacilityRate(id);
+    }
 }
