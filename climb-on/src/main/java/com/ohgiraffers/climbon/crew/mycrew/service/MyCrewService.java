@@ -62,4 +62,17 @@ public class MyCrewService
     public List<CrewApplyWithUserInfoDTO> getNewCrewApplyContentByCrewCode(int crewCode) {
         return myCrewMapper.getNewCrewApplyContentByCrewCode(crewCode);
     }
+
+    public CrewApplyWithUserInfoDTO getCrewApplyWithUserInfo(int userId) {
+        return  myCrewMapper.getCrewApplyWithUserInfo(userId);
+    }
+
+    public int updateCrewApplyResult(int userCode, int isApproval) {
+        return myCrewMapper.updateCrewApplyResult(userCode, isApproval);
+    }
+
+
+    public void alertUser(int userCode, int category) {
+        myCrewMapper.alertUser(userCode, category);
+    }
 }

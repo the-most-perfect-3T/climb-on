@@ -3,6 +3,6 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/climbdb
         username: gangnam
-        password: gangnam
+        password: 1234
 mybatis:
     mapper-locations: mapper/*.xml

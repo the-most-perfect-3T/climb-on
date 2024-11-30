@@ -170,6 +170,27 @@
         AND ca.is_approval = 0
     </select>
 
+    <select id="getCrewApplyWithUserInfo" parameterType="int" resultMap="crewApplyWithUserInfo">
+        SELECT
+        ca.*,
+        u.*
+        FROM crew_apply ca
+        JOIN users u
+        on ca.user_code = u.id
+        WHERE ca.user_code = #{userId}
+        AND ca.is_approval = 0
+    </select>
+
+    <update id="updateCrewApplyResult">
+        UPDATE crew_apply
+        SET is_approval = #{isApproval}
+        WHERE user_code = #{userCode}
+    </update>
+
+    <insert id="alertUser">
+        INSERT INTO user_notice (user_code, category)
+        VALUES (#{userCode}, #{category})
+    </insert>
 
 </mapper>
 

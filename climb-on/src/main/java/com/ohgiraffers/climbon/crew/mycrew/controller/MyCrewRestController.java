@@ -5,7 +5,9 @@ import com.ohgiraffers.climbon.crew.crewHome.dto.CrewBoardDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMemberListWithCrewApplyList;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewMembersDTO;
+import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
 import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
 import com.ohgiraffers.climbon.facilities.dto.ReviewDTO;
 import com.ohgiraffers.climbon.user.dto.UserDTO;
@@ -31,15 +33,24 @@ public class MyCrewRestController {
 
     @GetMapping("/member/{crewCode}")
     public ResponseEntity<Object> showMemberList(@PathVariable("crewCode") int crewCode, @AuthenticationPrincipal AuthDetail userDetails) {
+        int myId = userDetails.getLoginUserDTO().getId();
+        UserCrewDTO userCrewDTO = myCrewService.getMyCrewCodeAndRole(myId);
         List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(crewCode);
+        // 해당 크루의 크루 캡틴이면 크루신청을 챙겨서 돌아간다
+        if(!Objects.isNull(userCrewDTO) && userCrewDTO.getCrewCode() == crewCode && userCrewDTO.getRole().equals(CrewRole.CAPTAIN)) {
+            List<CrewApplyWithUserInfoDTO> crewApplys = myCrewService.getNewCrewApplyContentByCrewCode(userCrewDTO.getCrewCode());
+            CrewMemberListWithCrewApplyList crewMemberListWithCrewApplyList = new CrewMemberListWithCrewApplyList(crewApplys, memberList);
+            return ResponseEntity.ok(crewMemberListWithCrewApplyList);
+        }
+        else{
+            return ResponseEntity.ok(memberList);
+        }
+    }
 
-        /*//role이 CAPTAIN일시 크루 가입신청이 있는지 확인
-        if(userCrewDTO.getRole().equals(CrewRole.CAPTAIN)){
-            List<CrewApplyWithUserInfoDTO> crewApplyWithUserInfoDTO = myCrewService.getNewCrewApplyContentByCrewCode(myCrew.getId());
-            mv.addObject("newCrewApplyInfoList", crewApplyWithUserInfoDTO);
-            System.out.println(crewApplyWithUserInfoDTO);
-        }*/
-        return ResponseEntity.ok(memberList);
+    @GetMapping("/member/newApply/{userId}")
+    public ResponseEntity<Object> getInfoForModal(@PathVariable("userId") int userId){
+        CrewApplyWithUserInfoDTO crewApply = myCrewService.getCrewApplyWithUserInfo(userId);
+        return ResponseEntity.ok(crewApply);
     }
 
     @GetMapping("/album/{crewCode}")
