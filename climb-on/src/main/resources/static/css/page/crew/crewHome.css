@@ -234,7 +234,7 @@ h2 {
 .dropdown .dropdown-content {
     display: none;
     position: absolute;
-    width: 110px;
+    width: 100%;
     background-color: var(--bs-white);
     border: 1px solid #ddd;
     border-radius: 8px;
