@@ -2,17 +2,6 @@
 const crewCodeTag = document.getElementById('crewcode');
 const crewCode = crewCodeTag.getAttribute("data-crew-code");
 
-const test = [28, 30, 32]; // 리스트 저장
-// crew posts 에서 image가 포함되어 있는 애들을 어떻게 골라오지
-// 포함된 애들만 리스트에 저장해서 여기다가 출력
-
-test.forEach(function(a){
-    console.log(a)
-    const test1 = document.createElement('p'); // 해당 태그 ...에 저장 클래스 명에도 저장이 되나요
-    test1.innerHTML = a;
-    document.querySelector('#test').appendChild(test1);
-});
-
 // 가져온 이벤트 활동 페이지에 뿌려주는 로직
 function populateEventList(eventData) {
     const eventListContainer = document.getElementById('crew-activity-event-list');
@@ -117,38 +106,40 @@ albumTabBtn.addEventListener('click', async function() {
 });
 
 function setParticipateBtnEvent (){
-    document.getElementById("crewParticipateButton").addEventListener("click", async function()
-    {
-        const eventCode = this.getAttribute("data-event-code");
-        const crewCode = this.getAttribute("data-crew-code");
-        const userCode = 0;
+    const buttons = document.querySelectorAll("#crewParticipateButton")
+    buttons.forEach(button => {
+        button.addEventListener("click", async function()
+        {
+            const eventCode = this.getAttribute("data-event-code");
+            const crewCode = this.getAttribute("data-crew-code");
+            const userCode = 0;
 
-        console.log("이벤트 코드(" + eventCode + ")랑 크루 코드(" + crewCode +")");
+            console.log("이벤트 코드(" + eventCode + ")랑 크루 코드(" + crewCode +")");
 
-        const participationData = {
-            eventCode: eventCode,
-            crewCode: crewCode,
-            userCode: userCode
-        }
-
-        try{
-            const response = await fetch('/participate/crewevents',{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(participationData)
-            });
-            if (response.ok) {
-                alert("참여가 완료되었습니다.");
-            } else {
-                alert("참여에 실패했습니다.");
+            const participationData = {
+                eventCode: eventCode,
+                crewCode: crewCode,
+                userCode: userCode
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert("서버 오류가 발생했습니다.");
-        }
-    });
+            try{
+                const response = await fetch('/participate/crewevents',{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(participationData)
+                });
+                if (response.ok) {
+                    alert("참여가 완료되었습니다.");
+                } else {
+                    alert("참여에 실패했습니다.");
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("서버 오류가 발생했습니다.");
+            }
+        });
+    })
 }
 
 /* 타유저 프로필 모달 */
@@ -199,6 +190,48 @@ async function openUserModal() {
 
     }
 }
+
+const NoteTab= document.getElementById("news-tab");
+NoteTab.addEventListener('click', async function setCrewPosts() {
+    try {
+        const response = await fetch(`/mycrew/posts/${crewCode}`);
+        if (!response.ok) {
+            throw new Error("서버 오류: " + response.status + " response = " + response);
+        }
+        const data = await response.json();
+        const crewPostsContainer = document.getElementById("crew-posts-container");
+        crewPostsContainer.innerHTML = "";
+
+        data.forEach((post) => {
+            const postItem = document.createElement('div');
+            postItem.classList.add('post-container');
+            postItem.innerHTML = `
+                    <div class="post-header">
+                        <div class="profile-picture" style="background-image: ${post.userProfilePic}"></div>
+                        <div class="post-info">
+                            <h3 class="author-name">${post.nickname}</h3>
+                            <p class="post-time">${post.createdAt}</p>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p class="post-text">${post.content}</p>
+                        <div class="post-images">
+                            <img src="${post.imgUrl}" alt="Climbing Image 1">
+                        </div>
+                    </div>
+                    <div class="post-footer">
+                        <button class="like-button">좋아요</button>
+                        <span class="comments-count">댓글 2</span>
+                        <button class="share-button">공유하기</button>
+                    </div>
+            `
+            crewPostsContainer.appendChild(postItem);
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 const crewApplyBtn = document.querySelector('.crew-join-apply');
 // 크루 가입신청 후

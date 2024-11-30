@@ -1,6 +1,7 @@
 package com.ohgiraffers.climbon.crew.mycrew.service;
 
 import com.ohgiraffers.climbon.crew.crewHome.dto.CrewDTO;
+import com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dao.MyCrewMapper;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyDTO;
 import com.ohgiraffers.climbon.crew.mycrew.dto.CrewApplyWithUserInfoDTO;
@@ -61,5 +62,10 @@ public class MyCrewService
 
     public List<CrewApplyWithUserInfoDTO> getNewCrewApplyContentByCrewCode(int crewCode) {
         return myCrewMapper.getNewCrewApplyContentByCrewCode(crewCode);
+    }
+
+    public List<CrewPostDTO> getCrewPostsList(int crewCode)
+    {
+        return myCrewMapper.getCrewPostsList(crewCode);
     }
 }

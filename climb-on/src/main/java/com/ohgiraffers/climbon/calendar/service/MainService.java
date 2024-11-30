@@ -41,4 +41,9 @@ public class MainService
         }
         return recommendedFacilities;
     }
+
+    public List<PostDTO> getRecentPostsByCategory(String category)
+    {
+        return mainMapper.getRecentPostsByCategory(category);
+    }
 }

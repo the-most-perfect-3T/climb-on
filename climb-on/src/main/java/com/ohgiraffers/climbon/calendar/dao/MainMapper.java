@@ -15,4 +15,6 @@ public interface MainMapper
     List<PostDTO> getNotificationPosts();
 
     List<FacilitiesDTO> getFacilityInfo();
+
+    List<PostDTO> getRecentPostsByCategory(String category);
 }
