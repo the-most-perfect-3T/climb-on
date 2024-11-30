@@ -46,4 +46,9 @@ public class MainService
     {
         return mainMapper.getRecentPostsByCategory(category);
     }
+
+    public float getFacilityRate(Integer id)
+    {
+        return mainMapper.getFacilityRate(id);
+    }
 }

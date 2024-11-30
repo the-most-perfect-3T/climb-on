@@ -76,27 +76,26 @@ const loadPopularPosts = () =>
         .catch(error => console.log(error.message));
 }
 
-const loadFacilityInfo = () =>
-{
-    fetch('/api/posts/facilities')
+const loadFacilityInfo = async () => {
+
+    const facilityInfo = await fetch('/api/posts/facilities')
         .then(response => {
             if (!response.ok) {
                 throw new Error(`${response.status} 에러가 발생했습니다`);
             }
             return response.json();
         })
-        .then(facilities => {
+        .then(async facilities => {
             const facilityList = document.getElementById('recommendedFacility');
             facilityList.innerHTML = '';
-            facilities.forEach(facility => {
+            for (const facility of facilities) {
                 const facilityItem = document.createElement('div');
                 facilityItem.className = 'facility-item';
                 facilityItem.style.backgroundImage = `url(${facility.imageUrl})`;
-
                 facilityItem.innerHTML = `
                     <span class="rating">
                         <i class="fa-solid fa-star"></i>
-                        <span>4.5</span>
+                        <span>${await getFacility(facility.id)}</span>
                     </span>
                     <p>${facility.facilityName}</p>
                 `;
@@ -105,7 +104,7 @@ const loadFacilityInfo = () =>
                 })
                 //                        rating 가져와서 ${facility.rating}
                 facilityList.appendChild(facilityItem);
-            });
+            }
         })
         .catch(error => console.log(error.message));  // 핸들 에러
 };
@@ -177,6 +176,14 @@ async function updateUserRole(newRole) {
     } catch (error) {
         console.error('Fetch error:', error);
     }
+}
+
+async function getFacility(id) {
+    const test = await fetch(`/api/posts/rate/${id}`).then(response => {
+        return response.text()
+    });
+    console.log(test);
+    return test;
 }
 
 loadRecentPosts();
