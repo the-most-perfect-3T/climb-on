@@ -255,10 +255,6 @@
     margin-bottom: 30px;
 }
 
-.community-container .popular-list {
-    padding-left: 20px;
-}
-
 .community-container .popular-list ol{
     counter-reset: item;
     list-style-type: none;
