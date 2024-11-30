@@ -6,17 +6,19 @@ public class NoticeDTO {
     private int category;
     private int facilityCode;
     private String attachFile;
-    private int isApproval;
+    private int isApprovalBusiness;
+    private int isApprovalCrew;
 
     public NoticeDTO() {
     }
 
-    public NoticeDTO(int userCode, int category, int facilityCode, String attachFile, int isApproval) {
+    public NoticeDTO(int userCode, int category, int facilityCode, String attachFile, int isApprovalBusiness, int isApprovalCrew) {
         this.userCode = userCode;
         this.category = category;
         this.facilityCode = facilityCode;
         this.attachFile = attachFile;
-        this.isApproval = isApproval;
+        this.isApprovalBusiness = isApprovalBusiness;
+        this.isApprovalCrew = isApprovalCrew;
     }
 
     public int getUserCode() {
@@ -51,12 +53,20 @@ public class NoticeDTO {
         this.attachFile = attachFile;
     }
 
-    public int getIsApproval() {
-        return isApproval;
+    public int getIsApprovalBusiness() {
+        return isApprovalBusiness;
     }
 
-    public void setIsApproval(int isApproval) {
-        this.isApproval = isApproval;
+    public void setIsApprovalBusiness(int isApprovalBusiness) {
+        this.isApprovalBusiness = isApprovalBusiness;
+    }
+
+    public int getIsApprovalCrew() {
+        return isApprovalCrew;
+    }
+
+    public void setIsApprovalCrew(int isApprovalCrew) {
+        this.isApprovalCrew = isApprovalCrew;
     }
 
     @Override
@@ -66,7 +76,8 @@ public class NoticeDTO {
                 ", category=" + category +
                 ", facilityCode=" + facilityCode +
                 ", attachFile='" + attachFile + '\'' +
-                ", isApproval=" + isApproval +
+                ", isApprovalBusiness=" + isApprovalBusiness +
+                ", isApprovalCrew=" + isApprovalCrew +
                 '}';
     }
 }
