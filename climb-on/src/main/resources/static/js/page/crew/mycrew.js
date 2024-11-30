@@ -80,9 +80,9 @@ memberTabBtn.addEventListener('click', async function() {
             </td>
             <td>
               <div class="text-center">
-                <button type="button" class="btn px-4 py-2 fw-bold" id="crew-apply-confirm" 
+                <button type="button" class="btn px-4 py-2 fw-bold" id="crew-apply-confirm-modal-open" 
                 style="display: ${newApply.isPermission === false? "" : "none"}"
-                data-bs-toggle="modal" data-bs-target="#crewApplyConfirmModal" data-id="${newApply.userCode}">
+                data-id="${newApply.userCode}">
                 가입확인
                 </button>
                 <button type="button" class="btn px-5 py-2 fw-bold" id="crew-apply-confirm-modal-open" 
@@ -271,6 +271,39 @@ const crewApplyBtn = document.querySelector('.crew-join-apply');
 
 /*========================크루 가입 확인 모달========================*/
 async function openCrewApplyConfirmModal() {
+    const crewApplyConfirmModalOpen = document.querySelectorAll("#crew-apply-confirm-modal-open");
+    crewApplyConfirmModalOpen.forEach(function (el){
+        el.addEventListener("click", function (e){
+            const userId = parseInt(e.target.getAttribute("data-id"));
+            fetch(`/mycrew/member/newApply/${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error: ${response.status}`);
+                    }
+                    return response.json(); // JSON 데이터를 기대
+                })
+                .then(data => {
+                    const crewApplyConfirmModal = document.getElementById("crew-apply-confirm-modal");
+                    crewApplyConfirmModal.querySelector(".modal-body .left .name").textContent = data.nickname;
+                    crewApplyConfirmModal.querySelector(".modal-body .crewApplyContent").textContent = data.content;
+                    crewApplyConfirmModal.querySelector(".modal-body #input").value = data.userCode;
+
+                    if(data.isPermission === true){
+                        crewApplyConfirmModal.querySelector(".modal-body .btn-confirm").style.display = "none";
+                    }else if(data.isPermission === false){
+                        crewApplyConfirmModal.querySelector(".modal-body .btn-approval").style.display = "none";
+                        crewApplyConfirmModal.querySelector(".modal-body .btn-refusal").style.display = "none";
+                    }
+
+                    const modal = new bootstrap.Modal(document.getElementById('crew-apply-confirm-modal'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error("에러 발생:", error);
+                });
+        })
+    })
+    /*
     const crewApplyConfirmModalOpen = document.getElementById("crew-apply-confirm-modal-open");
     crewApplyConfirmModalOpen.addEventListener("click", function (e){
         const userId = parseInt(e.target.getAttribute("data-id"));
@@ -295,6 +328,6 @@ async function openCrewApplyConfirmModal() {
             .catch(error => {
                 console.error("에러 발생:", error);
             });
-    })
+    })*/
 
 }
