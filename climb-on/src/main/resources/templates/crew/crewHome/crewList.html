@@ -24,10 +24,10 @@
                 </button>
             </div>
 
-            <div class="filter border-bottom py-3 d-flex align-items-center justify-content-between px-3">
+            <div class="filter py-3 d-flex align-items-center justify-content-between px-3">
                 <div class="filter-text d-flex align-items-center">
-                    <span class="text-muted me-2">총</span>
-                    <span class="count-number fs-5 fw-bold" th:text="|${totalCount} 개|"></span>
+                    <span class="text-muted me-2 fw-bold">총</span>
+                    <span class="count-number fw-bold" th:text="|${totalCount} 개|"></span>
                 </div>
                 <div class="d-flex gap-2 ms-auto">
                     <button type="button" class="btn btn-light d-flex align-items-center gap-1" id="sortBy">
@@ -44,7 +44,7 @@
                 <!-- 선택된 지역 카테고리가 들어올곳 -->
             </div>
 
-            <div class="container-list py-4">
+            <div class="container-list">
                 <table class="table align-middle">
                     <thead class="d-none">
                         <th>크루 이미지, 모집여부</th>

@@ -370,6 +370,33 @@ button:disabled {
     .facility-details p {
         color: #fff;
     }
+    .crew-aside::after {
+        background: var(--darkBorderColor);
+    }
+    .crew-tab-nav li button span {
+        color: #fff;
+    }
+    .crew-notification .crew-notification-text {
+        color: #fff;
+    }
+    .crew-home-events-shower .crew-activity-event-item .crew-event-location, .crew-home-events-shower .crew-activity-event-item .crew-event-crewname {
+        color: #fff;
+    }
+    .crew-home-events-shower .crew-activity-event-item .crew-event-details p {
+        color: #fff;
+    }
+    .crew-limit-access {
+        color: var(--darkGray);
+    }
+    .crew-activity-event-item .crew-event-details {
+        color: #fff;
+    }
+    .crew-activity-event-item .crew-event-center {
+        color: #fff;
+    }
+    #crew-posts-container .post-container .post-content .post-text {
+        color: #fff;
+    }
 }
 
 
