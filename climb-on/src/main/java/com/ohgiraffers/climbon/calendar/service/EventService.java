@@ -6,6 +6,9 @@ import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,6 +24,7 @@ public class EventService
 
     public List<EventDTO> getCrewEvents(int crewCode)
     {
+        List<EventDTO> crewEvents = eventMapper.getAllEventsFromCrew(crewCode);
         return eventMapper.getAllEventsFromCrew(crewCode);
     }
 
@@ -69,6 +73,33 @@ public class EventService
 
     public List<EventDTO> getAllCrewsEvents()
     {
-        return eventMapper.getAllCrewsEvents();
+        List<EventDTO> crewsEvents = eventMapper.getAllCrewsEvents();
+        List<EventDTO> filteredEvents = new ArrayList<>();
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String today = sdf1.format(now);
+
+        for(EventDTO crewEvent : crewsEvents)
+        {
+            String eventStartDate = (crewEvent.getStart().length()>11)?crewEvent.getStart().substring(0, 11):crewEvent.getStart();
+            if(crewEvent.getEnd()!=null)
+            {
+                String eventEndDate = (crewEvent.getEnd().length()>11)?crewEvent.getEnd().substring(0, 11):crewEvent.getEnd();
+                if(eventEndDate.compareTo(today) > 0)
+                {
+                    filteredEvents.add(crewEvent);
+                    System.out.println(crewEvent.getTitle());
+                    continue;
+                }
+            }
+
+            if(!(eventStartDate.compareTo(today) < 0))
+            {
+                filteredEvents.add(crewEvent);
+                System.out.println(crewEvent.getTitle());
+            }
+        }
+        return filteredEvents;
     }
 }
