@@ -126,6 +126,11 @@
         WHERE user_code = #{id}
     </select>
 
+    <select id="getCrewCodeByUserCode" parameterType="int">
+        SELECT crew_code
+        FROM user_crew
+        WHERE user_code = #{id}
+    </select>
 
 
 </mapper>

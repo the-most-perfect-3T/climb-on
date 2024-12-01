@@ -86,4 +86,6 @@ public interface CrewBoardDAO {
     void deletePost(Integer postId);
 
     void deleteCommentsByPostId(Integer postId);
+
+    int getCrewCodeByPostId(Integer postId);
 }

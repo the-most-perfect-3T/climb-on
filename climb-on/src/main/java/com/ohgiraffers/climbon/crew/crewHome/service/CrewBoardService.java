@@ -200,5 +200,8 @@ public class CrewBoardService {
         crewBoardDAO.deleteCommentsByPostId(postId);
     }
 
+    public int getCrewCodeByPostId(Integer postId) {
+        return crewBoardDAO.getCrewCodeByPostId(postId);
+    }
 }
 
