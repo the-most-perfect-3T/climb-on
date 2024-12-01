@@ -271,12 +271,15 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
 
         data.forEach((post) => {
             const postItem = document.createElement('div');
+            console.log(post);
+            console.log(post.userProfilePic);
+            console.log(post.nickname);
             postItem.classList.add('post-container');
             postItem.innerHTML = `
                     <div class="post-header">
                         <div class="profile-picture" style="background-image: ${post.userProfilePic}"></div>
                         <div class="post-info">
-                            <h3 class="author-name">${post.nickname}</h3>
+                            <h3 class="author-name">${post.userNickname}</h3>
                             <p class="post-time">${(post.createdAt).split("T",1)}</p>
                         </div>
                     </div>

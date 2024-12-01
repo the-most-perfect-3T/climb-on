@@ -120,6 +120,14 @@
 .crew-tab-nav li button .rounded-circle {
     background-color: var(--point);
     color: #fff;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    display: flex;
+    font-size: 17px;
+    text-align: center;
+    justify-content: center;
 }
 
 .crew-tab-nav li button.active .rounded-circle {
