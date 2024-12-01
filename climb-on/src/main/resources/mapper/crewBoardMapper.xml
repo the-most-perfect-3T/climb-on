@@ -271,4 +271,9 @@
         WHERE post_id = #{postId};
     </update>
 
+    <select id="getCrewCodeByPostId" parameterType="int">
+        SELECT crew_code
+        FROM crew_posts
+        WHERE id = #{postId}
+    </select>
 </mapper>
