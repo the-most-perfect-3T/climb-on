@@ -19,6 +19,7 @@ function getCrewCode() {
 // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
 const offset = new Date().getTimezoneOffset() * 60000;
 let events = null;
+let myCrewCode= 0;
 
 async function showModal(calendar){
     $("#addButton").show();
@@ -222,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: "GET",
                 success: function (response) {
                     const crewCode = response.crewCode;
-                    console.log("your crew code: " + crewCode);
+                    myCrewCode = crewCode;
                     if (getCrewCode() == null && crewCode) {
                         fetch(`/events/myCrew?crewCode=${crewCode}`, {
                             method: 'GET',
@@ -555,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         $('.crew-tab-nav li').click(function () {
             if (crewCalendar) {
-                populateEventList(events);
+                populateEventList(events, myCrewCode===getCrewCode());
                 crewCalendar.updateSize();
                 //crewCalendar.refetchEvents();
             }
