@@ -816,7 +816,7 @@ body .btn-fmodal {
 #facilitymainImg {
     display: none; /* 초기에는 숨김 */
     width: 100%;
-    height: auto; /* 이미지의 원본 비율 유지 */
+    height: 100%;
 }
 
 /* 애니메이션 */
