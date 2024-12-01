@@ -74,10 +74,6 @@ public class MyCrewRestController {
     public ResponseEntity<Object> showPosts(@PathVariable("crewCode") int crewCode)
     {
         List<CrewPostDTO> postList = myCrewService.getCrewPostsList(crewCode);
-        for(CrewPostDTO post : postList){
-            System.out.println(post);
-            System.out.println(post.getUserProfilePic());
-        }
         return ResponseEntity.ok(postList);
     }
 }
