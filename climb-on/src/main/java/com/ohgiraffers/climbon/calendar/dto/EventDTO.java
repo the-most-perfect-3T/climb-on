@@ -11,13 +11,14 @@ public class EventDTO
     private String end;
     private String description;
     private String backgroundColor;
+    private String location;
     private boolean isAllDay;
 
     public EventDTO()
     {
     }
 
-    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, boolean isAllDay)
+    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, String location, boolean isAllDay)
     {
         this.id = id;
         this.title = title;
@@ -28,6 +29,7 @@ public class EventDTO
         this.end = end;
         this.description = description;
         this.backgroundColor = backgroundColor;
+        this.location = location;
         this.isAllDay = isAllDay;
     }
 
@@ -130,5 +132,15 @@ public class EventDTO
     public void setAllDay(boolean allDay)
     {
         isAllDay = allDay;
+    }
+
+    public String getLocation()
+    {
+        return location;
+    }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
     }
 }
