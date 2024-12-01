@@ -16,7 +16,7 @@
         <h1 class="post-title" th:text="${post.title}">게시글 제목 예시</h1>
         <div class="post-info">
         <div class="post-author">
-            <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+            <img th:src="${post.isAnonymous ? '/images/anonymouspicture.jpg' : post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
             <div class="author-info">
                 <div class="author-name">
                 <span th:text="${post.displayName}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자 닉네임</span>
