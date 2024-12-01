@@ -13,6 +13,7 @@
     /*background-color: #fff;*/
     text-align: center;
     justify-content: center;
+    padding-bottom: 95px;
 }
 .crew-aside::after{
     content: '';
@@ -81,11 +82,11 @@
 }
 
 .crew-aside .crew-join-apply{
-    width: 250px;
-    height: 55px;
-    background-color: #FF7F27;
+    width: 100%;
+    height: 50px;
+    background-color: var(--point);
     border-radius: 6px;
-    margin-top: 200px;
+    /*margin-top: 200px;*/
 }
 
 .crew-aside .crew-join-apply p{
@@ -153,7 +154,8 @@
 /* 마이크루 메인 */
 
 .tab-pane{
-    width: 870px;
+    /*width: 870px;*/
+    padding-bottom: 80px;
 }
 
 /* 공지 탭 */
@@ -161,8 +163,8 @@
 .tab-pane .crew-notification {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
+    margin-bottom: 5px;
+    padding: 20px;
 }
 
 .crew-notification .crew-notification-tag {
@@ -197,7 +199,7 @@
     display: flex;
     align-items: center;
     height: 110px;
-    background-color: var(--beige);
+    background-color: rgba(250,239,221,0.4);
 }
 
 .crew-activity-event-item .crew-event-info {
@@ -215,7 +217,7 @@
     text-align: center;
     padding: 5px 10px;
     border-radius: 50px;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .crew-activity-event-item .crew-event-details{
@@ -233,9 +235,10 @@
 }
 
 .crew-activity-event-item .crew-event-right{
-    flex: 1;
+    /*flex: 1;*/
     text-align: right;
     height: 100%;
+    background-color: var(--beige);
 }
 
 .crew-activity-event-item .participate-btn{
@@ -263,8 +266,8 @@
 
 /* 캘린더 간격 수정 */
 .tab-pane .calendar-section{
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 30px;
+    /*margin-bottom: 25px;*/
     height: 700px;
 }
 
