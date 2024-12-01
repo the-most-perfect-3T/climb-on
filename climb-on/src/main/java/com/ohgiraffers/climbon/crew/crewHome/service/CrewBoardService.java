@@ -192,5 +192,13 @@ public class CrewBoardService {
         List<CrewCommentDTO> crewCommentDTOList = crewBoardDAO.getCommentsById(id);
         return crewCommentDTOList;
     }
+
+    public void deletePost(Integer postId) {
+        crewBoardDAO.deletePost(postId);
+
+        // 해당 게시글의 모든 댓글 status = 0 으로 업데이트
+        crewBoardDAO.deleteCommentsByPostId(postId);
+    }
+
 }
 
