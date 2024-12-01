@@ -204,7 +204,7 @@ div#facilityDetailsContainer::-webkit-scrollbar-thumb {
 }
 .facility-details h3 {
 
-    font-size: 20px;
+    font-size: 24px;
 
 
 }
@@ -727,8 +727,9 @@ body .btn-fmodal {
     border: none;
     cursor: pointer;
     color: #888;
-    padding-left: 256px;
-    position: fixed;
+    /*padding-left: 256px;*/
+    position: absolute;
+    right: 0;
 }
 
 /* dropdown 메뉴 스타일 */
@@ -745,7 +746,7 @@ body .btn-fmodal {
     opacity: 60%;
     padding: 3px 8px;
     font-size: 12px;
-
+    min-width: 62px;
 
 }
 

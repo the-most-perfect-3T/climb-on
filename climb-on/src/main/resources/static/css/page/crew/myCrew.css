@@ -1,14 +1,28 @@
 @charset "utf-8";
 
+.crew-aside, .crew-main {
+    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+    padding-top: 95px;
+}
 /* 사이드 */
 .crew-aside{
     position: relative;
-    width: 270px;
-    height: calc(100% - 88px);
-    margin-top: 98px;
-    background-color: #fff;
+    width: 320px;
+    padding-right: 50px;
+
+    /*background-color: #fff;*/
     text-align: center;
     justify-content: center;
+}
+.crew-aside::after{
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 1px;
+    height: calc(100% - 88px);
+    transform: translateY(-50%);
+    background-color: var(--borderColor);
 }
 
 .crew-aside .crew-profile-img-wrapper{
@@ -88,15 +102,17 @@
 /* 마이 크루 메인 */
 
 .crew-main{
-    height: calc(100vh - var(--headerHeight) - var(--footerHeight));
-    margin-left: 80px;
+    width: calc(100% - 320px);
+    padding-left: 80px;
+  /*  margin-left: 80px;
     margin-top: 56px;
-    padding: 0;
+    padding: 0;*/
+    overflow-y: auto;
 }
 
 .inner .tab-content {
     height: 100%;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
 }
 
 .crew-tab-nav {
