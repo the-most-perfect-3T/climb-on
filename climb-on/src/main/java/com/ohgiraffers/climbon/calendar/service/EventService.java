@@ -24,8 +24,24 @@ public class EventService
 
     public List<EventDTO> getCrewEvents(int crewCode)
     {
-        List<EventDTO> crewEvents = eventMapper.getAllEventsFromCrew(crewCode);
-        return eventMapper.getAllEventsFromCrew(crewCode);
+        List<EventDTO> crewsEvents = eventMapper.getAllEventsFromCrew(crewCode);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String today = sdf1.format(now);
+
+        for(EventDTO crewEvent : crewsEvents)
+        {
+            if(crewEvent.getEnd()!=null)
+            {
+                String eventStartDate = (crewEvent.getStart().length()>11)?crewEvent.getStart().substring(0, 11):crewEvent.getStart();
+                String eventEndDate = (crewEvent.getEnd().length()>11)?crewEvent.getEnd().substring(0, 11):crewEvent.getEnd();
+                if(eventStartDate.compareTo(today) < 0 && eventEndDate.compareTo(today) > 0)
+                {
+                    crewEvent.setInProgress(true);
+                }
+            }
+        }
+        return crewsEvents;
     }
 
     public boolean isUserInCrew(CrewEventDTO crewEventDTO) throws Exception
@@ -89,7 +105,7 @@ public class EventService
                 if(eventEndDate.compareTo(today) > 0)
                 {
                     filteredEvents.add(crewEvent);
-                    System.out.println(crewEvent.getTitle());
+                    crewEvent.setInProgress(true);
                     continue;
                 }
             }
@@ -97,7 +113,6 @@ public class EventService
             if(!(eventStartDate.compareTo(today) < 0))
             {
                 filteredEvents.add(crewEvent);
-                System.out.println(crewEvent.getTitle());
             }
         }
         return filteredEvents;

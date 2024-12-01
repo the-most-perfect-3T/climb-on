@@ -58,4 +58,10 @@ public interface SearchDAO {
 
     List<PostDTO> searchCommunityPostsPaged(@Param("keyword") String keyword, @Param("currentCount") int currentCount, @Param("limit") int limit);
 
+    @Select("SELECT * FROM facilities WHERE facility_name LIKE CONCAT ('%', #{keyword}, '%') OR address LIKE CONCAT ('%', #{keyword}, '%') LIMIT #{currentCount}, #{limit}")
+    @Results(id="facilityResultMap", value={
+            @Result(column = "facility_name", property = "facilityName"),
+            @Result(column = "address", property = "address")
+    })
+    List<FacilitiesDTO> loadMoreFacilities(@Param("keyword") String keyword, @Param("currentCount") int currentCount, @Param("limit") int limit);
 }
