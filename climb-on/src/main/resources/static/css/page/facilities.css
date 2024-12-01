@@ -169,7 +169,7 @@ div#facilityDetailsContainer {
     position: absolute;
     top: 0;
     left: 340px;
-    width: 590px;
+    width: 500px;
     height: 100%;
     background-color: #fff;
     overflow-y: auto !important; /* ensures scrolling is possible */
@@ -204,7 +204,7 @@ div#facilityDetailsContainer::-webkit-scrollbar-thumb {
 }
 .facility-details h3 {
 
-    font-size: 20px;
+    font-size: 24px;
 
 
 }
@@ -727,8 +727,9 @@ body .btn-fmodal {
     border: none;
     cursor: pointer;
     color: #888;
-    padding-left: 256px;
-    position: fixed;
+    /*padding-left: 256px;*/
+    position: absolute;
+    right: 0;
 }
 
 /* dropdown 메뉴 스타일 */
@@ -745,7 +746,7 @@ body .btn-fmodal {
     opacity: 60%;
     padding: 3px 8px;
     font-size: 12px;
-
+    min-width: 62px;
 
 }
 
@@ -816,7 +817,7 @@ body .btn-fmodal {
 #facilitymainImg {
     display: none; /* 초기에는 숨김 */
     width: 100%;
-    height: auto; /* 이미지의 원본 비율 유지 */
+    height: 100%;
 }
 
 /* 애니메이션 */

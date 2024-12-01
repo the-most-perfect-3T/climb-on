@@ -290,9 +290,12 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    border-radius: 6px;
 }
 #facilityModal .modal-body ul li .img-wrap img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 #facilityModal .modal-body .btn-more {
     display: none;

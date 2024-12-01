@@ -91,7 +91,7 @@ public class PostController {
     @GetMapping("/{id}")
     public String getPostById(@PathVariable("id") Integer id, Model model, Principal principal){// previousPost 와 nextPost 정보를 추가로 조회
         Integer userId = postService.getUserIdByUserName(principal.getName()); // 현재 사용자 ID 가져오기
-        PostDTO post = postService.getPostById(id, userId); // 좋아요 여부 포함
+        PostDTO post = postService.getPostById(id, userId, true); // 좋아요 여부 , 조회수 증가 포함
 
         String userNickname =  postService.getUserNicknameById(post.getUserId());
         post.setUserNickname(userNickname);
@@ -229,7 +229,7 @@ public class PostController {
     @GetMapping("{id}/modify")
     public String modifyPostForm(@PathVariable Integer id, Model model, Principal principal){
         Integer userId = postService.getUserIdByUserName(principal.getName());
-        PostDTO post = postService.getPostById(id, userId);
+        PostDTO post = postService.getPostById(id, userId, false); // 조회수 증가 x
         String userRole = postService.getUserRoleById(userId);
         model.addAttribute("role", userRole); // 역할을 모델에 추가
         model.addAttribute("post", post); // 가져온 PostDTO 객체를 "post"라는 이름으로 뷰에 전달 (그래서 게시글페이지에서 PostDTO 들의 필드값들을 볼 수 있다.)

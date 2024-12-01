@@ -343,6 +343,8 @@
 }
 .section-mypage #favorite .section00 .list li .img-wrap img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .section-mypage #favorite .section00 .list li .name {
     font-size: 20px;
