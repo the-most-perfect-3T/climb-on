@@ -45,7 +45,7 @@
 
 .crewname-sns-container {
     align-items: center;
-    margin-top: 10px;
+    margin-top: 20px;
     margin-bottom: 10px;
     gap: 10px;
     padding-left: 10px;
@@ -69,8 +69,8 @@
 }
 
 .crewname-sns-container .insta-img {
-    width: 50px;
-    height: 50px;
+    width: 36px;
+    height: 36px;
 }
 
 .crew-description {
@@ -184,11 +184,11 @@
 }
 
 .crew-limit-access{
-    width: 870px;
+    /*width: 870px;*/
     height: 46px;
     background-color: var(--beige);
     padding: 12px 23px;
-    margin: 10px 0 10px 0;
+    margin: 20px 0 30px;
 }
 
 /* 크루 활동 이벤트 */
@@ -302,14 +302,15 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    width: 870px;
 }
-
+.container-list td {
+    padding: 30px 0;
+}
 .container-list td:first-child {
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    margin-left: 40px;
+    margin-left: 20px;
 }
 
 .table img {
@@ -486,9 +487,13 @@
 }
 
 /* 크루 소식 */
+#crew-posts-container {
+    margin-top: 20px;
+}
 #crew-posts-container .post-container{
     height: 100%;
-    padding: 25px;
+    padding: 40px 25px;
+    border-bottom: 1px solid var(--borderColor);
 }
 
 #crew-posts-container .post-container .post-header{
