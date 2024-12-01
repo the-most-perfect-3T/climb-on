@@ -49,16 +49,7 @@ function populateEventList(eventData, condition) {
         eventData.forEach(event => {
             createEventInfo(eventListContainer, event)
         })
-        if(condition === true){
-            setParticipateBtnEvent();
-        }
-        else
-        {
-            const buttons = document.querySelectorAll("#crewParticipateButton")
-            buttons.forEach(button => {
-                button.removeEventListener("click", setAuthorityToJoin);
-            });
-        }
+        setParticipateBtnEvent();
     }
 }
 
