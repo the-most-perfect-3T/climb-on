@@ -24,28 +24,32 @@
                 </div>
                 <!-- 초기화 버튼 -->
                 <div class="button-container-facility">
-
-                    <div class="img-wrap">
-                        <img src="/images/facility/o2.png" class="fcategory_button" onclick="resetForm()" alt="전체조회">
-                    </div>
-
-                    <div class="img-wrap">
-                        <img src="/images/facility/climbing-wall.png" class="fcategory_button" onclick="handleCategorySubmit(1)" alt="볼더링">
-                    </div>
-                    <div class="img-wrap">
-                <img src="/images/facility/free-icon-carabiner.png" class="fcategory_button"
-                     onclick="handleCategorySubmit(2)" alt="리드"  >
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="img-wrap" id="img-wrap0">
+                            <img src="/images/facility/o2.png" class="fcategory_button" onclick="resetForm()" alt="전체조회">
                         </div>
-                    <div class="img-wrap">
-                <img src="/images/outdoor_mountain.png" class="fcategory_button" onclick="handleCategorySubmit(3)" alt="자연">
+                        <p>전체 조회</p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="img-wrap">
+                            <img src="/images/facility/climbing-wall.png" class="fcategory_button" onclick="handleCategorySubmit(1)" alt="볼더링">
+                        </div>
+                        <p>볼더링</p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="img-wrap">
+                            <img src="/images/facility/free-icon-carabiner.png" class="fcategory_button" onclick="handleCategorySubmit(2)" alt="리드"  >
+                        </div>
+                        <p>리드</p>
+                    </div>
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="img-wrap">
+                            <img src="/images/outdoor_mountain.png" class="fcategory_button" onclick="handleCategorySubmit(3)" alt="자연">
+                        </div>
+                        <p>자연</p>
                     </div>
                 </div>
-                <div class="button-text">
-                    <p>전체 조회</p>
-                    <p>볼더링</p>
-                    <p>리드</p>
-                    <p>자연</p>
-                </div>
+
                 <div class="offcanvas-body">
                     <!-- 볼더링 카테고리 버튼 -->
                     <!--검색기능-->

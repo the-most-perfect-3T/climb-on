@@ -6,9 +6,20 @@ function setToMidnightKST(dateTime) {
     return date.toISOString().slice(0, 16);
 }
 
+function getCrewCode() {
+    const pathSegments = window.location.pathname.split('/');
+    const crewCodeIndex = pathSegments.indexOf('myCrew');
+
+    if (crewCodeIndex > -1 && crewCodeIndex + 1 < pathSegments.length) {
+        return parseInt(pathSegments[crewCodeIndex + 1]); // Extract crew code
+    }
+    return null; // Default value if not on a crew page
+}
+
 // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
 const offset = new Date().getTimezoneOffset() * 60000;
 let events = null;
+let myCrewCode= 0;
 
 async function showModal(calendar){
     $("#addButton").show();
@@ -212,8 +223,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: "GET",
                 success: function (response) {
                     const crewCode = response.crewCode;
-                    console.log("your crew code: " + crewCode);
-                    if (crewCode) {
+                    myCrewCode = crewCode;
+                    if (getCrewCode() == null && crewCode) {
                         fetch(`/events/myCrew?crewCode=${crewCode}`, {
                             method: 'GET',
                         })
@@ -223,16 +234,12 @@ document.addEventListener('DOMContentLoaded', function () {
                             })
                             .then(data => {
                                 console.log(data);
-                                crewCalendar.addEventSource(data)
-
+                                crewCalendar.addEventSource(data);
+                                popluateMainEventInMycrewHome(data);
                             })
                             .catch(error => {
                                 console.error('Error:', error);
                             });
-                        // 달력에 뿌려줄 데이터 가져와야 대용
-                        // const crewPage = document.getElementById('crewPage');
-                        // crewPage.href = `/events/myCrew?crewcode=${crewCode}`; // 이렇게 굳이 나누지 않아도 되나? 이미 크루 페이지를 가져올 거니까?
-                        // crewPage.textContent = `Access Your Team (${crewCode})`;
 
                         crewCalendar.batchRendering(function () {
                             crewCalendar.setOption('headerToolbar', {
@@ -245,6 +252,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                         crewCalendar.refetchEvents();
                     } else {
+                        fetch(`/events/myCrew?crewCode=${getCrewCode()}`, {
+                            method: 'GET',
+                        })
+                            .then(response => {
+                                if (!response.ok) throw new Error('크루 이벤트 불러오기에 실패하다 ... ');
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log(data);
+                                crewCalendar.addEventSource(data);
+                                popluateMainEventInMycrewHome(data);
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
                         crewCalendar.batchRendering(function () {
                             crewCalendar.setOption('headerToolbar', {
                                 left: 'prev,next today',
@@ -372,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 success: function (response) {
                     const crewCode = response.crewCode;
                     console.log("your crew code: " + crewCode);
-                    if (crewCode) {
+                    if (getCrewCode() == null && crewCode) {
                         fetch(`/events/myCrew?crewCode=${crewCode}`, {
                             method: 'GET',
                         })
@@ -406,6 +428,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                         crewCalendar.refetchEvents();
                     } else {
+                        fetch(`/events/myCrew?crewCode=${getCrewCode()}`, {
+                            method: 'GET',
+                        })
+                            .then(response => {
+                                if (!response.ok) throw new Error('크루 이벤트 불러오기에 실패하다 ... ');
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log(data);
+                                crewCalendar.addEventSource(data);
+                                popluateMainEventInMycrewHome(data);
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
                         crewCalendar.batchRendering(function () {
                             crewCalendar.setOption('headerToolbar', {
                                 left: 'prev,next today',
@@ -519,7 +556,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         $('.crew-tab-nav li').click(function () {
             if (crewCalendar) {
-                populateEventList(events);
+                populateEventList(events, myCrewCode===getCrewCode());
                 crewCalendar.updateSize();
                 //crewCalendar.refetchEvents();
             }

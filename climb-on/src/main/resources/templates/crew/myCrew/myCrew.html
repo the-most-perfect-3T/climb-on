@@ -6,14 +6,14 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/common/inputCommon.css}">
-    <link rel="stylesheet" th:href="@{/css/page/crew/myCrew.css}">;
+    <link rel="stylesheet" th:href="@{/css/page/crew/myCrew.css}">
     <link rel="stylesheet" th:href="@{/css/page/calendar.css}">
 </th:block>
 
 
 <th:block layout:fragment="containerFragment">
-    <div class="inner d-flex">
-        <aside class="crew-aside">
+    <div class="inner d-flex justify-content-between">
+        <aside class="crew-aside d-flex flex-column justify-content-between">
             <div class="crew-info">
                 <div class="crew-profile-img-wrapper">
                     <img th:src="${myCrew.imgUrl}" alt="Thumbnail" class="thumbnail">
@@ -64,13 +64,17 @@
                     </button>
                 </li>
                 <li role="presentation">
-                    <button id="member-tab"  data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false">
+                    <button class="position-relative" id="member-tab"  data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false">
                         <div class="position-relative">
-                            <th:block th:unless="${newCrewApplyInfoList == null or #lists.isEmpty(newCrewApplyInfoList)}">
-                                <span th:text="${newCrewApplyInfoList.size()}" class="notice-count position-absolute">1</span>
-                            </th:block>
                         </div>
-                        <span>멤버</span>
+                        <span style="padding: 10px 0 0 20px">
+                            멤버
+                        </span>
+                        <th:block th:unless="${newCrewApplyInfoList == null or #lists.isEmpty(newCrewApplyInfoList)}">
+                            <span th:text="${newCrewApplyInfoList.size()}" class="position-absolute top-0 start-100 translate-middle rounded-circle">
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </th:block>
                     </button>
                 </li>
             </ul>
@@ -90,6 +94,7 @@
     </div>
 
     <th:block th:replace="~{crew/myCrew/crewApplyModal :: crewApplyModalFragment}"></th:block>
+    <th:block th:replace="~{crew/myCrew/crewApplyConfirmModal :: crewApplyConfirmModalFragment}"></th:block>
 
 </th:block>
 

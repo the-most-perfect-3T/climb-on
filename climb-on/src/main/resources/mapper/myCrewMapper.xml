@@ -86,6 +86,25 @@
         <result property="inactiveAt" column="INACTIVE_AT"/>
     </resultMap>
 
+    <resultMap id="crewPostsResult" type="com.ohgiraffers.climbon.crew.crewHome.dto.CrewPostDTO">
+        <id property="id" column="id"/>
+        <result property="crewCode" column="crew_code"/>
+        <result property="userId" column="user_id"/>
+        <result property="category" column="category"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="isAnonymous" column="is_anonymous"/>
+        <result property="status" column="status"/>
+        <result property="userNickName" column="nickname"/>
+        <result property="userProfilePic" column="userProfilePic"/>
+        <result property="commentsCount" column="comments_count"/>
+    </resultMap>
+
     <select id="getMyCrewCodeAndRole" parameterType="int" resultMap="userCrew">
         SELECT *
         FROM user_crew
@@ -169,7 +188,40 @@
         WHERE ca.crew_code = #{crewCode}
         AND ca.is_approval = 0
     </select>
+  
+    <select id="getCrewApplyWithUserInfo" parameterType="int" resultMap="crewApplyWithUserInfo">
+        SELECT
+        ca.*,
+        u.*
+        FROM crew_apply ca
+        JOIN users u
+        on ca.user_code = u.id
+        WHERE ca.user_code = #{userId}
+        AND ca.is_approval = 0
+    </select>
 
+    <update id="updateCrewApplyResult">
+        UPDATE crew_apply
+        SET is_approval = #{isApproval}
+        WHERE user_code = #{userCode}
+    </update>
+
+    <insert id="alertUser">
+        INSERT INTO user_notice (user_code, category)
+        VALUES (#{userCode}, #{category})
+    </insert>
+
+    <select id="getCrewPostsList" parameterType="int" resultMap="crewPostsResult">
+        SELECT posts_with_comment_count.*
+        FROM (SELECT p.*, u.nickname AS userNickname, u.profile_pic AS userProfilePic,
+                (SELECT COUNT(*)
+                FROM crew_comments
+                WHERE post_id = p.id AND status = 1) AS comments_count
+        FROM crew_posts p
+        LEFT JOIN users u ON p.user_id = u.id
+        WHERE p.status = 1 AND p.crew_code = #{value}) AS posts_with_comment_count
+        ORDER BY posts_with_comment_count.created_at DESC;
+    </select>
 
 </mapper>
 

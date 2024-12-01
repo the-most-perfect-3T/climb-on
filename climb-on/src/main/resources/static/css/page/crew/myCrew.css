@@ -1,22 +1,29 @@
 @charset "utf-8";
 
-.crew-main{
+.crew-aside, .crew-main {
     height: calc(100vh - var(--headerHeight) - var(--footerHeight));
+    padding-top: 95px;
 }
-.inner .tab-content {
-    height: 100%;
-    overflow-y: auto;
-}
-
 /* 사이드 */
 .crew-aside{
     position: relative;
-    width: 270px;
-    height: calc(100% - 88px);
-    margin-top: 98px;
-    background-color: #fff;
+    width: 320px;
+    padding-right: 50px;
+
+    /*background-color: #fff;*/
     text-align: center;
     justify-content: center;
+    padding-bottom: 95px;
+}
+.crew-aside::after{
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 1px;
+    height: calc(100% - 88px);
+    transform: translateY(-50%);
+    background-color: var(--borderColor);
 }
 
 .crew-aside .crew-profile-img-wrapper{
@@ -75,10 +82,11 @@
 }
 
 .crew-aside .crew-join-apply{
-    width: 250px;
-    height: 55px;
-    background-color: #FF7F27;
+    width: 100%;
+    height: 50px;
+    background-color: var(--point);
     border-radius: 6px;
+    /*margin-top: 200px;*/
 }
 
 .crew-aside .crew-join-apply p{
@@ -92,12 +100,22 @@
     background-color: var(--gray);
 }
 
+/* 마이 크루 메인 */
 
 .crew-main{
-    margin-left: 80px;
+    width: calc(100% - 320px);
+    padding-left: 80px;
+  /*  margin-left: 80px;
     margin-top: 56px;
-    padding: 0;
+    padding: 0;*/
+    overflow-y: auto;
 }
+
+.inner .tab-content {
+    height: 100%;
+    /*overflow-y: auto;*/
+}
+
 .crew-tab-nav {
     display: flex;
     list-style: none;
@@ -113,27 +131,31 @@
 }
 
 .crew-tab-nav li button.active span {
-    color: #222222;
+    color: var(--black);
 }
 
-.notice-count {
-    top: 0;
-    right: 10px;
-    font-size: 8px;
-    font-weight: 600;
+.crew-tab-nav li button .rounded-circle {
+    background-color: var(--point);
     color: #fff;
-    display: block;
-    width: 12px;
-    height: 12px;
-    border-radius: 100%;
-    background: var(--point);
-    line-height: 12px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    display: flex;
+    font-size: 17px;
+    text-align: center;
+    justify-content: center;
+}
+
+.crew-tab-nav li button.active .rounded-circle {
+    color: #fff;
 }
 
 /* 마이크루 메인 */
 
 .tab-pane{
-    width: 870px;
+    /*width: 870px;*/
+    padding-bottom: 80px;
 }
 
 /* 공지 탭 */
@@ -141,13 +163,13 @@
 .tab-pane .crew-notification {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
+    margin-bottom: 5px;
+    padding: 20px;
 }
 
 .crew-notification .crew-notification-tag {
-    background-color: #FF7F27;
-    color: white;
+    background-color: var(--point);
+    color: #fff;
     padding: 5px 10px;
     border-radius: 50px;
     font-size: 16px;
@@ -158,23 +180,26 @@
 .crew-notification .crew-notification-text {
     font-size: 16px;
     font-weight: 500;
-    color: #343A40;
+    color: var(--gray);
 }
 
 .crew-limit-access{
     width: 870px;
     height: 46px;
-    background-color: #FAEFDD;
+    background-color: var(--beige);
     padding: 12px 23px;
     margin: 10px 0 10px 0;
 }
 
 /* 크루 활동 이벤트 */
+#crew-activity-event-list{
+    margin-top: 25px;
+}
 .crew-activity-event-item {
     display: flex;
     align-items: center;
     height: 110px;
-    background-color: #fdf7ed;
+    background-color: rgba(250,239,221,0.4);
 }
 
 .crew-activity-event-item .crew-event-info {
@@ -185,19 +210,20 @@
 }
 
 .crew-activity-event-item .crew-event-info .crew-event-status-tag {
-    background-color: #ff8040; /* Orange badge color */
-    color: white;
+    background-color: var(--point);
+    color: #fff;
     font-size: 16px;
     font-weight: 600;
     text-align: center;
     padding: 5px 10px;
     border-radius: 50px;
-    margin-right: 10px;
+    margin-right: 20px;
 }
 
 .crew-activity-event-item .crew-event-details{
     font-size: 16px;
     font-weight: 400;
+    color: var(--black);
 }
 
 .crew-activity-event-item .crew-event-center {
@@ -209,13 +235,15 @@
 }
 
 .crew-activity-event-item .crew-event-right{
-    flex: 1;
+    /*flex: 1;*/
     text-align: right;
     height: 100%;
+    background-color: var(--beige);
 }
 
 .crew-activity-event-item .participate-btn{
-    background-color: #FAEFDD;
+    background-color: var(--beige);
+    color: var(--black);
     width: 115px;
     height: 100%;
     cursor: pointer;
@@ -227,7 +255,7 @@
 }
 
 .crew-activity-event-item .participate-btn .fa-solid{
-    color: #FF7F27;
+    color: var(--point);
     font-size: 32px;
 }
 
@@ -238,8 +266,8 @@
 
 /* 캘린더 간격 수정 */
 .tab-pane .calendar-section{
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 30px;
+    /*margin-bottom: 25px;*/
     height: 700px;
 }
 
@@ -253,7 +281,7 @@
 }
 
 .grid-item {
-    background-color: #ff7f2a;
+    background-color: var(--point);
     position: relative;
     padding-top: 100%;
     overflow: hidden;
@@ -298,6 +326,17 @@
     margin-left: 20px;
 }
 
+.container-list td:nth-child(4) {
+    align-self: center;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.container-list td:nth-child(4) #crew-apply-confirm-modal-open {
+    background-color: var(--point);
+    color: var(--bs-white);
+}
+
 .table .badge {
     font-size: 0.9rem;
     background-color: var(--point);
@@ -305,4 +344,222 @@
 
 .table>:not(caption)>*>*{
     border-bottom: none;
+}
+
+/* 승인/거절 모달*/
+.custom-confirm-modal-width {
+    max-width: 700px;
+    width: 100%;
+}
+
+.applicantName {
+    font-size: 20px;
+}
+
+.applicantName .name {
+    font-weight: bold;
+}
+
+.modal-body .crewApplyContent {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.modal-body form .d-flex {
+    justify-content: space-between;
+}
+
+.modal-body .btn-approval {
+    background-color: var(--point);
+    color: white;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.modal-body .btn-refusal {
+    background-color: var(--gray);
+    color: white;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+}
+
+.modal-body .btn-confirm {
+    background-color: var(--point);
+    color: white;
+    width: 200px;
+    height: 50px;
+    font-size: 20px;
+}
+
+
+/* 가입 모달 */
+.custom-modal-width {
+    max-width: 1000px;
+    width: 100%;
+}
+
+.modal-body .top .mb-1 {
+    font-size: 30px;
+}
+
+.modal-body .block1 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.modal-body .middle .img-wrap {
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--beige);
+}
+
+.modal-body .middle .img-wrap #img {
+    object-fit: cover;
+}
+
+.modal-body .middle .badge {
+    background-color: var(--point);
+}
+
+.modal-body .middle .middle-left {
+    align-self: center;
+    text-align: center;
+    margin-left: 25px;
+}
+
+.modal-body .middle .middle-left .position-relative {
+    justify-items: center;
+}
+
+.modal-body .middle .middle-right {
+    padding-left: 40px;
+}
+
+.modal-body .middle .middle-right .crew-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.modal-body .middle .middle-right .crew-descriptionInfo {
+    word-break: keep-all;
+    text-align: left;
+    margin-top: 8px;
+    font-weight: 400;
+}
+
+.modal-body .middle .middle-right .crew-active-area {
+    margin-top: 8px;
+}
+
+.modal-body .middle .middle-right .crew-membercount {
+    margin-top: 8px;
+}
+
+.modal-body .block2 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 25px;
+}
+
+.modal-body .block3 {
+    padding-left: 25px;
+    padding-top: 20px;
+}
+
+.modal-body #crewApplyContentInput {
+    margin-left: 15px;
+    margin-top: 20px;
+    margin-right: 15px;
+    width: 97%;
+}
+
+.modal-footer .btn {
+    background-color: var(--point);
+    color: white;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/* 크루 소식 */
+#crew-posts-container .post-container{
+    height: 100%;
+    padding: 25px;
+}
+
+#crew-posts-container .post-container .post-header{
+    display: flex;
+    align-items: center;
+}
+
+#crew-posts-container .post-container .post-header .profile-picture {
+    width: 50px;
+    height: 50px;
+    background-color: var(--point);
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+#crew-posts-container .post-container .post-header .profile-picture .profile-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#crew-posts-container .post-container .post-header .post-info{
+    display: flex;
+    flex-direction: column;
+}
+
+#crew-posts-container .post-container .post-content {
+    height: 330px;
+    margin-top: 15px;
+}
+
+#crew-posts-container .post-container .post-content .post-images{
+    height: 180px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.post-images img {
+    width: 100%;  /* Make images fill the grid cell */
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: cover;  /* Ensures the image covers the space without distorting */
+}
+
+#crew-posts-container .post-container .post-content .post-text{
+    color: var(--black);
+    font-size: 14px;
+    height: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#crew-posts-container .post-container .post-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    align-items: center;
+}
+
+#crew-posts-container .post-container .post-footer .like-button,
+#crew-posts-container .post-container .post-footer .comments-count,
+#crew-posts-container .post-container .post-footer .share-button {
+    color: var(--gray);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+#crew-posts-container .post-container .post-footer .fa-solid,
+#crew-posts-container .post-container .post-footer .fa-regular {
+    color: var(--point);
+    font-size: 14px;
 }

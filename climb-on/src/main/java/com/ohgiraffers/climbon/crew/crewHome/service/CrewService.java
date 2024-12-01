@@ -79,4 +79,7 @@ public class CrewService {
     }
 
 
+    public int getCrewCodeByUserCode(Integer id) {
+        return crewDAO.getCrewCodeByUserCode(id);
+    }
 }

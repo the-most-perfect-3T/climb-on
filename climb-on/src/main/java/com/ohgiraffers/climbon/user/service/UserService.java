@@ -249,9 +249,9 @@ public class UserService {
 
     /** 유저 알림 확인 시 테이블에 해당 알림 삭제 */
     @Transactional
-    public int deleteUserNotice(int userCode) {
+    public int deleteUserNotice(int userCode, int category) {
 
-        int result = userMapper.deleteUserNotice(userCode);
+        int result = userMapper.deleteUserNotice(userCode, category);
         return result;
     }
     /** 비즈니스 알림 확인 시 테이블에 해당 알림 삭제 */
@@ -286,6 +286,7 @@ public class UserService {
         int result = userMapper.updateFacility(user);
         return result;
     }
+
 
     /**크루코드 가져오기*/
     /*public int findCrewCodeById(Integer key) {

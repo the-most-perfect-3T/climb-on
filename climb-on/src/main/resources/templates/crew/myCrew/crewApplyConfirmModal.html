@@ -1,0 +1,40 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/baseLayout}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<th:block th:fragment="crewApplyConfirmModalFragment">
+    <div class="modal fade" id="crew-apply-confirm-modal" tabindex="-1" aria-labelledby="crew-apply-confirm" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-confirm-modal-width">
+            <div class="modal-content p-4">
+
+                <div class="modal-header border-0">
+                    <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="left">
+                        <p class="applicantName">
+                            <span class="name">가입 신청자명</span>
+                            님이 크루 가입을 신청하셨습니다.
+                        </p>
+                    </div>
+                    <div class="crewApplyContent">
+                    </div>
+                    <form th:action="@{/crew/myCrew/crewApplyResult}"  method="post" class="right">
+                        <div class="d-flex align-items-center">
+                            <input type="hidden" id="input" name="userCode">
+                            <button class="btn-approval btn px-5 py-2 fw-bold" name="isApproval" value="2">승인</button>
+                            <button class="btn-refusal btn px-5 py-2 fw-bold" name="isApproval" value="1">거절</button>
+                            <button class="btn-confirm btn px-5 py-2 fw-bold" name="isApproval" value="3">확인</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</th:block>
+
+</html>

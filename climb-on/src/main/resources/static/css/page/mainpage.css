@@ -51,7 +51,7 @@
 }
 
 .main-content h3{
-    color: #343A40;
+    color: var(--gray);
     font-size: 24px;
     font-weight: 700;
     text-align: center;
@@ -97,10 +97,14 @@
 }
 
 .main-event-container .main-event-list h5{
-    color: #222222;
+    color: var(--black);
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 20px;
+}
+
+.main-event-container .main-event-list li{
+    cursor: pointer;
 }
 
 .main-event-container .calendar-section {
@@ -126,6 +130,7 @@
 }
 
 .featured-locations .facility-item {
+    cursor: pointer;
     margin-right: 13px;
     width: 360px;
     height: 100%;
@@ -220,6 +225,7 @@
     padding-right: 10px;
 }
 .community-container #recent-posts td {
+    cursor: pointer;
     padding: 10px 0;
     border-bottom: 1px solid var(--borderColor);
     font-size: 14px;
@@ -249,16 +255,20 @@
     margin-bottom: 30px;
 }
 
-.community-container .popular-list {
-    padding-left: 20px;
+.community-container .popular-list ol{
+    counter-reset: item;
+    list-style-type: none;
 }
+
 .community-container .popular-list li {
+    display: block;
+}
+.community-container .popular-list li:before{
     padding-left: 15px;
-    list-style: auto;
     font-size: 14px;
     color: var(--darkGray);
-
 }
+
 .community-container .popular-list li::marker {
     font-weight: 600;
 }

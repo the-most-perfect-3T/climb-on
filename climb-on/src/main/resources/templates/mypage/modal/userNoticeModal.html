@@ -35,11 +35,43 @@
                                         </div>
                                         <form action="/mypage/confirmNotice"  method="post" class="right confirm">
                                             <input type="hidden" name="userCode" th:value="${notice['userCode']}"/>
+                                            <input type="hidden" name="category" th:value="${notice['category']}"/>
+                                            <button class="btn-confirm border" name="userRole" th:value="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? 'ADMIN' : (#authorization.expression('hasAnyAuthority(''BUSINESS'')') ? 'BUSINESS' : 'USER')}">확인</button>
+                                        </form>
+                                    </li>
+                                </th:block>
+                                <!-- 크루 승인 -->
+                                <th:block  th:if="${notice['category'] == 2}">
+                                    <li class="list-item d-flex align-items-center justify-content-between border-top">
+                                        <div class="left">
+                                            <p>
+                                                크루 신청이 승인 되었습니다. 마이 크루를 방문해 보세요.
+                                            </p>
+                                        </div>
+                                        <form action="/mypage/confirmNotice"  method="post" class="right confirm">
+                                            <input type="hidden" name="userCode" th:value="${notice['userCode']}"/>
+                                            <input type="hidden" name="category" th:value="${notice['category']}"/>
+                                            <button class="btn-confirm border" name="userRole" th:value="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? 'ADMIN' : (#authorization.expression('hasAnyAuthority(''BUSINESS'')') ? 'BUSINESS' : 'USER')}">확인</button>
+                                        </form>
+                                    </li>
+                                </th:block>
+                                <!-- 크루 가입 거절 -->
+                                <th:block  th:if="${notice['category'] == 3}">
+                                    <li class="list-item d-flex align-items-center justify-content-between border-top">
+                                        <div class="left">
+                                            <p>
+                                                크루 신청이 거절 되었습니다.
+                                            </p>
+                                        </div>
+                                        <form action="/mypage/confirmNotice"  method="post" class="right confirm">
+                                            <input type="hidden" name="userCode" th:value="${notice['userCode']}"/>
+                                            <input type="hidden" name="category" th:value="${notice['category']}"/>
                                             <button class="btn-confirm border" name="userRole" th:value="${#authorization.expression('hasAnyAuthority(''ADMIN'')') ? 'ADMIN' : (#authorization.expression('hasAnyAuthority(''BUSINESS'')') ? 'BUSINESS' : 'USER')}">확인</button>
                                         </form>
                                     </li>
                                 </th:block>
                             </th:block>
+
                         </ul>
                     </div>
                 </div>
