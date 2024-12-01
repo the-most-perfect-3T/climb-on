@@ -16,6 +16,8 @@
         <result property="isAdmin" column="IS_ADMIN"/>
         <result property="location" column="LOCATION"/>
         <result property="isAllDay" column="ALL_DAY"/>
+        <result property="crewName" column="CREW_NAME"/>
+        <result property="crewImgUrl" column="IMG_URL"/>
     </resultMap>
 
     <resultMap id="crewEventResult" type="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
@@ -35,6 +37,7 @@
         SELECT
         *
         FROM calendar_events
+        JOIN
         WHERE crew_code = #{value};
     </select>
 
@@ -81,7 +84,8 @@
 
     <select id="getAllCrewsEvents" resultMap="eventResult">
         SELECT *
-        FROM calendar_events
+        FROM calendar_events e
+        JOIN crews c ON e.crew_code = c.id;
         WHERE crew_code IS NOT NULL;
     </select>
     

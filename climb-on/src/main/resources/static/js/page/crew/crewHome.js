@@ -198,9 +198,11 @@ function populateAllCrewEvents(eventData) {
                    <p class="crew-event-title">${eventData[i].title}</p>
                </div>
                <div class="crew-event-right">
-                   <p class="crew-event-location">서울숲클라이밍 종로점</p> <!--eventData[i].location 추가해서 여기-->
-                   <p class="crew-event-crewname">크루명</p>
-                   <div class="crew-event-image-placeholder"></div>
+                   <p class="crew-event-location">${eventData[i].location}</p> <!--eventData[i].location 추가해서 여기-->
+                   <p class="crew-event-crewname">${eventData[i].crewName}</p>
+                   <div class="crew-event-image-placeholder">
+                        <img src="${eventData[i].crewImgUrl}" alt="/images/logo.svg">
+                   </div>
                </div>`;
             eventListContainer.appendChild(eventItem);
         }

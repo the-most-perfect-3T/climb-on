@@ -13,12 +13,14 @@ public class EventDTO
     private String backgroundColor;
     private String location;
     private boolean isAllDay;
+    private String crewName;
+    private String crewImgUrl;
 
     public EventDTO()
     {
     }
 
-    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, String location, boolean isAllDay)
+    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, String location, boolean isAllDay, String crewName, String crewImgUrl)
     {
         this.id = id;
         this.title = title;
@@ -31,6 +33,8 @@ public class EventDTO
         this.backgroundColor = backgroundColor;
         this.location = location;
         this.isAllDay = isAllDay;
+        this.crewName = crewName;
+        this.crewImgUrl = crewImgUrl;
     }
 
     public int getId()
@@ -142,5 +146,25 @@ public class EventDTO
     public void setLocation(String location)
     {
         this.location = location;
+    }
+
+    public String getCrewName()
+    {
+        return crewName;
+    }
+
+    public void setCrewName(String crewName)
+    {
+        this.crewName = crewName;
+    }
+
+    public String getCrewImgUrl()
+    {
+        return crewImgUrl;
+    }
+
+    public void setCrewImgUrl(String crewImgUrl)
+    {
+        this.crewImgUrl = crewImgUrl;
     }
 }
