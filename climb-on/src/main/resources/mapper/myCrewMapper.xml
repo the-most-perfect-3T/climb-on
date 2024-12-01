@@ -101,7 +101,7 @@
         <result property="isAnonymous" column="is_anonymous"/>
         <result property="status" column="status"/>
         <result property="userNickName" column="nickname"/>
-        <result property="userProfilePic" column="profile_pic"/>
+        <result property="userProfilePic" column="userProfilePic"/>
         <result property="commentsCount" column="comments_count"/>
     </resultMap>
 

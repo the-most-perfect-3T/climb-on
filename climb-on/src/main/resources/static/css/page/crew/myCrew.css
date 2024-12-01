@@ -120,6 +120,14 @@
 .crew-tab-nav li button .rounded-circle {
     background-color: var(--point);
     color: #fff;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    display: flex;
+    font-size: 17px;
+    text-align: center;
+    justify-content: center;
 }
 
 .crew-tab-nav li button.active .rounded-circle {
@@ -457,7 +465,7 @@
     margin-top: 40px;
     margin-bottom: 40px;
 }
-  
+
 /* 크루 소식 */
 #crew-posts-container .post-container{
     height: 100%;
@@ -477,18 +485,42 @@
     margin-right: 15px;
 }
 
+#crew-posts-container .post-container .post-header .profile-picture .profile-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 #crew-posts-container .post-container .post-header .post-info{
     display: flex;
     flex-direction: column;
 }
 
 #crew-posts-container .post-container .post-content {
+    height: 330px;
     margin-top: 15px;
+}
+
+#crew-posts-container .post-container .post-content .post-images{
+    height: 180px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.post-images img {
+    width: 100%;  /* Make images fill the grid cell */
+    height: 100%; /* Maintain aspect ratio */
+    object-fit: cover;  /* Ensures the image covers the space without distorting */
 }
 
 #crew-posts-container .post-container .post-content .post-text{
     color: var(--black);
     font-size: 14px;
+    height: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #crew-posts-container .post-container .post-footer {

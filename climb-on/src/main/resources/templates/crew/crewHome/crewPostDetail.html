@@ -16,12 +16,14 @@
             <h1 class="post-title" th:text="${post.title}">게시글 제목 예시</h1>
             <div class="post-info">
                 <div class="post-author">
-                    <img th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <img th:if="!${post.isAnonymous}" th:src="${post.userProfilePic}" alt="프로필 이미지" style="width: 50px; height: 50px; border-radius: 50%;">
+                    <i th:if="${post.isAnonymous}" class="fa-solid fa-circle-user" style="font-size: 50px; color: var(--point)"></i>
                     <div class="author-info">
                         <div class="author-name">
                             <span th:text="${post.isAnonymous? '익명' : post.userNickname}" th:data-id="${post.isAnonymous == true ? '' : post.userId}" class="userModalOpen">작성자 닉네임</span>
                         </div>
                         <div class="meta-info">
+                            <a th:href="@{/crew/myCrew/{id}(id=${crew.id})}"><span class="post-crewCode fw-bold" th:text="${crew.crewName}"></span></a>
                             <span class="post-date" th:text="${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}">작성일</span>
                             <span class="views">조회</span><span th:text="${post.viewCount}">0</span>
                         </div>
@@ -29,7 +31,7 @@
                 </div>
                 <div class="post-actions" th:if="${post.userId == currentUserId}">  <!-- 수정 , 삭제 버튼을 현재 사용자가 작성자인 경우에만 표시하도록 조건 추가-->
                     <button th:onclick="|window.location.href='/crew/updatepost/${post.id}'|">수정</button>
-                    <form th:action="@{'/community/'  + ${post.id} + '/delete'}" method="post" style="display:inline;">
+                    <form th:action="@{'/crew/delete/'+ ${post.id}}" method="post" style="display:inline;">
                         <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
                     </form>
                 </div>

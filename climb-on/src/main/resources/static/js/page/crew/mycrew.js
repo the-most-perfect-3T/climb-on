@@ -29,11 +29,15 @@ function createEventInfo(eventContainer, event) {
         `;
     eventContainer.appendChild(eventItem);
 }
+
 function popluateMainEventInMycrewHome(eventData){
     const mainEventContainer = document.getElementById("crewRecentEvent");
-    mainEventContainer.innerHTML = '';
-    createEventInfo(mainEventContainer, eventData[0]);
-    setParticipateBtnEvent();
+    if(mainEventContainer != null)
+    {
+        mainEventContainer.innerHTML = '';
+        createEventInfo(mainEventContainer, eventData[0]);
+        setParticipateBtnEvent();
+    }
 }
 // 가져온 이벤트 활동 페이지에 뿌려주는 로직
 function populateEventList(eventData) {
@@ -271,22 +275,26 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
 
         data.forEach((post) => {
             const postItem = document.createElement('div');
+            console.log(post);
+            console.log(post.userProfilePic);
+            console.log(post.nickname);
             postItem.classList.add('post-container');
             postItem.innerHTML = `
                     <div class="post-header">
-                        <div class="profile-picture" style="background-image: ${post.userProfilePic}"></div>
+                        <div class="profile-picture userModalOpen" data-id="${post.crewCode}">
+                            <img src="${post.userProfilePic}" alt="userProfileImg" class="profile-img"/>
+                        </div>
                         <div class="post-info">
-                            <h3 class="author-name">${post.nickname}</h3>
+                            <h3 class="author-name userModalOpen" data-id="${post.crewCode}">${post.userNickname}</h3>
                             <p class="post-time">${(post.createdAt).split("T",1)}</p>
                         </div>
                     </div>
                     <div class="post-content">
-                        <p class="post-text">${post.content}</p>
-                        <div class="post-images">
-                            <img src="${post.imgUrl}" alt="Climbing Image 1">
-                        </div>
+                        <div class="post-text">${post.content}</div>
+                        <div class="post-images" id="images-${post.id}"></div> <!-- Container for images -->           
                     </div>
                     <div class="post-footer">
+                    <div class = like-and-comment>
                         <button class="like-button">
                             <i class="fa-regular fa-heart"></i>
                             좋아요
@@ -295,6 +303,7 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
                             <i class="fa-solid fa-comment-dots"></i>
                             댓글 ${post.commentsCount}
                         </button>
+                    </div>   
                         <button class="share-button">
                             <i class="fa-solid fa-share-nodes"></i>
                             공유하기
@@ -302,12 +311,31 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
                     </div>
             `
             crewPostsContainer.appendChild(postItem);
+            if (post.imgUrl) {
+                const imageContainer = document.getElementById(`images-${post.id}`);
+                const imgUrls = post.imgUrl.split(',');
+
+                imgUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url.trim();  // Remove any extra spaces
+                    img.alt = 'Post Image';
+                    img.className = 'post-image';  // Add a class for styling
+
+                    imageContainer.appendChild(img);  // Append each image to the container
+                });
+            }
         });
+        await openUserModal();
 
     } catch (error) {
         console.log(error);
     }
 });
+
+function splitImages(imageArray)
+{
+
+}
 
 const crewApplyBtn = document.querySelector('.crew-join-apply');
 // 크루 가입신청 후

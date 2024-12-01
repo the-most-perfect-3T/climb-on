@@ -30,4 +30,6 @@ public interface CrewDAO {
     int crewCaptainInsert(UserCrewDTO captain);
 
     int getCrewCodeFromCrewsByUserId(Integer id);
+
+    int getCrewCodeByUserCode(Integer id);
 }
