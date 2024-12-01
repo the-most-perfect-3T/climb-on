@@ -80,7 +80,7 @@ public class SearchController {
         // 추가 데이터를 가져오는 로직
         List<PostDTO> additionalPosts = searchService.loadMoreCommunityPosts(keyword, currentCount, limit);
         if (additionalPosts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No more posts available.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("검색 결과를 모두 불러왔습니다.");
         }
         return ResponseEntity.ok(additionalPosts);
     }

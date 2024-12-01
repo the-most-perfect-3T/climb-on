@@ -14,7 +14,7 @@
         <!-- 검색어 입력 폼 -->
         <form action="/search" method="get" class="head-search-form">
             <input type="search" name="keyword" placeholder="검색어를 입력하세요" minlength="2" required
-                   th:value="${keyword}" class="search-input">
+                   th:value="${keyword}" class="search-input" id="keywordInput">
             <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
         </div>

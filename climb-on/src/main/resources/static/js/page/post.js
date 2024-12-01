@@ -1,14 +1,10 @@
 let currentPostCount = 2; // 초기 개수
 const maxPostCount = 5; // 최대 개수
-const keyword = '[[${keyword}]]'; // Thymeleaf에서 검색어 가져오기
+const keyword = document.getElementById('keywordInput').value.trim();
 
-function loadMorePosts() {
-    if (currentPostCount >= maxPostCount) {
-        alert("더 이상 데이터를 로드할 수 없습니다.");
-        return;
-    }
+async function loadMorePosts() {
 
-    fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`)
+    await fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`)
         .then(response => {
             if (!response.ok) {
                 // HTTP 상태 코드가 200이 아닌 경우 처리
@@ -48,4 +44,19 @@ function loadMorePosts() {
             console.error('Error loading more posts:', error);
             alert(error.message); // 사용자에게 오류 메시지 표시
         });
+}
+
+async function loadPosts()
+{
+    try{
+        const response = await fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`);
+        if(!response.ok){
+            throw new Error("목록 더보기 실패" + response.json());
+        }
+        return response.json();
+    }
+    catch (error){
+        console.error("포스트를 더 불러오는 데에 실패했음", error);
+        alert(error.message);
+    }
 }
