@@ -130,19 +130,19 @@ function selectLocalImage() {
     fileInput.click();
     fileInput.addEventListener("change", function () {  // change 이벤트로 input 값이 바뀌면 실행
 
-        if (this.value !== "") { // 파일이 있을때만.
+        const file = fileInput.files[0];
+        if (file.value !== "") { // 파일이 있을때만.
             const ext = this.value.substring(this.value.lastIndexOf(".")).toLowerCase();
-            if (["gif", "jpg", "jpeg", "png", "bmp"].includes(ext)) {
+            if (![".gif", ".jpg", ".jpeg", ".png", ".bmp"].includes(ext)) {
                 appendAlert("jpg, jpeg, png, bmp, gif 파일만 업로드 가능합니다.", 'success');
                 return;
             }
-            // var fileSize = this.files[0].size;
-            // var maxSize = 20 * 1024 * 1024;
-            // if (fileSize > maxSize) {
-            //     alert("업로드 가능한 최대 이미지 용량은 20MB입니다.");
-            //     return;
-            // }
-            const file = fileInput.files[0];
+            const fileSize = file.size;
+            const maxSize = 10 * 1024 * 1024;
+            if (fileSize > maxSize) {
+                appendAlert("업로드 가능한 최대 이미지 용량은 10MB 입니다.");
+                return;
+            }
             const reader = new FileReader();
             reader.onload = () => {
                 const base64URL = reader.result;

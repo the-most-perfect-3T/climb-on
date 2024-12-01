@@ -82,4 +82,8 @@ public interface CrewBoardDAO {
     void addLike(int postId, Integer userId);
 
     List<CrewCommentDTO> getCommentsById(Integer id);
+
+    void deletePost(Integer postId);
+
+    void deleteCommentsByPostId(Integer postId);
 }

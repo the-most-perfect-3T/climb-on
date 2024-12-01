@@ -257,6 +257,12 @@ public class CrewController {
         return "redirect:/crew/post/" + id;
     }
 
+    // 게시글 삭제
+    @PostMapping("/delete/{id}")
+    public String deletePost(@PathVariable("id") Integer postId){
+        crewBoardService.deletePost(postId);
+        return "redirect:/crew/home";
+    }
 
 
     @GetMapping("/crewlist")
