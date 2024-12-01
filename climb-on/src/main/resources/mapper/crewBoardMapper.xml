@@ -134,7 +134,7 @@
             #{title},
             #{content},
             #{imgUrl},
-            NULL,
+            DEFAULT,
             #{isAnonymous},
             1
         )
@@ -255,6 +255,20 @@
         UPDATE crew_comments
         SET status = 0
         WHERE id = #{id}
+    </update>
+
+    <!-- 게시글 삭제(비활성화) -->
+    <update id="deletePost" parameterType="int">
+        UPDATE crew_posts
+        SET status = 0
+        WHERE id = #{id};
+    </update>
+
+    <!-- 특정 게시글의 모든 댓글 status = 0으로 업데이트 게시글과 연동해서 댓글 삭제 쿼리문(트랜잭션처리 위해 짯다)-->
+    <update id="deleteCommentsByPostId" parameterType="int">
+        UPDATE crew_comments
+        SET status = 0
+        WHERE post_id = #{postId};
     </update>
 
 </mapper>

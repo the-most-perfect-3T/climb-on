@@ -23,7 +23,7 @@
                             <h4>카테고리</h4>
                             <select class="form-select" aria-label="Default select example" name="category" required>
                                 <option value="">카테고리를 선택해주세요.</option>
-                                <option value="공지">공지</option>
+                                <option value="공지" th:disabled="${crewRole} == 'MEMBER'">공지</option>
                                 <option value="내 크루">내 크루</option>
                             </select>
                             <br/>
@@ -73,8 +73,10 @@
                             <div class="hidden alert" id="liveAlertPlaceHolder"></div>
 
                             <div class="d-flex justify-content-center button-container">
-                                <button type="reset" class="button btn-light">취소</button>
+
+                                <button id="resetBtn" type="reset" class="button btn-light">취소</button>
                                 <input type="submit" class="button" value="등록">
+
                             </div>
                         </div>
                     </form>

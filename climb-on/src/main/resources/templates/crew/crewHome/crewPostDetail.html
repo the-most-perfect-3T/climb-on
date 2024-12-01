@@ -29,7 +29,7 @@
                 </div>
                 <div class="post-actions" th:if="${post.userId == currentUserId}">  <!-- 수정 , 삭제 버튼을 현재 사용자가 작성자인 경우에만 표시하도록 조건 추가-->
                     <button th:onclick="|window.location.href='/crew/updatepost/${post.id}'|">수정</button>
-                    <form th:action="@{'/community/'  + ${post.id} + '/delete'}" method="post" style="display:inline;">
+                    <form th:action="@{'/crew/delete/'+ ${post.id}}" method="post" style="display:inline;">
                         <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
                     </form>
                 </div>

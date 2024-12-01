@@ -98,10 +98,13 @@ public class UserController {
                 noticeMap.put("category", notice.getCategory());
                 noticeMap.put("facilityCode", notice.getFacilityCode());
                 noticeMap.put("attachFile", notice.getAttachFile());
-                noticeMap.put("isApproval", notice.getIsApproval());
+                noticeMap.put("isApprovalBusiness", notice.getIsApprovalBusiness());
+                noticeMap.put("isApprovalCrew", notice.getIsApprovalCrew());
 
                 noticeMapList.add(noticeMap);
             }
+
+
 
             mv.addObject("noticeMapList", noticeMapList);
 
@@ -127,7 +130,7 @@ public class UserController {
                 noticeMap.put("category", notice.getCategory());
                 noticeMap.put("facilityCode", notice.getFacilityCode());
                 noticeMap.put("attachFile", notice.getAttachFile());
-                noticeMap.put("isApproval", notice.getIsApproval());
+                noticeMap.put("isApprovalBusiness", notice.getIsApprovalBusiness());
                 noticeMap.put("nickname", nickname);
 
                 noticeMapList.add(noticeMap);
@@ -161,7 +164,7 @@ public class UserController {
                 noticeMap.put("category", notice.getCategory());
                 noticeMap.put("facilityCode", notice.getFacilityCode());
                 noticeMap.put("attachFile", notice.getAttachFile());
-                noticeMap.put("isApproval", notice.getIsApproval());
+                noticeMap.put("isApprovalBusiness", notice.getIsApprovalBusiness());
                 noticeMap.put("nickname", nickname);
 
                 noticeMapList.add(noticeMap);
@@ -439,11 +442,11 @@ public class UserController {
 
     @PostMapping("updateNotice")
     public String updateNotice(NoticeDTO notice, RedirectAttributes redirectAttributes) {
-        int isApproval = notice.getIsApproval();
+        int isApproval = notice.getIsApprovalBusiness();
         switch (isApproval) {
             case 1:
                 // 승인 로직
-                notice.setIsApproval(1);
+                notice.setIsApprovalBusiness(1);
                 // user role 변경 (BUSINESS)
                 int userCode = notice.getUserCode();
                 UserDTO userDTO = new UserDTO();
@@ -463,9 +466,9 @@ public class UserController {
                 }
 
             case -1:
-                System.out.println("isApproval 세팅 전" + notice.getIsApproval());
+                System.out.println("isApproval 세팅 전" + notice.getIsApprovalBusiness());
                 // 거절 로직
-                notice.setIsApproval(-1);
+                notice.setIsApprovalBusiness(-1);
                 // 비즈니스 전환 테이블에 상태변경(거절)
                 int result2 = userService.updateNotice(notice);
                 // 유저알림 테이블에 추가
@@ -487,12 +490,16 @@ public class UserController {
 
 
     @PostMapping("confirmNotice")
-    public ModelAndView confirmNotice(ModelAndView mv, @RequestParam("userRole") UserRole userRole, @RequestParam("userCode") int userCode, RedirectAttributes redirectAttributes) {
+    public ModelAndView confirmNotice(ModelAndView mv,
+                                      @RequestParam("userRole") UserRole userRole,
+                                      @RequestParam("userCode") int userCode,
+                                      @RequestParam("category") int category,
+                                      RedirectAttributes redirectAttributes) {
 
         switch (userRole) {
             case USER:
                     // 유저 알림 테이블에서 삭제
-                    int userResult = userService.deleteUserNotice(userCode);
+                    int userResult = userService.deleteUserNotice(userCode, category);
                     if (userResult > 0) {
                         mv.setViewName("redirect:/mypage/home");
                         return mv;
