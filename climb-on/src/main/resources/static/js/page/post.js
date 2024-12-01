@@ -3,7 +3,6 @@ const maxPostCount = 5; // 최대 개수
 const keyword = document.getElementById('keywordInput').value.trim();
 
 async function loadMorePosts() {
-
     await fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`)
         .then(response => {
             if (!response.ok) {
@@ -44,19 +43,4 @@ async function loadMorePosts() {
             console.error('Error loading more posts:', error);
             alert(error.message); // 사용자에게 오류 메시지 표시
         });
-}
-
-async function loadPosts()
-{
-    try{
-        const response = await fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`);
-        if(!response.ok){
-            throw new Error("목록 더보기 실패" + response.json());
-        }
-        return response.json();
-    }
-    catch (error){
-        console.error("포스트를 더 불러오는 데에 실패했음", error);
-        alert(error.message);
-    }
 }
