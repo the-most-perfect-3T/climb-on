@@ -15,12 +15,13 @@ public class EventDTO
     private boolean isAllDay;
     private String crewName;
     private String crewImgUrl;
+    private boolean isInProgress;
 
     public EventDTO()
     {
     }
 
-    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, String location, boolean isAllDay, String crewName, String crewImgUrl)
+    public EventDTO(int id, String title, int userCode, int crewCode, boolean isAdmin, String start, String end, String description, String backgroundColor, String location, boolean isAllDay, String crewName, String crewImgUrl, boolean isInProgress)
     {
         this.id = id;
         this.title = title;
@@ -35,6 +36,7 @@ public class EventDTO
         this.isAllDay = isAllDay;
         this.crewName = crewName;
         this.crewImgUrl = crewImgUrl;
+        this.isInProgress = isInProgress;
     }
 
     public int getId()
@@ -166,5 +168,15 @@ public class EventDTO
     public void setCrewImgUrl(String crewImgUrl)
     {
         this.crewImgUrl = crewImgUrl;
+    }
+
+    public boolean isInProgress()
+    {
+        return isInProgress;
+    }
+
+    public void setInProgress(boolean inProgress)
+    {
+        isInProgress = inProgress;
     }
 }
