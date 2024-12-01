@@ -243,6 +243,13 @@
 <th:block layout:fragment="javascript">
     <script th:src="@{/js/page/crew/crewHome.js}"></script>
 
+    <script th:inline="javascript">
+        const alertMessage = [[${alertMessage}]];
+        if(alertMessage){
+            alert(alertMessage);
+        }
+    </script>
+
 </th:block>
 
 </html>
