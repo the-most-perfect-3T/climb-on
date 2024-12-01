@@ -85,7 +85,7 @@
     <select id="getAllCrewsEvents" resultMap="eventResult">
         SELECT *
         FROM calendar_events e
-        JOIN crews c ON e.crew_code = c.id;
+        JOIN crews c ON e.crew_code = c.id
         WHERE crew_code IS NOT NULL;
     </select>
     
