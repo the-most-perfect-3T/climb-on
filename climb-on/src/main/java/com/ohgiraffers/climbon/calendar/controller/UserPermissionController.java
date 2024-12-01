@@ -35,9 +35,7 @@ public class UserPermissionController
             return ResponseEntity.ok(0);
         }
         int userCode = userDetails.getLoginUserDTO().getId();
-        Object crewCode = userPermissionService.getCrewCodeByUserCode(userCode);
-
-        System.out.println("크루코드 가져오나요? : "+ crewCode);
+        Integer crewCode = userPermissionService.getCrewCodeByUserCode(userCode);
 
         return ResponseEntity.ok(Map.of("crewCode", crewCode));
     }
