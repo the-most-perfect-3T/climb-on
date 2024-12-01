@@ -26,9 +26,9 @@ public class PostService {
 
         int offset = (page - 1) * pageSize; // 페이지 번호에 맞는 시작 위치 ex) 2page 면 16번째 게시글부터 불러옴 (첫번째 게시글 위치로)
 
-        if (offset <= 0) {
-            offset = 1;
-        }
+//        if (offset <= 0) {
+//            offset = 1;
+//        }
 
         // 1. 공지 게시글 (2개 고정)
         List<PostDTO> noticePosts = postDAO.getFixedPostsByCategory("공지", 2);
@@ -59,9 +59,9 @@ public class PostService {
     public Map<String, List<PostDTO>> getPostsWithPinned(
             int page, int pageSize, String category, String searchKeyword, String sort, String dday, Boolean status) {
         int offset = (page - 1) * pageSize;
-        if (offset <= 0) {
-            offset = 1;
-        }
+//        if (offset <= 0) {
+//            offset = 1;
+//        }
 
         Map<String, List<PostDTO>> result = new HashMap<>();
 
@@ -147,8 +147,10 @@ public class PostService {
         return postDAO.getTotalPostCount(category, searchKeyword); // 전체 게시글 수를 가져오는 메소드
     }
 
-    public PostDTO getPostById(Integer id, Integer userId) {
-        postDAO.incrementViewCount(id); // 조회시 조회수 증가
+    public PostDTO getPostById(Integer id, Integer userId, boolean incrementView) {
+        if (incrementView) {
+            postDAO.incrementViewCount(id);
+        } // 조회시 조회수 증가 조건추가 (상세페이지 눌렀을때만 조회수증가하게)
         PostDTO post = postDAO.getPostById(id); // 게시글 가져오기
 
         // 현재 사용자의 좋아요 여부 설정
