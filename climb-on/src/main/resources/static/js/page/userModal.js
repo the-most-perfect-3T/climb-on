@@ -338,7 +338,8 @@ function createListItem(data) {
     const imgWrap = document.createElement('div');
     imgWrap.classList.add('img-wrap');
     const img = document.createElement('img');
-    /*img.src = data.imgSrc;*/
+    img.setAttribute("src", data.imageUrl);
+    /*img.src = data.imageUrl;*/
     imgWrap.appendChild(img);
     rightDiv.appendChild(imgWrap);
 
