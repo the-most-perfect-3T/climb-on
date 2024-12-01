@@ -21,9 +21,9 @@ const loadNotificationPosts = () =>
         .catch(error => console.log(error.message));
 }
 
-const loadRecentPosts = (offset =0, category = "") =>
+async function loadRecentPosts(offset =0, category = "")
 {
-    fetch(`/api/posts/recent/paginated`)
+    await fetch(`/api/posts/recent/paginated?category=${category}`)
         .then(response => {
             if(!response.ok) {
                 throw new Error(`${response.status} 에러가 발생했습니다`);
@@ -56,12 +56,12 @@ const loadPopularPosts = () =>
     fetch(`/api/posts/popular`)
         .then(response => {
             if(!response.ok) {
-                console.log(response.json());
                 throw new Error(`${response.status} 에러가 발생했습니다`);
             }
             return response.json();
         })
         .then(posts => {
+            console.log(posts);
             const popularPostsContainer = document.getElementById('popular-posts');
 
             for (let i = 0; i < posts.length; i++) {
