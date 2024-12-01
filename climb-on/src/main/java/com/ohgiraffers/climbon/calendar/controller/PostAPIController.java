@@ -50,7 +50,7 @@ public class PostAPIController
     }
 
     @GetMapping("/facilities")
-    public List<FacilitiesDTO> getFacilityInfo(ModelAndView mv)
+    public List<FacilitiesDTO> getFacilityInfo()
     {
         return mainService.getFacilityInfo();
     }
