@@ -29,13 +29,14 @@
     <select id="getRecentPosts" parameterType="String" resultMap="mainResult">
         SELECT *
         FROM community_posts
+        WHERE status = 1
         ORDER BY created_at DESC LIMIT 6;
     </select>
 
     <select id="getRecentPostsByCategory" resultMap="mainResult">
         SELECT *
         FROM community_posts
-        WHERE category = #{value}
+        WHERE category = #{value} AND status = 1
         ORDER BY created_at DESC LIMIT 6;
     </select>
 
@@ -55,7 +56,7 @@
     <select id="getNotificationPosts" resultMap="mainResult">
         SELECT *
         FROM community_posts
-        WHERE category LIKE "%소식%"
+        WHERE category LIKE "%소식%" AND status = 1
         ORDER BY event_end_date ASC LIMIT 6;
     </select>
 
