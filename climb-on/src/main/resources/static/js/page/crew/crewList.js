@@ -98,7 +98,7 @@ document.getElementById("registerCrewModalBtn").addEventListener('click', async 
         }
         const message = await response.text();
         if(message.includes("로그인")){
-            window.location.href = "auth/login";
+            window.location.href = "/auth/login";
         }
         else if(message.includes("소속된 크루X")){
             firstModal.show();

@@ -63,6 +63,7 @@ td .text-muted {
 
 .table img {
     object-fit: cover;
+    height: 100%;
 }
 
 .table .badge {

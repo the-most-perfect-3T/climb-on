@@ -33,6 +33,10 @@ public class MyCrewRestController {
     public ResponseEntity<Object> showMemberList(@PathVariable("crewCode") int crewCode, @AuthenticationPrincipal AuthDetail userDetails) {
         List<CrewMembersDTO> memberList = myCrewService.getCrewMemberList(crewCode);
 
+
+        // 크루코드와 유저 정보로 해당 크루 캡틴 인지 확잉
+        // crewApply가지고 돌아가서   0,0 인지 0,1 구분해서 가져감 modal
+        //뿌려주는데...
         /*//role이 CAPTAIN일시 크루 가입신청이 있는지 확인
         if(userCrewDTO.getRole().equals(CrewRole.CAPTAIN)){
             List<CrewApplyWithUserInfoDTO> crewApplyWithUserInfoDTO = myCrewService.getNewCrewApplyContentByCrewCode(myCrew.getId());
