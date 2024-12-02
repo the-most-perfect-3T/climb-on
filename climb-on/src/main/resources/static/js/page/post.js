@@ -3,6 +3,22 @@ let currentFacilityCount = 3;
 const maxPostCount = 5; // 최대 개수
 const keyword = document.getElementById('keywordInput').value.trim();
 
+const btnFacilities = document.getElementById('more-btn-facilities');
+const btnPosts = document.getElementById("more-btn-post");
+document.addEventListener("DOMContentLoaded", function(){
+    const facilityCount = document.querySelector(".facilityCount");
+    if(facilityCount.textContent == 0){
+        btnFacilities.style.display = "none";
+    }
+
+    const communityPostCount = document.querySelector(".communityPostCount");
+    if(communityPostCount.textContent == 0){
+        btnPosts.style.display = "none";
+    }
+
+});
+
+
 async function loadMorePosts() {
     await fetch(`/search/loadMorePosts?currentCount=${currentPostCount}&limit=5&keyword=${encodeURIComponent(keyword)}`)
         .then(response => {
@@ -45,6 +61,7 @@ async function loadMorePosts() {
             alert(error.message); // 사용자에게 오류 메시지 표시
         });
 }
+
 
 async function loadMoreFacilities() {
     await fetch(`/search/loadMoreFacilities?currentCount=${currentFacilityCount}&limit=5&keyword=${encodeURIComponent(keyword)}`)
