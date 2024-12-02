@@ -6,6 +6,9 @@ import com.ohgiraffers.climbon.calendar.dto.EventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -21,7 +24,24 @@ public class EventService
 
     public List<EventDTO> getCrewEvents(int crewCode)
     {
-        return eventMapper.getAllEventsFromCrew(crewCode);
+        List<EventDTO> crewsEvents = eventMapper.getAllEventsFromCrew(crewCode);
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String today = sdf1.format(now);
+
+        for(EventDTO crewEvent : crewsEvents)
+        {
+            if(crewEvent.getEnd()!=null)
+            {
+                String eventStartDate = (crewEvent.getStart().length()>11)?crewEvent.getStart().substring(0, 11):crewEvent.getStart();
+                String eventEndDate = (crewEvent.getEnd().length()>11)?crewEvent.getEnd().substring(0, 11):crewEvent.getEnd();
+                if(eventStartDate.compareTo(today) < 0 && eventEndDate.compareTo(today) > 0)
+                {
+                    crewEvent.setInProgress(true);
+                }
+            }
+        }
+        return crewsEvents;
     }
 
     public boolean isUserInCrew(CrewEventDTO crewEventDTO) throws Exception
@@ -69,6 +89,32 @@ public class EventService
 
     public List<EventDTO> getAllCrewsEvents()
     {
-        return eventMapper.getAllCrewsEvents();
+        List<EventDTO> crewsEvents = eventMapper.getAllCrewsEvents();
+        List<EventDTO> filteredEvents = new ArrayList<>();
+
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date now = new Date();
+        String today = sdf1.format(now);
+
+        for(EventDTO crewEvent : crewsEvents)
+        {
+            String eventStartDate = (crewEvent.getStart().length()>11)?crewEvent.getStart().substring(0, 11):crewEvent.getStart();
+            if(crewEvent.getEnd()!=null)
+            {
+                String eventEndDate = (crewEvent.getEnd().length()>11)?crewEvent.getEnd().substring(0, 11):crewEvent.getEnd();
+                if(eventEndDate.compareTo(today) > 0)
+                {
+                    filteredEvents.add(crewEvent);
+                    crewEvent.setInProgress(true);
+                    continue;
+                }
+            }
+
+            if(!(eventStartDate.compareTo(today) < 0))
+            {
+                filteredEvents.add(crewEvent);
+            }
+        }
+        return filteredEvents;
     }
 }

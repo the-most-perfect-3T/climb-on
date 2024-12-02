@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,13 +21,19 @@ public class PostAPIController
     private MainService mainService;
 
     @GetMapping("/recent/paginated")
-    public List<PostDTO> getRecentPosts(@RequestParam(required = false) String category)
+    public ResponseEntity<List<PostDTO>> getRecentPosts(@RequestParam(required = false, value = "category") String category)
     {
+        List<PostDTO> recentPosts = new ArrayList<>();
+        System.out.println("category 제발요 = " + category);
+
+        if(category == null || category.isEmpty()){
+            recentPosts = mainService.getRecentPosts();
+        }
         if(category != null && !category.isEmpty())
         {
-            return mainService.getRecentPostsByCategory(category);
+            recentPosts = mainService.getRecentPostsByCategory(category);
         }
-        return mainService.getRecentPosts();
+        return ResponseEntity.ok(recentPosts);
     }
 
     @GetMapping("/popular")
@@ -43,7 +50,7 @@ public class PostAPIController
     }
 
     @GetMapping("/facilities")
-    public List<FacilitiesDTO> getFacilityInfo(ModelAndView mv)
+    public List<FacilitiesDTO> getFacilityInfo()
     {
         return mainService.getFacilityInfo();
     }

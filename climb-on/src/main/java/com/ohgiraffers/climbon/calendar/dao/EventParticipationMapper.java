@@ -7,4 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface EventParticipationMapper
 {
     void participateCrewEvents(CrewEventDTO crewEventDTO);
+
+    int checkParticipateMember(CrewEventDTO crewEventDTO);
 }

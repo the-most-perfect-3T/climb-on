@@ -6,10 +6,7 @@ import com.ohgiraffers.climbon.calendar.service.EventParticipationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("participate")
@@ -21,14 +18,22 @@ public class EventParticipationController
     @PostMapping("/crewevents")
     public String participateCrewEvents(@RequestBody CrewEventDTO crewEventDTO, @AuthenticationPrincipal AuthDetail userDetails)
     {
-        System.out.println("event Participate Function called");
         try{
             crewEventDTO.setUserCode(userDetails.getLoginUserDTO().getId());
-            eventParticipationService.participateCrewEvents(crewEventDTO.getUserCode(), crewEventDTO.getCrewCode(), crewEventDTO.getEventCode());
+            eventParticipationService.participateCrewEvents(userDetails.getLoginUserDTO().getId(), crewEventDTO.getCrewCode(), crewEventDTO.getEventCode());
             return "성공적으로 참여 되었습니다.";
         }catch (Exception e) {
             e.printStackTrace();
             return "참여에 실패했습니다.";
         }
     }
+
+    @GetMapping("/checkDuplication")
+    public String checkParticipateMember(@RequestBody CrewEventDTO crewEventDTO, @AuthenticationPrincipal AuthDetail userDetails)
+    {
+        int result = eventParticipationService.checkParticipateMember(userDetails.getLoginUserDTO().getId(), crewEventDTO.getCrewCode(), crewEventDTO.getEventCode());
+
+        return result > 0 ? "이 이벤트에는 이미 참여했습니다!" : "";
+    }
+
 }

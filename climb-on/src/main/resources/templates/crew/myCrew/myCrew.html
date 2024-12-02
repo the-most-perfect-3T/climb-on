@@ -6,14 +6,14 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/common/inputCommon.css}">
-    <link rel="stylesheet" th:href="@{/css/page/crew/myCrew.css}">;
+    <link rel="stylesheet" th:href="@{/css/page/crew/myCrew.css}">
     <link rel="stylesheet" th:href="@{/css/page/calendar.css}">
 </th:block>
 
 
 <th:block layout:fragment="containerFragment">
-    <div class="inner d-flex">
-        <aside class="crew-aside">
+    <div class="inner d-flex justify-content-between">
+        <aside class="crew-aside d-flex flex-column justify-content-between">
             <div class="crew-info">
                 <div class="crew-profile-img-wrapper">
                     <img th:src="${myCrew.imgUrl}" alt="Thumbnail" class="thumbnail">

@@ -24,7 +24,44 @@ depth1.forEach(function(el) {
 
 
 // 다크모드
+document.addEventListener('DOMContentLoaded', () => {
+    const $html = document.querySelector('html');
+    const isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+    $html.setAttribute('data-bs-theme', isDarkMode ? 'dark' : 'light');
+});
 function darkMode() {
+    const $html = document.querySelector('html');
+    const darkModeToggle = document.getElementById('btnToggle');
+
+    // 초기 설정
+    const isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+    $html.setAttribute('data-bs-theme', isDarkMode ? 'dark' : 'light');
+
+    // 이벤트 리스너 추가
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', () => {
+            const isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+            const newMode = !isDarkMode;
+            localStorage.setItem('isDarkMode', newMode);
+            $html.setAttribute('data-bs-theme', newMode ? 'dark' : 'light');
+        });
+    }
+
+    // MutationObserver로 속성 유지
+    const observer = new MutationObserver(() => {
+        const isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+        const currentTheme = $html.getAttribute('data-bs-theme');
+        const expectedTheme = isDarkMode ? 'dark' : 'light';
+        if (currentTheme !== expectedTheme) {
+            $html.setAttribute('data-bs-theme', expectedTheme);
+        }
+    });
+
+    observer.observe($html, { attributes: true, attributeFilter: ['data-bs-theme'] });
+}
+darkMode();
+
+/*function darkMode() {
 
     const $html = document.querySelector('html');
     let isDarkMode = localStorage.getItem('isDarkMode') === 'true';
@@ -40,7 +77,7 @@ function darkMode() {
         $html.setAttribute('data-bs-theme', isDarkMode ? 'dark' : 'light');
     });
 }
-darkMode();
+darkMode();*/
 
 
 // Header Nav active

@@ -14,7 +14,10 @@
         <result property="userCode" column="USER_CODE"/>
         <result property="crewCode" column="CREW_CODE"/>
         <result property="isAdmin" column="IS_ADMIN"/>
+        <result property="location" column="LOCATION"/>
         <result property="isAllDay" column="ALL_DAY"/>
+        <result property="crewName" column="CREW_NAME"/>
+        <result property="crewImgUrl" column="IMG_URL"/>
     </resultMap>
 
     <resultMap id="crewEventResult" type="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
@@ -44,8 +47,8 @@
     </select>
 
     <insert id="insertEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
-        INSERT INTO calendar_events (title, user_code, crew_code, is_admin, start_datetime, end_datetime, description, color, all_day)
-        VALUES(#{title}, #{userCode}, #{crewCode}, #{isAdmin}, #{start}, #{end}, #{description}, #{backgroundColor}, #{isAllDay});
+        INSERT INTO calendar_events (title, user_code, crew_code, is_admin, start_datetime, end_datetime, location, color, all_day)
+        VALUES(#{title}, #{userCode}, #{crewCode}, #{isAdmin}, #{start}, #{end}, #{location}, #{backgroundColor}, #{isAllDay});
     </insert>
 
     <select id="checkDuplicate" resultType="Integer">
@@ -56,7 +59,7 @@
 
     <update id="modifyEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         UPDATE calendar_events
-        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, description = #{description}, color = #{backgroundColor}, #{isAllDay}
+        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, location = #{location}, color = #{backgroundColor}, #{isAllDay}
         WHERE event_id = #{id};
     </update>
 
@@ -80,8 +83,10 @@
 
     <select id="getAllCrewsEvents" resultMap="eventResult">
         SELECT *
-        FROM calendar_events
-        WHERE crew_code IS NOT NULL;
+        FROM calendar_events e
+        JOIN crews c ON e.crew_code = c.id
+        WHERE crew_code IS NOT NULL
+        ORDER BY e.start_datetime ASC;
     </select>
     
 <!--    <insert id="insertUserInCrewEvents">-->

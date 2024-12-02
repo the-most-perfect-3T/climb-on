@@ -8,7 +8,6 @@ import com.ohgiraffers.climbon.search.dao.SearchDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,14 +58,9 @@ public class SearchService {
     }
 
     public List<PostDTO> loadMoreCommunityPosts(String keyword, int currentCount, int limit) {
-        // 현재 개수와 limit에 맞게 데이터를 반환
-
+        System.out.println("my keword: " + keyword + " my current Count: " + currentCount + " limit: " + limit);
         List<PostDTO> posts = searchDAO.searchCommunityPostsPaged(keyword, currentCount, limit);
         System.out.println("Service layer fetched posts: " + posts);
-        System.out.println(keyword);
-        System.out.println(currentCount);
-        System.out.println(limit);
-
         return searchDAO.searchCommunityPostsPaged(keyword, currentCount, limit);
     }
 
@@ -74,4 +68,8 @@ public class SearchService {
         return postDAO.getUserNicknameById(userId);
     }
 
+    public List<FacilitiesDTO> loadMoreFacilities(String keyword, int currentCount, int limit)
+    {
+        return searchDAO.loadMoreFacilities(keyword, currentCount, limit);
+    }
 }

@@ -86,11 +86,10 @@
           <div class="hidden alert" id="liveAlertPlaceHolder"></div>
 
           <div class="d-flex justify-content-center button-container">
-            <button type="reset" class="button btn-light">취소</button>
-            <input type="submit" class="button" value="등록">
+             <button id="cancelButton" type="reset" class="button btn-light">취소</button>
+             <input type="submit" class="button" value="등록">
           </div>
         </div>
-          <input type="hidden" id="hiddenContent" th:text="${post.content}">
       </form>
 
     </div>
@@ -142,6 +141,22 @@
           if (existingEndDate){
               eventEndDateInput.value = existingEndDate;
           }
+
+          //취소 버튼 JS 로직
+          const cancelButton = document.getElementById("cancelButton");
+          const postId = [[${post.id != null ? post.id : 'null'}]];
+
+          cancelButton.addEventListener("click", (event) => {
+              event.preventDefault();
+              if (postId !== null) {
+                  // 수정 상태: 상세 페이지로 이동
+                  window.location.href = `/community/${postId}?incrementView=false`;
+              } else {
+                  // 작성 상태: 커뮤니티 목록으로 이동
+                  window.location.href = '/community';
+              }
+          });
+
       });
 
     function toggleEventFields(category){
