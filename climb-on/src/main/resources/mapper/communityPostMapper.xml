@@ -160,6 +160,14 @@
         LIMIT 1
     </select>
 
+    <select id="getAddedPostById" parameterType="int">
+        SELECT id
+        FROM community_posts
+        WHERE user_id = #{id}
+        ORDER BY created_at DESC
+        LIMIT 1
+    </select>
+
     <!-- 게시글 추가-->
     <insert id="insertPost" parameterType="com.ohgiraffers.climbon.community.dto.PostDTO">
         INSERT INTO community_posts (user_id, title, content, view_count, is_anonymous, like_count, img_url, category, status, created_at
@@ -174,6 +182,8 @@
         </if>
         )
     </insert>
+
+
 
     <!-- 댓글 추가 -->
     <insert id="insertComment" parameterType="com.ohgiraffers.climbon.community.dto.CommentDTO">

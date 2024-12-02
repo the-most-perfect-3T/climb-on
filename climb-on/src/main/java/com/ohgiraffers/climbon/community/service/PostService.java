@@ -164,6 +164,10 @@ public class PostService {
         postDAO.insertPost(post);
     }
 
+    public int getAddedPostById(int id) {
+        return postDAO.getAddedPostById(id);
+    }
+
     public void updatePost(PostDTO post) {
         postDAO.updatePost(post);
     }

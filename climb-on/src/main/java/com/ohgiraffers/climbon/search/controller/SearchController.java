@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -79,6 +82,12 @@ public class SearchController {
             @RequestParam(value = "keyword", required = false) String keyword) {
         // 추가 데이터를 가져오는 로직
         List<PostDTO> additionalPosts = searchService.loadMoreCommunityPosts(keyword, currentCount, limit);
+
+        for(PostDTO post : additionalPosts){
+            String userNickname =  searchService.getUserNicknameById(post.getUserId());
+            post.setUserNickname(userNickname);
+        }
+
         if (additionalPosts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("검색 결과를 모두 불러왔습니다.");
         }

@@ -2,18 +2,33 @@
 const crewCodeTag = document.getElementById('crewcode');
 const crewCode = crewCodeTag.getAttribute("data-crew-code");
 
+function compareTime(dateString)
+{
+    const currentDate = new Date();
+    const dateFromString = new Date(dateString);
+
+// Compare the two dates
+    if (dateFromString > currentDate) {
+        return true;
+    } else if (dateFromString < currentDate) {
+        return false;
+    } else {
+        return true;
+    }
+}
 function createEventInfo(eventContainer, event) {
-    console.log(event);
     const eventItem = document.createElement('div');
-    eventItem.className = 'crew-activity-event-item';
-    eventItem.innerHTML = `
+    if(compareTime(event.start))
+    {
+        eventItem.className = 'crew-activity-event-item';
+        eventItem.innerHTML = `
                                        <div class="crew-event-info">
                             <span class="crew-event-status-tag">${event.inProgress ? "진행중" : "예정"}</span>
                             <div class="crew-event-details">
                                 <p class="crew-event-date">${new Date(event.start).toLocaleDateString()} · ${new Date(event.start).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-    })}</p>
+            hour: '2-digit',
+            minute: '2-digit'
+        })}</p>
                                 <p class="crew-event-location">${event.location}</p>
                             </div>
                           </div>
@@ -28,12 +43,13 @@ function createEventInfo(eventContainer, event) {
                           </div>
 
         `;
-    eventContainer.appendChild(eventItem);
+        eventContainer.appendChild(eventItem);
+    }
 }
 
-function popluateMainEventInMycrewHome(eventData){
+function popluateMainEventInMycrewHome(eventData, condition){
     const mainEventContainer = document.getElementById("crewRecentEvent");
-    if(mainEventContainer != null)
+    if(mainEventContainer != null && condition)
     {
         mainEventContainer.innerHTML = '';
         createEventInfo(mainEventContainer, eventData[0]);
