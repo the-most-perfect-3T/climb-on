@@ -731,6 +731,9 @@ body .btn-fmodal {
     position: absolute;
     right: 0;
 }
+.review-actions button {
+    padding: 0;
+}
 
 /* dropdown 메뉴 스타일 */
 .dropdown-menureview {

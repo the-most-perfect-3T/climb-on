@@ -4,10 +4,11 @@
 
 .headcontainer{
     text-align: center;
-    padding: 40px 20px;
-    background-color: var(--beige);
-    width: 100vw; /* 화면 너비를 100%로 설정 */
-    margin-left: calc(-50vw + 50%); /* 화면 전체로 확장된 배경을 가운데 정렬 */
+    padding: 80px 0px;
+
+    background: rgba(250,239,221,0.4);
+   /* width: 100vw; !* 화면 너비를 100%로 설정 *!
+    margin-left: calc(-50vw + 50%); !* 화면 전체로 확장된 배경을 가운데 정렬 *!*/
     position: relative; /* 요소의 위치를 기준으로 설정 */
 }
 
@@ -26,10 +27,11 @@
     background-color: #fff; /* 흰색 배경 */
     border: 1px solid var(--borderColor); /* 연한 경계선 */
     border-radius: 50px; /* 둥근 모서리 */
-    padding: 10px 40px;
+    padding: 20px 40px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
     margin-top : 20px;
     font-size: 16px;
+    width: 560px;
 }
 
 
@@ -37,9 +39,9 @@
     color: var(--point);
 }
 
-.head-search-input[type="search"] {
-    width: 70%;
-    padding: 10px;
+.head-search-form input[type="search"] {
+    /*padding: 10px;*/
+    width: 100%;
     border: none; /* 경계선 제거 */
     background-color: transparent; /* 배경색 투명 */
     outline: none; /* 포커스 시 생기는 기본 윤곽선 제거 */
@@ -59,8 +61,9 @@
 }
 
 .search-results {
-    margin-top: 30px;
-    margin-left: 40px;
+    /*margin-top: 30px;*/
+    /*margin-left: 40px;*/
+    padding-bottom: 100px;
 }
 
 .img-wrap {
@@ -84,16 +87,21 @@
     flex-direction: column; /* 세로 방향 정렬 */
     align-items: center; /* 가운데 정렬 */
     text-align: center; /* 텍스트 가운데 정렬 */
-    width: 150px; /* 각 아이템의 고정 너비 */
+    /*width: 150px; !* 각 아이템의 고정 너비 *!*/
 }
 
 .crew-results {
     display: flex; /* Flexbox 레이아웃 사용 */
     flex-wrap: wrap; /* 너비 초과 시 다음 줄로 넘김 */
-    gap: 20px; /* 각 항목 간격 조정 */
+    gap: 35px; /* 각 항목 간격 조정 */
     justify-content: flex-start; /* 아이템을 왼쪽 정렬 */
+    padding-left: 40px;
 }
 
+section h2 {
+    font-weight: 700;
+    padding-left: 40px;
+}
 .result-crew h2 {
     display: flex; /* Flexbox로 가로 정렬 */
     align-items: center; /* 세로 가운데 정렬 */
@@ -117,8 +125,11 @@
 }
 
 /* 운동시설 아이템 스타일 */
+.facility-result-container {
+    margin-bottom: 60px;
+}
 .facility-item {
-    padding: 20px 0; /* Add vertical padding for space */
+    padding: 20px 40px; /* Add vertical padding for space */
     border-bottom: 1px solid #ddd; /* Light gray bottom border */
     margin-top: 5px;
 }
@@ -130,7 +141,7 @@
 }
 
 .result-facility {
-    margin-bottom: 124px;
+    /*margin-bottom: 124px;*/
 }
 
 .result-facility h2 {
@@ -156,7 +167,7 @@
 }
 
 .result-post {
-    margin-bottom: 145px;
+    /*margin-bottom: 145px;*/
 }
 
 .result-post h2 {
@@ -266,7 +277,7 @@
     text-overflow: ellipsis;
     white-space: normal;
 }
-
+/*
 #more-btn-post {
     display: block;
     margin: 20px auto;
@@ -277,4 +288,16 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+}*/
+
+.btn-more {
+    display: block;
+    margin: 30px auto 0;
+    padding: 5px 0;
+    color: var(--point);
+    border-bottom: 2px solid var(--point);
+    font-weight: 600;
+}
+.btn-more i {
+    margin-left: 10px;
 }
