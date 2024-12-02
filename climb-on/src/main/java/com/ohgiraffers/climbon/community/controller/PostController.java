@@ -198,8 +198,12 @@ public class PostController {
 //            imageFile.transferTo(file);
 //            post.setImageUrl("/" + uploadDir + fileName); // 이미지 URL 설정
 //        }
+
+        // 게시글 DB에 추가하고 새로 생성된 게시글 ID를 받음
+        int postId = postService.getAddedPostById(userId);
+
         postService.insertPost(post); // 새로운 게시글 DB에 추가
-        return "redirect:/community"; // 작성 후 게시글 목록으로 리다이렉트
+        return "redirect:/community/" + postId;
     }
 
 //  백업용 게시글 작성
