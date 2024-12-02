@@ -78,4 +78,6 @@ public interface PostDAO {
     String getUserProfilePicById(Integer userId);
 
     List<CommentDTO> getCommentsById(Integer id);
+
+    int getAddedPostById(int id);
 }
