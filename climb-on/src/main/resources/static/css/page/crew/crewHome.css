@@ -52,6 +52,11 @@ h2 {
     gap: 0.5rem;
 }
 
+.crew-item a {
+    display: block;
+    width: 100%;
+}
+
 .img-wrap {
     width: 80px;
     height: 80px;
@@ -65,6 +70,7 @@ h2 {
 
 .crewlist-container img {
     object-fit: cover;
+    height: 100%;
 }
 
 .crew-name {
