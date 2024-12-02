@@ -159,6 +159,33 @@
 
       });
 
+      document.getElementById('writePostForm').onsubmit = async function (event) {
+          event.preventDefault();
+          // 기존의 폼 검증 및 파일 업로드 로직...
+
+          try {
+              hiddenContentInput.value = quill.root.innerHTML;
+              const response = await fetch('/community/new', {
+                  method: 'POST',
+                  body: new FormData(this),
+              });
+
+              if (!response.ok) {
+                  throw new Error('게시글 작성에 실패했습니다.');
+              }
+
+              const result = await response.json(); // 서버에서 반환된 게시글 ID를 받음
+
+              console.log(result);
+              window.location.href = `/community/${result.id}`; // 해당 게시글의 상세 페이지로 이동
+
+          } catch (error) {
+              console.error("폼 제출 오류:", error);
+          }
+      };
+
+
+
     function toggleEventFields(category){
       const eventFields = document.getElementById('eventFields');
       if (category === '소식'){
