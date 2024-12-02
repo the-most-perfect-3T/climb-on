@@ -59,6 +59,7 @@ async function showModal(calendar){
 
                 if (response.ok) {
                     await calendar.refetchEvents(); // Refresh events from the server
+                    calendar.addEventSource(eventData);
                     events = eventData;
                     console.log(eventData);
                 } else {
@@ -253,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 center: 'title',
                                 right: 'myCustomButton'
                             });
-                            crewCalendar.setOption('selectable', true);
                             crewCalendar.setOption('editable', true);
                         });
                         crewCalendar.refetchEvents();
@@ -432,7 +432,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                 center: 'title',
                                 right: 'myCustomButton'
                             });
-                            crewCalendar.setOption('selectable', true);
                             crewCalendar.setOption('editable', true);
                         });
                         crewCalendar.refetchEvents();
@@ -570,14 +569,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (crewCalendar) {
                 populateEventList(events, myCrewCode===getCrewCode());
                 crewCalendar.updateSize();
-                //crewCalendar.refetchEvents();
+                crewCalendar.refetchEvents();
             }
         });
     }
 
     // 개인 캘린더
     if (calendarMyE1) {
-        console.log("you get private calendar");
         const privateCalendar = new FullCalendar.Calendar(calendarMyE1, {
 
             customButtons: {

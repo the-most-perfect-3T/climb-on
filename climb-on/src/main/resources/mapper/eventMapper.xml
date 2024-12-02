@@ -29,7 +29,7 @@
     <select id="getAllEvents" parameterType="int" resultMap="eventResult">
         SELECT *
         FROM calendar_events e
-        JOIN crew_gathering_events g ON e.event_id = g.event_code
+        LEFT JOIN crew_gathering_events g ON e.event_id = g.event_code
         WHERE e.user_code = #{userCode} OR g.user_code = #{userCode};
     </select>
 
