@@ -47,9 +47,9 @@ function createEventInfo(eventContainer, event) {
     }
 }
 
-function popluateMainEventInMycrewHome(eventData){
+function popluateMainEventInMycrewHome(eventData, condition){
     const mainEventContainer = document.getElementById("crewRecentEvent");
-    if(mainEventContainer != null)
+    if(mainEventContainer != null && condition)
     {
         mainEventContainer.innerHTML = '';
         createEventInfo(mainEventContainer, eventData[0]);

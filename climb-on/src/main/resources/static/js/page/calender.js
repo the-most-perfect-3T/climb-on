@@ -13,7 +13,7 @@ function getCrewCode() {
     if (crewCodeIndex > -1 && crewCodeIndex + 1 < pathSegments.length) {
         return parseInt(pathSegments[crewCodeIndex + 1]); // Extract crew code
     }
-    return null; // Default value if not on a crew page
+    return null;
 }
 
 // toISOString 했을 때의 시차를 위해 한국 시간 기준으로 맞춰줄 offset
@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     arg.event.setProp('backgroundColor', $("#color").val());
 
                                     let eventData = ({
+                                        id: arg.event.id,
                                         title: arg.event.title,
                                         start: arg.event.start.toISOString(),
                                         end: arg.event.end ? arg.event.end.toISOString() : null,
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             .then(data => {
                                 console.log(data);
                                 crewCalendar.addEventSource(data);
-                                popluateMainEventInMycrewHome(data);
+                                popluateMainEventInMycrewHome(data, myCrewCode===getCrewCode());
                             })
                             .catch(error => {
                                 console.error('Error:', error);
@@ -268,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             .then(data => {
                                 console.log(data);
                                 crewCalendar.addEventSource(data);
-                                popluateMainEventInMycrewHome(data);
+                                popluateMainEventInMycrewHome(data, myCrewCode===getCrewCode());
                             })
                             .catch(error => {
                                 console.error('Error:', error);
@@ -337,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
+                        id: arg.event.id,
                         title: arg.event.title,
                         start: arg.event.start.toISOString(),
                         end: arg.event.end ? arg.event.end.toISOString() : null,
@@ -446,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             .then(data => {
                                 console.log(data);
                                 crewCalendar.addEventSource(data);
-                                popluateMainEventInMycrewHome(data);
+                                popluateMainEventInMycrewHome(data, myCrewCode===getCrewCode());
                             })
                             .catch(error => {
                                 console.error('Error:', error);
@@ -515,6 +517,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
+                        id: arg.event.id,
                         title: arg.event.title,
                         start: arg.event.start.toISOString(),
                         end: arg.event.end ? arg.event.end.toISOString() : null,
@@ -622,6 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
+                        id: arg.event.id,
                         title: arg.event.title,
                         start: arg.event.start.toISOString(),
                         end: arg.event.end ? arg.event.end.toISOString() : null,
