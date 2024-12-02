@@ -3,11 +3,12 @@ const crewCodeTag = document.getElementById('crewcode');
 const crewCode = crewCodeTag.getAttribute("data-crew-code");
 
 function createEventInfo(eventContainer, event) {
+    console.log(event);
     const eventItem = document.createElement('div');
     eventItem.className = 'crew-activity-event-item';
     eventItem.innerHTML = `
                                        <div class="crew-event-info">
-                            <span class="crew-event-status-tag">예정</span>
+                            <span class="crew-event-status-tag">${event.inProgress ? "진행중" : "예정"}</span>
                             <div class="crew-event-details">
                                 <p class="crew-event-date">${new Date(event.start).toLocaleDateString()} · ${new Date(event.start).toLocaleTimeString([], {
         hour: '2-digit',
@@ -48,16 +49,7 @@ function populateEventList(eventData, condition) {
         eventData.forEach(event => {
             createEventInfo(eventListContainer, event)
         })
-        if(condition === true){
-            setParticipateBtnEvent();
-        }
-        else
-        {
-            const buttons = document.querySelectorAll("#crewParticipateButton")
-            buttons.forEach(button => {
-                button.removeEventListener("click", setAuthorityToJoin);
-            });
-        }
+        setParticipateBtnEvent();
     }
 }
 

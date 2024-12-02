@@ -57,6 +57,10 @@
     text-align: center;
 }
 
+.notification-list li{
+    padding: 20px 0;
+    border-bottom: 1px solid var(--gray);
+}
 
 /* 이벤트(리스트, 캘린더) */
 

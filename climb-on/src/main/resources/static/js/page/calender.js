@@ -30,6 +30,7 @@ async function showModal(calendar){
     $("#title").val("");
     $("#start").val(new Date(Date.now() - offset).toISOString().substring(0,16));
     $("#end").val(new Date(Date.now() - offset).toISOString().substring(0,16));
+    $("#location").val("");
     $("#color").val("red");
 
     //모달창 이벤트
@@ -38,6 +39,7 @@ async function showModal(calendar){
             title: $("#title").val(),
             start: $("#start").val(),
             end: $("#end").val(),
+            location: $("#location").val(),
             backgroundColor: $("#color").val()
         };
 
@@ -70,6 +72,7 @@ async function showModal(calendar){
             $("#title").val("");
             $("#start").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
             $("#end").val(new Date(Date.now() - offset).toISOString().substring(0, 16));
+            $("#location").val("");
             $("#color").val("red");
         }
     });
@@ -123,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 $("#title").val(arg.event.title);
                                 $("#start").val(arg.event.start.toISOString().substring(0, 16));
                                 $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0, 16) : "");
+                                $("#location").val(arg.event.location);
                                 $("#color").val(arg.event.color);
 
                                 //수정 버튼 클릭했을 때
@@ -130,12 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                     arg.event.setProp('title', $("#title").val());
                                     arg.event.setStart($("#start").val());
                                     arg.event.setEnd($("#end").val());
+                                    arg.event.setProp('location', $("#location").val());
                                     arg.event.setProp('backgroundColor', $("#color").val());
 
                                     let eventData = ({
                                         title: arg.event.title,
                                         start: arg.event.start.toISOString(),
                                         end: arg.event.end ? arg.event.end.toISOString() : null,
+                                        location: arg.event.location,
                                         backgroundColor: arg.event.backgroundColor
                                     });
 
@@ -319,6 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $("#title").val(arg.event.title);
                 $("#start").val(arg.event.start.toISOString().substring(0, 10));
                 $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0, 10) : "");
+                $("#location").val(arg.event.location);
                 $("#color").val(arg.event.color);
 
                 //수정 버튼 클릭했을 때
@@ -326,12 +333,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('title', $("#title").val());
                     arg.event.setStart($("#start").val());
                     arg.event.setEnd($("#end").val());
+                    arg.event.setProp('location', $("#location").val());
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
                         title: arg.event.title,
                         start: arg.event.start.toISOString(),
                         end: arg.event.end ? arg.event.end.toISOString() : null,
+                        location: arg.event.location,
                         backgroundColor: arg.event.backgroundColor
                     });
 
@@ -381,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $('.crew-tab-nav li').click(function () {
             if (crewCalendar) {
                 crewCalendar.updateSize();
-                //crewCalendar.refetchEvents();
+                crewCalendar.refetchEvents();
             }
         });
 
@@ -495,6 +504,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $("#title").val(arg.event.title);
                 $("#start").val(arg.event.start.toISOString().substring(0, 10));
                 $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0, 10) : "");
+                $("#location").val(arg.event.location)
                 $("#color").val(arg.event.color);
 
                 //수정 버튼 클릭했을 때
@@ -502,12 +512,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('title', $("#title").val());
                     arg.event.setStart($("#start").val());
                     arg.event.setEnd($("#end").val());
+                    arg.event.setProp('location', $("#location").val());
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
                         title: arg.event.title,
                         start: arg.event.start.toISOString(),
                         end: arg.event.end ? arg.event.end.toISOString() : null,
+                        location: arg.event.location,
                         backgroundColor: arg.event.backgroundColor
                     });
 
@@ -598,8 +610,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // 모달 창에 argument value 넣어줌
                 $("#calendarModal").modal("show");
                 $("#title").val(arg.event.title);
-                $("#start").val(arg.event.start.toISOString().substring(0, 10));
-                $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0, 10) : "");
+                $("#start").val(arg.event.start.toISOString().substring(0, 16));
+                $("#end").val(arg.event.end ? arg.event.end.toISOString().substring(0, 16) : "");
+                $("#location").val(arg.event.location);
                 $("#color").val(arg.event.color);
 
                 //수정 버튼 클릭했을 때
@@ -607,12 +620,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('title', $("#title").val());
                     arg.event.setStart($("#start").val());
                     arg.event.setEnd($("#end").val());
+                    arg.event.setProp('location', $("#location").val());
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
                         title: arg.event.title,
                         start: arg.event.start.toISOString(),
                         end: arg.event.end ? arg.event.end.toISOString() : null,
+                        location: arg.event.location,
                         backgroundColor: arg.event.backgroundColor
                     });
 
