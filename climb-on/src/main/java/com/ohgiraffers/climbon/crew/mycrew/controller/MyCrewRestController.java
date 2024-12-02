@@ -74,6 +74,12 @@ public class MyCrewRestController {
     public ResponseEntity<Object> showPosts(@PathVariable("crewCode") int crewCode)
     {
         List<CrewPostDTO> postList = myCrewService.getCrewPostsList(crewCode);
+        for (CrewPostDTO post : postList) {
+            // html 태그 제거 (img도 제거)
+            String htmlContent = post.getContent();
+            String plainText = htmlContent.replaceAll("<[^>]*>", "");
+            post.setContent(plainText);
+        }
         return ResponseEntity.ok(postList);
     }
 }

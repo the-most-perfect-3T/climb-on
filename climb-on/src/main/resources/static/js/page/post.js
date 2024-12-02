@@ -5,18 +5,7 @@ const keyword = document.getElementById('keywordInput').value.trim();
 
 const btnFacilities = document.getElementById('more-btn-facilities');
 const btnPosts = document.getElementById("more-btn-post");
-document.addEventListener("DOMContentLoaded", function(){
-    const facilityCount = document.querySelector(".facilityCount");
-    if(facilityCount.textContent == 0){
-        btnFacilities.style.display = "none";
-    }
 
-    const communityPostCount = document.querySelector(".communityPostCount");
-    if(communityPostCount.textContent == 0){
-        btnPosts.style.display = "none";
-    }
-
-});
 
 
 async function loadMorePosts() {
@@ -36,6 +25,13 @@ async function loadMorePosts() {
                 alert("더 이상 로드할 게시물이 없습니다.");
                 return;
             }
+            const totalLength = parseInt(document.querySelector(".communityPostCount").textContent);
+            const currentLength = document.querySelectorAll(".card").length + 5;
+
+            if(totalLength <= currentLength) {
+                btnPosts.style.display = "none";
+            }
+            console.log("ㅇㅁㅅㅁ", data);
             data.forEach(post => {
                 const postElement = `
                         <div class="card d-flex flex-row">
@@ -48,7 +44,10 @@ async function loadMorePosts() {
                                 <div class="card-content">${post.content}</div>
                                 <div class="card-meta">
                                     <span>${post.displayName}</span>
-                                    <span>${post.updatedAt || post.createdAt}</span>
+                                    <span>${post.updatedAt != null ? post.formattedUpdatedAt : post.formattedCreatedAt}</span>
+                                    <i class="fa-solid fa-eye" aria-hidden="true"></i><span>${post.viewCount}</span>
+                                    <i class="fa-regular fa-heart" aria-hidden="true"></i><span>${post.heartsCount}</span>
+                                    <i class="fa-regular fa-comment-dots" aria-hidden="true"></i><span>${post.commentsCount}</span>
                                 </div>
                             </div>
                         </div>`;
@@ -80,6 +79,14 @@ async function loadMoreFacilities() {
                 alert("더 이상 로드할 게시물이 없습니다.");
                 return;
             }
+
+            const totalLength = parseInt(document.querySelector(".facilityCount").textContent);
+            const currentLength = document.querySelectorAll(".facility-item").length + 5;
+
+            if(totalLength <= currentLength) {
+                btnFacilities.style.display = "none";
+            }
+
             data.forEach(facility => {
                 const facilityElement = `
                         <div class="facility-item">
