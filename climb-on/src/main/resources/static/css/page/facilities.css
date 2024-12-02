@@ -116,6 +116,7 @@
     background: white; /* 배경색을 흰색으로 설정 */
     z-index: 1000;
     margin-left: 10px;
+    margin-top: -25px;
 }
 
 .suggestion-item {
@@ -730,6 +731,9 @@ body .btn-fmodal {
     /*padding-left: 256px;*/
     position: absolute;
     right: 0;
+}
+.review-actions button {
+    padding: 0;
 }
 
 /* dropdown 메뉴 스타일 */

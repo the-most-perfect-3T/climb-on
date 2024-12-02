@@ -77,7 +77,7 @@ async function loadCrews(page) {
         });
         if(crewList.length < 5) {
             showMoreBtn.style.display = 'none';
-            alert("모든 크루 리스트 입니다.");
+            // alert("모든 크루 리스트 입니다.");
         }else {
             showMoreBtn.style.display = '';
         }
