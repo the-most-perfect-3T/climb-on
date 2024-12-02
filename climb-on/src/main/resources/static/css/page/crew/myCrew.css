@@ -521,12 +521,11 @@
 }
 
 #crew-posts-container .post-container .post-content {
-    height: 330px;
     margin-top: 15px;
 }
 
 #crew-posts-container .post-container .post-content .post-images{
-    height: 180px;
+    /*height: 180px;*/
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 10px;
@@ -542,7 +541,7 @@
 #crew-posts-container .post-container .post-content .post-text{
     color: var(--black);
     font-size: 14px;
-    height: 140px;
+    /*height: 140px;*/
     overflow: hidden;
     text-overflow: ellipsis;
 }
