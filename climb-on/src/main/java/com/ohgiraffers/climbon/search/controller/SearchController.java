@@ -80,9 +80,23 @@ public class SearchController {
         // 추가 데이터를 가져오는 로직
         List<PostDTO> additionalPosts = searchService.loadMoreCommunityPosts(keyword, currentCount, limit);
         if (additionalPosts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No more posts available.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("검색 결과를 모두 불러왔습니다.");
         }
         return ResponseEntity.ok(additionalPosts);
+    }
+
+    @GetMapping("/loadMoreFacilities")
+    @ResponseBody
+    public ResponseEntity<?> loadMoreFacilities(
+            @RequestParam("currentCount") int currentCount,
+            @RequestParam("limit") int limit,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        // 추가 데이터를 가져오는 로직
+        List<FacilitiesDTO> additionalFacilities = searchService.loadMoreFacilities(keyword, currentCount, limit);
+        if (additionalFacilities.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("검색 결과를 모두 불러왔습니다.");
+        }
+        return ResponseEntity.ok(additionalFacilities);
     }
 
 }

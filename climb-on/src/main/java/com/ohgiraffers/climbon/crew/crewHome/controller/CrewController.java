@@ -6,6 +6,9 @@ import com.ohgiraffers.climbon.community.dto.PostDTO;
 import com.ohgiraffers.climbon.crew.crewHome.dto.*;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewBoardService;
 import com.ohgiraffers.climbon.crew.crewHome.service.CrewService;
+import com.ohgiraffers.climbon.crew.mycrew.Enum.CrewRole;
+import com.ohgiraffers.climbon.crew.mycrew.dto.UserCrewDTO;
+import com.ohgiraffers.climbon.crew.mycrew.service.MyCrewService;
 import com.ohgiraffers.climbon.user.service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,6 +35,10 @@ public class CrewController {
 
     @Autowired
     CrewService crewService;
+
+    @Autowired
+    MyCrewService myCrewService;
+
     @Autowired
     private UserService userService;
 
@@ -77,31 +85,42 @@ public class CrewController {
 
     // 특정 게시글 상세 페이지
     @GetMapping("/post/{postId}")
-    public ModelAndView getPostById(@PathVariable("postId") Integer postId, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails){// previousPost 와 nextPost 정보를 추가로 조회
+    public ModelAndView getPostById(@PathVariable("postId") Integer postId, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails, RedirectAttributes redirectAttributes){// previousPost 와 nextPost 정보를 추가로 조회
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "크루 게시글은 해당 크루멤버만 조회 가능합니다.  \n로그인해주세요.");
             mv.setViewName("/auth/login");
         }
         else{
-            Integer userId = userDetails.getLoginUserDTO().getId(); // 현재 사용자 ID 가져오기
-            CrewPostDTO post = crewBoardService.getPostById(postId, userId); // 좋아요 여부 포함
+            int postCrewCode = crewBoardService.getCrewCodeByPostId(postId);
+            int myCrewCode = crewService.getCrewCodeByUserCode(userDetails.getLoginUserDTO().getId());
+            if(postCrewCode != myCrewCode){
+                System.out.println(postCrewCode);
+                System.out.println(myCrewCode);
+                redirectAttributes.addFlashAttribute("alertMessage", "게시글 상세 보기는 같은 크루원만 가능합니다.");
+                mv.setViewName("redirect:/crew/home");
+            }else {
+                Integer userId = userDetails.getLoginUserDTO().getId(); // 현재 사용자 ID 가져오기
+                CrewPostDTO post = crewBoardService.getPostById(postId, userId); // 좋아요 여부 포함
+
+                CrewDTO crew = myCrewService.getCrewInfoByCrewCode(post.getCrewCode());
+
+                String userProfilePic = crewBoardService.getUserProfilePicById(post.getUserId());
+                post.setUserProfilePic(userProfilePic);
+
+                List<CrewCommentDTO> comments = crewBoardService.getCommentsByPostId(postId); // 댓글 목록 가져오기
 
 
-            String userProfilePic = crewBoardService.getUserProfilePicById(post.getUserId());
-            post.setUserProfilePic(userProfilePic);
-
-            List<CrewCommentDTO> comments = crewBoardService.getCommentsByPostId(postId); // 댓글 목록 가져오기
-
-
-            // 이전,다음 게시글 정보 가져온다.
-            CrewPostDTO previousPost = crewBoardService.getPreviousPost(postId); // 이전 게시글
-            CrewPostDTO nextPost = crewBoardService.getNextPost(postId); // 다음 게시글
-            mv.addObject("post", post);
-            mv.addObject("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
-            mv.addObject("nextPost", nextPost);
-            mv.addObject("comments", comments);
-            mv.addObject("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로그인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
-            mv.setViewName("crew/crewHome/crewPostDetail");
+                // 이전,다음 게시글 정보 가져온다.
+                CrewPostDTO previousPost = crewBoardService.getPreviousPost(postId); // 이전 게시글
+                CrewPostDTO nextPost = crewBoardService.getNextPost(postId); // 다음 게시글
+                mv.addObject("crew", crew);
+                mv.addObject("post", post);
+                mv.addObject("previousPost", previousPost);  // 모델에 추가하여 postDetail.html에서 접근할 수 있게한다.
+                mv.addObject("nextPost", nextPost);
+                mv.addObject("comments", comments);
+                mv.addObject("currentUserId", userId); // 현재 사용자 ID를 추가 // 현재 로그인된 사용자의 userId를 템플릿으로 넘긴다. 그리고 템플릿에서 post.userId와 직접 비교 (수정, 삭제권한위해)
+                mv.setViewName("crew/crewHome/crewPostDetail");
+            }
         }
         return mv;
     }
@@ -185,7 +204,12 @@ public class CrewController {
             if(Objects.isNull(crewService.hasCrew(userDetails.getLoginUserDTO().getId()))){
                 mv.setViewName("redirect:/crew/crewlist");
             }else {
+                UserCrewDTO userCrewDTO = myCrewService.getMyCrewCodeAndRole(userDetails.getLoginUserDTO().getId());
+                CrewRole role = userCrewDTO.getRole();
+                String crewRole = role.getRole();
+
                 mv.addObject("role", userDetails.getLoginUserDTO().getUserRole());
+                mv.addObject("crewRole", crewRole);
                 mv.addObject("nickname", userDetails.getLoginUserDTO().getNickname());
                 mv.setViewName("crew/crewBoardWritePost");
             }
@@ -226,7 +250,11 @@ public class CrewController {
     @GetMapping("/updatepost/{id}")
     public ModelAndView updatePost(@PathVariable int id, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails) {
         CrewBoardDTO crewBoardDTO = crewBoardService.selectOnePostById(id);
-        System.out.println(crewBoardDTO);
+        UserCrewDTO userCrewDTO = myCrewService.getMyCrewCodeAndRole(userDetails.getLoginUserDTO().getId());
+        CrewRole role = userCrewDTO.getRole();
+        String crewRole = role.getRole();
+
+        mv.addObject("crewRole", crewRole);
         mv.addObject("crewBoardDTO", crewBoardDTO);
         mv.addObject("role", userDetails.getLoginUserDTO().getUserRole());
         mv.addObject("nickname", userDetails.getLoginUserDTO().getNickname());
@@ -241,6 +269,12 @@ public class CrewController {
         return "redirect:/crew/post/" + id;
     }
 
+    // 게시글 삭제
+    @PostMapping("/delete/{id}")
+    public String deletePost(@PathVariable("id") Integer postId){
+        crewBoardService.deletePost(postId);
+        return "redirect:/crew/home";
+    }
 
 
     @GetMapping("/crewlist")

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class MainService
@@ -34,11 +36,28 @@ public class MainService
     public List<FacilitiesDTO> getFacilityInfo()
     {
         List<FacilitiesDTO> allFacilities = mainMapper.getFacilityInfo();
-        List<FacilitiesDTO> recommendedFacilities = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        Set<Integer> set = new HashSet<>();
+        while(set.size() <3)
+        {
             int randNum = (int)(Math.random() * allFacilities.size());
-            recommendedFacilities.add(allFacilities.get(randNum));
+            set.add(randNum);
+        }
+
+        List<FacilitiesDTO> recommendedFacilities = new ArrayList<>();
+        for(int i : set)
+        {
+            recommendedFacilities.add(allFacilities.get(i));
         }
         return recommendedFacilities;
+    }
+
+    public List<PostDTO> getRecentPostsByCategory(String category)
+    {
+        return mainMapper.getRecentPostsByCategory(category);
+    }
+
+    public float getFacilityRate(Integer id)
+    {
+        return mainMapper.getFacilityRate(id);
     }
 }

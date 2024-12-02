@@ -35,12 +35,12 @@
     </div>
 
         <div class="inner">
-            <div class="role-test-convenient">
-                <!--유저 권한 별 테스트 위한 버튼-->
-                <button onclick="updateUserRole('ADMIN')">관리자</button>
-                <button onclick="updateUserRole('USER')">유저r</button>
-                <button onclick="updateUserRole('BUSINESS')">비즈니스</button>
-            </div>
+<!--            <div class="role-test-convenient">-->
+<!--                &lt;!&ndash;유저 권한 별 테스트 위한 버튼&ndash;&gt;-->
+<!--                <button onclick="updateUserRole('ADMIN')">관리자</button>-->
+<!--                <button onclick="updateUserRole('USER')">유저r</button>-->
+<!--                <button onclick="updateUserRole('BUSINESS')">비즈니스</button>-->
+<!--            </div>-->
 
             <div class="main-content">
 
@@ -51,7 +51,7 @@
                 <div class="main-event-container">
                     <section class="main-events-section">
                         <div class="main-event-list">
-                            <h5>대회 안내</h5>
+                            <h5>소식 안내</h5>
                             <ul class="notification-list" id="notifiEventList">
                                 <!--추후 처리 post category에서 어떻게 나뉘는지 더 생각해보고 ...-->
                             </ul>
@@ -80,13 +80,13 @@
                                    <button class="nav-link active" data-category="">전체</button>
                                </li>
                                <li class="nav-item">
+                                   <button class="nav-link" data-category="공지">공지</button>
+                               </li>
+                               <li class="nav-item">
+                                   <button class="nav-link" data-category="소식">소식</button>
+                               </li>
+                               <li class="nav-item">
                                    <button class="nav-link" data-category="일반">일반</button>
-                               </li>
-                               <li class="nav-item">
-                                   <button class="nav-link" data-category="모집">모집</button>
-                               </li>
-                               <li class="nav-item">
-                                   <button class="nav-link" data-category="질문">질문</button>
                                </li>
                            </ul>
                            <table id="table post-table">
@@ -97,12 +97,12 @@
                            <button class="btn-more-posts" onclick="window.location.href='/community'">게시글 더 보기</button>
                        </div>
 
-                       <div class="popular-posts">
+                       <ol class="popular-posts">
                            <h5>인기게시글</h5>
-                           <ol class="popular-list" id="popular-posts">
+                           <div class="popular-list" id="popular-posts">
                                <!-- 인기게시글 10개 여기 -->
-                           </ol>
-                       </div>
+                           </div>
+                       </ol>
                    </div>
                </div>
 

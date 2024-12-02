@@ -45,12 +45,14 @@ public class EventController
     @GetMapping("/myCrew")
     public ResponseEntity<?> getMyCrewEvents(@RequestParam("crewCode") Integer crewCode, @AuthenticationPrincipal AuthDetail userDetails) throws Exception
     {
-        // 수정 필요
-        int userCode = userDetails.getLoginUserDTO().getId();
-        if(!eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("해당 크루 멤버가 아님");
+//        // 수정 필요
+        if(userDetails != null) {
+            int userCode = userDetails.getLoginUserDTO().getId();
+            if(eventService.isUserInCrew(new CrewEventDTO(userCode, crewCode))){
+                userCrewCode = crewCode;
+                System.out.println("내 크루 코드");
+            }
         }
-        userCrewCode = crewCode;
         List<EventDTO> crewEvents = eventService.getCrewEvents(crewCode);
         return ResponseEntity.ok(crewEvents);
     }
@@ -118,6 +120,7 @@ public class EventController
     public List<EventDTO> getAllCrewsEvents()
     {
         List<EventDTO> allCrewEvents = eventService.getAllCrewsEvents();
+        System.out.println(allCrewEvents);
         System.out.println("allCrewEvents.isEmpty(): " + allCrewEvents.isEmpty());
 
         return allCrewEvents;

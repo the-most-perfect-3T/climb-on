@@ -187,6 +187,7 @@
     <delete id="deleteUserNotice" parameterType="int">
         DELETE FROM USER_NOTICE
               WHERE USER_CODE = #{userCode}
+                AND CATEGORY = #{category}
     </delete>
 
     <delete id="deleteBusinessNotice" parameterType="int">
@@ -204,13 +205,19 @@
             a.CATEGORY,
             b.FACILITY_CODE,
             b.ATTACH_FILE,
-            b.IS_APPROVAL
-        FROM USER_NOTICE a
-        JOIN BUSINESS_APPLY b
-        ON a.USER_CODE = b.USER_CODE
-        WHERE b.IS_APPROVAL = -1
-          AND a.USER_CODE = #{id}
+            b.IS_APPROVAL AS BUSINESS_IS_APPROVAL,
+            c.IS_APPROVAL AS CREW_IS_APPROVAL
+          FROM USER_NOTICE a
+          LEFT JOIN BUSINESS_APPLY b
+            ON a.USER_CODE = b.USER_CODE
+           AND a.CATEGORY = 1
+          LEFT JOIN CREW_APPLY c
+            ON a.USER_CODE = c.USER_CODE
+           AND a.CATEGORY IN (2, 3)
+         WHERE a.USER_CODE = #{id};
     </select>
+
+
 
     <update id="updateFacility" parameterType="com.ohgiraffers.climbon.user.dto.UserDTO">
         UPDATE USERS

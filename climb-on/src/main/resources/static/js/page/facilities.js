@@ -301,7 +301,12 @@ function resetForm() {
     // 검색 입력 필드를 0으로 설정
     // 입력 필드에서 코드 값을 가져옴
     const searchCode = document.getElementById('codeInput').value;
+    document.getElementById("img-wrap0").addEventListener("click", function () {
+        const button = this;
 
+        // active 클래스 추가
+        button.classList.add("active");
+    })
     // sessionStorage에 코드 값 저장
     sessionStorage.setItem('searchCode', searchCode);
     // 폼 제출
@@ -341,10 +346,12 @@ async function showFacilityDetails(facility) {
 
     // facilityDetailsHTML 내에 로딩 스피너와 세부 정보를 함께 포함
     const facilityDetailsHTML = `
-        <div class="facility-details">
+        <div class="facility-details border-bottom">
 
-            <div class="facility-details-top">
-                <img id="facilityImg" loading="lazy" class="facility-banner-content" src=""/></br>
+            <div class="facility-details-top border-bottom">
+                <div class="img-wrap-top d-flex align-items-center justify-content-center">
+                    <img id="facilityImg" loading="lazy" class="facility-banner-content w-100" src=""/>
+                </div>
                 <div class="nameAndStart">
                     <h3>${facility.facilityName || '정보 없음'}</h3>
                     <div class="favorite-btn" id="favorite-btn-${facility.id}" onClick="toggleFavorite(${facility.id},${isFavorite})">
@@ -352,11 +359,13 @@ async function showFacilityDetails(facility) {
                     </div>
                 </div>
             </div>
-            <h4><strong>기본정보</strong></h4>
-            <p>주소: ${facility.address || '정보 없음'}</p>
-            <p>전화번호: ${facility.contact || '정보 없음'}</p>
-            <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
-            <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
+            <div class="facility-default-info">
+                <h4><strong>기본정보</strong></h4>
+                <p>주소: ${facility.address || '정보 없음'}</p>
+                <p>전화번호: ${facility.contact || '정보 없음'}</p>
+                <p>운영시간: ${facility.openingTime || '정보 없음'}</p>
+                <p>시설 유형: ${facility.facilityType || '정보 없음'}</p>
+            </div>
         </div>
     `;
 
@@ -432,10 +441,10 @@ function loadReviews(facilityId) {
                 let Reviews22 = await getUserId();
 
                 const reviewSummary = `
-                <div class="facilityReviews" id="facilityReviews">
+                <div class="facilityReviews border-bottom" id="facilityReviews">
                 <div class="item2">
                   <div class="item4">
-                    <span class="review-sum">리뷰 : <i style="color: #FF7F27">${data.length}</i></span>
+                    <span class="review-sum">리뷰  <i style="color: #FF7F27">${data.length}</i></span>
                   </div>    
                    
                   <div class="reveiw-star-sum">
@@ -477,7 +486,7 @@ function loadReviews(facilityId) {
                     item.className = 'Review-item';
                     // 리뷰 내용 구성
                     item.innerHTML = `
-                    <div class="review-detail" id="review-detail">
+                    <div class="review-detail border-bottom" id="review-detail">
                         <div class="review-detail-nickname">
                         
                             <p class="userModalOpen" data-id="${Reviews.reviewerId}">${Reviews.userNickname}</p>
@@ -501,7 +510,7 @@ function loadReviews(facilityId) {
                         </div>
                         <p class="review-text">${Reviews.comment || '댓글이 없습니다'}</p>
                         <div class="review-text-fav">
-                            <div className="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
+                            <div class="reviewfavorite-btn" id="reviewfavorite-btn-${Reviews.id}" onClick="reviewtoggleFavorite(${Reviews.id},${isFavorite})">
                                 ${isFavorite ?? false ?'<i class="fa-heart fa-solid"></i>':'<i class="fa-heart fa-regular"></i>'}
                             </div>
                             

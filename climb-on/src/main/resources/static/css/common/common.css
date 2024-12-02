@@ -128,11 +128,12 @@ button:disabled {
     .ongoing-news-item {
         background-color: var(--darkBgBlack);
         color: #fff;
-        border-color: var(--darkBorderColor);
+        border: 1px solid var(--darkBorderColor);
     }
 
     .status-label{
         color: #fff;
+        border-bottom-color: var(--darkBorderColor);
     }
 
     .more-button{
@@ -290,6 +291,9 @@ button:disabled {
         color: #fff;
         border-color: var(--darkBorderColor);
     }
+    .input-wrap input, .input-wrap textarea {
+        border-color: var(--darkBorderColor);
+    }
 
     .input-wrap-btn button {
         color: var(--black);
@@ -297,11 +301,18 @@ button:disabled {
     .section-mypage .aside::after {
         background: var(--darkBorderColor);
     }
+    .section-mypage #profile .profile-cont .section00 .img-wrap {
+         border-color: var(--darkBorderColor);
+    }
+
     .section-mypage #profile .profile-cont .section00 .btn-wrap button {
         color: #fff;
     }
     .section-mypage .aside ul li button {
         color: #fff;
+    }
+    .section-mypage #profile .modify-cont .section00 .img-wrap {
+        border-color: var(--darkBorderColor);
     }
     .section-mypage #profile .modify-cont .section00 .btn-wrap .btn {
         color: var(--darkGray);
@@ -334,6 +345,56 @@ button:disabled {
         color: #fff;
     }
     .community-container .popular-list li {
+        color: #fff;
+    }
+
+    .crew-tab-nav button.active span{
+        color: var(--point);
+    }
+
+    .button-container-facility > div:not(:first-child) .img-wrap img {
+        filter: invert(100%);
+    }
+
+    .content .facility-address {
+        color: #fff;
+    }
+
+    .content #facilitiestb td {
+        border-bottom-color: var(--darkBorderColor);
+    }
+    div#facilityDetailsContainer {
+        background-color: var(--darkBgBlack);
+    }
+
+    .facility-details p {
+        color: #fff;
+    }
+    .crew-aside::after {
+        background: var(--darkBorderColor);
+    }
+    .crew-tab-nav li button span {
+        color: #fff;
+    }
+    .crew-notification .crew-notification-text {
+        color: #fff;
+    }
+    .crew-home-events-shower .crew-activity-event-item .crew-event-location, .crew-home-events-shower .crew-activity-event-item .crew-event-crewname {
+        color: #fff;
+    }
+    .crew-home-events-shower .crew-activity-event-item .crew-event-details p {
+        color: #fff;
+    }
+    .crew-limit-access {
+        color: var(--darkGray);
+    }
+    .crew-activity-event-item .crew-event-details {
+        color: #fff;
+    }
+    .crew-activity-event-item .crew-event-center {
+        color: #fff;
+    }
+    #crew-posts-container .post-container .post-content .post-text {
         color: #fff;
     }
 }

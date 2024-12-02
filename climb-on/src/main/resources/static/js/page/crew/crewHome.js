@@ -182,12 +182,11 @@ function populateAllCrewEvents(eventData) {
     {
         for(let i =0; i < eventData.length; i++) {
             if(i === 3) break;
-            console.log("이벤트 시작: " + i);
             const eventItem = document.createElement('div');
             eventItem.className = 'crew-activity-event-item';
             eventItem.innerHTML = `
                <div class="crew-event-info">
-                   <span class="crew-event-status-tag">예정</span> <!--start 시점이랑 오늘 date 비교해서 예정, 진행중으로 보여지게 만들어야 됨-->
+                   <span class="crew-event-status-tag">${eventData[i].inProgress ? "진행중" : "예정"}</span> <!--start 시점이랑 오늘 date 비교해서 예정, 진행중으로 보여지게 만들어야 됨-->
                    <div class="crew-event-details">
                        <p class="crew-event-date">${new Date(eventData[i].start).toLocaleDateString()} · ${new Date(eventData[i].start).toLocaleTimeString([], {
                            hour: '2-digit', minute: '2-digit'
@@ -198,9 +197,11 @@ function populateAllCrewEvents(eventData) {
                    <p class="crew-event-title">${eventData[i].title}</p>
                </div>
                <div class="crew-event-right">
-                   <p class="crew-event-location">서울숲클라이밍 종로점</p> <!--eventData[i].location 추가해서 여기-->
-                   <p class="crew-event-crewname">크루명</p>
-                   <div class="crew-event-image-placeholder"></div>
+                   <p class="crew-event-location">${eventData[i].location}</p> <!--eventData[i].location 추가해서 여기-->
+                   <p class="crew-event-crewname">${eventData[i].crewName}</p>
+                   <div class="crew-event-image-placeholder">
+                        <img src="${eventData[i].crewImgUrl}" alt="/images/logo.svg">
+                   </div>
                </div>`;
             eventListContainer.appendChild(eventItem);
         }

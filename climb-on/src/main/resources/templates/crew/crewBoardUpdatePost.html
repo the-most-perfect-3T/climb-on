@@ -25,7 +25,8 @@
                             <h4>카테고리</h4>
                             <select class="form-select" aria-label="Default select example" name="category" required>
                                 <option value="">카테고리를 선택해주세요.</option>
-                                <option value="공지" th:selected="${crewBoardDTO.category == '공지'}">공지</option>
+                                <option value="공지" th:selected="${crewBoardDTO.category == '공지'}"
+                                        th:disabled="${crewRole} == 'MEMBER'">공지</option>
                                 <option value="내 크루" th:selected="${crewBoardDTO.category == '내 크루'}">내 크루</option>
                             </select>
                             <br/>
@@ -70,15 +71,18 @@
 <!--                                <textarea class="form-control" id="editor" th:replace ="~{/common/quillTextEditor :: textEditorFragment}" required></textarea>-->
                             </div>
 
-                            <div class="form-check form-switch">
+                            <div class="form-check form-switch justify-content-end">
                                 <input class="form-check-input" type="checkbox" role="switch" id="anonymous" name="isAnonymous"
                                 th:checked="${crewBoardDTO.isAnonymous}">
                                 <label class="form-check-label" for="anonymous">익명</label>
                             </div>
 
                             <div class="hidden alert" id="liveAlertPlaceHolder"></div>
-                            <button type="reset" class="btn">취소</button>
-                            <input type="submit" class="btn" value="등록">
+
+                            <div class="d-flex justify-content-center button-container">
+                                <button type="reset" id="resetBtn" class="button btn-light">취소</button>
+                                <input type="submit" class="button" value="수정">
+                            </div>
 
                         </div>
 

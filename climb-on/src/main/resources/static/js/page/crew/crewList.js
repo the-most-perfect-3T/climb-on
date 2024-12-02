@@ -221,7 +221,7 @@ dropdownMenu.addEventListener('click', (event) => {
     선택된 항목이 하나라도 있으면 placeholder도 없애준다.*/
    const value = item.getAttribute("data-value");
    const span = document.createElement("span");
-   const imgName = value === "볼더링" ? "bouldering.svg" : value === "리드" ? "lead_climbing.svg" : "outdoor_mountain.png"
+   const imgName = value === "볼더링" ? "climbing-wall.png" : value === "리드" ? "free-icon-carabiner.png" : "outdoor_mountain.png"
    span.className = "btn btn-warning btn-sm rounded-pill d-flex align-items-center gap-2";
    span.dataset.value = value;
    span.innerHTML = `${value} <img src="/images/${imgName}" style="width: 16px; height: 16px">  

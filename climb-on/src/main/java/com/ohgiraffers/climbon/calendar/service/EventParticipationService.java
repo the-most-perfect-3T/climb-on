@@ -16,4 +16,9 @@ public class EventParticipationService
     {
         eventParticipationMapper.participateCrewEvents(new CrewEventDTO(userCode, crewCode, eventCode));
     }
+
+    public int checkParticipateMember(int userCode, int crewCode, int eventCode)
+    {
+        return eventParticipationMapper.checkParticipateMember(new CrewEventDTO(userCode, crewCode, eventCode));
+    }
 }

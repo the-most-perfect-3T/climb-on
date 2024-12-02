@@ -179,3 +179,8 @@ function selectLocalImage() {
         }
     });
 }
+
+const resetBtn = document.getElementById('resetBtn');
+resetBtn.addEventListener('click', () => {
+    window.location.href = "/crew/home";
+})
