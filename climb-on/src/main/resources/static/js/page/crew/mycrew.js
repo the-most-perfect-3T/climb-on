@@ -294,17 +294,19 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
             postItem.classList.add('post-container');
             postItem.innerHTML = `
                     <div class="post-header">
-                        <div class="profile-picture userModalOpen" data-id="${post.crewCode}">
+                        <div class="profile-picture userModalOpen" data-id="${post.userId}">                           
                             <img src="${post.userProfilePic}" alt="userProfileImg" class="profile-img"/>
                         </div>
                         <div class="post-info">
-                            <h3 class="author-name userModalOpen" data-id="${post.crewCode}">${post.userNickname}</h3>
+                            <h3 class="author-name userModalOpen" data-id="${post.userId}">${post.userNickname}</h3>
                             <p class="post-time">${(post.createdAt).split("T",1)}</p>
                         </div>
                     </div>
                     <div class="post-content">
-                        <div class="post-text">${post.content}</div>
-                        <div class="post-images" id="images-${post.id}"></div> <!-- Container for images -->           
+                        <a href="/crew/post/${post.id}">
+                            <div class="post-text">${post.content}</div>
+                            <div class="post-images" id="images-${post.id}"></div> <!-- Container for images -->
+                        </a>                                 
                     </div>
                     <div class="post-footer">
                     <div class = like-and-comment>
