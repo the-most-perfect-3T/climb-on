@@ -7,8 +7,7 @@
 </th:block>
 
 <th:block layout:fragment="containerFragment">
-    <div class="inner">
-        <div class="headcontainer">
+    <div class="headcontainer">
         <h2 class="head-title">통합검색</h2>
 
         <!-- 검색어 입력 폼 -->
@@ -17,7 +16,9 @@
                    th:value="${keyword}" class="search-input" id="keywordInput">
             <button type="submit" class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-        </div>
+    </div>
+    <div class="inner">
+
 
         <!-- 검색 결과 영역 -->
         <div class="search-results">
@@ -53,7 +54,10 @@
                         </div>
                     </div>
                 </section>
-                <button id="more-btn-facilities" onclick="loadMoreFacilities()">더보기</button>
+                <th:block th:if="${facilitiesCount > 3}">
+                    <button id="more-btn-facilities" onclick="loadMoreFacilities()" class="btn-more">더보기 <i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
+                </th:block>
+
             </div>
 
         <!-- 게시글 결과 -->
@@ -86,8 +90,10 @@
                     </div>
                 </section>
             </div>
-            <button id="more-btn-post" onclick="loadMorePosts()">더보기</button>
-    </div>
+            <th:block th:if="${communityPostCount > 2}">
+                <button id="more-btn-post" onclick="loadMorePosts()" class="btn-more">더보기 <i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>
+            </th:block>
+        </div>
     </div>
 
 </th:block>
