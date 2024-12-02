@@ -71,19 +71,16 @@ public class EventService
 
     public void modifyEvent(EventDTO event)
     {
-        System.out.println("+++ modifyEvent called +++");
         eventMapper.modifyEvent(event);
     }
 
     public List<EventDTO> getEventsByType(String type)
     {
-        System.out.println("getEventsByType called ");
         return eventMapper.getEventsByType(type);
     }
 
     public List<EventDTO> getMainEvents(boolean role)
     {
-        System.out.println("getMainEvents called ");
         return eventMapper.getMainEvents(role);
     }
 
