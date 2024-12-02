@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                     arg.event.setProp('title', $("#title").val());
                                     arg.event.setStart($("#start").val());
                                     arg.event.setEnd($("#end").val());
-                                    arg.event.setProp('location', $("#location").val());
+                                    arg.event.setExtendedProp('location', $("#location").val());
                                     arg.event.setProp('backgroundColor', $("#color").val());
 
                                     let eventData = ({
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('title', $("#title").val());
                     arg.event.setStart($("#start").val());
                     arg.event.setEnd($("#end").val());
-                    arg.event.setProp('location', $("#location").val());
+                    arg.event.setExtendedProp('location', $("#location").val());
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('title', $("#title").val());
                     arg.event.setStart($("#start").val());
                     arg.event.setEnd($("#end").val());
-                    arg.event.setProp('location', $("#location").val());
+                    arg.event.setExtendedProp('location', $("#location").val());
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     arg.event.setProp('title', $("#title").val());
                     arg.event.setStart($("#start").val());
                     arg.event.setEnd($("#end").val());
-                    arg.event.setProp('location', $("#location").val());
+                    arg.event.setExtendedProp('location', $("#location").val());
                     arg.event.setProp('backgroundColor', $("#color").val());
 
                     let eventData = ({
