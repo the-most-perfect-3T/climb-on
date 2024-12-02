@@ -113,7 +113,7 @@
           console.log("")
 
           if (role !== 'ADMIN') {
-              categorySelect.querySelectorAll('option[value="공지"], option[value="가이드"]').forEach(option => {
+              categorySelect.querySelectorAll('option[value="공지"], option[value="가이드"], option[value="소식"]').forEach(option => {
                   option.disabled = true;
               });
           }
