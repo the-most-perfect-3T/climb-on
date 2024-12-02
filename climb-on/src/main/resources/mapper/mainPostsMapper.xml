@@ -42,6 +42,7 @@
     <select id="getPopularPosts" resultMap="mainResult">
         SELECT *
         FROM community_posts
+        WHERE status = 1
         ORDER BY like_count DESC LIMIT 10;
     </select>
 
