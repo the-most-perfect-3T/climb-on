@@ -11,7 +11,7 @@
     <th:block layout:fragment="containerFragment">
         <section class="section-auth section-signup">
             <div class="inner">
-                <div class="top-area text-center" th:replace="~{/auth/login :: topArea}"></div>
+                <div class="top-area text-center" th:replace="~{auth/login :: topArea}"></div>
                 <div class="cont">
                     <form action="/auth/signup" method="post" onsubmit="return onSubmitHandler()">
                         <div class="input-wrap input-wrap-btn">
