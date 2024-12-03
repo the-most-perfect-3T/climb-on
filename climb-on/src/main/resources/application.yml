@@ -18,3 +18,10 @@ logging:
     org:
       springframework:
         security: DEBUG
+      thymeleaf: DEBUG
+    nz:
+      net:
+        ultraq:
+          thymeleaf: DEBUG
+server:
+  port: 8888
