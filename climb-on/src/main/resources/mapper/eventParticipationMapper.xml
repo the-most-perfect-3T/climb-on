@@ -11,7 +11,7 @@
 
     <insert id="participateCrewEvents" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">
         INSERT INTO crew_gathering_events (crew_code, user_code, event_code)
-        VALUES #{crewCode}, #{userCode}, #{eventCode};
+        VALUES (#{crewCode}, #{userCode}, #{eventCode});
     </insert>
 
     <select id="checkParticipateMember" parameterType="com.ohgiraffers.climbon.calendar.dto.CrewEventDTO">

@@ -1,7 +1,7 @@
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://112.221.66.174:3308/climbdb
+        url: jdbc:mysql://112.221.66.174:3307/climbdb
         username: gangnam
         password: gangnam
 mybatis:

@@ -87,7 +87,7 @@
                 posts_with_comment_count.view_count DESC <!-- 조회순 -->
             </when>
             <when test="sort == 'hearts'">
-                posts_with_comment_count.hearts_count DESC
+                posts_with_comment_count.like_count DESC
             </when>
             <otherwise>
                 posts_with_comment_count.created_at DESC   <!-- 기본값: 최신순-->

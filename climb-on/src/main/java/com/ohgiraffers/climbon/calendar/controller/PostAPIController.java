@@ -61,7 +61,7 @@ public class PostAPIController
         try{
             if(userDetail == null || userDetail.getLoginUserDTO() == null){
                 mv.addObject("message", "해당 게시글은 로그인 후 볼 수 있습니다.  \n로그인해주세요.");
-                mv.setViewName("/community");
+                mv.setViewName("community");
             }
             return mv;
         }
