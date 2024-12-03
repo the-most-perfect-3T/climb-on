@@ -2,11 +2,11 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
                 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
     <!--head-->
-    <head th:replace="~{/common/head :: headFragment}"></head>
+    <head th:replace="~{common/head :: headFragment}"></head>
 
     <body>
         <!--header-->
-        <header th:replace ="~{/common/header :: headerFragment}" ></header>
+        <header th:replace ="~{common/header :: headerFragment}" ></header>
 
         <!--content-->
         <main class="content">
@@ -16,8 +16,8 @@
         </main>
 
         <!--footer-->
-        <footer th:replace ="~{/common/footer :: footerFragment}" ></footer>
-        <th:block th:replace="~{/common/userViewModal :: modalFragment}"></th:block>
+        <footer th:replace ="~{common/footer :: footerFragment}" ></footer>
+        <th:block th:replace="~{common/userViewModal :: modalFragment}"></th:block>
 
         <!--공통 js-->
         <!--fontawesome icon-->
