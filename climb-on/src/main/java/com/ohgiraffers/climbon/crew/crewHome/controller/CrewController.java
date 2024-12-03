@@ -79,7 +79,7 @@ public class CrewController {
         mv.addObject("sort", sort);
         mv.addObject("viewMode", viewMode);
 
-        mv.setViewName("/crew/crewHome/crewHome");
+        mv.setViewName("crew/crewHome/crewHome");
         return mv;
     }
 
@@ -88,7 +88,7 @@ public class CrewController {
     public ModelAndView getPostById(@PathVariable("postId") Integer postId, ModelAndView mv, @AuthenticationPrincipal AuthDetail userDetails, RedirectAttributes redirectAttributes){// previousPost 와 nextPost 정보를 추가로 조회
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "크루 게시글은 해당 크루멤버만 조회 가능합니다.  \n로그인해주세요.");
-            mv.setViewName("/auth/login");
+            mv.setViewName("auth/login");
         }
         else{
             int postCrewCode = crewBoardService.getCrewCodeByPostId(postId);
@@ -136,7 +136,7 @@ public class CrewController {
 
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "크루 게시글에 댓글 작성은 해당 크루멤버만 가능합니다.  \n로그인해주세요.");
-            mv.setViewName("/auth/login");
+            mv.setViewName("auth/login");
         }
         else{
             // 1. 로그인된 사용자의 user_id(고유키) 가져오기
@@ -158,7 +158,7 @@ public class CrewController {
     public ModelAndView modifyComment(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @ModelAttribute CrewCommentDTO comment, @AuthenticationPrincipal AuthDetail userDetails, ModelAndView mv){
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "크루 게시글에 댓글 수정은 해당 크루멤버만 가능합니다.  \n로그인해주세요.");
-            mv.setViewName("/auth/login");
+            mv.setViewName("auth/login");
         }
         else{
             Integer userId = userDetails.getLoginUserDTO().getId();
@@ -176,7 +176,7 @@ public class CrewController {
     public ModelAndView deleteComment(@PathVariable("postId") Integer postId, @PathVariable("commentId") Integer commentId, @ModelAttribute CrewCommentDTO comment, @AuthenticationPrincipal AuthDetail userDetails, ModelAndView mv){
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "크루 게시글에 댓글 삭제는 해당 크루멤버만 가능합니다.  \n로그인해주세요.");
-            mv.setViewName("/auth/login");
+            mv.setViewName("auth/login");
         }
         else{
             comment.setId(commentId);
@@ -332,7 +332,7 @@ public class CrewController {
 
         if(resultForCrewRegister == 0){
             mv.addObject("message", "크루 등록중에 문제가 발생했습니다.");
-            mv.setViewName("/");
+            mv.setViewName("index");
         }else{
             int crewCode = crewService.getCrewCodeFromCrewsByUserId(id);
             int resultForUserCrewRoleInsert = crewService.crewCaptainInsert(id, crewCode);

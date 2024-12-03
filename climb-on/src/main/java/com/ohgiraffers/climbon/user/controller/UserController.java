@@ -55,7 +55,7 @@ public class UserController {
         // 로그인 정보 없으면
         if (userDetails == null || userDetails.getLoginUserDTO() == null) {
             mv.addObject("message", "로그인 정보가 유효하지 않습니다. 다시 로그인해주세요.");
-            mv.setViewName("/auth/login");
+            mv.setViewName("auth/login");
             return mv;
         }
 
@@ -68,7 +68,7 @@ public class UserController {
 
         if (user == null) {
             mv.addObject("message", "사용자 정보를 찾을 수 없습니다.");
-            mv.setViewName("/auth/login");
+            mv.setViewName("auth/login");
             return mv;
         }
 
@@ -329,7 +329,7 @@ public class UserController {
 
         int result = userService.updateStatus(key);
         if (result > 0) {
-            mv.setViewName("/common/userWithdraw");
+            mv.setViewName("common/userWithdraw");
 
         }else {
             populateUserData(mv, key);

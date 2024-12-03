@@ -4,4 +4,4 @@ server:
     include-stacktrace: on_param
     whitelabel:
       enabled: false
-    path: /error
+    path: error
