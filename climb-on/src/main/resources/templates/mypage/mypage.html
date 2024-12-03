@@ -1,6 +1,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/baseLayout}"
+      layout:decorate="~{layout/baseLayout}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
@@ -64,22 +64,22 @@
                 </aside>
 
                 <div class="tab-content">
-                    <th:block th:replace="~{/mypage/tab/profileTab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/tab/reviewTab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/tab/commentsTab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/tab/boardTab :: tabContFragment}"></th:block>
-                    <th:block th:replace="~{/mypage/tab/favoriteTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{mypage/tab/profileTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{mypage/tab/reviewTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{mypage/tab/commentsTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{mypage/tab/boardTab :: tabContFragment}"></th:block>
+                    <th:block th:replace="~{mypage/tab/favoriteTab :: tabContFragment}"></th:block>
                 </div>
             </div>
         </div>
-        <th:block th:replace="~{/mypage/modal/userModal :: modalFragment}"></th:block>
-        <th:block th:replace="~{/mypage/modal/businessModal :: modalFragment}"></th:block>
-        <th:block th:replace="~{/mypage/modal/adminNoticeModal :: modalFragment}"></th:block>
-        <th:block th:replace="~{/mypage/modal/businessNoticeModal :: modalFragment}"></th:block>
-        <th:block th:replace="~{/mypage/modal/userNoticeModal :: modalFragment}"></th:block>
-        <th:block th:replace="~{/mypage/modal/facilityModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{mypage/modal/userModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{mypage/modal/businessModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{mypage/modal/adminNoticeModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{mypage/modal/businessNoticeModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{mypage/modal/userNoticeModal :: modalFragment}"></th:block>
+        <th:block th:replace="~{mypage/modal/facilityModal :: modalFragment}"></th:block>
         <th:block th:replace="~{calendar/calendarModal :: modalFragment }"></th:block>
-        <th:block th:replace="~{/facilities/facilityModal :: facilityModalFragment}"></th:block>
+        <th:block th:replace="~{facilities/facilityModal :: facilityModalFragment}"></th:block>
     </th:block>
 
 
