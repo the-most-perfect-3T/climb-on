@@ -1,17 +1,3 @@
-/*let Reviews22;
-
-window.onload = async function() {
-
-
-}*/
-//검색*/
-
-/*document.addEventListener('DOMContentLoaded', async () => {
-    // DOMContentLoaded 이벤트가 발생하면, getFacilityDetails로부터 시설 정보를 받아옴
-    const facility = await getFacilityDetails();  // 서버에서 시설 정보 받기
-    await showFacilityDetails(facility);  // 받은 시설 정보를 보여줌
-
-});*/
 
 function showSuggestions() {
     const name = document.getElementById('codeInput').value;
@@ -213,22 +199,7 @@ function loadKakaoMap(facilities) {
      //
     });
 
-/*    // 초기 마커 설정
-    marker = new kakao.maps.Marker({
-        position: new kakao.maps.LatLng(selectedPosition.lat, selectedPosition.lng),
-        map: map
-    });*/
 
-   // 지도 클릭 이벤트
-  /*  kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
-        const latlng = mouseEvent.latLng;
-
-        // 마커 위치 변경
-        marker.setPosition(latlng);
-        selectedPosition = {lat: latlng.getLat(), lng: latlng.getLng()};
-        // 선택된 좌표를 콘솔에 출력
-        console.log(`Selected Location: ${selectedPosition.lat}, ${selectedPosition.lng}`);
-    });*/
 }
 //해당위치로 지도이동
 let currentMarker = null;  // 이전 마커를 추적하기 위한 변수
