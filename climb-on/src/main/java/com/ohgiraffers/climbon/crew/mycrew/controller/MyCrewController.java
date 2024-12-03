@@ -34,7 +34,7 @@ public class MyCrewController
         try {// 비로그인 user
             if (userDetails == null || userDetails.getLoginUserDTO() == null) {
                 mv.addObject("message", "크루 페이지는 로그인 후 볼수 있습니다.  \n로그인해주세요.");
-                mv.setViewName("/auth/login");
+                mv.setViewName("auth/login");
                 return mv;
             }
             // 로그인 user
@@ -85,7 +85,7 @@ public class MyCrewController
         try {// 비로그인 user
             if (userDetails == null || userDetails.getLoginUserDTO() == null) {
                 mv.addObject("message", "크루 페이지는 로그인 후 볼수 있습니다.  \n로그인해주세요.");
-                mv.setViewName("/auth/login");
+                mv.setViewName("auth/login");
             }
             // 로그인 user
             else {
