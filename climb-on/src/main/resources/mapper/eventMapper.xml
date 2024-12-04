@@ -59,7 +59,7 @@
 
     <update id="modifyEvent" parameterType="com.ohgiraffers.climbon.calendar.dto.EventDTO">
         UPDATE calendar_events
-        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, location = #{location}, color = #{backgroundColor}, #{isAllDay}
+        SET title = #{title}, start_datetime = #{start}, end_datetime = #{end}, location = #{location}, color = #{backgroundColor}, ALL_DAY = #{isAllDay}
         WHERE event_id = #{id};
     </update>
 

@@ -2,18 +2,33 @@
 const crewCodeTag = document.getElementById('crewcode');
 const crewCode = crewCodeTag.getAttribute("data-crew-code");
 
+function compareTime(dateString)
+{
+    const currentDate = new Date();
+    const dateFromString = new Date(dateString);
+
+// Compare the two dates
+    if (dateFromString > currentDate) {
+        return true;
+    } else if (dateFromString < currentDate) {
+        return false;
+    } else {
+        return true;
+    }
+}
 function createEventInfo(eventContainer, event) {
-    console.log(event);
     const eventItem = document.createElement('div');
-    eventItem.className = 'crew-activity-event-item';
-    eventItem.innerHTML = `
+    if(compareTime(event.start))
+    {
+        eventItem.className = 'crew-activity-event-item';
+        eventItem.innerHTML = `
                                        <div class="crew-event-info">
                             <span class="crew-event-status-tag">${event.inProgress ? "진행중" : "예정"}</span>
                             <div class="crew-event-details">
                                 <p class="crew-event-date">${new Date(event.start).toLocaleDateString()} · ${new Date(event.start).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-    })}</p>
+            hour: '2-digit',
+            minute: '2-digit'
+        })}</p>
                                 <p class="crew-event-location">${event.location}</p>
                             </div>
                           </div>
@@ -28,12 +43,13 @@ function createEventInfo(eventContainer, event) {
                           </div>
 
         `;
-    eventContainer.appendChild(eventItem);
+        eventContainer.appendChild(eventItem);
+    }
 }
 
-function popluateMainEventInMycrewHome(eventData){
+function popluateMainEventInMycrewHome(eventData, condition){
     const mainEventContainer = document.getElementById("crewRecentEvent");
-    if(mainEventContainer != null)
+    if(mainEventContainer != null && condition)
     {
         mainEventContainer.innerHTML = '';
         createEventInfo(mainEventContainer, eventData[0]);
@@ -161,22 +177,26 @@ albumTabBtn.addEventListener('click', async function() {
         }
         const data = await response.json();
         const gridContainer = document.querySelector('.grid-container');
+        const crewLimitAccessContainer = document.getElementById("noAlbumFoundContainer");
+        crewLimitAccessContainer.innerHTML = "";
         gridContainer.innerHTML = "";
 
         data.forEach((img) => {
+            crewLimitAccessContainer.style.display = "none";
             const gridItem = document.createElement('div');
             gridItem.classList.add('grid-item');
             gridItem.innerHTML = `
             <img src="${img}" alt="/images/logo.svg">          
             `
             gridContainer.appendChild(gridItem);
-        })
+        });
 
         if(data.length === 0){
             console.log(data.length);
             const div = document.createElement('div');
             div.innerText = "사진이 포함된 크루 게시글이 아직 없습니다.";
-            gridContainer.appendChild(div);
+            crewLimitAccessContainer.appendChild(div);
+            // gridContainer.appendChild(div);
         }
     } catch (error) {
         console.error("AJAX 오류:", error);
@@ -276,9 +296,12 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
         }
         const data = await response.json();
         const crewPostsContainer = document.getElementById("crew-posts-container");
+        const crewLimitAccessContainer = document.getElementById("noCrewPostFoundContainer");
+        crewLimitAccessContainer.innerHTML = "";
         crewPostsContainer.innerHTML = "";
 
         data.forEach((post) => {
+            crewLimitAccessContainer.style.display = "none";
             const postItem = document.createElement('div');
             console.log(post);
             console.log(post.userProfilePic);
@@ -286,8 +309,8 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
             postItem.classList.add('post-container');
             postItem.innerHTML = `
                     <div class="post-header">
-                        <div class="profile-picture userModalOpen" data-id="${post.userId}">                           
-                            <img src="${post.userProfilePic}" alt="userProfileImg" class="profile-img"/>
+                        <div class="profile-picture">                           
+                            <img src="${post.userProfilePic}" alt="userProfileImg" class="profile-img userModalOpen" data-id="${post.userId}">
                         </div>
                         <div class="post-info">
                             <h3 class="author-name userModalOpen" data-id="${post.userId}">${post.userNickname}</h3>
@@ -318,6 +341,7 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
                     </div>
             `
             crewPostsContainer.appendChild(postItem);
+
             if (post.imgUrl) {
                 const imageContainer = document.getElementById(`images-${post.id}`);
                 const imgUrls = post.imgUrl.split(',');
@@ -331,8 +355,19 @@ NoteTab.addEventListener('click', async function setCrewPosts() {
                     imageContainer.appendChild(img);  // Append each image to the container
                 });
             }
+            if(post.imgUrl === null || post.imgUrl.length === 0){
+                const postImagesConatiner = document.getElementById(`images-${post.id}`);
+                postImagesConatiner.style.display = "none";
+            }
         });
         await openUserModal();
+        if(data.length === 0){
+            console.log(data.length);
+            const div = document.createElement('div');
+            div.innerText = "크루원이 등록한 게시글이 아직 없습니다.";
+            crewLimitAccessContainer.appendChild(div);
+            // gridContainer.appendChild(div);
+        }
 
     } catch (error) {
         console.log(error);

@@ -1,6 +1,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/baseLayout}"
+      layout:decorate="~{layout/baseLayout}"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
@@ -81,15 +81,15 @@
             <div style="display: none" id="crewcode" th:data-crew-code="${myCrew.id}"></div>
 
             <div class="tab-content">
-                <th:block th:replace="~{/crew/myCrew/tab/homeTab :: tabContFragment}"></th:block>
-                <th:block th:replace="~{/crew/myCrew/tab/newsTab :: tabContFragment}"></th:block>
-                <th:block th:replace="~{/crew/myCrew/tab/activityTab :: tabContFragment}"></th:block>
-                <th:block th:replace="~{/crew/myCrew/tab/albumTab :: tabContFragment}"></th:block>
-                <th:block th:replace="~{/crew/myCrew/tab/memberTab :: tabContFragment}"></th:block>
+                <th:block th:replace="~{crew/myCrew/tab/homeTab :: tabContFragment}"></th:block>
+                <th:block th:replace="~{crew/myCrew/tab/newsTab :: tabContFragment}"></th:block>
+                <th:block th:replace="~{crew/myCrew/tab/activityTab :: tabContFragment}"></th:block>
+                <th:block th:replace="~{crew/myCrew/tab/albumTab :: tabContFragment}"></th:block>
+                <th:block th:replace="~{crew/myCrew/tab/memberTab :: tabContFragment}"></th:block>
             </div>
         </div>
 
-        <th:block th:replace="~{/calendar/calendarModal :: modalFragment }"></th:block>
+        <th:block th:replace="~{calendar/calendarModal :: modalFragment }"></th:block>
 
     </div>
 
