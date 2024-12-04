@@ -1,8 +1,4 @@
-# 클라이머들의 커뮤니티 웹사이트 CLI'MON
-<img src="https://github.com/the-most-perfect-3T/climb-on/blob/deploy/climb-on/src/main/resources/static/images/logo.svg?raw=true"/>  
-<br>
-
-## CLI'MON 
+# 클라이머들의 커뮤니티 웹사이트 <img src="https://github.com/the-most-perfect-3T/climb-on/blob/deploy/climb-on/src/main/resources/static/images/logo.svg?raw=true"/>
 > 클라이밍을 사랑하는/사랑하게 될 모두를 위한 웹사이트 입니다.<br>
 > 일반회원, 비즈니스 계정 회원 모두를 위한 커뮤니티 입니다.<br> 
 > 시설 검색, 자유로운 게시판 기능들을 활용해 정보 검색과 공유가 자유롭습니다.<br>
@@ -10,15 +6,14 @@
 
 
 ## 배포 주소
-> **개발 버전** : [http://voluntain.cs.skku.edu/](http://voluntain.cs.skku.edu/) <br>
-> **프론트 서버** : [http://voluntain.cs.skku.edu:33307/](http://voluntain.cs.skku.edu:33307/)<br>
-> **백엔드 서버** : [http://voluntain.cs.skku.edu:2223/](http://voluntain.cs.skku.edu:2223/)<br>
+> **배포 버전** : [http://112.221.66.174:8888/](http://112.221.66.174:8888/) <br>
 
 
 ## 목차
 1. [기능소개](#기능소개)
 2. [페이지별 기능](#페이지별-기능)
 3. [팀원 소개](#팀원-소개)
+4. [기술 스택](#기술-스택)
 4. [개발 환경](#env)
 5. [발전 가능성](#room-for-improvement)
 
@@ -51,54 +46,52 @@
 <br>
 
 ## 팀원 소개
-|      박지예       |          서채연         |       이현정         |                                                                                                               
-| :------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | 
-|   <img width="160px" src="https://user-images.githubusercontent.com/50205887/205326013-af001243-a77d-4601-8bfc-aa713931cf95.png" />    |                      <img width="160px" src="https://user-images.githubusercontent.com/50205887/207570536-f5a82e48-99a1-4399-91d3-75fc5f8f3349.png" />    |                   <img width="160px" src="https://user-images.githubusercontent.com/50205887/207570634-247c3715-a54e-4f63-8c08-9b266f8a35f7.png"/>   |
-|   [@parkjiye](https://github.com/parkjiye)   |    [@ChaeyeonSeo](https://github.com/ChaeyeonSeo)  | [@hyunjeong408](https://github.com/hyunjeong408)  |
-| 성균관대학교 소프트웨어학과 4학년 | 성균관대학교 소프트웨어학과 4학년 | 성균관대학교 소프트웨어학과 4학년 |
+|                                                               최예지                                                                |                                        김남준                                        |                                                               윤석중                                                                | 이승환 |                                       최정민                                        |                                                                                                               
+|:--------------------------------------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------:| 
+|                        <img width="160px" src="https://avatars.githubusercontent.com/u/177176285?v=4" />                         | <img width="160px" src="https://avatars.githubusercontent.com/u/177180528?v=4" /> |                         <img width="160px" src="https://avatars.githubusercontent.com/u/177180456?v=4"/>                         | <img width="160px" src="https://avatars.githubusercontent.com/u/177591236?v=4" /> | <img width="160px" src="https://avatars.githubusercontent.com/u/89982300?v=4" /> | 
+|                                              [@yz-choi](https://github.com/yz-choi)                                              |                     [@NJ-KIM11](https://github.com/NJ-KIM11)                      |                                              [@SJY9195](https://github.com/SJY9195)                                              |  [@SeungHwan-1](https://github.com/SeungHwan-1) |                      [@cjmin-n](https://github.com/cjmin-n)                      |
+|                                                                                                                 |                                                                                   |                                                                                                                | fadsdf |                                      dsfas                                       |
 
 
-## Stacks 🐈
+## 기술 스택   🐈
 
 ### Environment
-![IntelliJ]
-![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=Visual%20Studio%20Code&logoColor=white)
+![IntelliJ](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![thymeleaf](https://img.shields.io/badge/thymeleaf-005F0F?style=for-the-badge&logo=thymeleaf&logoColor=white)
+![springsecurity](https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
+![mysql](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![mybatis](https://img.shields.io/badge/mybatis-181717?style=for-the-badge&logo=mybatis&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white)
 ![Github](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white)
+
+
+### Deployment
+![docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ### Config
 ![npm](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white)
 
 ### Development
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=Javascript&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Strapi](https://img.shields.io/badge/Strapi-2F2E8B?style=for-the-badge&logo=Strapi&logoColor=white)
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=white)
+
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=Bootstrap&logoColor=white)
-![Material UI](https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=MUI&logoColor=white)
+
+### Api
+![kakao](https://img.shields.io/badge/kakao-LogIn-FFCD00?style=for-the-badge&logo=kakao&logoColor=white)
+![kakao](https://img.shields.io/badge/kakao-Map-FFCD00?style=for-the-badge&logo=kakao&logoColor=white)
+
+### Planning & Design
+![figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 
 ### Communication
-![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=Slack&logoColor=white)
+![figma](https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white)
 ![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white)
-![GoogleMeet](https://img.shields.io/badge/GoogleMeet-00897B?style=for-the-badge&logo=Google%20Meet&logoColor=white)
+![jira](https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
+![miro](https://img.shields.io/badge/miro-050038?style=for-the-badge&logo=miro&logoColor=white)
 
 
-
-## Room for Improvement
-Include areas you believe need improvement / could be improved. Also add TODOs for future development.
-
-Room for improvement:
-- Improvement to be done 1
-- Improvement to be done 2
-
-To do:
-- Feature to be added 1
-- Feature to be added 2
-
-
-
-## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
+## 개발 기간 및 환경
+<img src="https://github.com/the-most-perfect-3T/climb-on/blob/deploy/climb-on/src/main/resources/static/images/project-architecture.png?raw=true" />
 
 
 > 하이미디어 아카데미 ~~~과정<br>
