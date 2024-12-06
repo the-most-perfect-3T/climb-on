@@ -137,6 +137,10 @@
             <if test="category != null and category != '전체'">
                 AND category = #{category}
             </if>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND (title LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR content LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
         </where>
     </select>
 
