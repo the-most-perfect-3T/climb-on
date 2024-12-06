@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layout/baseLayout}">
+      layout:decorate="~{layout/baseLayout}">
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/page/communityPost.css}">
@@ -268,20 +268,20 @@
             <!-- 이전 페이지 링크 -->
             <li>
         <!-- 여기에 공백 생기면 오류 뜨므로 건들면 안된다--><a th:href="@{'/community?page=' + (${currentPage - 1})
-                        + '&category=' + ${#strings.defaultString(category, '전체')}
-                        + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}
-                        + '&sort=' + ${#strings.defaultString(sort, 'latest')}
-                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
+                        + '&category=' + ${category != null ? category : '전체'}
+                        + '&searchKeyword=' + ${searchKeyword != null ? searchKeyword : ''}
+                        + '&sort=' + ${sort != null ? sort : 'latest'}
+                        + '&viewMode=' + ${viewMode != null ? viewMode : 'list'}}"
                 th:classappend="${currentPage <= 1} ? 'disabled' : ''">
                 <i class="fa-solid fa-circle-chevron-left"></i></a>
             </li>  <!--currentPage에 따라 이전 페이지링크가 표시--> <!-- 페이지네이션이 되도 링크 생성 할 때 현재 URL에 포함된 category, searchKeyword, sort 등의 파라미터를 함께 전달하여 커뮤니티게시판의 기존 기능 유지-->
             <!-- 페이지 번호 링크 -->
             <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}" th:if="${pageNum > 0}">  <!--#numbers.sequence(1, totalPages)를 사용하여 1부터 totalPages까지 페이지 번호 링크를 생성하고, 현재 페이지는 active 클래스를 추가하여 강조--> <!--첫번째 인자가 null인 경우 두번째 인수 반환-->
                 <a th:href="@{'/community?page=' + ${pageNum}
-                        + '&category=' + ${#strings.defaultString(category, '전체')}
-                        + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}
-                        + '&sort=' + ${#strings.defaultString(sort, 'latest')}
-                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
+                        + '&category=' + ${category != null ? category : '전체'}
+                        + '&searchKeyword=' + ${searchKeyword != null ? searchKeyword : ''}
+                        + '&sort=' + ${sort != null ? sort : 'latest'}
+                        + '&viewMode=' + ${viewMode != null ? viewMode : 'list'}}"
                    onclick="navigateWithViewMode(event, ${pageNum})"
                    th:text="${pageNum}"
                    th:classappend="${pageNum == currentPage} ? 'active' : ''">
@@ -291,10 +291,10 @@
             <!-- 다음 페이지 링크 -->
             <li>
                 <a th:href="@{'/community?page=' + (${currentPage + 1})
-                        + '&category=' + ${#strings.defaultString(category, '전체')}
-                        + '&searchKeyword=' + ${#strings.defaultString(searchKeyword, '')}
-                        + '&sort=' + ${#strings.defaultString(sort, 'latest')}
-                        + '&viewMode=' + ${#strings.defaultString(viewMode, 'list')}}"
+                        + '&category=' + ${category != null ? category : '전체'}
+                        + '&searchKeyword=' + ${searchKeyword != null ? searchKeyword : ''}
+                        + '&sort=' + ${sort != null ? sort : 'latest'}
+                        + '&viewMode=' + ${viewMode != null ? viewMode : 'list'}}"
                    th:classappend="${currentPage >= totalPages} ? 'disabled' : ''">
                     <i class="fa-solid fa-circle-chevron-right"></i></a> <!--currentPage에 따라 다음 페이지링크가 표시-->
             </li>
@@ -312,12 +312,15 @@
             function navigateWithViewMode(event, page){
                 event.preventDefault(); // 기본 동작 방지
                 const urlParams = new URLSearchParams(window.location.search);
-
+                const currentSort = urlParams.get('sort') || 'latest';
+                const currentSearchKeyword = urlParams.get('searchKeyword') || '';
                 const currentCategory = urlParams.get('category') || '전체'; // 카테고리가 없으면 기본값 "전체"로 설정
                 const currentViewMode = urlParams.get('viewMode') || 'list'; // 뷰모드 기본값을 리스트로 설정
                 urlParams.set('page', page); //페이지 번호 설정
                 urlParams.set('category', currentCategory); //카테고리 설정
                 urlParams.set('viewMode', currentViewMode); //뷰모드 설정
+                urlParams.set('sort', currentSort);
+                urlParams.set('searchKeyword', currentSearchKeyword);
                 // 선택된 뷰 모드를 URL에 추가하여 페이지 이동
                 window.location.href = `/community?${urlParams.toString()}`;
             }
