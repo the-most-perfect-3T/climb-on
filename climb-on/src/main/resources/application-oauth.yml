@@ -23,4 +23,4 @@ spring:
             user-info-authentication-method: header
             user-name-attribute: id
 kakao:
-  logout-redirect-uri: "http://112.221.66.174:8888"
+  logout-redirect-uri: "http://192.168.0.175:8888/"
