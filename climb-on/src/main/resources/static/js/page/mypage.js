@@ -85,7 +85,7 @@ const btnDeleteProfile = document.querySelector(".section-mypage #profile .modif
 const profileImg = document.getElementById('profileImg');
 const profileImgSrc = profileImg.getAttribute("src");
 
-if (profileImgSrc.includes("/img/profile")) {
+if (profileImgSrc.includes("/images/profile") || profileImgSrc.includes("kakaocdn")) {
     btnDeleteProfile.removeAttribute("disabled");
 } else {
     btnDeleteProfile.setAttribute("disabled", true);

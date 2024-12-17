@@ -64,7 +64,7 @@ public class Oauth2UserService extends DefaultOAuth2UserService {
             String nickname = oAuth2UserInfo.getName();
             SignupDTO signupDTO = new SignupDTO();
             signupDTO.setNickname(nickname);
-            signupDTO.setProfilePic(profilePic);
+            signupDTO.setProfilePic(profilePic); // 카카오 프로필 삭제 안됨.. -> 수정해야함
             signupDTO.setId(dbUser.getId());
             int result = authMapper.updateInfo(signupDTO);
 
