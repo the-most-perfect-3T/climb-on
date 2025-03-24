@@ -13,7 +13,7 @@
 1. [기능소개](#기능소개)
 2. [페이지별 기능](#페이지별-기능)
 3. [팀원 소개](#팀원-소개)
-4. [기술 스택](#기술-스택-🐈)
+4. [기술 스택](#기술-스택)
 5. [개발 기간 및 환경](#개발-기간-및-환경)
 6. [발전 가능성](#room-for-improvement)
 
@@ -55,7 +55,7 @@
 |                             캘린더 API<br>메인페이지<br>마이크루                              |                             크루홈<br>마이크루<br>텍스트에디터 API                             |                                   커뮤니티<br>통합검색                                   |                                  시설<br>카카오지도 API                                  |                            로그인<br>카카오로그인 API<br>마이페이지                            |
 
 
-## 기술 스택 🐈
+## 기술 스택
 ### Back-end
 ![springboot](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![springsecurity](https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
