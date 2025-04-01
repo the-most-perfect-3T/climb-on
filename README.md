@@ -22,28 +22,35 @@
 ## 기능소개 
 - 로그인, 회원가입
 - 마이페이지
-- 통합 검색
 - 시설 검색, 리뷰
 - 일정 등록, 참여
 - 커뮤니티 게시판
 - 크루홈, 검색, 등록, 가입, 관리
 - 크루 페이지
-- Tech 1 - version 1.0
-- Tech 2 - version 2.0
+- 통합 검색
 
 <br>
 
 ## 페이지별 기능
-| **메인페이지** | **로그인** |
+| **로그인** | **회원가입** |
 | :------------: | :------------: |
-| <img src="https://github.com/gangnam-auction/gangnam-auction/blob/won/FrontEnd/auction-front/src/assets/readMe_%EB%A9%94%EC%9D%B8%ED%8E%98%EC%9D%B4%EC%A7%80.png?raw=true" alt="mainpage" /> | <img src="https://github.com/gangnam-auction/gangnam-auction/blob/won/FrontEnd/auction-front/src/assets/readMe_%EB%A1%9C%EA%B7%B8%EC%9D%B8.png?raw=true" alt="login" /> |
-| 최근 본 게시글/ 메인 이미지를 통해 해당 아이템 상세보기/<br> 캐쉬충전/ 로그인/ 로그아웃 | 아이디 저장/ 회원가입/ 아이디, 비밀번호 찾기 |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/login.gif" alt="로그인" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/signup.gif" alt="회원가입" /> |
+| 유효성검사 / 회원가입 / 카카오 로그인 | 아이디,닉네임 중복검사 / 입력값 유효성검사 |
 
-| **회원가입** | **회원가입 정보입력** |
+| **마이페이지** | **시설** |
 | :------------: | :------------: |
-| <img src="https://github.com/gangnam-auction/gangnam-auction/blob/won/FrontEnd/auction-front/src/assets/readMe_%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85.png?raw=true" alt="signup" /> | <img src="https://github.com/gangnam-auction/gangnam-auction/blob/won/FrontEnd/auction-front/src/assets/readMe_%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%20%EC%A0%95%EB%B3%B4%EC%9E%91%EC%84%B1.png?raw=true" alt="signup input" /> |
-| 약관동의 후 정보입력 | 정보 입력/ 유효성 평가 후 회원가입 |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/mypage.gif" alt="마이페이지" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/facility.gif" alt="시설" /> |
+| 내 프로필(정보 수정, 홈짐 등록, 내 일정관리, 비즈니스회원 전환 신청, 알림) / 게시물관리 / 댓글 관리 / 리뷰 관리 / 즐겨찾기 관리 | 시설 검색 / 시설 정보 / 리뷰 |
 
+| **커뮤니티** | **크루** |
+| :------------: | :------------: |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/community.gif" alt="커뮤니티" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/crew.gif" alt="크루" /> |
+| 시설 소식 / 커뮤니티 게시판 | 크루 리스트 / 크루 생성 / 크루소식 |
+
+| **크루 페이지** | **통합검색** |
+| :------------: | :------------: |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/schedule.gif" alt="크루 페이지" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/search.gif" alt="통합검색" /> |
+| 크루 가입(알림) / 크루 소식/활동/앨범/멤버 | 크루,운동시설,게시물 검색 |
 
 <br>
 
@@ -88,10 +95,41 @@
 
 
 ## 개발 기간 및 환경
-<img src="https://github.com/the-most-perfect-3T/climb-on/blob/deploy/climb-on/src/main/resources/static/images/project-architecture.png?raw=true" />
+<img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/project-architecture.png" />
 
 
-
-> 하이미디어 아카데미 ~~~과정<br>
+> 하이미디어 아카데미<br/>
+> 클라우드 기반의 자바 풀스택 과정<br/>
 > 3조:세가완삼 프로젝트 <br/>
-> > 개발기간: 2024.11.15 ~ 2024.12.1
+> 개발기간: 2024.11.15 ~ 2024.12.1
+
+## 발전 가능성
+1. 반응형 UI & 모바일 대응<br/>
+- 모바일 유저 증가에 따라 반응형 레이아웃 구현
+- Bootstrap의 Grid 시스템 적극 활용 (미디어 쿼리 포함)
+- 사용자 흐름에 맞춘 모바일 우선 디자인 (Mobile-First Design)
+
+2. 지역 기반 크루 매칭 & 일정 공유 기능 강화
+- 지역별 활동 크루 연결 및 일정 추천 기능
+- Kakao Map API → 위치 기반 검색 기능 강화
+- 사용자 주소/위치 정보 등록 기능 추가 (Spring Boot + MyBatis로 DB 설계)
+
+3. 비즈니스 회원 전용 기능 확장 (B2B)
+- 클라이밍 센터 및 강사 대상 플랫폼화
+- 비즈니스용 게시판, 예약 시스템, 홍보 페이지 구성 (프론트 단 별도 UI 구성)
+- 운영 정보 등록 및 대시보드 기능 개발 (MyBatis 기반 CRUD)
+
+4. 커뮤니티 활성화: 후기, 정보, 리뷰 공유
+- 게시판 카테고리 세분화 (예: 장비 리뷰 / 루트 정보 / 초보 가이드 등)
+- 게시글 신고 기능 (Spring + JavaScript)
+- 활동 뱃지 시스템 (유저 경험 설계 + Figma 프로토타입)
+
+5. AI 기반 추천 기능 (장기 목표)
+- 사용자 행동 기반 추천 시스템 구축
+- Spring 기반 유저 행동 로그 기록 (예: 검색, 클릭, 예약)
+- 추천 로직: 인기 크루 / 비슷한 관심 유저 기반 일정 추천
+
+
+### ✨ 함께 만드는 클라이밍 커뮤니티, ClimOn
+
+
