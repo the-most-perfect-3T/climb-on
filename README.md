@@ -34,22 +34,22 @@
 ## 페이지별 기능
 | **로그인** | **회원가입** |
 | :------------: | :------------: |
-| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/login.gif" alt="로그인" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/signup.gif" alt="회원가입" /> |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/login.gif" alt="로그인" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/signup.gif" alt="회원가입" /> |
 | 유효성검사 / 회원가입 / 카카오 로그인 | 아이디,닉네임 중복검사 / 입력값 유효성검사 |
 
 | **마이페이지** | **시설** |
 | :------------: | :------------: |
-| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/mypage.gif" alt="마이페이지" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/facility.gif" alt="시설" /> |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/mypage.gif" alt="마이페이지" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/facility.gif" alt="시설" /> |
 | 내 프로필(정보 수정, 홈짐 등록, 내 일정관리, 비즈니스회원 전환 신청, 알림) / 게시물관리 / 댓글 관리 / 리뷰 관리 / 즐겨찾기 관리 | 시설 검색 / 시설 정보 / 리뷰 |
 
 | **커뮤니티** | **크루** |
 | :------------: | :------------: |
-| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/community.gif" alt="커뮤니티" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/crew.gif" alt="크루" /> |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/community.gif" alt="커뮤니티" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/crew.gif" alt="크루" /> |
 | 시설 소식 / 커뮤니티 게시판 | 크루 리스트 / 크루 생성 / 크루소식 |
 
 | **크루 페이지** | **통합검색** |
 | :------------: | :------------: |
-| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/schedule.gif" alt="크루 페이지" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/search.gif" alt="통합검색" /> |
+| <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/schedule.gif" alt="크루 페이지" /> | <img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/search.gif" alt="통합검색" /> |
 | 크루 가입(알림) / 크루 소식/활동/앨범/멤버 | 크루,운동시설,게시물 검색 |
 
 <br>
@@ -95,7 +95,7 @@
 
 
 ## 개발 기간 및 환경
-<img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/main/climb-on/src/main/resources/static/images/project-architecture.png" />
+<img src="https://raw.githubusercontent.com/the-most-perfect-3T/climb-on/deploy/climb-on/src/main/resources/static/images/project-architecture.png" />
 
 
 > 하이미디어 아카데미<br/>
